@@ -34,13 +34,21 @@ namespace WebApp.Controllers
 			};
 			return View(model);
 		}
-		[HttpGet("GetMunicipioByUf/{uf}")]
-		public JsonResult GetMunicipioByUf([FromQuery]string uf)
-		{
-			var resultLocal = ApiClientFactory.Instance.GetMunicipiosByUf(uf);
+		
+        public async Task<JsonResult> GetMunicipioByUf(string uf)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(uf)) throw new Exception("Estado não informado.");
+                var resultLocal = ApiClientFactory.Instance.GetMunicipiosByUf(uf);
 
+                return Json(new SelectList(resultLocal, "Id", "Nome"));
 
-			return Json(new SelectList(resultLocal, "Id", "Nome"));
-		}
-	}
+            }
+            catch (Exception ex)
+            {
+                return Json(ex.Message);
+            }
+        }
+    }
 }

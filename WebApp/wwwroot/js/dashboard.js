@@ -57,20 +57,29 @@ var vm = new Vue({
                 $("#ddlEstado").change(function () {
                     var sigla = $("#ddlEstado").val();
 
-                    var url = "Dashboard/GetMunicipioByUf/" + sigla;
+                    var url = "Dashboard/GetMunicipioByUf?uf=" + sigla;
 
                     var ddlSource = "#ddlMunicipio";
 
                     $.getJSON(url,
                         { id: $(ddlSource).val() },
                         function (data) {
-                            var items = '<option value="">Selecionar Municipio</option>';
-                            $("#ddlMunicipio").empty;
-                            $.each(data,
-                                function (i, row) {
-                                    items += "<option value='" + row.value + "'>" + row.text + "</option>";
+                            if (data.length > 0) {
+                                var items = '<option value="">Selecionar Municipio</option>';
+                                $("#ddlMunicipio").empty;
+                                $.each(data,
+                                    function (i, row) {
+                                        items += "<option value='" + row.value + "'>" + row.text + "</option>";
+                                    });
+                                $("#ddlMunicipio").html(items);
+                            }
+                            else {
+                                new PNotify({
+                                    title: 'Usuario',
+                                    text: data,
+                                    type: 'warning'
                                 });
-                            $("#ddlMunicipio").html(items);
+                            }
                         });
                 });
             }
@@ -78,7 +87,7 @@ var vm = new Vue({
 
 
 
-            
+
         }).apply(this, [jQuery]);
     },
     methods: {

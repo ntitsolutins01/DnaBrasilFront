@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.EntityFrameworkCore;
 using System.Configuration;
-using Infraero.Relprev.CrossCutting.Configuration;
 using WebApp.Data;
 using WebApp.Models;
 using WebApp.Services;
@@ -79,7 +78,7 @@ builder.Services.Configure<DataProtectionTokenProviderOptions>(options =>
     options.TokenLifespan = TimeSpan.FromMinutes(config.TokenTime));
 
 // Registra o serviço de e-mail. Configurado em appsettings.json
-builder.Services.AddTransient<IEmailSender, SendGridEmailService>();
+builder.Services.AddTransient<IEmailSender, EmailService>();
 
 var app = builder.Build();
 

@@ -43,7 +43,7 @@
                                 <td class="text-center">
                                     <a data-toggle="tooltip" data-placement="top" title="Editar" asp-action="Edit" asp-controller="Usuario" 
                                        asp-route-Id="@item.Id" class="on-default edit-row" style='color: #FF9800'><i class="fa fa-pencil"></i></a>
-									<a data-toggle="tooltip" data-placement="top" title="Excluir" href='javascript:(crud.DeleteModal("+@item.Id+"))'
+									<a data-toggle="tooltip" data-placement="top" title="Excluir" href='javascript:(crud.DeleteModal(@item.Id))'
 									   class="on-default remove-row" style="cursor: pointer;color: #F44336"><i class="fa fa-trash"></i></a>
 
                                 </td>

@@ -13,6 +13,7 @@ using WebApp.Models;
 using WebApp.Utility;
 using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 using System.Security.Claims;
+using System.Text.RegularExpressions;
 using WebApp.Configuration;
 
 namespace WebApp.Controllers
@@ -65,7 +66,9 @@ namespace WebApp.Controllers
         {
             try
             {
-                var result = ApiClientFactory.Instance.GetUsuarioByCpf(collection["cpf"].ToString());
+                var cpf = collection["cpf"].ToString();
+
+                var result = ApiClientFactory.Instance.GetUsuarioByCpf(Regex.Replace(cpf, "[^0-9a-zA-Z]+", ""));
 
                 if (result != null)
                 {
@@ -97,12 +100,14 @@ namespace WebApp.Controllers
                 };
 
                 var newUser = new IdentityUser { UserName = command.Email, Email = command.Email };
-                var includedUser = await _userManager.CreateAsync(newUser, "12345678");
+                await _userManager.CreateAsync(newUser, "12345678");
 
                 command.PerfilId = int.Parse(collection["ddlPerfil"].ToString());
                 var perfil = ApiClientFactory.Instance.GetPerfilById(command.PerfilId);
 
-                command.AspNetUserId = "includedUser.Id";
+                var includedUserId = _userManager.Users.FirstOrDefault(x => x.Email == newUser.Email).Id;
+
+                command.AspNetUserId = includedUserId;
                 command.AspNetRoleId = perfil.AspNetRoleId;
 
                 ApiClientFactory.Instance.CreateUsuario(command);
@@ -134,7 +139,7 @@ namespace WebApp.Controllers
             message = message.Replace("%NAME%", nome);
             message = message.Replace("%CALLBACK%", HtmlEncoder.Default.Encode(callbackUrl.Replace("%2FAccount", "/Account")));
 
-            await _emailSender.SendEmailAsync(user.Email, "Primeiro acesso sistema Dna",
+            await _emailSender.SendEmailAsync(user.Email, "Primeiro acesso sistema Dna Brasil",
                 message);
         }
 
@@ -220,29 +225,30 @@ namespace WebApp.Controllers
         }
 
         //[ClaimsAuthorize("Usuario", "Consultar")]
-        public async Task<JsonResult> GetUsuarioByEmail(string email)
+        public async Task<bool> GetUsuarioByEmail(string email)
         {
-            try
+            if (string.IsNullOrEmpty(email)) throw new Exception("Email não informado.");
+            var result = ApiClientFactory.Instance.GetUsuarioByEmail(email);
+
+            if (result == null)
             {
-                if (!string.IsNullOrEmpty(email))
-                {
-                    var result = ApiClientFactory.Instance.GetUsuarioByEmail(email);
-
-                    if (result == null)
-                    {
-                        throw new Exception("Já existe um usuário cadastrado com esse email.");
-                    }
-
-                    return Json(result);
-                }
-
-                throw new Exception("Email não informado.");
+                return true;
             }
-            catch (Exception ex)
+
+            return false;
+        }
+
+        public async Task<bool> GetUsuarioByCpf(string cpf)
+        {
+            if (string.IsNullOrEmpty(cpf)) throw new Exception("Cpf não informado.");
+            var result = ApiClientFactory.Instance.GetUsuarioByCpf(Regex.Replace(cpf, "[^0-9a-zA-Z]+", ""));
+
+            if (result == null)
             {
-                return Json(ex.Message);
-
+                return true;
             }
+
+            return false;
         }
     }
 }

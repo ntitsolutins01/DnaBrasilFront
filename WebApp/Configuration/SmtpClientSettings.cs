@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Security;
 using System.Text;
 
-namespace Infraero.Relprev.CrossCutting.Configuration
+namespace WebApp.Configuration
 {
     public class SmtpClientSettings
     {
@@ -10,7 +9,7 @@ namespace Infraero.Relprev.CrossCutting.Configuration
         public string FromName { get; set; }
         public string Host { get; set; }
         public string Port { get; set; }
-
-
+        public string Pwd { get; set; }
+        public string Usr { get; set; }
     }
 }
