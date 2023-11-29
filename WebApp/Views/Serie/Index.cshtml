@@ -23,9 +23,9 @@
 					<table class="table table-bordered table-striped mb-0" id="datatable-default">
 						<thead>
 							<tr>
-								@* <th>Id</th>
-								<th>Serie</th>
-								<th>Status</th> *@
+							@* <th class="text-center">Id</th>
+							<th class="text-center">Serie</th>
+							<th> class="text-center"Status</th> *@
 								<th>Ações</th>
 							</tr>
 						</thead>
@@ -33,9 +33,9 @@
 							@* @foreach (var item in Model.Series)
 							{*@
 							<tr>
-								@*  <td>@Html.DisplayFor(modelItem => item.Id)</td>
-								<td>@Html.DisplayFor(modelItem => item.Nome)</td>
-								<td>@Html.DisplayFor(modelItem => item.Status)</td> *@
+							@*  <td class="text-center">@Html.DisplayFor(modelItem => item.Id)</td>
+							<td class="text-center">@Html.DisplayFor(modelItem => item.Nome)</td>
+							<td class="text-center">@Html.DisplayFor(modelItem => item.Status)</td> *@
 								<td class="actions">
 									<a  title="Editar" type="button" data-toggle="modal" data-target="#mdEdit" style="cursor: pointer; color: #FF9800"><i class="fa fa-pencil"></i></a>
 									<a  title="Excluir" type="button" data-toggle="modal" data-target="#mdDelete" style="cursor: pointer; color: #F44336"><i class="fa fa-trash"></i></a>

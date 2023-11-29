@@ -24,19 +24,19 @@
                     <table class="table table-bordered table-striped mb-0" id="datatable-default">
                         <thead>
                             <tr>
-                                <th>Id</th>
-                                <th>Nome da Deficiencia</th>
-                                <th>Status</th>
-                                <th>Ações</th>
+                                <th class="text-center">Id</th>
+                                <th class="text-center">Nome da Deficiencia</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center">Ações</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var item in Model.Deficiencias)
                             {
                                 <tr>
-                                    <td>@Html.DisplayFor(modelItem => item.Id)</td>
-                                    <td>@Html.DisplayFor(modelItem => item.Nome)</td>
-                                    <td>@Html.DisplayFor(modelItem => item.Status)</td>
+                                    <td class ="text-center">@Html.DisplayFor(modelItem => item.Id)</td>
+                                    <td class="text-center">@Html.DisplayFor(modelItem => item.Nome)</td>
+                                    <td class ="text-center">@Html.DisplayFor(modelItem => item.Status)</td>
                                     <td class="actions">
                                         <a data-toggle="tooltip" data-placement="top" title="Editar" asp-action="Edit" asp-controller="Deficiencia" asp-route-id="@item.Id" class="on-default edit-row" style='color: #FF9800'><i class="fa fa-pencil"></i></a>
                                         <a data-toggle="tooltip" data-placement="top" title="Excluir" asp-action="Delete" asp-controller="Deficiencia" asp-route-id="@item.Id" class="on-default remove-row" style='color: #F44336'><i class="fa fa-trash"></i></a>

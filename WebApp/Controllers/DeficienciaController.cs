@@ -41,6 +41,7 @@ namespace WebApp.Controllers
         }
 
         //[ClaimsAuthorize("Usuario", "Incluir")]
+        [HttpPost]
         public async Task<ActionResult> Create(IFormCollection collection)
         {
             try

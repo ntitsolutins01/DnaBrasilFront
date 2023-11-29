@@ -41,6 +41,7 @@ namespace WebApp.Controllers
         }
 
         //[ClaimsAuthorize("Usuario", "Incluir")]
+        [HttpPost]
         public async Task<ActionResult> Create(IFormCollection collection)
         {
             try
@@ -49,7 +50,6 @@ namespace WebApp.Controllers
                 {
                     Nome = collection["nome"].ToString(),
                     Descricao = collection["descricao"].ToString()
-
                 };
 
                 await ApiClientFactory.Instance.CreateLocalidade(command);

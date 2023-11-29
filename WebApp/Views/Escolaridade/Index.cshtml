@@ -17,15 +17,15 @@
 				<div class="panel-body">
 					<div class="form-group row">
 						<div class="col-sm-12 pull-right">
-							<a href="@Url.Action("Create", "Escolaridade")" id="addToTable" class="btn btn-primary pull-right"><i class="fa fa-plus"></i> Novo Tipo de Laudo </a>
+							<a href="@Url.Action("Create", "Escolaridade")" id="addToTable" class="btn btn-primary pull-right"><i class="fa fa-plus"></i> Nova Escolaridade </a>
 						</div>
 					</div>
 					<table class="table table-bordered table-striped mb-0" id="datatable-default">
 						<thead>
 							<tr>
-								@* <th>Id</th>
-								<th>Escolaridade</th>
-								<th>Status</th> *@
+							@* <th class="text-center">Id</th>
+							<th class="text-center">Escolaridade</th>
+							<th class="text-center">Status</th> *@
 								<th>Ações</th>
 							</tr>
 						</thead>
@@ -33,9 +33,9 @@
 							@* @foreach (var item in Model.Escolaridades)
 							{*@
 							<tr>
-								@*  <td>@Html.DisplayFor(modelItem => item.Id)</td>
-								<td>@Html.DisplayFor(modelItem => item.Nome)</td>
-								<td>@Html.DisplayFor(modelItem => item.Status)</td> *@
+							@*  <td class="text-center">@Html.DisplayFor(modelItem => item.Id)</td>
+							<td class="text-center">@Html.DisplayFor(modelItem => item.Nome)</td>
+							<td class="text-center">@Html.DisplayFor(modelItem => item.Status)</td> *@
 								<td class="actions">
 									<a  title="Editar" type="button" data-toggle="modal" data-target="#mdEdit" style="cursor: pointer; color: #FF9800"><i class="fa fa-pencil"></i></a>
 									<a  title="Excluir" type="button" data-toggle="modal" data-target="#mdDelete" style="cursor: pointer; color: #F44336"><i class="fa fa-trash"></i></a>
