@@ -1,5 +1,5 @@
 var vm = new Vue({
-    el: "#formDashboard",
+    el: "#formFomento",
     data: {
         loading: false
     },
@@ -9,7 +9,7 @@ var vm = new Vue({
             'use strict';
             var formid = $('form').attr('id');
 
-            if (formid === "formDashboard") {
+            if (formid === "formFomento") {
                 var $select = $(".select2").select2({
                     allowClear: true
                 });
@@ -35,7 +35,7 @@ var vm = new Vue({
                 });
 
 
-                $("#formDashboard").validate({
+                $("#formFomento").validate({
                     highlight: function (label) {
                         $(label).closest('.form-group').removeClass('has-success').addClass('has-error');
                     },
@@ -53,11 +53,10 @@ var vm = new Vue({
                         }
                     }
                 });
-
                 $("#ddlEstado").change(function () {
                     var sigla = $("#ddlEstado").val();
 
-                    var url = "DivisaoAdministrativa/GetMunicipioByUf?uf=" + sigla;
+                    var url = "../DivisaoAdministrativa/GetMunicipioByUf?uf=" + sigla;
 
                     var ddlSource = "#ddlMunicipio";
 
@@ -83,11 +82,6 @@ var vm = new Vue({
                         });
                 });
             }
-
-
-
-
-
         }).apply(this, [jQuery]);
     },
     methods: {
@@ -110,17 +104,17 @@ var vm = new Vue({
                 self.loading = flag;
             }
         },
-        DeleteDashboard: function (id) {
-            var url = "Dashboard/Delete/" + id;
-            $("#deleteDashboardHref").prop("href", url);
+        DeleteFomento: function (id) {
+            var url = "Fomento/Delete/" + id;
+            $("#deleteFomentoHref").prop("href", url);
         }
     }
 });
 
 var crud = {
     DeleteModal: function (id) {
-        $('input[name="DashboardId"]').attr('value', id);
-        $('#mdDeleteDashboard').modal('show');
-        vm.DeleteDashboard(id)
+        $('input[name="FomentoId"]').attr('value', id);
+        $('#mdDeleteFomento').modal('show');
+        vm.DeleteFomento(id)
     }
 };

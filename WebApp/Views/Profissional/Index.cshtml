@@ -1,4 +1,4 @@
-﻿
+﻿@model ProfissionalModel
 @{
     ViewData["Title"] = "Listagem de Profissionais";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -83,23 +83,32 @@
         <table class="table table-bordered table-striped mb-0" id="datatable-default">
             <thead>
                 <tr>
-                    <th>Nome</th>
-                    <th>Email</th>
-                    <th>Alunos</th>
-                    <th>Pesquisas</th>
-                    <th>Laudos</th>
-                    <th>Status</th>
+                    <th class="text-center">Id</th>
+                    <th class="text-center">Nome</th>
+                    <th class="text-center">Email</th>
+                    <th class="text-center">Habilitado</th>
+                    <th class="text-center">Status</th>
+                    <th class ="text-center">Ações</th>
                 </tr>
             </thead>
             <tbody>
+            @foreach (var item in Model.Profissionais)
+            {
                 <tr>
-                    <td>Fábio de Souza Muniz</td>
-                    <td>ntitsolutions01@gmail.com</td>
-                    <td>2</td>
-                    <td>2</td>
-                    <td>6</td>
-                    <td>Aguardando Ativação</td>
+                    <td class="text-center" style="width:20px;">@Html.DisplayFor(modelItem => item.Id)</td>
+                    <td class="text-center">@Html.DisplayFor(modelItem => item.Nome)</td>
+                    <td class="text-center">@Html.DisplayFor(modelItem => item.Email)</td>
+                    <td class="text-center">@Html.DisplayFor(modelItem => item.Habilitado)</td>
+                    <td class="text-center">@Html.DisplayFor(modelItem => item.Status)</td>
+                    <td class="text-center">
+                        <a data-toggle="tooltip" data-placement="top" title="Editar" asp-action="Edit" asp-controller="Usuario" 
+                           asp-route-Id="@item.Id" class="on-default edit-row" style='color: #FF9800'><i class="fa fa-pencil"></i></a>
+                        <a data-toggle="tooltip" data-placement="top" title="Excluir" href='javascript:(crud.DeleteModal(@item.Id))'
+                           class="on-default remove-row" style="cursor: pointer;color: #F44336"><i class="fa fa-trash"></i></a>
+
+                    </td>
                 </tr>
+            }
             </tbody>
         </table>
     </div>

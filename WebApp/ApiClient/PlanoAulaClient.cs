@@ -5,26 +5,29 @@ namespace WebApp.ApiClient
 {
     public partial class DnaApiClient
     {
-        private const string ResourceSerie = "Series";
+
+        private const string ResourcePlanoAula = "PlanosAulas";
+
         #region Main Methods
 
-        public Task<long> CreateSerie(SerieModel.CreateUpdateSerieCommand command)
+        public Task<long> CreatePlanoAula(PlanoAulaModel.CreateUpdatePlanoAulaCommand command)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceSerie}"));
+                $"{ResourcePlanoAula}"));
             return Post(requestUrl, command);
         }
-        public Task<bool> UpdateSerie(int id, SerieModel.CreateUpdateSerieCommand command)
+
+        public Task<bool> UpdatePlanoAula(int id, PlanoAulaModel.CreateUpdatePlanoAulaCommand command)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceSerie}/{id}"));
+                $"{ResourcePlanoAula}/{id}"));
             return Put(requestUrl, command);
         }
 
-        public Task<bool> DeleteSerie(int id)
+        public Task<bool> DeletePlanoAula(int id)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceSerie}/{id}"));
+                $"{ResourcePlanoAula}/{id}"));
             return Delete<bool>(requestUrl);
         }
 
@@ -32,19 +35,20 @@ namespace WebApp.ApiClient
 
         #region Methods
 
-        public SerieDto GetSerieById(string id)
+        public PlanoAulaDto GetPlanoAulaById(string id)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceSerie}/{id}"));
-            return Get<SerieDto>(requestUrl);
+                $"{ResourcePlanoAula}/{id}"));
+            return Get<PlanoAulaDto>(requestUrl);
         }
-        public List<SerieDto> GetSerieAll()
+        public List<PlanoAulaDto> GetPlanosAulasAll()
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceSerie}"));
-            return Get<List<SerieDto>>(requestUrl);
+                $"{ResourcePlanoAula}"));
+            return Get<List<PlanoAulaDto>>(requestUrl);
         }
 
         #endregion
+
     }
 }

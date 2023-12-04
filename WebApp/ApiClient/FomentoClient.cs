@@ -5,26 +5,26 @@ namespace WebApp.ApiClient
 {
     public partial class DnaApiClient
     {
-        private const string ResourceSerie = "Series";
+        private const string ResourceFomento = "Fomentos";
         #region Main Methods
 
-        public Task<long> CreateSerie(SerieModel.CreateUpdateSerieCommand command)
+        public Task<long> CreateFomento(FomentoModel.CreateUpdateFomentoCommand command)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceSerie}"));
+                $"{ResourceFomento}"));
             return Post(requestUrl, command);
         }
-        public Task<bool> UpdateSerie(int id, SerieModel.CreateUpdateSerieCommand command)
+        public Task<bool> UpdateFomento(int id, FomentoModel.CreateUpdateFomentoCommand command)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceSerie}/{id}"));
+                $"{ResourceFomento}/{id}"));
             return Put(requestUrl, command);
         }
 
-        public Task<bool> DeleteSerie(int id)
+        public Task<bool> DeleteFomento(int id)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceSerie}/{id}"));
+                $"{ResourceFomento}/{id}"));
             return Delete<bool>(requestUrl);
         }
 
@@ -32,17 +32,17 @@ namespace WebApp.ApiClient
 
         #region Methods
 
-        public SerieDto GetSerieById(string id)
+        public FomentoDto GetFomentoById(string id)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceSerie}/{id}"));
-            return Get<SerieDto>(requestUrl);
+                $"{ResourceFomento}/{id}"));
+            return Get<FomentoDto>(requestUrl);
         }
-        public List<SerieDto> GetSerieAll()
+        public List<FomentoDto> GetFomentoAll()
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceSerie}"));
-            return Get<List<SerieDto>>(requestUrl);
+                $"{ResourceFomento}"));
+            return Get<List<FomentoDto>>(requestUrl);
         }
 
         #endregion

@@ -1,4 +1,5 @@
-﻿@{
+﻿@model PlanoAulaModel
+@{
 	ViewData["Title"] = "Listagem Plano de Aula";
 	Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -21,32 +22,28 @@
 				<table class="table table-bordered table-striped mb-0" id="datatable-default">
 					<thead>
 						<tr>
-							<th>Nome plano</th>
-							<th>Grade</th>
+							<th class="text-center">Id</th>
+							<th class="text-center">Nome Plano Aula</th>
+							<th class="text-center">Grade</th>
 							<th class="text-center">Ações</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
-							<td>Atletismo Corrida</td>
-							<td>Ensino Fundamental</td>
-							<td class="actions">
-								<a data-toggle="tooltip" data-placement="top" title="Download" 
-								   @* asp-action="Edit" *@ asp-controller="Perfil" asp-route-id="1" class="on-default edit-row"
-								   style='color: #1565C0'><i class="fa fa-download"></i></a>
-								<a data-toggle="tooltip" data-placement="top" title="Excluir" asp-action="Delete" asp-controller="Usuario" asp-route-id="1" 
-								   class="on-default remove-row" style='color:#F44336'><i class="fa fa-trash"></i></a>
-							</td>
-						</tr>
-						<tr>
-							<td>Judô</td>
-							<td>Ensino Médio</td>
-							<td class="actions">
-								<a data-toggle="tooltip" data-placement="top" title="Download" @* asp-action="Edit" 
-
-								*@ asp-controller="Perfil" asp-route-id="1" class="on-default edit-row" style='color: #1565C0'><i class="fa fa-download"></i></a>
-							</td>
-						</tr>
+						@foreach (var item in Model.PlanosAulas)
+						{
+							<tr>
+								<td class="text-center" style="width:20px;">@Html.DisplayFor(modelItem => item.Id)</td>
+								<td class="text-center">@Html.DisplayFor(modelItem => item.Nome)</td>
+								<td class="text-center">@Html.DisplayFor(modelItem => item.Grade)</td>
+								<td class="actions">
+									<a data-toggle="tooltip" data-placement="top" title="Download"
+									@* asp-action="Edit" *@ asp-controller="Perfil" asp-route-id="1" class="on-default edit-row"
+									   style='color: #1565C0'><i class="fa fa-download"></i></a>
+									<a data-toggle="tooltip" data-placement="top" title="Excluir" asp-action="Delete" asp-controller="Usuario" asp-route-id="1"
+									   class="on-default remove-row" style='color:#F44336'><i class="fa fa-trash"></i></a>
+								</td>
+							</tr>
+						}
 					</tbody>
 				</table>
 			</div>

@@ -1,6 +1,6 @@
-@model WebApp.Models.TiposLaudoModel
+﻿@* @model WebApp.Models.FomentoModel *@
 @{
-    ViewData["Title"] = "Listagem de Tipos Laudo";
+    ViewData["Title"] = "Listagem de Fomentos";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -13,36 +13,36 @@
                     <div class="panel-actions">
                         <a href="#" class="card-action card-action-toggle" data-card-toggle></a>
                     </div>
-                    <h2 class="panel-title">Listagem de Tipo de Laudos</h2>
+                    <h2 class="panel-title">Listagem de Fomentos</h2>
                 </header>
                 <div class="panel-body">
                     <div class="form-group row">
                         <div class="col-sm-12 pull-right">
-                            <a href="@Url.Action("Create", "TiposLaudo")" id="addToTable" class="btn btn-primary pull-right"><i class="fa fa-plus"></i> Novo Tipo de Laudo </a>
+                            <a href="@Url.Action("Create", "Fomento")" id="addToTable" class="btn btn-primary pull-right"><i class="fa fa-plus"></i> Novo Fomento </a>
                         </div>
                     </div>
                     <table class="table table-bordered table-striped mb-0" id="datatable-default">
                         <thead>
                             <tr>
                                 <th class="text-center">Id</th>
-                                <th class="text-center">Nome Tipo de Laudo</th>
-                                <th class="text-center">Descrição</th>
+                                <th class="text-center">Fomento</th>
+                                <th class="text-center">Status</th>
                                 <th class="text-center">Ações</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var item in Model.TiposLaudos)
-                            {
+                            @* @foreach (var item in Model.Fomentos)
+                            { *@
                                 <tr>
-	                                <td class="text-center" style="width:20px;">@Html.DisplayFor(modelItem => item.Id)</td>
-                                    <td class ="text-center">@Html.DisplayFor(modelItem => item.Nome)</td>
-                                    <td class="text-center">@Html.DisplayFor(modelItem => item.Descricao)</td>
-                                    <td class="text-center actions">
-                                        <a data-toggle="tooltip" data-placement="top" title="Editar" asp-action="Edit" asp-controller="TiposLaudo" asp-route-id="@item.Id" class="on-default edit-row" style='color: #FF9800'><i class="fa fa-pencil"></i></a>
-                                        <a data-toggle="tooltip" data-placement="top" title="Excluir" asp-action="Delete" asp-controller="TiposLaudo" asp-route-id="@item.Id" class="on-default remove-row" style='color: #F44336'><i class="fa fa-trash"></i></a>
+                                    <td class="text-center" style="width:20px;">1</td>
+                                    <td class="text-center">Fomento 1981357/2023</td>
+                                    <td class="text-center">Ativo</td>
+                                    <td class="actions">
+                                        <a data-toggle="tooltip" data-placement="top" title="Editar"  class="on-default edit-row" style='color: #FF9800'><i class="fa fa-pencil"></i></a>
+                                        <a data-toggle="tooltip" data-placement="top" title="Excluir"  class="on-default remove-row" style='color: #F44336'><i class="fa fa-trash"></i></a>
                                     </td>
                                 </tr>
-                            }
+                            @* } *@
                         </tbody>
                     </table>
                 </div>
@@ -56,7 +56,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="mdExcluirLabel">
-                    <i class="fa fa-trash"></i> &nbsp;&nbsp;<strong>Exclusão de Tipo Laudo</strong>
+                    <i class="fa fa-trash"></i> &nbsp;&nbsp;<strong>Exclusão de Fomento</strong>
                 </h5>
             </div>
             <div class="modal-body">
@@ -82,7 +82,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="mdEditarLabel">
-                    <i class="fa fa-trash"></i> &nbsp;&nbsp;<strong>Alterar de Tipo Laudo</strong>
+                    <i class="fa fa-trash"></i> &nbsp;&nbsp;<strong>Alterar Fomento</strong>
                 </h5>
             </div>
             <div class="modal-body">
@@ -119,20 +119,20 @@
 
             if (crub === 1) {
                 new PNotify({
-                    title: 'Tipos de Laudo',
+                    title: 'Fomento',
                     text: 'Cadastro realizado com sucesso!',
                     type: 'success'
                 });
             } else if (crub === 2) {
                 new PNotify({
-                    title: 'Tipos de Laudo',
+                    title: 'Fomento',
                     text: 'Dados alterados com sucesso.',
                     type: 'warning',
                     icon: 'fa fa-pencil'
                 });
             } else if (crub === 3) {
                 new PNotify({
-                    title: 'Tipos de Laudo',
+                    title: 'Fomento',
                     text: 'Registro excluído com sucesso.',
                     type: 'error',
                     icon: 'fa fa-trash-o'

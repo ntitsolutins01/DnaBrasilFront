@@ -1,9 +1,6 @@
-﻿using Infraero.Relprev.CrossCutting.Enumerators;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
-using WebApp.Areas.Identity.Models;
 using WebApp.Configuration;
 using WebApp.Enumerators;
 using WebApp.Factory;
@@ -28,7 +25,7 @@ namespace WebApp.Controllers
             SetCrudMessage(crud);
             var response = ApiClientFactory.Instance.GetLocalidadeAll();
 
-			return View(new LocalidadeModel() { Localidades = response });
+            return View(new LocalidadeModel() { Localidades = response});
 		}
 
         //[ClaimsAuthorize("ConfiguracaoSistema", "Incluir")]
@@ -37,7 +34,9 @@ namespace WebApp.Controllers
             SetNotifyMessage(notify, message);
             SetCrudMessage(crud);
 
-            return View();
+            var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome");
+
+            return View(new LocalidadeModel() { ListEstados = estados });
         }
 
         //[ClaimsAuthorize("Usuario", "Incluir")]
@@ -49,7 +48,9 @@ namespace WebApp.Controllers
                 var command = new LocalidadeModel.CreateUpdateLocalidadeCommand
                 {
                     Nome = collection["nome"].ToString(),
-                    Descricao = collection["descricao"].ToString()
+                    Descricao = collection["descricao"].ToString(),
+                    MunicipioId = collection["ddlMunicipio"].ToString()
+
                 };
 
                 await ApiClientFactory.Instance.CreateLocalidade(command);
@@ -63,16 +64,17 @@ namespace WebApp.Controllers
         }
 
         //[ClaimsAuthorize("Localidade", "Alterar")]
-        //public ActionResult Edit(string id)
-        //{
-        //    var obj = ApiClientFactory.Instance.GetLocalidadeById(id);
+        public ActionResult Edit(string id)
+        {
+            var obj = ApiClientFactory.Instance.GetLocalidadeById(id);
 
-        //    var model = new LocalidadeModel() { Localidade = obj };
+            var model = new LocalidadeModel() { Localidade = obj };
 
-        //    return View(model);
-        //}
+            return View(model);
+        }
 
         //[ClaimsAuthorize("Usuario", "Alterar")]
+        [HttpPost]
         public async Task<ActionResult> Edit(string id, IFormCollection collection)
         {
                 var command = new LocalidadeModel.CreateUpdateLocalidadeCommand

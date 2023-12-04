@@ -1,12 +1,12 @@
-﻿@model LocalidadeModel
+﻿@model FomentoModel
 @{
-    ViewData["Title"] = "Inclusão de Localidade";
+    ViewData["Title"] = "Inclusão de Fomento";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div class="row">
     <div class="col-md-12">
-        @using (@Html.BeginForm("Create", "Localidade", FormMethod.Post, new { id = "formLocalidade", @class = "form-horizontal" }))
+        @using (@Html.BeginForm("Create", "Fomento", FormMethod.Post, new { id = "formFomento", @class = "form-horizontal" }))
         {
             <section class="panel">
                 <header class="panel-heading">
@@ -14,22 +14,16 @@
                         <a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
                     </div>
 
-                    <h2 class="panel-title">Cadastro de Localidade</h2>
+                    <h2 class="panel-title">Cadastro de Fomento</h2>
                 </header>
                 <div class="panel-body">
-                    <div class="form-group row">
-                        <label class="col-sm-3 control-label text-sm-right pt-2">Nome da Localidade <span class="required">*</span></label>
-                        <div class="col-sm-3">
-                            <input type="text" name="nome" class="form-control"
-                                   maxlength="60"
-                                   title="Por favor informe o Nome da Localidade." required />
 
-                        </div>
-                        <label class="col-sm-1 control-label text-sm-right pt-2">Descrição <span class="required">*</span></label>
-                        <div class="col-sm-5">
-                            <input type="text" name="descricao" class="form-control"
-                                   maxlength="150"
-                                   title="Por favor informe a descrição." required />
+                    <div class="form-group row">
+                        <label class="col-sm-3 control-label text-sm-right pt-2">Fomento</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="nome" class="form-control"
+                                   maxlength="80"
+                                   title="Por favor informe o Fomento." required />
                         </div>
                     </div>
                     <div class="form-group row">
@@ -41,12 +35,22 @@
                                 <option value="">Selecionar Estado</option>
                             </select>
                         </div>
-                        <label class="col-sm-1 control-label text-sm-right pt-2">Município</label>
+                        <label class="col-sm-1 control-label text-sm-right pt-2">Cidade</label>
                         <div class="col-md-5">
                             <select class="form-control populate select2" name="ddlMunicipio" id="ddlMunicipio"
                                     title="cidadeSelect" required
-                                    asp-for="MunicipioId" asp-items="Model.ListMunicipios">
+                                    asp-for="CidadeId" asp-items="Model.ListCidades">
                                 <option value="">Selecionar Cidade</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-3 control-label text-sm-right pt-2">Localidade</label>
+                        <div class="col-md-4">
+                            <select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade"
+                                    title="localidadeSelect" required
+                                    asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
+                                <option value="">Selecionar Localidade</option>
                             </select>
                         </div>
                     </div>
@@ -54,7 +58,7 @@
                 <footer class="panel-footer">
                     <div class="row">
                         <div class="col-md-9 col-md-offset-3">
-                            <a href="@Url.Action("Index", "Localidade")" class="btn btn-dark pull-right" style="margin-left: 5px;margin-right: 5px;"><i class="fa fa-reply"></i> &nbsp;&nbsp;Voltar</a>
+                            <a href="@Url.Action("Index", "Fomento")" class="btn btn-dark pull-right" style="margin-left: 5px;margin-right: 5px;"><i class="fa fa-reply"></i> &nbsp;&nbsp;Voltar</a>
                             <button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;"><i class="fa fa-remove"></i> &nbsp;&nbsp;Cancelar</button>
                             <button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
                         </div>
@@ -75,7 +79,7 @@
     <script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
     <script src="~/assets/vendor/select2/js/select2.js"></script>
     <script src="~/assets/vendor/jquery-mask/jquery.mask.js"></script>
-    <script src="~/js/localidade.js"></script>
+    <script src="~/js/fomento.js"></script>
     <script>
 
         (function ($) {
@@ -85,19 +89,19 @@
 
             if (crud === 1) {
                 new PNotify({
-                    title: 'Localidade',
+                    title: 'Fomento',
                     text: 'Cadastro realizado com sucesso!',
                     type: 'success'
                 });
             } else if (crud === 2) {
                 new PNotify({
-                    title: 'Localidade',
+                    title: 'Fomento',
                     text: 'Dados alterados com sucesso.',
                     type: 'warning'
                 });
             } else if (crud === 3) {
                 new PNotify({
-                    title: 'Localidade',
+                    title: 'Fomento',
                     text: 'Registro excluído com sucesso.',
                     type: 'error'
                 });
@@ -108,19 +112,19 @@
 
             if (notify === 0) {
                 new PNotify({
-                    title: 'Localidade',
+                    title: 'Fomento',
                     text: messagem,
                     type: 'success'
                 });
             } else if (notify === 1) {
                 new PNotify({
-                    title: 'Localidade',
+                    title: 'Fomento',
                     text: messagem,
                     type: 'warning'
                 });
             } else if (notify === 2) {
                 new PNotify({
-                    title: 'Localidade',
+                    title: 'Fomento',
                     text: messagem,
                     type: 'error'
                 });

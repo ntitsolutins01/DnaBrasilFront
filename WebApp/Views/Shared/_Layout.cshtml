@@ -112,10 +112,58 @@
 
 							<ul class="nav nav-main">
                                 <li>
-									<a href="@Url.Action("Index", "Home")">
+									<a href="@Url.Action("Index", "Dashboard")">
                                         <i class="fa fa-home" aria-hidden="true"></i>
                                         <span>Dashboard</span>
                                     </a>
+                                </li>
+                                <li class="nav-parent">
+                                    <a href="#">
+                                        <i class="fa fa-cogs" aria-hidden="true"></i>
+                                        <span>Configuração Sistema</span>
+                                    </a>
+                                    <ul class="nav nav-children">
+                                        <li>
+                                            <a href="@Url.Action("Index", "TiposLaudo")">
+                                                Tipos Laudo
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "Ambiente")">
+                                                Ambiente
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "Deficiencia")">
+                                                Deficiencia
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "Fomento")">
+                                                Localidade
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "Localidade")">
+                                                Localidade
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "Contrato")">
+                                                Contratos
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "Escolaridade")">
+                                                Tipo Escolaridade
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "Serie")">
+                                                Série
+                                            </a>
+                                        </li>
+                                    </ul>
                                 </li>
                                 <li class="nav-parent nav-expanded">
 									<a href="@Url.Action("Index", "Aluno")">
@@ -181,49 +229,6 @@
 										<i class="fa fa-shield" aria-hidden="true"></i>
 										<span>Perfil</span>
 									</a>
-								</li>
-								<li class="nav-parent">
-									<a href="#">
-										<i class="fa fa-cogs" aria-hidden="true"></i>
-										<span>Configuração Sistema</span>
-									</a>
-									<ul class="nav nav-children">
-										<li>
-											<a href="@Url.Action("Index", "TiposLaudo")">
-												Tipos Laudo
-											</a>
-										</li>
-										<li>
-											<a href="@Url.Action("Index", "Ambiente")">
-												Ambiente
-											</a>
-										</li>
-										<li>
-											<a href="@Url.Action("Index", "Deficiencia")">
-												Deficiencia
-											</a>
-										</li>
-										<li>
-											<a href="@Url.Action("Index", "Localidade")">
-												Localidade
-											</a>
-										</li>
-										<li>
-											<a href="@Url.Action("Index", "Contrato")">
-												Contratos
-											</a>
-										</li>
-										<li>
-											<a href="@Url.Action("Index", "Escolaridade")">
-												Tipo Escolaridade
-											</a>
-										</li>
-										<li>
-											<a href="@Url.Action("Index", "Serie")">
-												Série
-											</a>
-										</li>
-									</ul>
 								</li>
 							</ul>
 						</nav>
