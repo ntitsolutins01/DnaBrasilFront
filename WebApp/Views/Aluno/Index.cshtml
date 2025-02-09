@@ -209,6 +209,7 @@
                     </h5>
                 </div>
                 <input type="hidden" name="carteirinhaAlunoId" :value="editDto.Id" />
+                <input type="hidden" id="fomentoId" name="fomentoId" value="editDto.FomentoId" />
                 <div class="modal-body">
                     <div class="row" style="margin: 10px">
                         <div class="tabs">
@@ -221,7 +222,7 @@
                                 </li>
                             </ul>
                             <div class="tab-content">
-                                <div id="frente" class="tab-pane active">
+                                <div id="frente" class="tab-pane active" style="background-image: url(/assets/styles_Carteirinha/modelos/carteirinha-frente.png);">
                                     <div class="student-info">
                                         <div class="info-row">
                                             <label>NOME DO ESTUDANTE:</label>
@@ -275,7 +276,7 @@
                     <a data-toggle="tooltip"
                        data-placement="top"
                        title="Imprimir"
-                       :href="'/Aluno/ImprimirCarteirinha/' + editDto.Id"
+                       :href="'/Aluno/ImprimirCarteirinha/' + editDto.Id + '?fomentoId=' + editDto.FomentoId"
                        class="on-default edit-row btn btn-info pull-right"
                        target="_blank">
                         <i class="fa fa-print"></i> &nbsp;&nbsp;Imprimir
@@ -381,7 +382,8 @@
     <script>
         function imprimirCarteirinha() {
             const alunoId = $('#carteirinhaAlunoId').val();
-            window.open(`/Aluno/ImprimirCarteirinha/${alunoId}`, '_blank');
+            const fomentoId = $('#fomentoId').val();
+            window.open(`/Aluno/ImprimirCarteirinha/${alunoId}?fomentoId=${fomentoId}`, '_blank');
         }
 
         (function ($) {

@@ -1,4 +1,5 @@
-﻿using WebApp.Dto;
+﻿using DocumentFormat.OpenXml.Office2010.Excel;
+using WebApp.Dto;
 using WebApp.Models;
 
 namespace WebApp.ApiClient
@@ -171,6 +172,19 @@ namespace WebApp.ApiClient
                 $"{ResourceAlunos}/Profissional/{id}"));
             return Get<List<SelectListDto>>(requestUrl);
         }
+
+        /// <summary>
+        /// Busca Carteirinha pelo Id do Fomento
+        /// </summary>
+        /// <param name="fomentoId">Id do Fomento</param>
+        /// <returns>Retorna modelo da carteirinha</returns>
+        public async Task<ModeloCarteirinhaDto> GetModeloCarteirinhaByFomentoId(int fomentoId)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"ModelosCarteirinhas/Fomento/{fomentoId}"));
+            return Get<ModeloCarteirinhaDto>(requestUrl);
+        }
+
 
         #endregion
     }
