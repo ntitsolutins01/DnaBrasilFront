@@ -125,19 +125,24 @@
                     : false
                     : false;
 
-                    if (filtroVazio)
-                    {
-                        <div class="col-sm-8 pull-left">
-                            <div class="alert alert-warning" style="padding-bottom: 6px;padding-top: 6px; !important; margin-bottom: 10px; !important">
-                                <strong>Atenção!</strong> Os alunos listados são referentes ao seu <a href="" class="alert-link">Estado/Município</a> de cadastro.
-                            </div>
+                    /*
+                    <div class="col-sm-8 pull-left">
+                    <div class="alert alert-warning" style="padding-bottom: 6px;padding-top: 6px; !important; margin-bottom: 10px; !important">
+                    <strong>Atenção!</strong> Os alunos listados são referentes ao seu <a href="" class="alert-link">Estado/Município</a> de cadastro.
+                    </div>
+                    </div>
+                    */
+                    <div class="col-sm-8 pull-left">
+                        <div class="alert alert-info" style="padding-bottom: 6px;padding-top: 6px; !important; margin-bottom: 10px; !important">
+                            <strong>Info:</strong> Para impressão em lote selecione o filtro e clique em <a href="" class="alert-link">Impressão em Lote</a>.
                         </div>
-                        <div class="col-sm-8 pull-left">
-                            <div class="alert alert-info" style="padding-bottom: 6px;padding-top: 6px; !important; margin-bottom: 10px; !important">
-                                <strong>Info:</strong> Para impressão em lote selecione o filtro e clique em <a href="" class="alert-link">Impressão em Lote</a>.
-                            </div>
+                    </div>
+                    <div class="col-sm-8 pull-left">
+                        <div class="alert alert-info" style="padding-bottom: 6px;padding-top: 6px; !important; margin-bottom: 10px; !important">
+                            <strong>Info:</strong> Lembre-se de selecionar o fomento e a localidade para que o sistema encontre a carteirinha corretamente.
                         </div>
-                    }
+                    </div>
+
                 }
                 <div class="col-sm-2 pull-right">
                     <a href="@Url.Action("Create", "Aluno")" id="addToTable" class="btn btn-block btn-primary pull-right"><i class="fa fa-plus"></i>  &nbsp;&nbsp;Novo Aluno </a>

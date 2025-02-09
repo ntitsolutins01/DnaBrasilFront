@@ -527,6 +527,13 @@ namespace WebApp.Controllers
             {
                 _logger.Info($"Tela para impressao de carteirinha - Aluno.ImprimirCarteirinhasLote");
 
+                // Buscar o modelo da carteirinha baseado no fomentoId
+                ModeloCarteirinhaDto modeloCarteirinha = null;
+                if (!string.IsNullOrEmpty(fomentoId))
+                {
+                    modeloCarteirinha = await ApiClientFactory.Instance.GetModeloCarteirinhaByFomentoId(int.Parse(fomentoId));
+                }
+
                 IEnumerable<AlunoDto> alunos;
                 if (!string.IsNullOrEmpty(ids))
                 {
@@ -638,7 +645,8 @@ namespace WebApp.Controllers
                             Id = a.LocalidadeId,
                             Nome = a.NomeLocalidade
                         }
-                    }).ToList() // Convertendo para List<AlunoIndexDto>
+                    }).ToList(), // Convertendo para List<AlunoIndexDto>
+                    ModeloCarteirinha = modeloCarteirinha
                 });
             }
             catch (Exception e)
