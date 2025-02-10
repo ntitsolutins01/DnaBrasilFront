@@ -135,6 +135,6 @@ namespace WebApp.ApiClient
             return Get<List<FuncionalidadeDto>>(requestUrl);
         }
 
-		#endregion
-	}
+        #endregion
+    }
 }
