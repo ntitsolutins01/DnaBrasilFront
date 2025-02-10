@@ -21,6 +21,7 @@
         public MunicipioDto Municipio { get; set; }
         public LocalidadeDto Localidade { get; set; }
         public bool Convidado { get; set; }
+        public bool PossuiLaudo { get; set; }
 
         #region SearchFilter
         public string Sexo { get; set; }

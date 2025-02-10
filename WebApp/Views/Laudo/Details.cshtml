@@ -55,7 +55,16 @@
                                                         <tbody>
                                                             <tr class="d-flex">
                                                                 <th class="text col-md-3 col-6" style="font-weight: bold;">Profissional</th>
-                                                                <td class="text-center col-md-3 col-6">@Model.Profissional.Nome</td>
+                                                                <td class="text-center col-md-3 col-6">
+                                                                    @if (Model.Profissional == null)
+                                                                    {
+                                                                        <text>Não Definido</text>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <text>@Model.Profissional.Nome</text>
+                                                                    }
+                                                                </td>
                                                                 <th class="text col-md-3 col-6" style="font-weight: bold;">Idade</th>
                                                                 <td class="text-center col-md-3 col-6">@Model.Aluno.Idade</td>
                                                             </tr>
@@ -188,7 +197,16 @@
                                                         <tbody>
                                                             <tr class="d-flex">
                                                                 <th class="text col-md-3 col-6" style="font-weight: bold;">Profissional</th>
-                                                                <td class="text-center col-md-3 col-6">@Model.Profissional.Nome</td>
+                                                                <td class="text-center col-md-3 col-6">
+                                                                    @if (Model.Profissional == null)
+                                                                    {
+                                                                        <text>Não Definido</text>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <text>@Model.Profissional.Nome</text>
+                                                                    }
+                                                                </td>
                                                                 <th class="text col-md-3 col-6" style="font-weight: bold;">Idade</th>
                                                                 <td class="text-center col-md-3 col-6">@Model.Aluno.Idade</td>
                                                             </tr>
@@ -220,7 +238,7 @@
                                                         <tbody>
                                                             <tr class="d-flex">
                                                                 <th class="text col-md-3 col-6" style="font-weight: bold;">Modalidade</th>
-                                                                <td class="text-center">@Model.Laudo.Modalidade</td>
+                                                                <td class="text-center">@Model.Modalidade.Nome</td>
                                                             </tr>
                                                         </tbody>
                                                     </table>
@@ -352,7 +370,16 @@
                                                         <tbody>
                                                             <tr class="d-flex">
                                                                 <th class="text col-md-3 col-6" style="font-weight: bold;">Profissional</th>
-                                                                <td class="text-center col-md-3 col-6">@Model.Profissional.Nome</td>
+                                                                <td class="text-center col-md-3 col-6">
+                                                                    @if (Model.Profissional == null)
+                                                                    {
+                                                                        <text>Não Definido</text>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <text>@Model.Profissional.Nome</text>
+                                                                    }
+                                                                </td>
                                                                 <th class="text col-md-3 col-6" style="font-weight: bold;">Idade</th>
                                                                 <td class="text-center col-md-3 col-6">@Model.Aluno.Idade</td>
                                                             </tr>
@@ -439,7 +466,16 @@
                                                         <tbody>
                                                             <tr class="d-flex">
                                                                 <th class="text col-md-3 col-6" style="font-weight: bold;">Profissional</th>
-                                                                <td class="text-center col-md-3 col-6">@Model.Profissional.Nome</td>
+                                                                <td class="text-center col-md-3 col-6">
+                                                                    @if (Model.Profissional == null)
+                                                                    {
+                                                                        <text>Não Definido</text>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <text>@Model.Profissional.Nome</text>
+                                                                    }
+                                                                </td>
                                                                 <th class="text col-md-3 col-6" style="font-weight: bold;">Idade</th>
                                                                 <td class="text-center col-md-3 col-6">@Model.Aluno.Idade</td>
                                                             </tr>
@@ -527,7 +563,16 @@
                                                         <tbody>
                                                             <tr class="d-flex">
                                                                 <th class="text col-md-3 col-6" style="font-weight: bold;">Profissional</th>
-                                                                <td class="text-center col-md-3 col-6">@Model.Profissional.Nome</td>
+                                                                <td class="text-center col-md-3 col-6">
+                                                                    @if (Model.Profissional == null)
+                                                                    {
+                                                                        <text>Não Definido</text>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <text>@Model.Profissional.Nome</text>
+                                                                    }
+                                                                </td>
                                                                 <th class="text col-md-3 col-6" style="font-weight: bold;">Idade</th>
                                                                 <td class="text-center col-md-3 col-6">@Model.Aluno.Idade</td>
                                                             </tr>
@@ -682,7 +727,16 @@
                                                         <tbody>
                                                             <tr class="d-flex">
                                                                 <th class="text col-md-3 col-6" style="font-weight: bold;">Profissional</th>
-                                                                <td class="text-center col-md-3 col-6">@Model.Profissional.Nome</td>
+                                                                <td class="text-center col-md-3 col-6">
+                                                                    @if (Model.Profissional == null)
+                                                                    {
+                                                                        <text>Não Definido</text>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <text>@Model.Profissional.Nome</text>
+                                                                    }
+                                                                </td>
                                                                 <th class="text col-md-3 col-6" style="font-weight: bold;">Idade</th>
                                                                 <td class="text-center col-md-3 col-6">@Model.Aluno.Idade</td>
                                                             </tr>

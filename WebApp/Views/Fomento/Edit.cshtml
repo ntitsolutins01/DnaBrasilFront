@@ -184,6 +184,14 @@
 			// Set the value
 			$("#ddlLinhaAcao").val(dataarray);
 
+			//set filter
+			$("#ddlLinhaAcao").multiselect({
+				enableFiltering: true,
+					enableCaseInsensitiveFiltering: true,
+					maxHeight: 200,
+					dropUp: true
+			});
+
 			// Then refresh
 			$("#ddlLinhaAcao").multiselect("refresh");
 
@@ -196,6 +204,14 @@
 			var dataarray=data.split(",");
 
 			$("#ddlLocalidade").val(dataarray);
+
+			//set filter
+			$("#ddlLocalidade").multiselect({
+				enableFiltering: true,
+					enableCaseInsensitiveFiltering: true,
+					maxHeight: 200,
+					dropUp: true
+			});
 
 			// Then refresh
 			$("#ddlLocalidade").multiselect("refresh");

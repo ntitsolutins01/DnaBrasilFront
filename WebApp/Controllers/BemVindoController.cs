@@ -25,7 +25,7 @@ namespace WebApp.Controllers
         {
             var user = User.Identity.Name;
 
-            var usuario = ApiClientFactory.Instance.GetUsuarioByEmail(user);
+            var usuario = await ApiClientFactory.Instance.GetUsuarioByEmail(user);
 
             var result = ApiClientFactory.Instance.GetAlunoByEmail(usuario.Email);
 

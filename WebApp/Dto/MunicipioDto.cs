@@ -2,9 +2,9 @@
 {
     public class MunicipioDto
     {
-		public int Id { get; init; }
-		public int Codigo { get; init; }
-		public string? Nome { get; init; }
+		public int Id { get; set; }
+        public string? Nome { get; set; }
+        public int CodigoIbge { get; set; }
 
-	}
+    }
 }

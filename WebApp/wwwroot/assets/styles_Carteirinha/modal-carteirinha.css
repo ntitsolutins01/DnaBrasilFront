@@ -16,16 +16,6 @@
     flex-shrink: 0;
 }
 
-#frente.tab-pane,
-.frente-page {
-    background-image: url(/assets/images/Carteirinha-Frente-New.jpg);
-}
-
-#verso.tab-pane,
-.verso-page {
-    background-image: url(/assets/images/Carteirinha-Verso-New.jpg);
-}
-
 /* Frente da Carteirinha */
 .student-info {
     position: absolute;

@@ -68,7 +68,7 @@ namespace WebApp.Controllers
             {
                 ListFomentos = fomentos,
                 ListEstados = estados,
-                Dashboard = dashboardEad,
+                DashboardEad = dashboardEad,
                 ListMunicipios = municipios!,
                 ListTipoCursos = tipoCurso,
                 ListLocalidades = localidades!

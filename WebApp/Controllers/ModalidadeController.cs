@@ -29,7 +29,7 @@ namespace WebApp.Controllers
             var response = ApiClientFactory.Instance.GetModalidadeAll();
             var linhasAcoes = new SelectList(ApiClientFactory.Instance.GetLinhasAcoesAll(), "Id", "Nome");
 
-            return View(new ModalidadeModel() { Modalidades = response, ListLinhasAcoes = linhasAcoes});
+            return View(new ModalidadeModel() { Modalidades = response, ListLinhasAcoes = linhasAcoes });
         }
 
         //[ClaimsAuthorize("ConfiguracaoSistema", "Incluir")]
@@ -39,7 +39,7 @@ namespace WebApp.Controllers
             SetCrudMessage(crud);
             var linhasAcoes = new SelectList(ApiClientFactory.Instance.GetLinhasAcoesAll(), "Id", "Nome");
 
-            return View(new ModalidadeModel{ListLinhasAcoes = linhasAcoes});
+            return View(new ModalidadeModel { ListLinhasAcoes = linhasAcoes });
         }
 
         //[ClaimsAuthorize("Usuario", "Incluir")]
@@ -77,18 +77,20 @@ namespace WebApp.Controllers
 
                 foreach (var file in collection.Files)
                 {
-	                if (file.Length <= 0) continue;
+                    if (file.Length <= 0) continue;
 
-	                using (var ms = new MemoryStream())
-	                {
-		                file.CopyToAsync(ms);
-		                var byteIMage = ms.ToArray();
-		                command.ByteImage = byteIMage;
-	                }
+                    command.NomeByteImage = Path.GetFileName(collection.Files[0].FileName);
+
+                    using (var ms = new MemoryStream())
+                    {
+                        file.CopyToAsync(ms);
+                        var byteIMage = ms.ToArray();
+                        command.ByteImage = byteIMage;
+                    }
                 }
 
 
-				await ApiClientFactory.Instance.CreateModalidade(command);
+                await ApiClientFactory.Instance.CreateModalidade(command);
 
                 return RedirectToAction(nameof(Index), new { crud = (int)EnumCrud.Created });
             }
@@ -131,17 +133,24 @@ namespace WebApp.Controllers
 
             foreach (var file in collection.Files)
             {
-	            if (file.Length <= 0) continue;
+                if (file.Length <= 0) continue;
 
-	            using (var ms = new MemoryStream())
-	            {
-		            file.CopyToAsync(ms);
-		            var byteIMage = ms.ToArray();
-		            command.ByteImage = byteIMage;
-	            }
+                command.NomeByteImage = Path.GetFileName(collection.Files[0].FileName);
+
+                using (var ms = new MemoryStream())
+                {
+                    await file.CopyToAsync(ms);
+                    command.ByteImage = ms.ToArray();
+                }
             }
 
-			await ApiClientFactory.Instance.UpdateModalidade(command.Id, command);
+            if (!collection.Files.Any())
+            {
+                var currentModalidade = ApiClientFactory.Instance.GetModalidadeById(command.Id);
+                command.ByteImage = currentModalidade.ByteImage;
+            }
+
+            await ApiClientFactory.Instance.UpdateModalidade(command.Id, command);
 
             return RedirectToAction(nameof(Index), new { crud = (int)EnumCrud.Updated });
         }
@@ -162,9 +171,18 @@ namespace WebApp.Controllers
 
         public Task<ModalidadeDto> GetModalidadeById(int id)
         {
-            var result = ApiClientFactory.Instance.GetModalidadeById(id);
+            try
+            {
+                var result = ApiClientFactory.Instance.GetModalidadeById(id);
+                var linhasAcoes = new SelectList(ApiClientFactory.Instance.GetLinhasAcoesAll(), "Id", "Nome", result.LinhaAcaoId);
+                result.ListLinhasAcoes = linhasAcoes;
 
-            return Task.FromResult(result);
+                return Task.FromResult(result);
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
         }
 
         [ClaimsAuthorize(ClaimType.Modalidade, Claim.Consultar)]

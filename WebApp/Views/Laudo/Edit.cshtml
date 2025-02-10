@@ -21,16 +21,16 @@
                             <label class="col-sm-2 control-label text-sm-right pt-2">Estado <span class="required">*</span></label>
                             <div class="col-md-4">
                                 <select class="form-control populate select2" name="ddlEstado" id="ddlEstado"
-                                        title="Por favor informe um Estado." required disabled
-                                        asp-for="EstadoId" asp-items="Model.ListEstados">
+                                title="Por favor informe um Estado." required disabled
+                                asp-for="EstadoId" asp-items="Model.ListEstados">
                                     <option value="">Selecionar Estado</option>
                                 </select>
                             </div>
                             <label class="col-sm-2 control-label text-sm-right pt-2">Município <span class="required">*</span></label>
                             <div class="col-md-4">
                                 <select class="form-control populate select2" name="ddlMunicipio" id="ddlMunicipio"
-                                        title="Por favor informe um Municipio." required disabled
-                                        asp-for="MunicipioId" asp-items="Model.ListMunicipios">
+                                title="Por favor informe um Municipio." required disabled
+                                asp-for="MunicipioId" asp-items="Model.ListMunicipios">
                                     <option value="">Selecionar Município</option>
                                 </select>
                             </div>
@@ -39,16 +39,16 @@
                             <label class="col-sm-2 control-label text-sm-right pt-2">Localidade <span class="required">*</span></label>
                             <div class="col-md-4">
                                 <select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade"
-                                        title="Por favor informe a localidade." required disabled
-                                        asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
+                                title="Por favor informe a localidade." required disabled
+                                asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
                                     <option value="">Selecionar Localidade</option>
                                 </select>
                             </div>
                             <label class="col-sm-2 control-label text-sm-right pt-2">Profissional <span class="required">*</span></label>
                             <div class="col-md-4">
                                 <select class="form-control populate select2" name="ddlProfissional" id="ddlProfissional"
-                                        title="Por favor informe o profissional." required
-                                        asp-for="ProfissionalId" asp-items="Model.ListProfissionais">
+                                title="Por favor informe o profissional." required
+                                asp-for="ProfissionalId" asp-items="Model.ListProfissionais">
                                     <option value="">Selecionar Profissional</option>
                                 </select>
                             </div>
@@ -57,8 +57,8 @@
                             <label class="col-sm-2 control-label text-sm-right pt-2">Aluno <span class="required">*</span></label>
                             <div class="col-md-4">
                                 <select class="form-control populate select2" name="ddlAluno" id="ddlAluno"
-                                        title="Por favor informe um Aluno." required disabled
-                                        asp-for="AlunoId" asp-items="Model.ListAlunos">
+                                title="Por favor informe um Aluno." required disabled
+                                asp-for="AlunoId" asp-items="Model.ListAlunos">
                                     <option value="">Selecionar Aluno</option>
                                 </select>
                             </div>
@@ -94,7 +94,7 @@
                                 </li>
                                 <li class="">
                                     <a href="#saude-bucal"
-                                       data-toggle="tab" aria-expanded="false">
+                                    data-toggle="tab" aria-expanded="false">
                                         <i class="fa fa-medkit" style="color: #5bc0de;"></i>
                                         <span style="color: #5bc0de;">Saúde Bucal</span>
                                     </a>
@@ -103,7 +103,7 @@
                                 {
                                     <li class="">
                                         <a href="#qualidade-vida" data-toggle="tab" aria-expanded="false">
-                                            <i class="fa fa-star-o" style="color: #00a4a9;"></i>
+                                            <i class="fa fa-thumbs-up" style="color: #00a4a9;"></i>
                                             <span style="color: #00a4a9;">Qualidade de Vida</span>
                                         </a>
                                     </li>
@@ -112,7 +112,7 @@
                                 {
                                     <li class="">
                                         <a href="#vocacional"
-                                           data-toggle="tab" aria-expanded="false">
+                                        data-toggle="tab" aria-expanded="false">
                                             <i class="fa fa-star" style="color: #a787c0;"></i>
                                             <span style="color: #a787c0;">Vocacional</span>
                                         </a>
@@ -120,6 +120,7 @@
                                 }
                             </ul>
                             <div class="tab-content">
+                                <!-- CAMPO DE SAÚDE -->
                                 <div id="saude" class="tab-pane active">
                                     <div class="row form-group">
                                         <div>
@@ -128,16 +129,16 @@
                                                 @if (Model.Saude.Altura == null)
                                                 {
                                                     var altura = Model.TalentoEsportivo.Altura;
-                                                    var alturaFormatada = String.Format("{0:0.##}", altura);
-                                                    <input type="text" class="form-control" id="alturaSaude" name="alturaSaude" maxlength="3"
-                                                           required value="@alturaFormatada" title="Por favor informe a Altura (cm)" />
+                                                    var alturaFormatada = Math.Round((decimal)altura, 0);
+                                                    <input type="text" class="form-control altura-mask" id="alturaSaude" name="alturaSaude" maxlength="3" placeholder="000"
+                                                    required value="@alturaFormatada" title="Por favor informe a Altura (cm)" />
                                                 }
                                                 else
                                                 {
                                                     var altura = Model.Saude.Altura;
-                                                    var alturaFormatada = String.Format("{0:0.##}", altura);
-                                                    <input type="text" class="form-control" id="alturaSaude" name="alturaSaude" maxlength="3"
-                                                           required value="@alturaFormatada" title="Por favor informe a Altura (cm)" />
+                                                    var alturaFormatada = Math.Round((decimal)altura, 0);
+                                                    <input type="text" class="form-control altura-mask" id="alturaSaude" name="alturaSaude" maxlength="3" placeholder="000"
+                                                    required value="@alturaFormatada" title="Por favor informe a Altura (cm)" />
                                                 }
 
                                             </div>
@@ -147,17 +148,15 @@
                                             <div class="col-sm-3">
                                                 @if (Model.Saude.Massa != null)
                                                 {
-                                                    var peso = Model.Saude.Massa.ToString();
+                                                    var peso = Math.Round((decimal)Model.Saude.Massa, 0);
 
-                                                    <input type="text" class="form-control" id="massaCorporalSaude" name="massaCorporalSaude" maxlength="6"
-                                                           required value="@peso" title="Por favor informe a Massa Corporal (kg)" />
+                                                    <input type="text" class="form-control peso-mask" id="massaCorporalSaude" name="massaCorporalSaude" maxlength="2" placeholder="00" required value="@peso" title="Por favor informe a Massa Corporal (kg)" />
                                                 }
                                                 else
                                                 {
                                                     var peso = Model.TalentoEsportivo.Peso;
-                                                    peso = peso == null ? null : (decimal)peso;
-                                                    <input type="text" class="form-control" id="massaCorporalSaude" name="massaCorporalSaude" maxlength="6"
-                                                           required value="@peso" title="Por favor informe a Massa Corporal (kg)" />
+                                                    peso = peso == null ? null : Math.Round((decimal)peso, 0);
+                                                    <input type="text" class="form-control peso-mask" id="massaCorporalSaude" name="massaCorporalSaude" maxlength="2" placeholder="00" required value="@peso" title="Por favor informe a Massa Corporal (kg)" />
                                                 }
                                             </div>
                                         </div>
@@ -170,56 +169,63 @@
                                                 @if (Model.Saude.Envergadura == null)
                                                 {
                                                     var envergadura = Model.TalentoEsportivo.Envergadura;
-                                                    var envergaduraFormatado = String.Format("{0:0.##}", envergadura);
-                                                    <input type="text" class="form-control" id="envergaduraSaude" name="envergaduraSaude" maxlength="3"
-                                                           required value="@envergaduraFormatado" title="Por favor informe a Envergadura (cm)" />
+                                                    var envergaduraFormatado = Math.Round((decimal)envergadura, 0);
+                                                    <input type="text" class="form-control altura-mask" id="envergaduraSaude" name="envergaduraSaude" maxlength="3" placeholder="000" required value="@envergaduraFormatado" title="Por favor informe a Envergadura (cm)" />
                                                 }
                                                 else
                                                 {
                                                     var envergadura = Model.Saude.Envergadura;
-                                                    var envergaduraFormatado = String.Format("{0:0.##}", envergadura);
-                                                    <input type="text" class="form-control" id="envergaduraSaude" name="envergaduraSaude" maxlength="3"
-                                                           required value="@envergaduraFormatado" title="Por favor informe a Envergadura (cm)" />
+                                                    var envergaduraFormatado = Math.Round((decimal)envergadura, 0);
+                                                    <input type="text" class="form-control altura-mask" id="envergaduraSaude" name="envergaduraSaude" maxlength="3" placeholder="000" required value="@envergaduraFormatado" title="Por favor informe a Envergadura (cm)" />
                                                 }
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                <!-- CAMPO TALENTO ESPORTIVO -->
                                 <div id="talento-esportivo" class="tab-pane">
                                     <div class="row form-group">
                                         <div>
                                             @{
                                                 var alturaTalentoEsportivo = Model.TalentoEsportivo.Altura;
-                                                var alturaFormatadaTalentoEsportivo = String.Format("{0:0.##}", alturaTalentoEsportivo);
+                                                var alturaFormatadaTalentoEsportivo = Math.Round((decimal)alturaTalentoEsportivo, 0); 
                                             }
                                             <label class="col-sm-2 control-label"><strong>Altura (cm) </strong> <span class="required">*</span></label>
                                             <div class="col-sm-3">
-                                                <input type="text" class="form-control" id="altura" name="altura" maxlength="3" value="@alturaFormatadaTalentoEsportivo"
+                                                <input type="text" class="form-control altura-mask" id="altura" name="altura" maxlength="3" placeholder="000" value="@alturaFormatadaTalentoEsportivo"
                                                        required title="Favor informe Altura (cm)" />
                                             </div>
                                         </div>
                                         <div>
+                                            @{
+                                                var pesoTalentoEsportivo = Model.TalentoEsportivo.Peso;
+                                                var pesoFormatadoTalentoEsportivo = Math.Round((decimal)pesoTalentoEsportivo, 0);
+                                            }
                                             <label class="col-sm-3 control-label"><strong>Massa Corporal (kg)</strong> <span class="required">*</span></label>
                                             <div class="col-sm-3">
-                                                <input type="text" class="form-control" id="massaCorporal" name="massaCorporal" maxlength="6" value="@Model.TalentoEsportivo.Peso" required title="Favor informe Massa Corporal (kg)" />
+                                                <input type="text" class="form-control peso-mask" id="massaCorporal" name="massaCorporal" maxlength="2" placeholder="00" value="@pesoFormatadoTalentoEsportivo" required title="Favor informe Massa Corporal (kg)" />
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row form-group">
                                         <div>
+                                            @{
+                                                var preesaoManualTalentoEsportivo = Model.TalentoEsportivo.PreensaoManual;
+                                                var preesaoManualFormatadoTalentoEsportivo = Math.Round((decimal)preesaoManualTalentoEsportivo, 0);
+                                            }
                                             <label class="col-sm-2 control-label"><strong>Preensão Manual (kg)</strong> <span class="required">*</span></label>
                                             <div class="col-sm-3">
-                                                <input type="text" class="form-control" id="preensaoManual" name="preensaoManual" maxlength="6" value="@Model.TalentoEsportivo.PreensaoManual" required title="Favor informe Preensão Manual (kg)" />
+                                                <input type="text" class="form-control preensao-mask" id="preensaoManual" name="preensaoManual" maxlength="2" placeholder="00" value="@preesaoManualFormatadoTalentoEsportivo" required title="Favor informe Preensão Manual (kg)" />
                                             </div>
                                         </div>
                                         <div>
                                             @{
                                                 var flexibilidadeTalentoEsportivo = Model.TalentoEsportivo.Flexibilidade;
-                                                var flexibilidadeFormatadaTalentoEsportivo = String.Format("{0:0.##}", flexibilidadeTalentoEsportivo);
+                                                var flexibilidadeFormatadaTalentoEsportivo = Math.Round((decimal)flexibilidadeTalentoEsportivo, 0);
                                             }
                                             <label class="col-sm-3 control-label"><strong>Flexibilidade (cm)</strong> <span class="required">*</span></label>
                                             <div class="col-sm-3">
-                                                <input type="text" class="form-control" id="flexibilidade" name="flexibilidade" maxlength="3" value="@flexibilidadeFormatadaTalentoEsportivo" required title="Favor informe Flexibilidade (cm)" />
+                                                <input type="text" class="form-control flexibilidade-mask" id="flexibilidade" name="flexibilidade" maxlength="3" placeholder="000" value="@flexibilidadeFormatadaTalentoEsportivo" required title="Favor informe Flexibilidade (cm)" />
                                             </div>
                                         </div>
                                     </div>
@@ -228,11 +234,11 @@
 
                                             @{
                                                 var impulsaoHorizontalTalentoEsportivo = Model.TalentoEsportivo.ImpulsaoHorizontal;
-                                                var impulsaoHorizontalFormatadaTalentoEsportivo = String.Format("{0:0.##}", impulsaoHorizontalTalentoEsportivo);
+                                                var impulsaoHorizontalFormatadaTalentoEsportivo = Math.Round((decimal)impulsaoHorizontalTalentoEsportivo, 0);
                                             }
                                             <label class="col-sm-2 control-label"><strong>Impulsão Horizontal (cm)</strong> <span class="required">*</span></label>
                                             <div class="col-sm-3">
-                                                <input type="text" class="form-control" id="impulsaoHorizontal" name="impulsaoHorizontal" maxlength="3" value="@impulsaoHorizontalFormatadaTalentoEsportivo" required title="Favor informe Impulsão Horizontal (cm)" />
+                                                <input type="text" class="form-control altura-mask" id="impulsaoHorizontal" name="impulsaoHorizontal" maxlength="3" placeholder="000" value="@impulsaoHorizontalFormatadaTalentoEsportivo" required title="Favor informe Impulsão Horizontal (cm)" />
                                             </div>
                                         </div>
                                         <div>
@@ -242,7 +248,7 @@
                                                     <span class="input-group-addon">
                                                         <i class="fa fa-clock-o"></i>
                                                     </span>
-                                                    <input type="text" class="form-control" id="testeVelocidade" name="testeVelocidade" maxlength="6" value="@Model.TalentoEsportivo.Velocidade" required title="Favor informe Teste de Velocidade 20m (seg)" />
+                                                    <input type="text" class="form-control" id="testeVelocidade" name="testeVelocidade" maxlength="5" placeholder="00.00" value="@Model.TalentoEsportivo.Velocidade" required title="Favor informe Teste de Velocidade 20m (seg)" />
                                                 </div>
                                             </div>
                                         </div>
@@ -251,7 +257,7 @@
                                         <div>
                                             <label class="col-sm-2 control-label"><strong>Aptidão Física (mLO2/min)</strong> <span class="required">*</span></label>
                                             <div class="col-sm-3">
-                                                <input type="text" class="form-control" id="aptidaoFisica" name="aptidaoFisica" maxlength="6" value="@Model.TalentoEsportivo.Vo2Max" required title="Favor informe Aptidão Física (mLO2/min)" />
+                                                <input type="text" class="form-control" id="aptidaoFisica" name="aptidaoFisica" maxlength="5" placeholder="00.00" value="@Model.TalentoEsportivo.Vo2Max" required title="Favor informe Aptidão Física (mLO2/min)" />
                                             </div>
                                         </div>
                                         <div>
@@ -261,7 +267,7 @@
                                                     <span class="input-group-addon">
                                                         <i class="fa fa-clock-o"></i>
                                                     </span>
-                                                    <input type="text" class="form-control" id="agilidade" name="agilidade" maxlength="6" value="@Model.TalentoEsportivo.ShuttleRun" required title="Favor informe Agilidade (seg)" />
+                                                    <input type="text" class="form-control" id="agilidade" name="agilidade" maxlength="5" placeholder="00.00" value="@Model.TalentoEsportivo.ShuttleRun" required title="Favor informe Agilidade (seg)" />
 
                                                 </div>
                                             </div>
@@ -300,7 +306,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                @if (Model.Aluno.Idade >= 12)
+                                @if (Model.Aluno.Idade >= 14)
                                 {
                                     <div id="vocacional" class="tab-pane">
                                         @for (var index = 0; index < Model.ListQuestionarioVocacional.Count; index++)
@@ -328,7 +334,7 @@
                                         }
                                     </div>
                                 }
-                                @if (Model.Aluno.Idade >= 14)
+                                @if (Model.Aluno.Idade >= 12)
                                 {
                                     <div id="qualidade-vida" class="tab-pane">
                                         @for (var index = 0; index < Model.ListQuestionarioQualidadeVida.Count; index++)
@@ -373,7 +379,7 @@
                                                 {
                                                     <div class="radio-custom radio-danger col-sm-3">
                                                         <input id="respConsumoAlimentar_@resp.Id" name="nomeRespConsumoAlimentar_@index" type="radio" value="@resp.Id"
-                                                               @(Model.ConsumoAlimentar.Id != 0 && Model.ConsumoAlimentar.Respostas.Contains(resp.Id.ToString()) ? "checked" : "") required title="Por favor selecione uma opção." />
+                                                        @(Model.ConsumoAlimentar.Id != 0 && Model.ConsumoAlimentar.Respostas.Contains(resp.Id.ToString()) ? "checked" : "") required title="Por favor selecione uma opção." />
                                                         <label for="respConsumoAlimentar_@resp.Id">@resp.RespostaQuestionario</label>
                                                     </div>
                                                 }

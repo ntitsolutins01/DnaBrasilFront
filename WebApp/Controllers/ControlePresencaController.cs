@@ -57,8 +57,7 @@ namespace WebApp.Controllers
                 SetNotifyMessage(notify, message);
                 SetCrudMessage(crud);
 
-                var usu = ApiClientFactory.Instance.GetUsuarioByEmail(usuario);
-
+                var usu = await ApiClientFactory.Instance.GetUsuarioByEmail(usuario);
 
                 var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentoAll(), "Id", "Nome");
                 var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome", usu.Uf);
@@ -129,7 +128,7 @@ namespace WebApp.Controllers
 
 
         [ClaimsAuthorize(ClaimType.ControlePresenca, Claim.Incluir)]
-        public ActionResult Create(int? crud, int? notify, string message = null)
+        public async Task<ActionResult> Create(int? crud, int? notify, string message = null)
 		{
 			try
 			{
@@ -141,7 +140,7 @@ namespace WebApp.Controllers
                 var usuario = User.Identity.Name;
 
                 if (usuario == null) return Redirect("/Identity/Account/Login");
-                var usu = ApiClientFactory.Instance.GetUsuarioByEmail(usuario);
+                var usu = await ApiClientFactory.Instance.GetUsuarioByEmail(usuario);
 
                 var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome", usu.Uf);
 

@@ -20,7 +20,7 @@ namespace WebApp.Controllers;
 /// <summary>
 /// Controller de Atividade
 /// </summary>
-[Authorize(Policy = ModuloAccess.Atividade)]
+//[Authorize(Policy = ModuloAccess.Atividade)]
 public class AtividadeController : BaseController
 {
     #region Constructor
@@ -214,11 +214,25 @@ public class AtividadeController : BaseController
 
     #region Get Methods
 
+    /// <summary>
+    /// Busca uma única Atividade
+    /// </summary>
+    /// <param name="id">Id da Atividade a ser buscada</param>
+    /// <returns>Retorna o objeto da Atividade</returns>
     public Task<AtividadeDto> GetAtividadeById(int id)
     {
         var result = ApiClientFactory.Instance.GetAtividadeById(id);
 
         return Task.FromResult(result);
     }
+
+    public Task<List<AtividadeAlunosDto>> GetAtividadeAlunosByAtividadeId(int id)
+    {
+        var result = ApiClientFactory.Instance.GetAtividadeAlunosByAtividadeId(id);
+
+        return Task.FromResult(result);
+    }
+
+    
     #endregion
 }

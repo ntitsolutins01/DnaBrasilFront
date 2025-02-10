@@ -2,7 +2,7 @@ var vm = new Vue({
     el: "#vModalidade",
     data: {
         loading: false,
-        editDto: { Id: "", LinhaAcao: "", Nome: "", Vo2MaxIni: "", Vo2MaxFim: "", VinteMetrosIni: "", VinteMetrosFim: "", ShutlleRunIni: "", ShutlleRunFim: "", FlexibilidadeIni: "", FlexibilidadeFim: "", PreensaoManualIni: "", PreensaoManualFim: "", AbdominalPranchaIni: "", AbdominalPranchaFim: "", ImpulsaoIni: "", ImpulsaoFim: "", EnvergaduraIni: "", EnvergaduraFim: "", PesoIni: "", PesoFim: "", AlturaIni: "", AlturaFim: "", Status: true }
+        editDto: { Id: "", LinhaAcao: "", Nome: "", Vo2MaxIni: "", Vo2MaxFim: "", VinteMetrosIni: "", VinteMetrosFim: "", ShutlleRunIni: "", ShutlleRunFim: "", FlexibilidadeIni: "", FlexibilidadeFim: "", PreensaoManualIni: "", PreensaoManualFim: "", AbdominalPranchaIni: "", AbdominalPranchaFim: "", ImpulsaoIni: "", ImpulsaoFim: "", EnvergaduraIni: "", EnvergaduraFim: "", PesoIni: "", PesoFim: "", AlturaIni: "", AlturaFim: "", Status: true, ByteImage: null }
     },
     mounted: function () {
         var self = this;
@@ -153,13 +153,6 @@ var vm = new Vue({
             axios.get("Modalidade/GetModalidadeById/?id=" + id).then(result => {
 
                 self.editDto.Id = result.data.id;
-                if (result.data.linhaAcao === null) {
-                    self.editDto.LinhaAcao = "";
-
-                } else { 
-                    self.editDto.LinhaAcao = result.data.linhaAcao.id;
-                }
-                $("#ddlLinhaAcao").val(self.editDto.LinhaAcao).trigger("change");
                 self.editDto.Nome = result.data.nome;
                 self.editDto.Status = result.data.status;
                 self.editDto.Vo2MaxIni = result.data.vo2MaxIni;
@@ -181,7 +174,28 @@ var vm = new Vue({
                 self.editDto.PesoIni = result.data.pesoIni;
                 self.editDto.PesoFim = result.data.pesoFim;
                 self.editDto.AlturaIni = result.data.alturaIni;
-                self.editDto.AlturaFim = result.data.alturaFim  ;
+                self.editDto.AlturaFim = result.data.alturaFim;
+                self.editDto.ByteImage = result.data.byteImage;
+
+                if (result.data.listLinhasAcoes && result.data.listLinhasAcoes.length > 0) {
+                    var items = '<option value="">Selecionar a Linha Ação</option>';
+                    $("#ddlLinhaAcao").empty();
+                    $.each(result.data.listLinhasAcoes,
+                        function (i, row) {
+                            if (row.selected) {
+                                items += "<option selected value='" + row.value + "'>" + row.text + "</option>";
+                            } else {
+                                items += "<option value='" + row.value + "'>" + row.text + "</option>";
+                            }
+                        });
+                    $("#ddlLinhaAcao").html(items);
+                } else {
+                    new PNotify({
+                        title: 'Linha Ação',
+                        text: 'Linhas Ações não encontradas.',
+                        type: 'warning'
+                    });
+                }
 
             }).catch(error => {
                 Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);

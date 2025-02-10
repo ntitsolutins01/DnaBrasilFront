@@ -22,7 +22,7 @@
         public bool Status { get; set; }
         public bool Habilitado { get; set; }
         public int Idade { get; set; }
-        public List<ModalidadeDto>? Modalidades { get; set; }
+        public List<ModalidadeDto>? ListModalidades { get; set; }
         public string? NomeMunicipio { get; set; }
         public int? DependenciaId { get; set; }
         public int? MatriculaId { get; set; }
@@ -33,6 +33,7 @@
         //public VocacionalDto Vocaiconal { get; set; }
         public byte[]? Image { get; set; }
         public byte[]? QrCode { get; set; }
+        public string? Modalidades { get; set; }
 
         #region SearchFilter
         public string Sexo { get; set; }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
 using WebApp.Configuration;
 using WebApp.Dto;
@@ -93,7 +94,7 @@ namespace WebApp.Controllers
         public Task<LinhaAcaoDto> GetLinhaAcaoById(int id)
         {
             var result = ApiClientFactory.Instance.GetLinhaAcaoById(id);
-
+            
             return Task.FromResult(result);
         }
     }

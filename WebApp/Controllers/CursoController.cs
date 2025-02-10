@@ -1,6 +1,4 @@
-﻿using DocumentFormat.OpenXml.Bibliography;
-using DocumentFormat.OpenXml.Spreadsheet;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
@@ -39,7 +37,7 @@ public class CursoController : BaseController
     }
     #endregion
 
-    #region Crud Methods
+    #region Main Methods
 
     /// <summary>
     /// Listagem de Curso

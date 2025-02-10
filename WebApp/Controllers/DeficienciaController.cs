@@ -15,13 +15,23 @@ namespace WebApp.Controllers;
 
 public class DeficienciaController : BaseController
 {
+    #region Constructor
+
     private readonly IOptions<UrlSettings> _appSettings;
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="appSettings"></param>
     public DeficienciaController(IOptions<UrlSettings> appSettings)
     {
         _appSettings = appSettings;
         ApplicationSettings.WebApiUrl = _appSettings.Value.WebApiBaseUrl;
     }
+
+
+    #endregion
+
 
     public IActionResult Index(int? crud, int? notify, string message = null)
     {
