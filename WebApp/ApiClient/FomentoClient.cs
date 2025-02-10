@@ -80,7 +80,7 @@ namespace WebApp.ApiClient
         /// Busca todos os Fomentos cadastrados
         /// </summary>
         /// <returns>Retorna a lista de Fomentos</returns>
-        public List<FomentoDto> GetFomentoAll()
+        public List<FomentoDto> GetFomentosAll()
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
                 $"{ResourceFomento}"));

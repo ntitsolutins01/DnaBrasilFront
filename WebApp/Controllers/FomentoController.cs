@@ -26,7 +26,7 @@ namespace WebApp.Controllers
             ViewBag.Status = true;
             SetNotifyMessage(notify, message);
             SetCrudMessage(crud);
-            var response = ApiClientFactory.Instance.GetFomentoAll();
+            var response = ApiClientFactory.Instance.GetFomentosAll();
             var localidades = new SelectList(ApiClientFactory.Instance.GetLocalidadeAll(), "Id", "Nome");
             var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome");
 

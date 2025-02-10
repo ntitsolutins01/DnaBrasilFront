@@ -50,7 +50,7 @@ namespace WebApp.Controllers
                 var usu = await ApiClientFactory.Instance.GetUsuarioByEmail(usuario);
 
 
-                var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentoAll(), "Id", "Nome");
+                var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentosAll(), "Id", "Nome");
                 var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome", usu.Uf);
 
                 SelectList municipios = null;
