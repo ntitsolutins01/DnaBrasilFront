@@ -78,7 +78,7 @@ public class ControleAcessoAulaController : BaseController
     }
 
     /// <summary>
-    /// Ação de inclusão do Controle Acesso Aula
+    /// Ação de Inclusão do Controle Acesso Aula
     /// </summary>
     /// <param name="collection">Coleção de dados para inclusao de ControleAcessoAula</param>
     /// <returns>Retorna mensagem de inclusao através do parametro crud</returns>
