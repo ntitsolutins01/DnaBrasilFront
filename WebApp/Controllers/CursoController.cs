@@ -44,9 +44,9 @@ public class CursoController : BaseController
     /// <summary>
     /// Listagem do Curso
     /// </summary>
-    /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
-    /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
-    /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+    /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+    /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+    /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
     [ClaimsAuthorize(ClaimType.Curso, Identity.Claim.Consultar)]
     public IActionResult Index(int? crud, int? notify, string message = null)
     {
@@ -58,11 +58,11 @@ public class CursoController : BaseController
     }
 
     /// <summary>
-    /// Tela para inclusão do Curso
+    /// Tela para Inclusão do Curso
     /// </summary>
-    /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
-    /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
-    /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+    /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+    /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+    /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
     [ClaimsAuthorize(ClaimType.Curso, Identity.Claim.Incluir)]
     public ActionResult Create(int? crud, int? notify, string message = null)
     {
@@ -91,8 +91,8 @@ public class CursoController : BaseController
     /// <summary>
     /// Ação de Inclusão do Curso
     /// </summary>
-    /// <param name="collection">coleção de dados para inclusao de Curso</param>
-    /// <returns>retorna mensagem de inclusao através do parametro crud</returns>
+    /// <param name="collection">Coleção de dados para inclusao de Curso</param>
+    /// <returns>Retorna mensagem de inclusao através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.Curso, Identity.Claim.Incluir)]
     [HttpPost]
     public async Task<ActionResult> Create(IFormCollection collection)
@@ -146,9 +146,9 @@ public class CursoController : BaseController
     /// <summary>
     /// Ação de Alteração do Curso
     /// </summary>
-    /// <param name="id">identificador do Curso</param>
-    /// <param name="collection">coleção de dados para alteração de Curso</param>
-    /// <returns>retorna mensagem de alteração através do parametro crud</returns>
+    /// <param name="id">Identificador do Curso</param>
+    /// <param name="collection">Coleção de dados para alteração de Curso</param>
+    /// <returns>Retorna mensagem de alteração através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.Curso, Identity.Claim.Alterar)]
     public async Task<ActionResult> Edit(IFormCollection collection)
     {
@@ -212,9 +212,9 @@ public class CursoController : BaseController
     /// <summary>
     /// Ação de Exclusão do Curso
     /// </summary>
-    /// <param name="id">identificador do Curso</param>
-    /// <param name="collection">coleção de dados para exclusão de Curso</param>
-    /// <returns>retorna mensagem de exclusão através do parametro crud</returns>
+    /// <param name="id">Identificador do Curso</param>
+    /// <param name="collection">Coleção de dados para exclusão de Curso</param>
+    /// <returns>Retorna mensagem de exclusão através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.Curso, Identity.Claim.Excluir)]
     public ActionResult Delete(int id)
     {
