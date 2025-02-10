@@ -26,8 +26,8 @@ public class ControleMaterialEstoqueSaidaController : BaseController
     /// <summary>
     /// Construtor da página
     /// </summary>
-    /// <param name="app">configurações de urls do sistema</param>
-    /// <param name="host">informações da aplicação em execução</param>
+    /// <param name="appSettings">Configurações de urls do sistema</param>
+    /// <param name="host">Informações da aplicação em execução</param>
     public ControleMaterialEstoqueSaidaController(IOptions<UrlSettings> appSettings)
     {
         _appSettings = appSettings;
@@ -39,10 +39,10 @@ public class ControleMaterialEstoqueSaidaController : BaseController
     /// <summary>
     /// Listagem de Controle de Material de Estoque e Saida
     /// </summary>
-    /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
-    /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
-    /// <param name="collection">lista de filtros selecionados para pesquisa de alunos</param>
-    /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+    /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+    /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+    /// <param name="collection">Lista de filtros selecionados para pesquisa de alunos</param>
+    /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
     [ClaimsAuthorize(ClaimType.ControleMaterialEstoqueSaida, Identity.Claim.Consultar)]
     public IActionResult Index(int? crud, int? notify, string message = null)
     {
@@ -56,9 +56,9 @@ public class ControleMaterialEstoqueSaidaController : BaseController
     /// <summary>
     /// Tela para Inclusão de Controle de Material de Estoque e Saida
     /// </summary>
-    /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
-    /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
-    /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+    /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+    /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+    /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
     [ClaimsAuthorize(ClaimType.ControleMaterialEstoqueSaida, Identity.Claim.Incluir)]
     public ActionResult Create(int? crud, int? notify, string message = null)
     {
@@ -84,8 +84,8 @@ public class ControleMaterialEstoqueSaidaController : BaseController
     /// <summary>
     /// Ação de Inclusão do ControleMaterialEstoqueSaida
     /// </summary>
-    /// <param name="collection">coleção de dados para inclusao de ControleMaterialEstoqueSaida</param>
-    /// <returns>retorna mensagem de inclusao através do parametro crud</returns>
+    /// <param name="collection">Coleção de dados para inclusao de ControleMaterialEstoqueSaida</param>
+    /// <returns>Retorna mensagem de inclusao através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.ControleMaterialEstoqueSaida, Identity.Claim.Incluir)]
     [HttpPost]
     public async Task<ActionResult> Create(IFormCollection collection)
@@ -125,9 +125,9 @@ public class ControleMaterialEstoqueSaidaController : BaseController
     /// <summary>
     /// Ação de Alteração Controle de Material de Estoque e Saida
     /// </summary>
-    /// <param name="id">identificador do ControleMaterialEstoqueSaida</param>
-    /// <param name="collection">coleção de dados para alteração de ControleMaterialEstoqueSaida</param>
-    /// <returns>retorna mensagem de alteração através do parametro crud</returns>
+    /// <param name="id">Identificador do ControleMaterialEstoqueSaida</param>
+    /// <param name="collection">Coleção de dados para alteração de ControleMaterialEstoqueSaida</param>
+    /// <returns>Retorna mensagem de alteração através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.ControleMaterialEstoqueSaida, Identity.Claim.Alterar)]
     public async Task<ActionResult> Edit(IFormCollection collection)
     {
@@ -153,8 +153,8 @@ public class ControleMaterialEstoqueSaidaController : BaseController
     /// Ação de exclusão de Controle de Material de Estoque e Saida
     /// </summary>
     /// <param name="id">Identificador Controle de Material de Estoque e Saida</param>
-    /// <param name="collection">coleção de dados para exclusão de ControleMaterialEstoqueSaida</param>
-    /// <returns>retorna mensagem de exclusão através do parametro crud</returns>
+    /// <param name="collection">Coleção de dados para exclusão de ControleMaterialEstoqueSaida</param>
+    /// <returns>Retorna mensagem de exclusão através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.ControleMaterialEstoqueSaida, Identity.Claim.Excluir)]
     public ActionResult Delete(int id)
     {
