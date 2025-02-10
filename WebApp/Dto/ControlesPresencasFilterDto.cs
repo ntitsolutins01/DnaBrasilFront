@@ -1,4 +1,6 @@
-﻿namespace WebApp.Dto
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+
+namespace WebApp.Dto
 {
 	public class ControlesPresencasFilterDto
     {

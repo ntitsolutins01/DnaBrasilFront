@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using log4net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -19,6 +20,8 @@ namespace WebApp.Controllers
     [Authorize(Policy = ModuloAccess.ControlePresenca)]
     public class ControlePresencaController : BaseController
 	{
+        private readonly ILog _logger;
+
         #region Constructor
 
         private readonly UserManager<IdentityUser> _userManager;
@@ -28,9 +31,11 @@ namespace WebApp.Controllers
         /// </summary>
         /// <param name="appSettings">configurações de url da api</param>
         /// <param name="userManager">gerenciador de identidade de usuários</param>
-        public ControlePresencaController(IOptions<UrlSettings> appSettings, UserManager<IdentityUser> userManager)
+        /// <param name="logger">Log de mensagens da aplicação</param>
+        public ControlePresencaController(IOptions<UrlSettings> appSettings, UserManager<IdentityUser> userManager, ILog logger)
         {
             _userManager = userManager;
+            _logger = logger;
             ApplicationSettings.WebApiUrl = appSettings.Value.WebApiBaseUrl;
         }
 
@@ -52,12 +57,25 @@ namespace WebApp.Controllers
         {
             try
             {
+                _logger.Info($"Usuario Logado em ControlePresenca.Index User.Identity.Name : {User.Identity.Name}");
+
                 var usuario = User.Identity.Name;
 
                 SetNotifyMessage(notify, message);
                 SetCrudMessage(crud);
+                
+                //Busca usuario por AspNetUserId
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-                var usu = await ApiClientFactory.Instance.GetUsuarioByEmail(usuario);
+                _logger.Info($"Busca Usuario por AspNetUserId: {userId}");
+
+                if (userId == null)
+                {
+                    _logger.Warn($"AspNetUserId não encontrado para o email: {User.Identity.Name}");
+                    throw new Exception($"AspNetUserId não encontrado para o email: {User.Identity.Name}");
+                }
+
+                var usu = await ApiClientFactory.Instance.GetUsuarioByAspNetUserId(userId);
 
                 var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentoAll(), "Id", "Nome");
                 var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome", usu.Uf);
@@ -87,6 +105,10 @@ namespace WebApp.Controllers
                     alunos =  new SelectList(resultAlunos, "Id", "Nome");
                 }
 
+                var listModalidades = new SelectList(ApiClientFactory.Instance.GetModalidadeAll(), "Id", "Nome");
+                var profissionais =
+                    ApiClientFactory.Instance.GetProfissionaisByLocalidade(Convert.ToInt32(usu.LocalidadeId));
+
                 var searchFilter = new ControlesPresencasFilterDto()
                 {
                     UsuarioEmail = usuario,
@@ -112,7 +134,9 @@ namespace WebApp.Controllers
                     ListMunicipios = municipios!,
                     ListLocalidades = localidades!,
                     ListAlunos = alunos,
-                    ControlesPresencas = response.ControlesPresencas
+                    ControlesPresencas = response.ControlesPresencas,
+                    ListAtividadesModalidades = listModalidades,
+                    ListProfissionais = profissionais!
 
                 };
                 return View(model);
