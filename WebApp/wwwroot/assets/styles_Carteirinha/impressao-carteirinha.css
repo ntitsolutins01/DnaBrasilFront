@@ -84,14 +84,6 @@ body {
     align-items: center;
 }
 
-.frente-page {
-    background-image: url(/assets/images/Carteirinha-Frente-New.jpg);
-}
-
-.verso-page {
-    background-image: url(/assets/images/Carteirinha-Verso-New.jpg);
-}
-
 /* Botões */
 .btn {
     padding: 8px 16px;
@@ -128,12 +120,50 @@ body {
         margin: 0;
     }
 
+
     body {
         margin: 0;
         padding: 0;
         background: white;
+        /* Usando apenas as propriedades print-color-adjust com prefixos */
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
+        /* Mantendo a renderização de fontes */
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        /* Removida a propriedade color-adjust */
+        color-interpolation-filters: linearRGB;
+        color-rendering: optimizeQuality;
+    }
+
+    .page {
+        /* Mantendo apenas as propriedades bem suportadas */
+        image-rendering: optimizeQuality;
+        color-rendering: optimizeQuality;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .frente-page, .verso-page {
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: cover;
+        image-rendering: optimizeQuality;
+        color-interpolation: linearRGB;
+        color-interpolation-filters: linearRGB;
+    }
+
+    /* Melhorar a qualidade das imagens */
+    img {
+        /* Otimização específica para imagens em CMYK */
+        image-rendering: optimizeQuality;
+        color-rendering: optimizeQuality;
+        color-interpolation: linearRGB;
+    }
+
+    .student-info, .main-content-verso {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
     }
 
     .print-controls {

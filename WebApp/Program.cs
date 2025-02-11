@@ -189,7 +189,6 @@ builder.Services.AddAuthorization(o =>
 
     #region Sistema EAD
 
-
     o.AddPolicy(ModuloAccess.DashboardEad, policy =>
         policy.RequireAssertion(context =>
             context.User.IsInRole(UserRoles.AdministradorEad) ||
@@ -200,7 +199,6 @@ builder.Services.AddAuthorization(o =>
     o.AddPolicy(ModuloAccess.ConfiguracaoSistemaEad, policy =>
         policy.RequireAssertion(context =>
             context.User.IsInRole(UserRoles.AdministradorEad) ||
-            context.User.IsInRole(UserRoles.ProfessorEad) ||
             context.User.IsInRole(UserRoles.CoordenadorEad) ||
             context.User.IsInRole(UserRoles.Administrador)));
 

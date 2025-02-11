@@ -1,4 +1,5 @@
-﻿using WebApp.Dto;
+﻿using DocumentFormat.OpenXml.Office2010.Excel;
+using WebApp.Dto;
 using WebApp.Models;
 
 namespace WebApp.ApiClient
@@ -93,7 +94,7 @@ namespace WebApp.ApiClient
         /// </summary>
         /// <param name="id">Id de Aluno a ser buscado</param>
         /// <returns>Retorna o objeto de Aluno</returns>
-        public AlunoDto GetAlunoById(int id)
+        public async Task<AlunoDto> GetAlunoById(int id)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
                 $"{ResourceAlunos}/{id}"));
@@ -141,7 +142,7 @@ namespace WebApp.ApiClient
         /// </summary>
         /// <param name="id">Id da localidade a ser buscado</param>
         /// <returns>Retorna a todos os Aluno</returns>
-        public List<SelectListDto> GetNomeAlunosAll(string id)
+        public async Task<List<SelectListDto>> GetNomeAlunosAll(string id)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
                 $"{ResourceAlunos}/NomeAlunos/{id}"));
@@ -171,6 +172,19 @@ namespace WebApp.ApiClient
                 $"{ResourceAlunos}/Profissional/{id}"));
             return Get<List<SelectListDto>>(requestUrl);
         }
+
+        /// <summary>
+        /// Busca Carteirinha pelo Id do Fomento
+        /// </summary>
+        /// <param name="fomentoId">Id do Fomento</param>
+        /// <returns>Retorna modelo da carteirinha</returns>
+        public async Task<ModeloCarteirinhaDto> GetModeloCarteirinhaByFomentoId(int fomentoId)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"ModelosCarteirinhas/Fomento/{fomentoId}"));
+            return Get<ModeloCarteirinhaDto>(requestUrl);
+        }
+
 
         #endregion
     }

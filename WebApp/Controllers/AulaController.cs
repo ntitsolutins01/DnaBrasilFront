@@ -64,13 +64,16 @@ public class AulaController : BaseController
     /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
     /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
     [ClaimsAuthorize(ClaimType.Aula, Identity.Claim.Incluir)]
-    public ActionResult Create(int? crud, int? notify, string message = null)
+    public async Task<ActionResult> Create(int? crud, int? notify, string message = null)
     {
         try
         {
             SetNotifyMessage(notify, message);
             SetCrudMessage(crud);
-            var professores = new SelectList(ApiClientFactory.Instance.GetUsuarioAll().Where(x => x.Perfil.Id == (int)EnumPerfil.Professor), "Id", "Nome");
+
+            //criar metodo que busca Usuarios por PerfilId
+            var usuario = ApiClientFactory.Instance.GetUsuarioAll().Where(x => x.Perfil.Id == (int)EnumPerfil.Professor);
+            var professores = new SelectList(usuario, "Id", "Nome");
             var tipoCurso = new SelectList(ApiClientFactory.Instance.GetTipoCursosAll(), "Id", "Nome");
 
             return View(new AulaModel()

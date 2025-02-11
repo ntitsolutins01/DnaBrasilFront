@@ -481,7 +481,7 @@ namespace WebApp.Controllers
                         });
                 }
 
-                var result2 = ApiClientFactory.Instance.GetUsuarioByEmail(collection["email"].ToString().Trim());
+                var result2 = await ApiClientFactory.Instance.GetUsuarioByEmail(collection["email"].ToString().Trim());
 
                 if (result2 != null)
                 {
@@ -557,11 +557,11 @@ namespace WebApp.Controllers
         /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
         /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
         [ClaimsAuthorize(ClaimType.Profissional, Claim.Consultar)]
-        public ActionResult Profile(int? crud, int? notify, string message = null)
+        public async Task<ActionResult> Profile(int? crud, int? notify, string message = null)
         {
             try
             {
-                _logger.Info($"Usuario Logado User.Identity.Name: {User.Identity.Name}");
+                _logger.Info($"Usuario Logado em Profissional.Profile User.Identity.Name : {User.Identity.Name}");
 
                 SetNotifyMessage(notify, message);
                 SetCrudMessage(crud);
@@ -585,9 +585,9 @@ namespace WebApp.Controllers
                     throw new Exception($"User.Identity.Name não encontrado para o email: {User.Identity.Name}");
                 }
 
-                var usu = ApiClientFactory.Instance.GetUsuarioByAspNetUserId(userId);
+                var usu = await ApiClientFactory.Instance.GetUsuarioByAspNetUserId(userId);
 
-                var profissional = ApiClientFactory.Instance.GetProfissionalByEmail(usuario);
+                var profissional = await ApiClientFactory.Instance.GetProfissionalByEmail(usuario);
 
                 _logger.Info($"ProfissionalId: {profissional.Id}");
 
