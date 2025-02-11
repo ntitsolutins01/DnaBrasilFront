@@ -1,9 +1,7 @@
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using WebApp.Authorization;
 using WebApp.Configuration;
 using WebApp.Dto;
@@ -22,13 +20,18 @@ namespace WebApp.Controllers;
 [Authorize(Policy = ModuloAccess.ConfiguracaoSistema)]
 public class EstruturaController : BaseController
 {
-    #region Constructor
+    #region Parametros
+
     private readonly IOptions<UrlSettings> _appSettings;
+
+    #endregion
+
+    #region Constructor
 
     /// <summary>
     /// Construtor da página
     /// </summary>
-    /// <param name="app">configurações de urls do sistema</param>
+    /// <param name="appSettings">Configurações de urls do sistema</param>
     public EstruturaController(IOptions<UrlSettings> appSettings)
     {
         _appSettings = appSettings;
@@ -40,10 +43,10 @@ public class EstruturaController : BaseController
     /// <summary>
     /// Listagem de Estrutura
     /// </summary>
-    /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
-    /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
-    /// <param name="collection">lista de filtros selecionados para pesquisa de alunos</param>
-    /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+    /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+    /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+    /// <param name="collection">Lista de filtros selecionados para pesquisa de alunos</param>
+    /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
     [ClaimsAuthorize(ClaimType.Estrutura, Claim.Consultar)]
     public IActionResult Index(int? crud, int? notify, string message = null)
     {
@@ -55,11 +58,11 @@ public class EstruturaController : BaseController
     }
 
     /// <summary>
-    /// Tela para inclusão de Estrutura
+    /// Tela para Inclusão de Estrutura
     /// </summary>
-    /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
-    /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
-    /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+    /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+    /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+    /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
     [ClaimsAuthorize(ClaimType.Estrutura, Claim.Incluir)]
     public ActionResult Create(int? crud, int? notify, string message = null)
     {
@@ -85,8 +88,8 @@ public class EstruturaController : BaseController
     /// <summary>
     /// Ação de Inclusão do Estrutura
     /// </summary>
-    /// <param name="collection">coleção de dados para Inclusao de Estrutura</param>
-    /// <returns>retorna mensagem de Inclusao através do parametro crud</returns>
+    /// <param name="collection">Coleção de dados para Inclusao de Estrutura</param>
+    /// <returns>Retorna mensagem de Inclusao através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.Estrutura, Claim.Incluir)]
     [HttpPost]
     public async Task<ActionResult> Create(IFormCollection collection)
@@ -113,9 +116,9 @@ public class EstruturaController : BaseController
     /// <summary>
     /// Ação de Alteração do Estrutura
     /// </summary>
-    /// <param name="id">identificador do Estrutura</param>
-    /// <param name="collection">coleção de dados para alteração de Estrutura</param>
-    /// <returns>retorna mensagem de alteração através do parametro crud</returns>
+    /// <param name="id">Identificador do Estrutura</param>
+    /// <param name="collection">Coleção de dados para alteração de Estrutura</param>
+    /// <returns>Retorna mensagem de alteração através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.Estrutura, Claim.Alterar)]
     public async Task<ActionResult> Edit(IFormCollection collection)
     {
@@ -144,8 +147,8 @@ public class EstruturaController : BaseController
     /// Ação de Exclusão do Estrutura
     /// </summary>
     /// <param name="id">Identificador do Estrutura</param>
-    /// <param name="collection">coleção de dados para Exclusão de Estrutura</param>
-    /// <returns>retorna mensagem de exclusão através do parametro crud</returns>
+    /// <param name="collection">Coleção de dados para Exclusão de Estrutura</param>
+    /// <returns>Retorna mensagem de exclusão através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.Estrutura, Claim.Excluir)]
     public ActionResult Delete(int id)
     {
@@ -190,7 +193,7 @@ public class EstruturaController : BaseController
     /// Busca de Estruturas por localidade
     /// </summary>
     /// <param name="id">Identificador da Localidade</param>
-    /// <returns>retorna a lista de Estruturas</returns>
+    /// <returns>Retorna a lista de Estruturas</returns>
     [ClaimsAuthorize(ClaimType.Estrutura, Claim.Consultar)]
     public Task<JsonResult> GetEstruturasByLocalidade(string id)
     {
