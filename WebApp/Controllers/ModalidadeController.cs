@@ -12,16 +12,41 @@ using WebApp.Utility;
 
 namespace WebApp.Controllers
 {
+    /// <summary>
+    /// Controle de Modalidade
+    /// </summary>
     public class ModalidadeController : BaseController
     {
+
+        #region Parametros
+
         private readonly IOptions<UrlSettings> _appSettings;
 
+        #endregion
+
+        #region Constructor
+
+        /// <summary>
+        /// Construtor da página
+        /// </summary>
+        /// <param name="appSettings">configurações de urls do sistema</param>
         public ModalidadeController(IOptions<UrlSettings> appSettings)
         {
             _appSettings = appSettings;
             ApplicationSettings.WebApiUrl = _appSettings.Value.WebApiBaseUrl;
         }
 
+        #endregion
+
+        #region Main Methods
+
+        /// <summary>
+        /// Listagem de Modalidade
+        /// </summary>
+        /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
+        /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
+        /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+        /// <returns></returns>
         public IActionResult Index(int? crud, int? notify, string message = null)
         {
             SetNotifyMessage(notify, message);
@@ -32,6 +57,13 @@ namespace WebApp.Controllers
             return View(new ModalidadeModel() { Modalidades = response, ListLinhasAcoes = linhasAcoes });
         }
 
+        /// <summary>
+        /// Tela para Inclusão de Modalidade
+        /// </summary>
+        /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
+        /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
+        /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+        /// <returns></returns>
         //[ClaimsAuthorize("ConfiguracaoSistema", "Incluir")]
         public ActionResult Create(int? crud, int? notify, string message = null)
         {
@@ -42,6 +74,11 @@ namespace WebApp.Controllers
             return View(new ModalidadeModel { ListLinhasAcoes = linhasAcoes });
         }
 
+        /// <summary>
+        /// Ação de Inclusão de Modalidade
+        /// </summary>
+        /// <param name="collection">coleção de dados para inclusao de Modalidade</param>
+        /// <returns>retorna mensagem de inclusao através do parametro crud</returns>
         //[ClaimsAuthorize("Usuario", "Incluir")]
         [HttpPost]
         public async Task<ActionResult> Create(IFormCollection collection)
@@ -100,6 +137,11 @@ namespace WebApp.Controllers
             }
         }
 
+        /// <summary>
+        /// Ação de Alteração de Modalidade
+        /// </summary>
+        /// <param name="collection">coleção de dados para alteração de Modalidade</param>
+        /// <returns>retorna mensagem de alteração através do parametro crud</returns>
         //[ClaimsAuthorize("Usuario", "Alterar")]
         public async Task<ActionResult> Edit(IFormCollection collection)
         {
@@ -155,6 +197,11 @@ namespace WebApp.Controllers
             return RedirectToAction(nameof(Index), new { crud = (int)EnumCrud.Updated });
         }
 
+        /// <summary>
+        /// Ação de Exclusão do Modalidade
+        /// </summary>
+        /// <param name="id">identificador do Modalidade</param>
+        /// <returns>retorna mensagem de exclusão através do parametro crud</returns>
         //[ClaimsAuthorize("Usuario", "Excluir")]
         public ActionResult Delete(int id)
         {
@@ -169,6 +216,16 @@ namespace WebApp.Controllers
             }
         }
 
+        #endregion
+
+        #region Get Methods
+
+        /// <summary>
+        /// Busca  Modalidade por Id
+        /// </summary>
+        /// <param name="id">Identificador de Modalidade</param>
+        /// <returns>Retorna a Modalidade</returns>
+        /// <exception cref="Exception"></exception>
         public Task<ModalidadeDto> GetModalidadeById(int id)
         {
             try
@@ -185,6 +242,11 @@ namespace WebApp.Controllers
             }
         }
 
+        /// <summary>
+        /// Busca Modalidade por id de Linha de Acao
+        /// </summary>
+        /// <param name="id">Identificador de Modalidade</param>
+        /// <returns>Retorna a Modalidade</returns>
         [ClaimsAuthorize(ClaimType.Modalidade, Claim.Consultar)]
         public Task<JsonResult> GetModalidadesByLinhaAcaoId(string id)
         {
@@ -202,4 +264,8 @@ namespace WebApp.Controllers
             }
         }
     }
+
+    #endregion
+
+
 }

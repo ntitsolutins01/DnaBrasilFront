@@ -37,9 +37,11 @@ var vm = new Vue({
                     $(this).trigger('blur');
                 });
 
-
                 //clique de escolha do select
                 $("#ddlEstado").change(function () {
+
+                    self.ShowLoad(true, "pFiltro");
+
                     var sigla = $("#ddlEstado").val();
 
                     var url = "../../DivisaoAdministrativa/GetMunicipioByUf?uf=" + sigla;
@@ -66,10 +68,15 @@ var vm = new Vue({
                                 });
                             }
                         });
+
+                    self.ShowLoad(false, "pFiltro");
                 });
 
                 //clique de escolha do select
                 $("#ddlMunicipio").change(function () {
+
+                    self.ShowLoad(true, "pFiltro");
+
                     var id = $("#ddlMunicipio").val();
 
                     var url = "../../Localidade/GetLocalidadeByMunicipio?id=" + id;
@@ -96,18 +103,16 @@ var vm = new Vue({
                                 });
                             }
                         });
+
+                    self.ShowLoad(false, "pFiltro");
                 });
 
-                //clique de escolha do select
                 $("#ddlLocalidade").change(function () {
                     var id = $("#ddlLocalidade").val();
 
                     var url = "../../Aluno/GetAlunosByLocalidade?id=" + id;
-
-                    var ddlSource = "#ddlAluno";
-
                     $.getJSON(url,
-                        { id: $(ddlSource).val() },
+                    { id: id },
                         function (data) {
                             if (data.length > 0) {
                                 var items = '<option value="">Selecionar Aluno</option>';
@@ -120,85 +125,8 @@ var vm = new Vue({
                             }
                             else {
                                 new PNotify({
-                                    title: 'Alunos',
-                                    text: 'Alunos não encontrados.',
-                                    type: 'warning'
-                                });
-                            }
-                        });
-                });
-            }
-            if (formid === "formEditControlePresenca") {
-
-                $("#formEditControlePresenca").validate({
-                    highlight: function (label) {
-                        $(label).closest('.form-group').removeClass('has-success').addClass('has-error');
-                    },
-                    success: function (label) {
-                        $(label).closest('.form-group').removeClass('has-error');
-                        label.remove();
-                    },
-                    errorPlacement: function (error, element) {
-                        var placement = element.closest('.input-group');
-                        if (!placement.get(0)) {
-                            placement = element;
-                        }
-                        if (error.text() !== '') {
-                            placement.after(error);
-                        }
-                    }
-                });
-            }
-
-            if (formid === "formControlePresenca") {
-                //skin select
-                var $select = $(".select2").select2({
-                    allowClear: true
-                });
-
-                $(".select2").each(function () {
-                    var $this = $(this),
-                        opts = {};
-
-                    var pluginOptions = $this.data('plugin-options');
-                    if (pluginOptions)
-                        opts = pluginOptions;
-
-                    $this.themePluginSelect2(opts);
-                });
-
-                /*
-                 * When you change the value the select via select2, it triggers
-                 * a 'change' event, but the jquery validation plugin
-                 * only re-validates on 'blur'*/
-
-                $select.on('change', function () {
-                    $(this).trigger('blur');
-                });
-
-                $("#ddlEstado").change(function () {
-                    var sigla = $("#ddlEstado").val();
-
-                    var url = "../DivisaoAdministrativa/GetMunicipioByUf?uf=" + sigla;
-
-                    var ddlSource = "#ddlMunicipio";
-
-                    $.getJSON(url,
-                        { id: $(ddlSource).val() },
-                        function (data) {
-                            if (data.length > 0) {
-                                var items = '<option value="">Selecionar Municipio</option>';
-                                $("#ddlMunicipio").empty;
-                                $.each(data,
-                                    function (i, row) {
-                                        items += "<option value='" + row.value + "'>" + row.text + "</option>";
-                                    });
-                                $("#ddlMunicipio").html(items);
-                            }
-                            else {
-                                new PNotify({
-                                    title: 'Fomento',
-                                    text: 'Municípios não encontrados.',
+                                    title: 'Aluno',
+                                    text: "Aluno não encontrado.",
                                     type: 'warning'
                                 });
                             }
@@ -206,29 +134,29 @@ var vm = new Vue({
                 });
 
                 //clique de escolha do select
-                $("#ddlMunicipio").change(function () {
-                    var id = $("#ddlMunicipio").val();
+                $("#ddlModalidade").change(function () {
+                    var modalidadeId = $("#ddlModalidade").val();
 
-                    var url = "../../Localidade/GetLocalidadeByMunicipio?id=" + id;
+                    var profissionalId = $("#profissionalIdMinhasTurmas").val();
 
-                    var ddlSource = "#ddlLocalidade";
+                    var url = "../Profissional/GetTurmasByModalidadeIdProfissionalId";
 
                     $.getJSON(url,
-                        { id: $(ddlSource).val() },
+                        { modalidadeId: modalidadeId, profissionalId: profissionalId },
                         function (data) {
                             if (data.length > 0) {
-                                var items = '<option value="">Selecionar Localidade</option>';
-                                $("#ddlLocalidade").empty;
+                                var items = '<option value="">Selecionar Turma</option>';
+                                $("#ddlTurma").empty;
                                 $.each(data,
                                     function (i, row) {
                                         items += "<option value='" + row.value + "'>" + row.text + "</option>";
                                     });
-                                $("#ddlLocalidade").html(items);
+                                $("#ddlTurma").html(items);
                             }
                             else {
                                 new PNotify({
-                                    title: 'Localidades',
-                                    text: 'Localidades não encontradas.',
+                                    title: 'Profissional',
+                                    text: "O Profissional logado não possui atividades e turmas cadastradas.",
                                     type: 'warning'
                                 });
                             }
@@ -236,54 +164,72 @@ var vm = new Vue({
                 });
 
                 //clique de escolha do select
-                $("#ddlLocalidade").change(function () {
-                    var id = $("#ddlLocalidade").val();
+                $("#ddlTurma").change(function () {
 
-                    var url = "../../Aluno/GetAlunosByLocalidade?id=" + id;
+                    var id = $("#ddlTurma").val();
 
-                    var ddlSource = "#ddlAluno";
-
-                    $.getJSON(url,
-                        { id: $(ddlSource).val() },
-                        function (data) {
-                            if (data.length > 0) {
-                                var items = '<option value="">Selecionar Aluno</option>';
-                                $("#ddlAluno").empty;
-                                $.each(data,
-                                    function (i, row) {
-                                        items += "<option value='" + row.value + "'>" + row.text + "</option>";
-                                    });
-                                $("#ddlAluno").html(items);
-                            }
-                            else {
-                                new PNotify({
-                                    title: 'Alunos',
-                                    text: 'Alunos não encontrados.',
-                                    type: 'warning'
-                                });
-                            }
-                        });
-                });
-
-                $("#formControlePresenca").validate({
-                    highlight: function (label) {
-                        $(label).closest('.form-group').removeClass('has-success').addClass('has-error');
-                    },
-                    success: function (label) {
-                        $(label).closest('.form-group').removeClass('has-error');
-                        label.remove();
-                    },
-                    errorPlacement: function (error, element) {
-                        var placement = element.closest('.input-group');
-                        if (!placement.get(0)) {
-                            placement = element;
-                        }
-                        if (error.text() !== '') {
-                            placement.after(error);
-                        }
+                    if (id === "") {
+                        Site.Notification("Profissional", "Por favor selecione uma turma", "warning");
                     }
+
+                    var url = "../Atividade/GetAtividadeById";
+
+                    var urlDataTable = "../Atividade/GetAtividadeAlunosByAtividadeId";
+
+                    axios.get(url, {
+                        params: {
+                            id: id
+                        }
+                    }).then(result => {
+                        $("#divAlunos").show();
+                        self.editDto.Categoria = result.data.nomeCategoria;
+                        self.editDto.Estrutura = result.data.nomeEstrutura;
+                        self.editDto.DiasSemana = result.data.diasSemana;
+                        self.editDto.Horario = result.data.hrInicial + " - " + result.data.hrFinal;
+
+                        axios.get(urlDataTable, {
+                            params: {
+                                id: id
+                            }
+                        }).then(result => {
+                            if (result.data.length > 0) {
+
+                                self.editDto.Update = true;
+
+                                $.each(result.data,
+                                    function (i, item) {
+
+                                        $('#alunoDataTable').DataTable().destroy();
+
+                                        var table = $('#alunoDataTable').DataTable({
+                                            columnDefs: [
+                                                { "className": "text-center", "targets": "_all" }
+                                            ]
+                                        });
+
+                                        table.row.add([item.alunoId.toString(), item.alunoId + " - " + item.nome,
+                                        "<a style='color:#F44336' href='javascript:(crud.DeleteAluno(\"" + item.alunoId + "\"))'><i class='fa fa-trash'></i></a>"])
+                                            .draw();
+
+                                        self.params.alunos.push(item.alunoId.toString());
+
+                                    });
+
+                                $('input[name="arrAlunos"]').attr('value', self.params.alunos);
+                            } else {
+
+                                self.editDto.Update = false;
+                            }
+                        }).catch(error => {
+                            Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
+                        });
+
+                    }).catch(error => {
+                        Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
+                    });
                 });
             }
+
         }).apply(this, [jQuery]);
     },
     methods: {

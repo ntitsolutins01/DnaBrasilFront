@@ -97,14 +97,6 @@ body {
     align-items: center;
 }
 
-.frente-page {
-    background-image: url(/assets/images/Carteirinha-Frente-New.jpg);
-}
-
-.verso-page {
-    background-image: url(/assets/images/Carteirinha-Verso-New.jpg);
-}
-
 /* Frente page styles */
 .student-info {
     position: absolute;
@@ -234,18 +226,23 @@ body {
     @page {
         size: 8.5cm 5.4cm;
         margin: 0;
+        /* Configurações específicas para CMYK */
+        marks: crop cross;
+        bleed: 3mm;
     }
 
     body {
         margin: 0;
         padding: 0;
         background: white;
+        /* Configurações de alta qualidade para impressão */
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
-    }
-
-    .print-controls {
-        display: none;
+        /* Otimização de renderização */
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        color-interpolation-filters: linearRGB;
+        color-rendering: optimizeQuality;
     }
 
     .preview-wrapper {
@@ -264,9 +261,41 @@ body {
         padding: 0;
         page-break-after: always;
         box-shadow: none;
+        /* Otimização para impressão */
+        image-rendering: optimizeQuality;
+        color-rendering: optimizeQuality;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
     }
 
-        .page.no-print {
-            display: none !important;
-        }
+    .frente-page, .verso-page {
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: cover;
+        /* Melhor qualidade para imagens de fundo */
+        image-rendering: optimizeQuality;
+        color-interpolation: linearRGB;
+        color-interpolation-filters: linearRGB;
+    }
+
+    img {
+        /* Otimização para imagens */
+        image-rendering: optimizeQuality;
+        color-rendering: optimizeQuality;
+        color-interpolation: linearRGB;
+    }
+
+    .student-info, .main-content-verso {
+        /* Melhor renderização de texto */
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    .page.no-print {
+        display: none !important;
+    }
+
+    .print-controls {
+        display: none;
+    }
 }

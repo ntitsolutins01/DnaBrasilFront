@@ -12,6 +12,9 @@ using WebApp.Utility;
 
 namespace WebApp.Controllers;
 
+/// <summary>
+/// Controle de Tipo Curso
+/// </summary>
 [Authorize(Policy = ModuloAccess.ConfiguracaoSistemaEad)]
 public class TipoCursoController : BaseController
 {
@@ -30,9 +33,9 @@ public class TipoCursoController : BaseController
     }
     #endregion
 
-    #region Crud Methods
+    #region Main Methods
     /// <summary>
-    /// Listagem de TipoCurso
+    /// Listagem de Tipo Curso
     /// </summary>
     /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
     /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
@@ -49,7 +52,7 @@ public class TipoCursoController : BaseController
     }
 
     /// <summary>
-    /// Tela para inclusão de TipoCurso
+    /// Tela para Inclusão de Tipo Curso
     /// </summary>
     /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
     /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
@@ -74,9 +77,9 @@ public class TipoCursoController : BaseController
     }
 
     /// <summary>
-    /// Ação de inclusao do TipoCurso
+    /// Ação de Inclusao do Tipo Curso
     /// </summary>
-    /// <param name="collection">coleção de dados para inclusao de TipoCurso</param>
+    /// <param name="collection">coleção de dados para inclusao de Tipo Curso</param>
     /// <returns>retorna mensagem de inclusao através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.TipoCurso, Identity.Claim.Incluir)]
 	[HttpPost]
@@ -100,10 +103,10 @@ public class TipoCursoController : BaseController
     }
 
     /// <summary>
-    /// Ação de alteração do TipoCurso
+    /// Ação de Alteração do Tipo Curso
     /// </summary>
-    /// <param name="id">identificador do TipoCurso</param>
-    /// <param name="collection">coleção de dados para alteração de TipoCurso</param>
+    /// <param name="id">identificador do Tipo Curso</param>
+    /// <param name="collection">coleção de dados para alteração de Tipo Curso</param>
     /// <returns>retorna mensagem de alteração através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.TipoCurso, Identity.Claim.Alterar)]
 	public async Task<ActionResult> Edit(IFormCollection collection)
@@ -128,10 +131,10 @@ public class TipoCursoController : BaseController
     }
 
     /// <summary>
-    /// Ação de exclusão do TipoCurso
+    /// Ação de Exclusão do Tipo Curso
     /// </summary>
-    /// <param name="id">identificador do TipoCurso</param>
-    /// <param name="collection">coleção de dados para exclusão de TipoCurso</param>
+    /// <param name="id">identificador do Tipo Curso</param>
+    /// <param name="collection">coleção de dados para exclusão de Tipo Curso</param>
     /// <returns>retorna mensagem de exclusão através do parametro crud</returns>
 	[ClaimsAuthorize(ClaimType.TipoCurso, Identity.Claim.Excluir)]
 	public ActionResult Delete(int id)
@@ -151,9 +154,9 @@ public class TipoCursoController : BaseController
 	#region Get Methods
 
 	/// <summary>
-	/// Busca de tipo de curdo  por id
+	/// Busca de Tipo de Curdo  por id
 	/// </summary>
-	/// <param name="id">identificador do tipo de curso</param>
+	/// <param name="id">identificador do Tipo de Curso</param>
 	/// <returns>retorna o tipo de curso</returns>
 	public Task<TiposCursoDto> GetTipoCursoById(int id)
     {

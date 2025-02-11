@@ -24,13 +24,18 @@ namespace WebApp.Controllers
     //[Authorize(Policy = ModuloAccess.ControleAcesso)]
     public class UsuarioController : BaseController
     {
-        #region Constructor
+
+        #region Parametros
 
         private readonly IEmailSender _emailSender;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IWebHostEnvironment _host;
         private readonly ILog _logger;
+
+        #endregion
+
+        #region Constructor
 
         /// <summary>
         /// Construtor da página
@@ -58,10 +63,10 @@ namespace WebApp.Controllers
 
         #endregion
 
-        #region Crud Methods
+        #region Main Methods
 
         /// <summary>
-        /// Listagem de usuário
+        /// Listagem de Usuário
         /// </summary>
         /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
         /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
@@ -82,7 +87,7 @@ namespace WebApp.Controllers
         }
 
         /// <summary>
-        /// Tela para inclusão de Usuario
+        /// Tela para Inclusão de Usuario
         /// </summary>
         /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
         /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
@@ -104,7 +109,7 @@ namespace WebApp.Controllers
         }
 
         /// <summary>
-        /// Ação de inclusão do Usuario
+        /// Ação de Inclusão do Usuario
         /// </summary>
         /// <param name="collection">coleção de dados para inclusao de Usuario</param>
         /// <returns>retorna mensagem de inclusao através do parametro crud</returns>
@@ -197,9 +202,9 @@ namespace WebApp.Controllers
         }
 
         /// <summary>
-        /// Tela de alteração de Usuario
+        /// Tela de Alteração de Usuario
         /// </summary>
-        /// <param name="id">id do usuario</param>
+        /// <param name="id">id do Usuario</param>
         /// <exception cref="ArgumentNullException">Mensagem de erro ao alterar o tentar acessar tela de alteração do Usuario</exception>
         [ClaimsAuthorize(ClaimType.Usuario, Identity.Claim.Alterar)]
         public async Task<ActionResult> Edit(string id, int? crud, int? notify, string message = null)
@@ -242,7 +247,7 @@ namespace WebApp.Controllers
         }
 
         /// <summary>
-        /// Ação de alteração do Usuario
+        /// Ação de Alteração do Usuario
         /// </summary>
         /// <param name="id">identificador do Usuario</param>
         /// <param name="collection">coleção de dados para alteração de Usuario</param>
@@ -297,7 +302,7 @@ namespace WebApp.Controllers
         }
 
         /// <summary>
-        /// Ação de exclusão do Usuario
+        /// Ação de Exclusão do Usuario
         /// </summary>
         /// <param name="id">identificador do Usuario</param>
         /// <param name="collection">coleção de dados para exclusão de Usuario</param>

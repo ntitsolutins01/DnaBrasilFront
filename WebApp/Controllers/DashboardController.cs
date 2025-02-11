@@ -16,7 +16,7 @@ namespace WebApp.Controllers
     {
         private readonly ILogger<DashboardController> _logger;
         private readonly IOptions<UrlSettings> _appSettings;
-
+         
 
         public DashboardController(ILogger<DashboardController> logger, IOptions<UrlSettings> appSettings)
         {

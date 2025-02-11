@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using WebApp.Configuration;
 using WebApp.Dto;
 using WebApp.Enumerators;
@@ -18,7 +16,6 @@ namespace WebApp.Controllers
 
         private readonly IOptions<UrlSettings> _appSettings;
         private readonly IWebHostEnvironment _host;
-        private readonly IWebHostEnvironment _webHostEnvironment;
 
         #endregion
 
@@ -37,6 +34,15 @@ namespace WebApp.Controllers
         }
         #endregion
 
+        #region Main Methods
+
+        /// <summary>
+        /// Listagem de Certificado
+        /// </summary>
+        /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+        /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+        /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
+        /// <returns></returns>
         public IActionResult Index(int? crud, int? notify, string message = null)
         {
             ViewBag.Status = true;
@@ -50,6 +56,13 @@ namespace WebApp.Controllers
             });
         }
 
+        /// <summary>
+        /// Tela para Inclusão de Certificado
+        /// </summary>
+        /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+        /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
+        /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
+        /// <returns></returns>
         public ActionResult Create(int? crud, int? notify, string message = null)
         {
             try
@@ -69,6 +82,11 @@ namespace WebApp.Controllers
             }
         }
 
+        /// <summary>
+        ///  Ação de Inclusão de Certificado
+        /// </summary>
+        /// <param name="collection">Coleção de dados para inclusao de Curso</param>
+        /// <returns>Retorna mensagem de inclusao através do parametro crud</returns>
         [HttpPost]
         public async Task<ActionResult> Create(IFormCollection collection)
         {
@@ -134,6 +152,14 @@ namespace WebApp.Controllers
             }
         }
 
+        /// <summary>
+        /// Tela para Alteração de Certificado
+        /// </summary>
+        /// <param name="id">Identificador de Certificado</param>
+        /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+        /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+        /// <param name="message">Retorna mensagem de alteração através do parametro crud</param>
+        /// <returns></returns>
         public ActionResult Edit(int id, int? crud, int? notify, string message = null)
         {
             SetNotifyMessage(notify, message);
@@ -148,6 +174,12 @@ namespace WebApp.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Ação de Alteração de Certificado
+        /// </summary>
+        /// <param name="id">Identificador de Certificado</param>
+        /// <param name="collection">Coleção de dados para Alteração de Certificado</param>
+        /// <returns>Retorna mensagem de alteração através do parametro crud</returns>
         [HttpPost]
         public async Task<ActionResult> Edit(int id, IFormCollection collection)
         {
@@ -167,6 +199,11 @@ namespace WebApp.Controllers
             return RedirectToAction(nameof(Index), new { crud = (int)EnumCrud.Updated });
         }
 
+        /// <summary>
+        /// Ação de Exclusão de Certificado
+        /// </summary>
+        /// <param name="id">Identificador do Certificado</param>
+        /// <returns>Retorna mensagem de exclusão através do parametro crud</returns>
         public ActionResult Delete(int id)
         {
             try
@@ -180,6 +217,15 @@ namespace WebApp.Controllers
             }
         }
 
+        #endregion
+
+        #region Get Methods
+
+        /// <summary>
+        /// Busca de Certificado por Id
+        /// </summary>
+        /// <param name="id">Identificador de Certificado</param>
+        /// <returns>Retorna o Certificado</returns>
         public Task<CertificadoDto> GetCertificadoById(int id)
         {
             var result = ApiClientFactory.Instance.GetCertificadoById(id);
@@ -187,10 +233,21 @@ namespace WebApp.Controllers
             return Task.FromResult(result);
         }
 
+        /// <summary>
+        /// Método de busca todos os Certificado pelo id do tipo de Certificado
+        /// </summary>
+        /// <param name="id">Id do tipo de curso</param>
+        /// <returns>Retorna um json com todos os Certificado</returns>
         public JsonResult GetCursosByTipoCursoId(int id)
         {
             var cursos = ApiClientFactory.Instance.GetCursosAllByTipoCursoId(id);
             return Json(cursos);
         }
+
+        #endregion
+
+
+
+
     }
 }

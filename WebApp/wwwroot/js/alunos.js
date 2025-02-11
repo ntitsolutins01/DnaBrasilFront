@@ -2,7 +2,7 @@ var vm = new Vue({
     el: "#vPesquisarAluno",
     data: {
         loading: false,
-        editDto: { Id: "", Nome: "", Status: true, Email: "", Sexo: "", DtNascimento: "", MunicipioEstado: "", NomeLocalidade: "", Cpf: "", Image: "", Modalidades: "", Cep: "", Etinia: "", Deficiencia: "" }
+        editDto: { Id: "", FomentoId: "", Nome: "", Status: true, Email: "", Sexo: "", DtNascimento: "", MunicipioEstado: "", NomeLocalidade: "", Cpf: "", Image: "", Modalidades: "", Cep: "", Etinia: "", Deficiencia: "" }
     },
     mounted: function () {
         var self = this;
@@ -152,76 +152,88 @@ var vm = new Vue({
         CarteirinhaAluno: function (id) {
             var self = this;
 
-
-
-
-            axios.get("Aluno/GetAlunoById/?id=" + id).then(result => {
-
-                self.editDto.Id = result.data.id;
-                self.editDto.Nome = result.data.nome;
-                self.editDto.Status = result.data.status;
-                self.editDto.Email = result.data.email;
-                self.editDto.Sexo = result.data.sexo;
-                self.editDto.Cpf = result.data.cpf;
-                self.editDto.Cep = result.data.cep;
-                self.editDto.DtNascimento = result.data.dtNascimento;
-                self.editDto.MunicipioEstado = result.data.municipioEstado;
-                self.editDto.NomeLocalidade = result.data.nomeLocalidade;
-                self.editDto.Telefone = result.data.celular;
-
-                if (result.data.celular === "0" || result.data.celular === "" || result.data.celular === null) {
-                    self.editDto.Telefone = "Não informado";
-                }
-                else {
-                    self.editDto.Telefone = result.data.celular;
-                }
-                if (result.data.image == null && result.data.sexo === "Feminino") {
-                    const studentPhoto = document.querySelector('.student-photo');
-                    if (studentPhoto) {
-                        studentPhoto.style.objectFit = "inherit";
-                    }
-                    self.editDto.Image = 'assets/images/menina.png';
-                } else if (result.data.image == null && result.data.sexo === "Masculino") {
-                    const studentPhoto = document.querySelector('.student-photo');
-                    if (studentPhoto) {
-                        studentPhoto.style.objectFit = "inherit";
-                    }
-                    self.editDto.Image = 'assets/images/menino.png';
-                }
-                else {
-                    const studentPhoto = document.querySelector('.student-photo');
-                    if (studentPhoto) {
-                        studentPhoto.style.objectFit = "cover";
-                    }
-                    self.editDto.Image = 'data:image/jpeg;base64,' + result.data.image;
-                }
-                if (result.data.cpf === "0" || result.data.cpf === "" || result.data.cpf === null) {
-                    self.editDto.Cpf = "Não informado";
-                }
-                else {
+            axios.get("Aluno/GetAlunoById/?id=" + id)
+                .then(result => {
+                    self.editDto.Id = result.data.id;
+                    self.editDto.FomentoId = result.data.fomentoId;
+                    self.editDto.Nome = result.data.nome;
+                    self.editDto.Status = result.data.status;
+                    self.editDto.Email = result.data.email;
+                    self.editDto.Sexo = result.data.sexo;
                     self.editDto.Cpf = result.data.cpf;
-                }
-                if (result.data.modalidades === "0" || result.data.modalidades === "" || result.data.modalidades === null) {
-                    self.editDto.modalidades = "Modalidade não informada";
-                }
-                else {
-                    self.editDto.Modalidades = result.data.modalidades;
-                }
-                self.editDto.QRCode = 'data:image/jpeg;base64,' + result.data.qrCode;
+                    self.editDto.Cep = result.data.cep;
+                    self.editDto.DtNascimento = result.data.dtNascimento;
+                    self.editDto.MunicipioEstado = result.data.municipioEstado;
+                    self.editDto.NomeLocalidade = result.data.nomeLocalidade;
+                    self.editDto.Telefone = result.data.celular;
 
+                    if (result.data.celular === "0" || result.data.celular === "" || result.data.celular === null) {
+                        self.editDto.Telefone = "Não informado";
+                    }
+                    else {
+                        self.editDto.Telefone = result.data.celular;
+                    }
 
+                    if (result.data.image == null && result.data.sexo === "Feminino") {
+                        const studentPhoto = document.querySelector('.student-photo');
+                        if (studentPhoto) {
+                            studentPhoto.style.objectFit = "inherit";
+                        }
+                        self.editDto.Image = 'assets/images/menina.png';
+                    } else if (result.data.image == null && result.data.sexo === "Masculino") {
+                        const studentPhoto = document.querySelector('.student-photo');
+                        if (studentPhoto) {
+                            studentPhoto.style.objectFit = "inherit";
+                        }
+                        self.editDto.Image = 'assets/images/menino.png';
+                    }
+                    else {
+                        const studentPhoto = document.querySelector('.student-photo');
+                        if (studentPhoto) {
+                            studentPhoto.style.objectFit = "cover";
+                        }
+                        self.editDto.Image = 'data:image/jpeg;base64,' + result.data.image;
+                    }
 
-                //var text = 'http://front.hml.dnadobrasil.org.br/Identity/Account/ControlePresenca?alunoId=' + self.editDto.Id;
+                    if (result.data.cpf === "0" || result.data.cpf === "" || result.data.cpf === null) {
+                        self.editDto.Cpf = "Não informado";
+                    }
+                    else {
+                        self.editDto.Cpf = result.data.cpf;
+                    }
 
-                //$('#qr').ClassyQR({
-                //    create: true,// signals the library to create the image tag inside the container div.
-                //    type: 'text',// text/url/sms/email/call/locatithe text to encode in the QR. on/wifi/contact, default is TEXT
-                //    text: text// the text to encode in the QR.
-                //});
+                    if (result.data.modalidades === "0" || result.data.modalidades === "" || result.data.modalidades === null) {
+                        self.editDto.modalidades = "Modalidade não informada";
+                    }
+                    else {
+                        self.editDto.Modalidades = result.data.modalidades;
+                    }
 
-            }).catch(error => {
-                Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
-            });
+                    self.editDto.QRCode = 'data:image/jpeg;base64,' + result.data.qrCode;
+
+                    //var text = 'http://front.hml.dnadobrasil.org.br/Identity/Account/ControlePresenca?alunoId=' + self.editDto.Id;
+
+                    //$('#qr').ClassyQR({
+                    //    create: true,// signals the library to create the image tag inside the container div.
+                    //    type: 'text',// text/url/sms/email/call/locatithe text to encode in the QR. on/wifi/contact, default is TEXT
+                    //    text: text// the text to encode in the QR.
+                    //});
+
+                    // Após ter o fomentoId, buscar o modelo da carteirinha
+                    return axios.get("Aluno/GetModeloCarteirinhaByFomento?fomentoId=" + result.data.fomentoId);
+                })
+                .then(modeloResult => {
+                    // Atualizar o background do verso com o nome da imagem retornado
+                    if (modeloResult.data && modeloResult.data.nomeImagem) {
+                        const versoElement = document.querySelector('#verso');
+                        if (versoElement) {
+                            versoElement.style.backgroundImage = `url(/assets/styles_Carteirinha/modelos/${modeloResult.data.nomeImagem})`;
+                        }
+                    }
+                })
+                .catch(error => {
+                    Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
+                });
         },
         GetPesquisaAluno: function () {
 
