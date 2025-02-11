@@ -2,9 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
 using WebApp.Configuration;
-using WebApp.Dto;
 using WebApp.Factory;
-using WebApp.Models;
 using WebApp.Utility;
 
 namespace WebApp.Controllers
@@ -26,8 +24,8 @@ namespace WebApp.Controllers
         /// <summary>
         ///  Construtor da página
         /// </summary>
-        /// <param name="logger">logger</param>
-        /// <param name="appSettings">configurações de urls do sistema</param>
+        /// <param name="logger">Logger</param>
+        /// <param name="appSettings">Configurações de urls do sistema</param>
         public DivisaoAdministrativaController(ILogger<DivisaoAdministrativaController> logger, IOptions<UrlSettings> appSettings)
         {
             _logger = logger;
@@ -42,7 +40,7 @@ namespace WebApp.Controllers
         /// <summary>
         ///  Busca Municipio por Uf
         /// </summary>
-        /// <param name="uf">uf</param>
+        /// <param name="uf">Uf</param>
         /// <returns>Retorna a um Municipio</returns>
         public Task<JsonResult> GetMunicipioByUf(string uf)
         {
