@@ -36,7 +36,7 @@ public class EstruturaController : BaseController
     }
     #endregion
 
-    #region Crud Methods
+    #region Main Methods
     /// <summary>
     /// Listagem de Estrutura
     /// </summary>
@@ -83,10 +83,10 @@ public class EstruturaController : BaseController
     }
 
     /// <summary>
-    /// Ação de inclusão do Estrutura
+    /// Ação de Inclusão do Estrutura
     /// </summary>
-    /// <param name="collection">coleção de dados para inclusao de Estrutura</param>
-    /// <returns>retorna mensagem de inclusao através do parametro crud</returns>
+    /// <param name="collection">coleção de dados para Inclusao de Estrutura</param>
+    /// <returns>retorna mensagem de Inclusao através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.Estrutura, Claim.Incluir)]
     [HttpPost]
     public async Task<ActionResult> Create(IFormCollection collection)
@@ -111,7 +111,7 @@ public class EstruturaController : BaseController
     }
 
     /// <summary>
-    /// Ação de alteração do Estrutura
+    /// Ação de Alteração do Estrutura
     /// </summary>
     /// <param name="id">identificador do Estrutura</param>
     /// <param name="collection">coleção de dados para alteração de Estrutura</param>
@@ -141,10 +141,10 @@ public class EstruturaController : BaseController
     }
 
     /// <summary>
-    /// Ação de exclusão do Estrutura
+    /// Ação de Exclusão do Estrutura
     /// </summary>
-    /// <param name="id">identificador do Estrutura</param>
-    /// <param name="collection">coleção de dados para exclusão de Estrutura</param>
+    /// <param name="id">Identificador do Estrutura</param>
+    /// <param name="collection">coleção de dados para Exclusão de Estrutura</param>
     /// <returns>retorna mensagem de exclusão através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.Estrutura, Claim.Excluir)]
     public ActionResult Delete(int id)
@@ -167,6 +167,11 @@ public class EstruturaController : BaseController
 
     #region Get Methods
 
+    /// <summary>
+    /// Busca Estrutura por Id
+    /// </summary>
+    /// <param name="id">Identificador de Estrutura</param>
+    /// <returns>Retorna a Estrutura</returns>
     public Task<EstruturaDto> GetEstruturaById(int id)
     {
         //var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -182,10 +187,10 @@ public class EstruturaController : BaseController
     }
 
     /// <summary>
-    /// Busca de estruturas por localidade
+    /// Busca de Estruturas por localidade
     /// </summary>
-    /// <param name="id">identificador da localidade</param>
-    /// <returns>retorna a lista de estruturas</returns>
+    /// <param name="id">Identificador da Localidade</param>
+    /// <returns>retorna a lista de Estruturas</returns>
     [ClaimsAuthorize(ClaimType.Estrutura, Claim.Consultar)]
     public Task<JsonResult> GetEstruturasByLocalidade(string id)
     {

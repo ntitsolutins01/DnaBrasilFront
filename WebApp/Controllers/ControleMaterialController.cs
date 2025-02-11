@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
 using WebApp.Authorization;
@@ -13,31 +12,37 @@ using WebApp.Utility;
 
 namespace WebApp.Controllers;
 
+/// <summary>
+/// Controle de Material
+/// </summary>
 public class ControleMaterialController : BaseController
 {
-    #region Constructor
+    #region Parametros
+
     private readonly IOptions<UrlSettings> _appSettings;
+
+    #endregion
+
+    #region Constructor
 
     /// <summary>
     /// Construtor da página
     /// </summary>
-    /// <param name="app">configurações de urls do sistema</param>
-    /// <param name="host">informações da aplicação em execução</param>
+    /// <param name="appSettings">Configurações de urls do sistema</param>
     public ControleMaterialController(IOptions<UrlSettings> appSettings)
     {
         _appSettings = appSettings;
         ApplicationSettings.WebApiUrl = _appSettings.Value.WebApiBaseUrl;
     }
     #endregion
-
-    #region Crud Methods
+    
+    #region Main Methods
     /// <summary>
-    /// Listagem de ControleMaterial
+    /// Listagem de Controle Material
     /// </summary>
-    /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
-    /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
-    /// <param name="collection">lista de filtros selecionados para pesquisa de alunos</param>
-    /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+    /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+    /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+    /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
     [ClaimsAuthorize(ClaimType.ControleMaterial, Identity.Claim.Consultar)]
     public IActionResult Index(int? crud, int? notify, string message = null)
     {
@@ -49,11 +54,11 @@ public class ControleMaterialController : BaseController
     }
 
     /// <summary>
-    /// Tela para inclusão de Controle Material
+    /// Tela para Inclusão de Controle Material
     /// </summary>
-    /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
-    /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
-    /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+    /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+    /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+    /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
     [ClaimsAuthorize(ClaimType.ControleMaterial, Identity.Claim.Incluir)]
     public ActionResult Create(int? crud, int? notify, string message = null)
     {
@@ -77,10 +82,10 @@ public class ControleMaterialController : BaseController
     }
 
 	/// <summary>
-	/// Ação de inclusão do ControleMaterial
+	/// Ação de Inclusão do Controle Material
 	/// </summary>
-	/// <param name="collection">coleção de dados para inclusao de ControleMaterial</param>
-	/// <returns>retorna mensagem de inclusao através do parametro crud</returns>
+	/// <param name="collection">Coleção de dados para inclusao de Controle Material</param>
+	/// <returns>Retorna mensagem de inclusao através do parametro crud</returns>
 	[ClaimsAuthorize(ClaimType.ControleMaterial, Identity.Claim.Incluir)]
 	[HttpPost]
 	public async Task<ActionResult> Create(IFormCollection collection)
@@ -118,11 +123,10 @@ public class ControleMaterialController : BaseController
 	}
 
 	/// <summary>
-	/// Ação de alteração do ControleMaterial
+	/// Ação de Alteração do Controle Material
 	/// </summary>
-	/// <param name="id">identificador do ControleMaterial</param>
-	/// <param name="collection">coleção de dados para alteração de ControleMaterial</param>
-	/// <returns>retorna mensagem de alteração através do parametro crud</returns>
+	/// <param name="collection">Coleção de dados para alteração de Controle Material</param>
+	/// <returns>Retorna mensagem de alteração através do parametro crud</returns>
 	[ClaimsAuthorize(ClaimType.ControleMaterial, Identity.Claim.Alterar)]
 	public async Task<ActionResult> Edit(IFormCollection collection)
 	{
@@ -151,11 +155,10 @@ public class ControleMaterialController : BaseController
 	}
 
     /// <summary>
-    /// Ação de exclusão do ControleMaterial
+    /// Ação de Exclusão do Controle Material
     /// </summary>
-    /// <param name="id">identificador do ControleMaterial</param>
-    /// <param name="collection">coleção de dados para exclusão de ControleMaterial</param>
-    /// <returns>retorna mensagem de exclusão através do parametro crud</returns>
+    /// <param name="id">Identificador do Controle Material</param>
+    /// <returns>Retorna mensagem de exclusão através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.ControleMaterial, Identity.Claim.Excluir)]
     public ActionResult Delete(int id)
     {
@@ -175,10 +178,10 @@ public class ControleMaterialController : BaseController
     #region Get Methods
 
     /// <summary>
-    /// Método de busca de controle de material por id
+    /// Método de busca de Controle de Material por id
     /// </summary>
-    /// <param name="id">id do material </param>
-    /// <returns>retorna o objeto controle de material</returns>
+    /// <param name="id">Id do Material </param>
+    /// <returns>Retorna o objeto Controle de Material</returns>
     [ClaimsAuthorize(ClaimType.ControleMaterial, Identity.Claim.Consultar)]
     public Task<ControleMaterialDto> GetControleMaterialById(int id)
     {

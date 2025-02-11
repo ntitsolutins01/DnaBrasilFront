@@ -13,6 +13,9 @@ using WebApp.Utility;
 
 namespace WebApp.Controllers;
 
+/// <summary>
+/// Controle de Tipo de Material
+/// </summary>
 [Authorize(Policy = ModuloAccess.ConfiguracaoSistemaEad)]
 public class TipoMaterialController : BaseController
 {
@@ -31,9 +34,9 @@ public class TipoMaterialController : BaseController
     }
     #endregion
 
-    #region Crud Methods
+    #region Main Methods
     /// <summary>
-    /// Listagem de TipoMaterial
+    /// Listagem de Tipo Material
     /// </summary>
     /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
     /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
@@ -50,7 +53,7 @@ public class TipoMaterialController : BaseController
     }
 
     /// <summary>
-    /// Tela para inclusão de Modulo Ead
+    /// Tela para Inclusão de Tipo Material
     /// </summary>
     /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
     /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
@@ -78,9 +81,9 @@ public class TipoMaterialController : BaseController
     }
 
     /// <summary>
-    /// Ação de inclusão do TipoMaterial
+    /// Ação de Inclusão do Tipo Material
     /// </summary>
-    /// <param name="collection">coleção de dados para inclusao de TipoMaterial</param>
+    /// <param name="collection">coleção de dados para inclusao de Tipo Material</param>
     /// <returns>retorna mensagem de inclusao através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.TipoMaterial, Identity.Claim.Incluir)]
     [HttpPost]
@@ -120,10 +123,10 @@ public class TipoMaterialController : BaseController
 
 
     /// <summary>
-    /// Ação de alteração do TipoMaterial
+    /// Ação de Alteração do Tipo Material
     /// </summary>
-    /// <param name="id">identificador do TipoMaterial</param>
-    /// <param name="collection">coleção de dados para alteração de TipoMaterial</param>
+    /// <param name="id">identificador do Tipo Material</param>
+    /// <param name="collection">coleção de dados para alteração de Tipo Material</param>
     /// <returns>retorna mensagem de alteração através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.TipoMaterial, Identity.Claim.Alterar)]
     public async Task<ActionResult> Edit(IFormCollection collection)
@@ -147,10 +150,10 @@ public class TipoMaterialController : BaseController
     }
 
     /// <summary>
-    /// Ação de exclusão do TipoMaterial
+    /// Ação de Exclusão do Tipo Material
     /// </summary>
-    /// <param name="id">identificador do TipoMaterial</param>
-    /// <param name="collection">coleção de dados para exclusão de TipoMaterial</param>
+    /// <param name="id">identificador do Tipo Material</param>
+    /// <param name="collection">coleção de dados para exclusão de Tipo Material</param>
     /// <returns>retorna mensagem de exclusão através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.TipoMaterial, Identity.Claim.Excluir)]
     public ActionResult Delete(int id)
@@ -166,6 +169,28 @@ public class TipoMaterialController : BaseController
         }
     }
 
+
+    #endregion
+
+    #region Get Methods
+
+    /// <summary>
+    /// Busca Tipo de Material por Id
+    /// </summary>
+    /// <param name="id">Identificador de Tipo de Material</param>
+    /// <returns>Retorna a Tipo de Material</returns>
+    public Task<TipoMaterialDto> GetTipoMaterialById(int id)
+    {
+        var result = ApiClientFactory.Instance.GetTipoMaterialById(id);
+
+        return Task.FromResult(result);
+    }
+
+    /// <summary>
+    /// Busca Tipos de Materias por Id
+    /// </summary>
+    /// <param name="id">Identificador de Tipo de Materias por Id</param>
+    /// <returns>Retorna a Tipos de Materias por Id</returns>
     public Task<JsonResult> GetTiposMateriaisAllByGrupoMaterialId(string id)
     {
         try
@@ -181,15 +206,6 @@ public class TipoMaterialController : BaseController
             return Task.FromResult(Json(ex.Message));
         }
     }
-    #endregion
 
-    #region Get Methods
-
-    public Task<TipoMaterialDto> GetTipoMaterialById(int id)
-    {
-        var result = ApiClientFactory.Instance.GetTipoMaterialById(id);
-
-        return Task.FromResult(result);
-    }
     #endregion
 }

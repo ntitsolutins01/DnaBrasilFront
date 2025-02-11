@@ -13,6 +13,9 @@ using WebApp.Utility;
 
 namespace WebApp.Controllers;
 
+/// <summary>
+/// Controle de Material
+/// </summary>
 [Authorize(Policy = ModuloAccess.ConfiguracaoSistemaEad)]
 public class MaterialController : BaseController
 {
@@ -31,7 +34,7 @@ public class MaterialController : BaseController
     }
     #endregion
 
-    #region Crud Methods
+    #region Main Methods
     /// <summary>
     /// Listagem de Material
     /// </summary>
@@ -81,7 +84,7 @@ public class MaterialController : BaseController
     }
 
     /// <summary>
-    /// Tela para inclusão de Modulo Ead
+    /// Tela para Inclusão de Material
     /// </summary>
     /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
     /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
@@ -124,9 +127,9 @@ public class MaterialController : BaseController
     }
 
     /// <summary>
-    /// Ação de inclusão do Material
+    /// Ação de Inclusão do Material
     /// </summary>
-    /// <param name="collection">coleção de dados para inclusao de Material</param>
+    /// <param name="collection">coleção de dados para Inclusao de Material</param>
     /// <returns>retorna mensagem de inclusao através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.Material, Identity.Claim.Incluir)]
     [HttpPost]
@@ -154,10 +157,10 @@ public class MaterialController : BaseController
 
 
     /// <summary>
-    /// Ação de alteração do Material
+    /// Ação de Alteração do Material
     /// </summary>
-    /// <param name="id">identificador do Material</param>
-    /// <param name="collection">coleção de dados para alteração de Material</param>
+    /// <param name="id">Identificador do Material</param>
+    /// <param name="collection">coleção de dados para Alteração de Material</param>
     /// <returns>retorna mensagem de alteração através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.Material, Identity.Claim.Alterar)]
     public async Task<ActionResult> Edit(IFormCollection collection)
@@ -186,9 +189,9 @@ public class MaterialController : BaseController
     }
 
     /// <summary>
-    /// Ação de exclusão do Material
+    /// Ação de Exclusão do Material
     /// </summary>
-    /// <param name="id">identificador do Material</param>
+    /// <param name="id">Identificador do Material</param>
     /// <param name="collection">coleção de dados para exclusão de Material</param>
     /// <returns>retorna mensagem de exclusão através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.Material, Identity.Claim.Excluir)]
@@ -224,6 +227,11 @@ public class MaterialController : BaseController
 
     #region Get Methods
 
+    /// <summary>
+    /// Busca Materail por Id
+    /// </summary>
+    /// <param name="id">Identificador de Materail</param>
+    /// <returns>Retorna a Material</returns>
     public Task<MaterialDto> GetMaterialById(int id)
     {
         var result = ApiClientFactory.Instance.GetMaterialById(id);
