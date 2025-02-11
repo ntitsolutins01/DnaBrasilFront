@@ -108,8 +108,8 @@ namespace WebApp.Controllers
                 }
 
                 var listModalidades = new SelectList(ApiClientFactory.Instance.GetModalidadeAll(), "Id", "Nome");
-                var profissionais =
-                    ApiClientFactory.Instance.GetProfissionaisByLocalidade(Convert.ToInt32(usu.LocalidadeId));
+                //var profissionais = 
+                //    ApiClientFactory.Instance.GetProfissionaisByLocalidade(Convert.ToInt32(usu.LocalidadeId));
 
                 var searchFilter = new ControlesPresencasFilterDto()
                 {
@@ -138,7 +138,7 @@ namespace WebApp.Controllers
                     ListAlunos = alunos,
                     ControlesPresencas = response.ControlesPresencas,
                     ListAtividadesModalidades = listModalidades,
-                    ListProfissionais = profissionais!
+                    //ListProfissionais = profissionais!
 
                 };
                 return View(model);
