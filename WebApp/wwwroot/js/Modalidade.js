@@ -9,20 +9,20 @@ var vm = new Vue({
         (function ($) {
             'use strict';
 
-            if (typeof Switch !== 'undefined' && $.isFunction(Switch)) {
-
-                $(function () {
-                    $('[data-plugin-ios-switch]').each(function () {
-                        var $this = $(this);
-
-                        $this.themePluginIOS7Switch();
-                    });
-                });
-            }
-
             var formid = $('form')[1].id;
 
             if (formid === "formEditModalidade") {
+
+                if (typeof Switch !== 'undefined' && $.isFunction(Switch)) {
+
+                    $(function () {
+                        $('[data-plugin-ios-switch]').each(function () {
+                            var $this = $(this);
+
+                            $this.themePluginIOS7Switch();
+                        });
+                    });
+                }
 
                 var $select = $(".select2").select2({
                     allowClear: true

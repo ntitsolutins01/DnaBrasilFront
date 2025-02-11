@@ -313,8 +313,8 @@ public class EventoController : BaseController
                 var command = new AlunoModel.CreateUpdateDadosAlunoCommand
                 {
                     MunicipioId = Convert.ToInt32(evento.MunicipioId),
-                    Nome = "Convidado",
-                    Email = "convidado@convidado.com",
+                    Nome = $"Convidado-{evento.LocalidadeId}",
+                    Email = $"convidado{evento.LocalidadeId}@convidado.com",
                     Sexo = "G",
                     DtNascimento = DateTime.Now.ToString("dd/MM/yyyy"),
                     LocalidadeId = Convert.ToInt32(evento.LocalidadeId),
