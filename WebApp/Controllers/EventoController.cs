@@ -21,16 +21,20 @@ namespace WebApp.Controllers;
 [Authorize(Policy = ModuloAccess.Evento)]
 public class EventoController : BaseController
 {
-    #region Constructor
+    #region Parametros
 
     private readonly IWebHostEnvironment _host;
 
-	/// <summary>
-	/// Construtor da página
-	/// </summary>
-	/// <param name="app">configurações de urls do sistema</param>
-	/// <param name="host">informações da aplicação em execução</param>
-	public EventoController(IOptions<UrlSettings> appSettings, IWebHostEnvironment host)
+    #endregion
+
+    #region Constructor
+
+    /// <summary>
+    /// Construtor da página
+    /// </summary>
+    /// <param name="appSettings">Configurações de urls do sistema</param>
+    /// <param name="host">Informações da aplicação em execução</param>
+    public EventoController(IOptions<UrlSettings> appSettings, IWebHostEnvironment host)
     {
 	    _host = host;
         ApplicationSettings.WebApiUrl = appSettings.Value.WebApiBaseUrl;
@@ -42,9 +46,9 @@ public class EventoController : BaseController
     /// <summary>
     /// Listagem de Evento
     /// </summary>
-    /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
-    /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
-    /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+    /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+    /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+    /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
     [ClaimsAuthorize(ClaimType.Evento, Identity.Claim.Consultar)]
     public IActionResult Index(int? crud, int? notify, string message = null)
     {
@@ -58,9 +62,9 @@ public class EventoController : BaseController
     /// <summary>
     /// Tela para Inclusão de Evento
     /// </summary>
-    /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
-    /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
-    /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+    /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+    /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+    /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
     [ClaimsAuthorize(ClaimType.Evento, Identity.Claim.Incluir)]
     public ActionResult Create(int? crud, int? notify, string message = null)
     {
@@ -88,8 +92,8 @@ public class EventoController : BaseController
     /// <summary>
     /// Ação de Inclusão do Evento
     /// </summary>
-    /// <param name="collection">coleção de dados para Inclusao de Evento</param>
-    /// <returns>retorna mensagem de inclusao através do parametro crud</returns>
+    /// <param name="collection">Coleção de dados para Inclusao de Evento</param>
+    /// <returns>Retorna mensagem de inclusao através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.Evento, Identity.Claim.Incluir)]
     [HttpPost]
     public async Task<ActionResult> Create(IFormCollection collection)
@@ -116,10 +120,10 @@ public class EventoController : BaseController
 
 
     /// <summary>
-    /// Ação de alteração do Evento
+    /// Ação de Alteração do Evento
     /// </summary>
-    /// <param name="collection">coleção de dados para alteração de Evento</param>
-    /// <returns>retorna mensagem de alteração através do parametro crud</returns>
+    /// <param name="collection">Coleção de dados para alteração de Evento</param>
+    /// <returns>Retorna mensagem de alteração através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.Evento, Identity.Claim.Alterar)]
     public async Task<ActionResult> Edit(IFormCollection collection)
     {
@@ -148,7 +152,7 @@ public class EventoController : BaseController
     /// Ação de Exclusão do Evento
     /// </summary>
     /// <param name="id">Identificador do Evento</param>
-    /// <returns>retorna mensagem de exclusão através do parametro crud</returns>
+    /// <returns>Retorna mensagem de exclusão através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.Evento, Identity.Claim.Excluir)]
     public ActionResult Delete(int id)
     {
@@ -172,8 +176,8 @@ public class EventoController : BaseController
 	/// <summary>
 	/// Ação de Upload de fotos do Evento
 	/// </summary>
-	/// <param name="collection">arquivo de Upload realizado</param>
-	/// <returns>retorna mensagem de Upload realizado através do parametro notfy e message</returns>
+	/// <param name="collection">Arquivo de Upload realizado</param>
+	/// <returns>Retorna mensagem de Upload realizado através do parametro notfy e message</returns>
 	[HttpPost]
 	[ClaimsAuthorize(ClaimType.Evento, Claim.Incluir)]
 	public async Task<ActionResult> Upload(IFormCollection collection)
@@ -220,7 +224,7 @@ public class EventoController : BaseController
 	/// Ação de Download de Fotos do Evento
 	/// </summary>
 	/// <param name="id">Id do Evento</param>
-	/// <returns>retorna Fotos para Download</returns>
+	/// <returns>Retorna Fotos para Download</returns>
 	[ClaimsAuthorize(ClaimType.Evento, Claim.Incluir)]
 	public ActionResult Download(int id)
 	{
@@ -268,9 +272,9 @@ public class EventoController : BaseController
 	/// Listagem de Controle de Presença de Evento
 	/// </summary>
 	/// <param name="eventoId">Id do Evento</param>
-	/// <param name="crud">paramentro que indica o tipo de ação realizado</param>
-	/// <param name="notify">parametro que indica o tipo de notificação realizada</param>
-	/// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+	/// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+	/// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+	/// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
 	[ClaimsAuthorize(ClaimType.Evento, Identity.Claim.Consultar)]
     public IActionResult IndexControlePresenca(int eventoId, int? crud, int? notify, string message = null)
     {
@@ -286,9 +290,9 @@ public class EventoController : BaseController
     /// Tela para Inclusão de Controle de Presença do Evento
     /// </summary>
     /// <param name="eventoId">Id do Evento </param>
-    /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
-    /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
-    /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+    /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+    /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+    /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
     [ClaimsAuthorize(ClaimType.Evento, Identity.Claim.Incluir)]
     public async Task<ActionResult> CreateControlePresenca(int eventoId, int? crud, int? notify, string message = null)
     {
@@ -349,8 +353,8 @@ public class EventoController : BaseController
     /// <summary>
     /// Ação para Inclusão de Controle de Presença do Evento
     /// </summary>
-    /// <param name="collection">coleção de dados para Inclusao de Controle de Presença do Evento</param>
-    /// <returns>retorna mensagem de inclusao através do parametro crud</returns>
+    /// <param name="collection">Coleção de dados para Inclusao de Controle de Presença do Evento</param>
+    /// <returns>Retorna mensagem de inclusao através do parametro crud</returns>
     [HttpPost]
     [ClaimsAuthorize(ClaimType.Evento, Identity.Claim.Alterar)]
     public async Task<ActionResult> CreateControlePresenca(IFormCollection collection)
@@ -390,8 +394,8 @@ public class EventoController : BaseController
     /// <summary>
     /// Ação de Alteração do Controle de Presença do Evento
     /// </summary>
-    /// <param name="collection">coleção de dados para alteração de controle de presença do Evento</param>
-    /// <returns>retorna mensagem de alteração através do parametro crud</returns>
+    /// <param name="collection">Coleção de dados para alteração de controle de presença do Evento</param>
+    /// <returns>Retorna mensagem de alteração através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.Evento, Identity.Claim.Alterar)]
     public async Task<ActionResult> EditControlePresenca(IFormCollection collection)
     {
@@ -414,6 +418,13 @@ public class EventoController : BaseController
             return RedirectToAction(nameof(IndexControlePresenca), new { eventoId = Convert.ToInt32(collection["editEventoId"]), notify = (int)EnumNotify.Error, message = "Erro ao executar esta ação. Favor entrar em contato com o administrador do sistema." });
         }
     }
+
+    /// <summary>
+    /// Ação de Exclusão do Evento 
+    /// </summary>
+    /// <param name="id">Identificaçao do Evento</param>
+    /// <param name="eventoId">Id do Evento </param>
+    /// <returns>Retorna mensagem de exclusão através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.ControlePresenca, Claim.Excluir)]
     public ActionResult DeleteControlePresenca(int id, int eventoId)
     {
