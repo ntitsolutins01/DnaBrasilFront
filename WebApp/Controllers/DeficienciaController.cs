@@ -25,7 +25,7 @@ public class DeficienciaController : BaseController
     /// <summary>
     /// Construtor da página
     /// </summary>
-    /// <param name="app">configurações de urls do sistema</param>
+    /// <param name="appSettings">Configurações de urls do sistema</param>
     public DeficienciaController(IOptions<UrlSettings> appSettings)
     {
         _appSettings = appSettings;
@@ -40,10 +40,10 @@ public class DeficienciaController : BaseController
     /// <summary>
     /// Listagem de Deficiencia
     /// </summary>
-    /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
-    /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
-    /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
-    /// <returns>returns true false</returns>
+    /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+    /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+    /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
+    /// <returns>Returns true false</returns>
     public IActionResult Index(int? crud, int? notify, string message = null)
     {
         SetNotifyMessage(notify, message);
@@ -56,10 +56,10 @@ public class DeficienciaController : BaseController
     /// <summary>
     /// Tela para Inclusão de Deficiencia
     /// </summary>
-    /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
-    /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
-    /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
-    /// <returns>returns true false</returns>
+    /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+    /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+    /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
+    /// <returns>Returns true false</returns>
     //[ClaimsAuthorize("ConfiguracaoSistema", "Incluir")]
     public ActionResult Create(int? crud, int? notify, string message = null)
     {
@@ -72,8 +72,8 @@ public class DeficienciaController : BaseController
     /// <summary>
     /// Ação de Inclusão de Deficiencia
     /// </summary>
-    /// <param name="collection">coleção de dados para inclusao de Deficiencia</param>
-    /// <returns>retorna mensagem de inclusao através do parametro crud</returns>
+    /// <param name="collection">Coleção de dados para inclusao de Deficiencia</param>
+    /// <returns>Retorna mensagem de inclusao através do parametro crud</returns>
     //[ClaimsAuthorize("Usuario", "Incluir")]
     [HttpPost]
     public async Task<ActionResult> Create(IFormCollection collection)
@@ -96,10 +96,10 @@ public class DeficienciaController : BaseController
     }
 
     /// <summary>
-    /// 
+    /// Ação de Alteração de Deficiencia
     /// </summary>
-    /// <param name="collection"></param>
-    /// <returns></returns>
+    /// <param name="collection">Coleção de dados para alteração de Deficiencia</param>
+    /// <returns>Retorna mensagem de alteração através do parametro crud</returns>
     //[ClaimsAuthorize("Usuario", "Alterar")]
     public async Task<ActionResult> Edit(IFormCollection collection)
     {
@@ -119,7 +119,7 @@ public class DeficienciaController : BaseController
     /// Ação de Alteração de Deficiencia
     /// </summary>
     /// <param name="id">Identificador de Deficiencia</param>
-    /// <returns>retorna mensagem de alteração através do parametro crud</returns>
+    /// <returns>Retorna mensagem de alteração através do parametro crud</returns>
     //[ClaimsAuthorize("Usuario", "Excluir")]
     public ActionResult Delete(int id)
     {
