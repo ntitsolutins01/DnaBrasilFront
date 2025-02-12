@@ -31,6 +31,13 @@ namespace WebApp.Controllers
 
         #region Constructor
 
+        /// <summary>
+        /// Contrutor da página
+        /// </summary>
+        /// <param name="db">Db</param>
+        /// <param name="roleManager">Funçao Gerente</param>
+        /// <param name="userManager">Gereente de Usuarios</param>
+        /// <param name="appSettings">Configurações da aplicação</param>
         public PerfilController(ApplicationDbContext db,
             RoleManager<IdentityRole> roleManager,
             UserManager<IdentityUser> userManager, IOptions<UrlSettings> appSettings)
@@ -48,9 +55,9 @@ namespace WebApp.Controllers
         /// <summary>
         /// Listagem de Perfil
         /// </summary>
-        /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
-        /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
-        /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+        /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+        /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+        /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
         /// <returns></returns>
         //[ClaimsAuthorize("Perfil", "Consultar")]
         public ActionResult Index(int? crud, int? notify, string message = null)
@@ -65,7 +72,7 @@ namespace WebApp.Controllers
         /// <summary>
         /// Tela para Inclusão de Perfil
         /// </summary>
-        /// <returns>returns true false</returns>
+        /// <returns>Returns true false</returns>
         public ActionResult Create()
         {
             var responseModulos = ApiClientFactory.Instance.GetModulosAll();
@@ -77,8 +84,8 @@ namespace WebApp.Controllers
         /// <summary>
         /// Ação de Inclusão de Perfil
         /// </summary>
-        /// <param name="collection">coleção de dados para inclusao de Perfil</param>
-        /// <returns>retorna mensagem de inclusao através do parametro crud</returns>
+        /// <param name="collection">Coleção de dados para inclusao de Perfil</param>
+        /// <returns>Retorna mensagem de inclusao através do parametro crud</returns>
         //[ClaimsAuthorize("Perfil", "Incluir")]
         [HttpPost]
         public async Task<ActionResult> Create(IFormCollection collection)
@@ -130,7 +137,7 @@ namespace WebApp.Controllers
         /// Ação de Alteração de Perfil
         /// </summary>
         /// <param name="id">Identificador de Perfil</param>
-        /// <returns>retorna mensagem de alteração através do parametro crud</returns>
+        /// <returns>Retorna mensagem de alteração através do parametro crud</returns>
         //[ClaimsAuthorize("Perfil", "Alterar")]
         public ActionResult Edit(int id)
         {
@@ -165,8 +172,8 @@ namespace WebApp.Controllers
         /// Ação de Alteração de Perfil
         /// </summary>
         /// <param name="id">Identificador de Perfil</param>
-        /// <param name="collection">coleção de dados para alteração de Perfil</param>
-        /// <returns>retorna mensagem de alteração através do parametro crud</returns>
+        /// <param name="collection">Coleção de dados para alteração de Perfil</param>
+        /// <returns>Retorna mensagem de alteração através do parametro crud</returns>
         //[ClaimsAuthorize("Perfil", "Alterar")]
         [HttpPost]
         public async Task<ActionResult> Edit(int id, IFormCollection collection)
@@ -238,8 +245,8 @@ namespace WebApp.Controllers
         /// <summary>
         ///  Ação de Exclusão do Perfil
         /// </summary>
-        /// <param name="id">identificador do Perfil</param>
-        /// <returns>retorna mensagem de exclusão através do parametro crud</returns>
+        /// <param name="id">Identificador do Perfil</param>
+        /// <returns>Retorna mensagem de exclusão através do parametro crud</returns>
         //[ClaimsAuthorize("Perfil", "Excluir")]
         public async Task<ActionResult> DeleteAsync(int id)
         {
