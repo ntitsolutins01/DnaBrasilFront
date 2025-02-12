@@ -19,14 +19,19 @@ namespace WebApp.Controllers;
 [Authorize(Policy = ModuloAccess.ConfiguracaoSistemaEad)]
 public class ModuloEadController : BaseController
 {
-    #region Constructor
+    #region Parametros
+
     private readonly IOptions<UrlSettings> _appSettings;
+
+    #endregion
+
+    #region Constructor
 
     /// <summary>
     /// Construtor da página
     /// </summary>
-    /// <param name="app">configurações de urls do sistema</param>
-    /// <param name="host">informações da aplicação em execução</param>
+    /// <param name="appSettings">Configurações de urls do sistema</param>
+    /// <param name="host">Informações da aplicação em execução</param>
     public ModuloEadController(IOptions<UrlSettings> appSettings)
     {
         _appSettings = appSettings;
@@ -34,14 +39,14 @@ public class ModuloEadController : BaseController
     }
     #endregion
 
-    #region Crud Methods
+    #region Main Methods
     /// <summary>
     /// Listagem de Modulo Ead
     /// </summary>
-    /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
-    /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
-    /// <param name="collection">lista de filtros selecionados para pesquisa de alunos</param>
-    /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+    /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+    /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+    /// <param name="collection">Lista de filtros selecionados para pesquisa de alunos</param>
+    /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
     [ClaimsAuthorize(ClaimType.ModuloEad, Identity.Claim.Consultar)]
     public IActionResult Index(int? crud, int? notify, string message = null)
     {
@@ -55,9 +60,9 @@ public class ModuloEadController : BaseController
     /// <summary>
     /// Tela para Inclusão de Modulo Ead
     /// </summary>
-    /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
-    /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
-    /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+    /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+    /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+    /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
     [ClaimsAuthorize(ClaimType.ModuloEad, Identity.Claim.Incluir)]
     public ActionResult Create(int? crud, int? notify, string message = null)
     {
@@ -87,8 +92,8 @@ public class ModuloEadController : BaseController
     /// <summary>
     /// Ação de Inclusão do Modulo Ead
     /// </summary>
-    /// <param name="collection">coleção de dados para inclusao de Modulo Ead</param>
-    /// <returns>retorna mensagem de inclusao através do parametro crud</returns>
+    /// <param name="collection">Coleção de dados para inclusao de Modulo Ead</param>
+    /// <returns>Retorna mensagem de inclusao através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.ModuloEad, Identity.Claim.Incluir)]
     [HttpPost]
     public async Task<ActionResult> Create(IFormCollection collection)
@@ -131,9 +136,9 @@ public class ModuloEadController : BaseController
     /// <summary>
     /// Ação de Alteração do Modulo Ead
     /// </summary>
-    /// <param name="id">identificador do Modulo Ead</param>
-    /// <param name="collection">coleção de dados para alteração de Modulo Ead</param>
-    /// <returns>retorna mensagem de alteração através do parametro crud</returns>
+    /// <param name="id">Identificador do Modulo Ead</param>
+    /// <param name="collection">Coleção de dados para alteração de Modulo Ead</param>
+    /// <returns>Retorna mensagem de alteração através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.ModuloEad, Identity.Claim.Alterar)]
     public async Task<ActionResult> Edit(IFormCollection collection)
     {
@@ -175,9 +180,9 @@ public class ModuloEadController : BaseController
     /// <summary>
     /// Ação de Exclusão do Modulo Ead
     /// </summary>
-    /// <param name="id">identificador do Modulo Ead</param>
-    /// <param name="collection">coleção de dados para exclusão de Modulo Ead</param>
-    /// <returns>retorna mensagem de exclusão através do parametro crud</returns>
+    /// <param name="id">Identificador do Modulo Ead</param>
+    /// <param name="collection">Coleção de dados para exclusão de Modulo Ead</param>
+    /// <returns>Retorna mensagem de exclusão através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.ModuloEad, Identity.Claim.Excluir)]
     public ActionResult Delete(int id)
     {
