@@ -20,11 +20,21 @@ namespace WebApp.Controllers
     [Authorize(Policy = ModuloAccess.PlanoAula)]
     public class PlanoAulaController : BaseController
 	{
-        #region Constructor
-        private readonly IOptions<UrlSettings> _appSettings;
-		private readonly IHostingEnvironment _host;
+        #region Parametros
 
-		public PlanoAulaController(IOptions<UrlSettings> appSettings,
+        private readonly IOptions<UrlSettings> _appSettings;
+        private readonly IHostingEnvironment _host;
+
+        #endregion
+
+        #region Constructor
+
+        /// <summary>
+        /// Contrutor da página
+        /// </summary>
+        /// <param name="appSettings">Configurações da aplicação</param>
+        /// <param name="host">Informação do ambiente em que a aplicação está rodando</param>
+        public PlanoAulaController(IOptions<UrlSettings> appSettings,
 			IHostingEnvironment host)
 		{
 			_appSettings = appSettings;
@@ -38,9 +48,9 @@ namespace WebApp.Controllers
         /// <summary>
         /// Listagem do Plano de Aula
         /// </summary>
-        /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
-        /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
-        /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+        /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+        /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+        /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
         /// <returns></returns>
         [ClaimsAuthorize(ClaimType.PlanoAula, Claim.Consultar)]
         public IActionResult Index(int? crud, int? notify, string message = null)
@@ -56,9 +66,9 @@ namespace WebApp.Controllers
         /// <summary>
         /// Tela para Inclusão do Plano de Aula
         /// </summary>
-        /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
-        /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
-        /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+        /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+        /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+        /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
         /// <returns></returns>
         [ClaimsAuthorize(ClaimType.PlanoAula, Claim.Incluir)]
         public ActionResult Create(int? crud, int? notify, string message = null)
@@ -74,8 +84,8 @@ namespace WebApp.Controllers
         /// <summary>
         /// Ação de Inclusão do Plano  de Aula
         /// </summary>
-        /// <param name="collection">coleção de dados para inclusao de Plano Aula</param>
-        /// <returns>retorna mensagem de inclusao através do parametro crud</returns>
+        /// <param name="collection">Coleção de dados para inclusao de Plano Aula</param>
+        /// <returns>Retorna mensagem de inclusao através do parametro crud</returns>
         [ClaimsAuthorize(ClaimType.PlanoAula, Claim.Incluir)]
         [HttpPost]
 		public async Task<ActionResult> Create(IFormCollection collection)
@@ -120,8 +130,8 @@ namespace WebApp.Controllers
         /// <summary>
         /// Ação de Alteração do Plano de Aula
         /// </summary>
-        /// <param name="collection">coleção de dados para alteração de Plano Aula</param>
-        /// <returns>retorna mensagem de alteração através do parametro crud</returns>
+        /// <param name="collection">Coleção de dados para alteração de Plano Aula</param>
+        /// <returns>Retorna mensagem de alteração através do parametro crud</returns>
         [ClaimsAuthorize(ClaimType.PlanoAula, Claim.Alterar)]
         public async Task<ActionResult> Edit(IFormCollection collection)
 		{
@@ -162,8 +172,8 @@ namespace WebApp.Controllers
         /// <summary>
         /// Ação de Exclusão do Plano de Aula
         /// </summary>
-        /// <param name="id">identificador do Plano de Aula</param>
-        /// <returns></returns>
+        /// <param name="id">Identificador do Plano de Aula</param>
+        /// <returns>Retorna mensagem de exclusão através do parametro crud</returns>
         [ClaimsAuthorize(ClaimType.PlanoAula, Claim.Excluir)]
         public ActionResult Delete(int id)
 		{
@@ -185,11 +195,11 @@ namespace WebApp.Controllers
 			}
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="id"></param>
-		/// <returns></returns>
+        /// <summary>
+        /// Faz o Dowload do aquivo associado a uma Plano de Aula especifico 
+        /// </summary>
+        /// <param name="id">Id do Plano de Aula</param>
+        /// <returns>Retorna o arquivo para download</returns>
         [ClaimsAuthorize(ClaimType.PlanoAula, Claim.Download)]
         public ActionResult Download(int id)
         {
