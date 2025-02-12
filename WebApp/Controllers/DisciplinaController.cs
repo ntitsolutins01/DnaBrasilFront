@@ -39,7 +39,7 @@ namespace WebApp.Controllers
         /// Listagem de Disciplina
         /// </summary>
         /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
-        /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
+        /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
         /// <param name="collection">Lista de filtros selecionados para pesquisa de alunos</param>
         /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
         [ClaimsAuthorize(ClaimType.Disciplina, Identity.Claim.Consultar)]
@@ -55,8 +55,8 @@ namespace WebApp.Controllers
         /// <summary>
         /// Listagem de Disciplina
         /// </summary>
-        /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
-        /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
+        /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+        /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
         /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
         /// <returns>Returns true false</returns>
         public ActionResult Create(int? crud, int? notify, string message = null)
