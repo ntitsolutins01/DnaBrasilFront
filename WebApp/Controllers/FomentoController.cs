@@ -27,7 +27,7 @@ namespace WebApp.Controllers
         /// <summary>
         /// Construtor da página
         /// </summary>
-        /// <param name="appSettings">configurações de urls do sistema</param>
+        /// <param name="appSettings">Configurações de urls do sistema</param>
         public FomentoController(IOptions<UrlSettings> appSettings)
         {
             _appSettings = appSettings;
@@ -41,9 +41,9 @@ namespace WebApp.Controllers
         /// <summary>
         ///  Listagem de Fomento
         /// </summary>
-        /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
-        /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
-        /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+        /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+        /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+        /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
         /// <returns></returns>
         public IActionResult Index(int? crud, int? notify, string message = null)
         {
@@ -66,9 +66,9 @@ namespace WebApp.Controllers
         /// <summary>
         /// Tela para Inclusão de Fomento
         /// </summary>
-        /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
-        /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
-        /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+        /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+        /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+        /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
         /// <returns></returns>
         public ActionResult Create(int? crud, int? notify, string message = null)
         {
@@ -90,8 +90,8 @@ namespace WebApp.Controllers
         /// <summary>
         /// Ação de Inclusão de Fomento
         /// </summary>
-        /// <param name="collection">coleção de dados para Inclusao de Fomento</param>
-        /// <returns>retorna mensagem de inclusao através do parametro crud</returns>
+        /// <param name="collection">Coleção de dados para Inclusao de Fomento</param>
+        /// <returns>Retorna mensagem de inclusao através do parametro crud</returns>
         [HttpPost]
         public async Task<ActionResult> Create(IFormCollection collection)
         {
@@ -123,9 +123,9 @@ namespace WebApp.Controllers
         /// Ação de Alteração de Fomento
         /// </summary>
         /// <param name="id">Identificador de Fomento</param>
-        /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
-        /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
-        /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+        /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+        /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+        /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
         /// <returns></returns>
         public ActionResult Edit(int id, int? crud, int? notify, string message = null)
         {
@@ -155,8 +155,8 @@ namespace WebApp.Controllers
         /// Ação de Alteração de Fomento
         /// </summary>
         /// <param name="id">Identificador de Fomento</param>
-        /// <param name="collection">coleção de dados para Alteração de Fomento</param>
-        /// <returns>retorna mensagem de alteração através do parametro crud</returns>
+        /// <param name="collection">Coleção de dados para Alteração de Fomento</param>
+        /// <returns>Retorna mensagem de alteração através do parametro crud</returns>
         [HttpPost]
         public async Task<ActionResult> Edit(int id, IFormCollection collection)
         {
@@ -182,8 +182,8 @@ namespace WebApp.Controllers
         /// <summary>
         /// Ação de Exclusão de Fomento
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">Identificador de Fomento</param>
+        /// <returns>Retorna mensagem de exclusão através do parametro crud</returns>
         public ActionResult Delete(int id)
         {
             try
