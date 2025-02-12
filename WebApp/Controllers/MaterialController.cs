@@ -19,14 +19,19 @@ namespace WebApp.Controllers;
 [Authorize(Policy = ModuloAccess.ConfiguracaoSistemaEad)]
 public class MaterialController : BaseController
 {
-    #region Constructor
+    #region Parametros
+
     private readonly IOptions<UrlSettings> _appSettings;
+
+    #endregion
+
+    #region Constructor
 
     /// <summary>
     /// Construtor da página
     /// </summary>
-    /// <param name="app">configurações de urls do sistema</param>
-    /// <param name="host">informações da aplicação em execução</param>
+    /// <param name="appSettings">Configurações de urls do sistema</param>
+    /// <param name="host">Informações da aplicação em execução</param>
     public MaterialController(IOptions<UrlSettings> appSettings)
     {
         _appSettings = appSettings;
@@ -38,10 +43,10 @@ public class MaterialController : BaseController
     /// <summary>
     /// Listagem de Material
     /// </summary>
-    /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
-    /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
-    /// <param name="collection">lista de filtros selecionados para pesquisa de materiais</param>
-    /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+    /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+    /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+    /// <param name="collection">Lista de filtros selecionados para pesquisa de materiais</param>
+    /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
     [ClaimsAuthorize(ClaimType.Material, Identity.Claim.Consultar)]
     public async Task<ActionResult> Index(int? crud, int? notify, IFormCollection collection, string message = null)
     {
@@ -86,9 +91,9 @@ public class MaterialController : BaseController
     /// <summary>
     /// Tela para Inclusão de Material
     /// </summary>
-    /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
-    /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
-    /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+    /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+    /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+    /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
     [ClaimsAuthorize(ClaimType.Material, Identity.Claim.Incluir)]
     public ActionResult Create(int? crud, int? notify, string message = null)
     {
@@ -129,8 +134,8 @@ public class MaterialController : BaseController
     /// <summary>
     /// Ação de Inclusão do Material
     /// </summary>
-    /// <param name="collection">coleção de dados para Inclusao de Material</param>
-    /// <returns>retorna mensagem de inclusao através do parametro crud</returns>
+    /// <param name="collection">Coleção de dados para Inclusao de Material</param>
+    /// <returns>Retorna mensagem de inclusao através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.Material, Identity.Claim.Incluir)]
     [HttpPost]
     public async Task<ActionResult> Create(IFormCollection collection)
@@ -160,8 +165,8 @@ public class MaterialController : BaseController
     /// Ação de Alteração do Material
     /// </summary>
     /// <param name="id">Identificador do Material</param>
-    /// <param name="collection">coleção de dados para Alteração de Material</param>
-    /// <returns>retorna mensagem de alteração através do parametro crud</returns>
+    /// <param name="collection">Coleção de dados para Alteração de Material</param>
+    /// <returns>Retorna mensagem de alteração através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.Material, Identity.Claim.Alterar)]
     public async Task<ActionResult> Edit(IFormCollection collection)
     {
@@ -192,8 +197,8 @@ public class MaterialController : BaseController
     /// Ação de Exclusão do Material
     /// </summary>
     /// <param name="id">Identificador do Material</param>
-    /// <param name="collection">coleção de dados para exclusão de Material</param>
-    /// <returns>retorna mensagem de exclusão através do parametro crud</returns>
+    /// <param name="collection">Coleção de dados para exclusão de Material</param>
+    /// <returns>Retorna mensagem de exclusão através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.Material, Identity.Claim.Excluir)]
     public ActionResult Delete(int id)
     {
@@ -208,21 +213,7 @@ public class MaterialController : BaseController
         }
     }
 
-    public Task<JsonResult> GetMateriaisByTipoMaterialId(string id)
-    {
-        try
-        {
-            if (string.IsNullOrEmpty(id)) throw new Exception("Material não informado.");
-            var resultLocal = ApiClientFactory.Instance.GetMateriaisByTipoMaterialId(Convert.ToInt32(id));
-
-            return Task.FromResult(Json(new SelectList(resultLocal, "Id", "Descricao")));
-
-        }
-        catch (Exception ex)
-        {
-            return Task.FromResult(Json(ex.Message));
-        }
-    }
+    
     #endregion
 
     #region Get Methods
@@ -237,6 +228,27 @@ public class MaterialController : BaseController
         var result = ApiClientFactory.Instance.GetMaterialById(id);
 
         return Task.FromResult(result);
+    }
+
+    /// <summary>
+    /// Busca Material por Id de Tipo Material 
+    /// </summary>
+    /// <param name="id">Identificador de Material</param>
+    /// <returns>Retorna a Id de Material</returns>
+    public Task<JsonResult> GetMateriaisByTipoMaterialId(string id)
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(id)) throw new Exception("Material não informado.");
+            var resultLocal = ApiClientFactory.Instance.GetMateriaisByTipoMaterialId(Convert.ToInt32(id));
+
+            return Task.FromResult(Json(new SelectList(resultLocal, "Id", "Descricao")));
+
+        }
+        catch (Exception ex)
+        {
+            return Task.FromResult(Json(ex.Message));
+        }
     }
     #endregion
 }
