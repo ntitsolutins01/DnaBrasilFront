@@ -14,30 +14,35 @@ namespace WebApp.Controllers;
 
 public class RankingController : BaseController
 {
-	#region Constructor
-	private readonly IOptions<UrlSettings> _appSettings;
+    #region Parametros
 
-	/// <summary>
-	/// Construtor da página
-	/// </summary>
-	/// <param name="app">configurações de urls do sistema</param>
-	/// <param name="host">informações da aplicação em execução</param>
-	public RankingController(IOptions<UrlSettings> appSettings)
+    private readonly IOptions<UrlSettings> _appSettings;
+
+    #endregion
+
+    #region Constructor
+
+    /// <summary>
+    /// Construtor da página
+    /// </summary>
+    /// <param name="appSettings">Configurações de urls do sistema</param>
+    /// <param name="host">Informações da aplicação em execução</param>
+    public RankingController(IOptions<UrlSettings> appSettings)
     {
         _appSettings = appSettings;
         ApplicationSettings.WebApiUrl = _appSettings.Value.WebApiBaseUrl;
     }
 	#endregion
 
-	#region Crud Methods
+	#region Main Methods
 
 	/// <summary>
 	/// Listagem de Ranking
 	/// </summary>
-	/// <param name="crud">paramentro que indica o tipo de ação realizado</param>
-	/// <param name="notify">parametro que indica o tipo de notificação realizada</param>
-	/// <param name="collection">lista de filtros selecionados para pesquisa de alunos</param>
-	/// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+	/// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+	/// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+	/// <param name="collection">Lista de filtros selecionados para pesquisa de alunos</param>
+	/// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
 	[ClaimsAuthorize(ClaimType.Ranking, Claim.Consultar)]
 	public IActionResult Index(int? crud, int? notify, string message = null)
     {
@@ -51,9 +56,9 @@ public class RankingController : BaseController
 	/// <summary>
 	/// Tela para inclusão de aluno
 	/// </summary>
-	/// <param name="crud">paramentro que indica o tipo de ação realizado</param>
-	/// <param name="notify">parametro que indica o tipo de notificação realizada</param>
-	/// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+	/// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+	/// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+	/// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
 	[ClaimsAuthorize(ClaimType.Ranking, Claim.Incluir)]
 	public ActionResult Create(int? crud, int? notify, string message = null)
 	{
