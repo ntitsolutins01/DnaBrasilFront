@@ -46,6 +46,7 @@
             'ddlEstado',
             'ddlMunicipio',
             'ddlLocalidade',
+            'ddlProfissional',
             'ddlDeficiencia',
             'ddlEtnia',
             'ddlSexo'
@@ -60,6 +61,7 @@
             estadoId: $('#ddlEstado').val(),
             municipioId: $('#ddlMunicipio').val(),
             localidadeId: $('#ddlLocalidade').val(),
+            profissionalId: $('#ddlProfissional').val(),
             deficienciaId: $('#ddlDeficiencia').val(),
             etniaId: $('#ddlEtnia').val(),
             sexoId: $('#ddlSexo').val()
