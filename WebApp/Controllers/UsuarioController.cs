@@ -40,12 +40,12 @@ namespace WebApp.Controllers
         /// <summary>
         /// Construtor da página
         /// </summary>
-        /// <param name="app">configurações de urls do sistema</param>
-        /// <param name="emailSender">imlementacao de infraestrutura de identidade possa enviar emails de confirmação e redefinição de senha.</param>
-        /// <param name="userManager">gerenciador de identidade de usuários</param>
-        /// <param name="host">informações da aplicação em execução</param>
-        /// <param name="roleManager">gerenciador de regras de permissoes</param>
-        /// <param name="logger">gerenciador de log</param>
+        /// <param name="app">Configurações de urls do sistema</param>
+        /// <param name="emailSender">Imlementacao de infraestrutura de identidade possa enviar emails de confirmação e redefinição de senha.</param>
+        /// <param name="userManager">Gerenciador de identidade de usuários</param>
+        /// <param name="host">Informações da aplicação em execução</param>
+        /// <param name="roleManager">Gerenciador de regras de permissoes</param>
+        /// <param name="logger">Gerenciador de log</param>
         public UsuarioController(IOptions<UrlSettings> app,
             IEmailSender emailSender,
             UserManager<IdentityUser> userManager,
@@ -68,9 +68,9 @@ namespace WebApp.Controllers
         /// <summary>
         /// Listagem de Usuário
         /// </summary>
-        /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
-        /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
-        /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+        /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+        /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+        /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
         [ClaimsAuthorize(ClaimType.Usuario, Identity.Claim.Consultar)]
         public IActionResult Index(int? crud, int? notify, string message = null)
         {
@@ -89,9 +89,9 @@ namespace WebApp.Controllers
         /// <summary>
         /// Tela para Inclusão de Usuario
         /// </summary>
-        /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
-        /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
-        /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+        /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+        /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+        /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
         [ClaimsAuthorize(ClaimType.Usuario, Identity.Claim.Incluir)]
         public ActionResult Create(int? crud, int? notify, string message = null)
         {
@@ -111,8 +111,8 @@ namespace WebApp.Controllers
         /// <summary>
         /// Ação de Inclusão do Usuario
         /// </summary>
-        /// <param name="collection">coleção de dados para inclusao de Usuario</param>
-        /// <returns>retorna mensagem de inclusao através do parametro crud</returns>
+        /// <param name="collection">Coleção de dados para inclusao de Usuario</param>
+        /// <returns>Retorna mensagem de inclusao através do parametro crud</returns>
         [ClaimsAuthorize(ClaimType.Usuario, Identity.Claim.Incluir)]
         [HttpPost]
         public async Task<ActionResult> Create(IFormCollection collection)
@@ -204,7 +204,7 @@ namespace WebApp.Controllers
         /// <summary>
         /// Tela de Alteração de Usuario
         /// </summary>
-        /// <param name="id">id do Usuario</param>
+        /// <param name="id">Id do Usuario</param>
         /// <exception cref="ArgumentNullException">Mensagem de erro ao alterar o tentar acessar tela de alteração do Usuario</exception>
         [ClaimsAuthorize(ClaimType.Usuario, Identity.Claim.Alterar)]
         public async Task<ActionResult> Edit(string id, int? crud, int? notify, string message = null)
@@ -249,9 +249,9 @@ namespace WebApp.Controllers
         /// <summary>
         /// Ação de Alteração do Usuario
         /// </summary>
-        /// <param name="id">identificador do Usuario</param>
-        /// <param name="collection">coleção de dados para alteração de Usuario</param>
-        /// <returns>retorna mensagem de alteração através do parametro crud</returns>
+        /// <param name="id">Identificador do Usuario</param>
+        /// <param name="collection">Coleção de dados para alteração de Usuario</param>
+        /// <returns>Retorna mensagem de alteração através do parametro crud</returns>
         [ClaimsAuthorize(ClaimType.Curso, Identity.Claim.Alterar)]
         [HttpPost]
         public async Task<ActionResult> Edit(int id, IFormCollection collection)
@@ -304,9 +304,9 @@ namespace WebApp.Controllers
         /// <summary>
         /// Ação de Exclusão do Usuario
         /// </summary>
-        /// <param name="id">identificador do Usuario</param>
-        /// <param name="collection">coleção de dados para exclusão de Usuario</param>
-        /// <returns>retorna mensagem de exclusão através do parametro crud</returns>
+        /// <param name="id">Identificador do Usuario</param>
+        /// <param name="collection">Coleção de dados para exclusão de Usuario</param>
+        /// <returns>Retorna mensagem de exclusão através do parametro crud</returns>
         [ClaimsAuthorize(ClaimType.Usuario, Identity.Claim.Excluir)]
         public async Task<ActionResult> Delete(int id)
         {
@@ -356,9 +356,9 @@ namespace WebApp.Controllers
         /// <summary>
         /// Tela de Visualização do Profile do Usuário Logado
         /// </summary>
-        /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
-        /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
-        /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+        /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+        /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+        /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
         public async Task<ActionResult> Profile(int? crud, int? notify, string message = null)
         {
             try
@@ -412,9 +412,9 @@ namespace WebApp.Controllers
         /// <summary>
         /// Método para envio de email
         /// </summary>
-        /// <param name="user">identidade do usuário</param>
-        /// <param name="email">email a ser enviado</param>
-        /// <param name="nome">nome da pessoa que receberá o email</param>
+        /// <param name="user">Identidade do usuário</param>
+        /// <param name="email">Email a ser enviado</param>
+        /// <param name="nome">Nome da pessoa que receberá o email</param>
         [ClaimsAuthorize(ClaimType.Usuario, Identity.Claim.Excluir)]
         private async Task SendNewUserEmail(IdentityUser user, string email, string nome)
         {
@@ -434,8 +434,8 @@ namespace WebApp.Controllers
         /// <summary>
         /// Método de busca de Usuario por email
         /// </summary>
-        /// <param name="email">email</param>
-        /// <returns>retorna objeto Usuario</returns>
+        /// <param name="email">Email</param>
+        /// <returns>Retorna objeto Usuario</returns>
         [ClaimsAuthorize(ClaimType.Usuario, Identity.Claim.Consultar)]
         public Task<JsonResult> GetUsuarioByEmail(string email)
         {
@@ -462,8 +462,8 @@ namespace WebApp.Controllers
         /// <summary>
         /// Método de busca de Usuario por cpf
         /// </summary>
-        /// <param name="cpf">cpf do Usuario</param>
-        /// <returns>retorna objeto Usuario</returns>
+        /// <param name="cpf">Cpf do Usuario</param>
+        /// <returns>Retorna objeto Usuario</returns>
         [ClaimsAuthorize(ClaimType.Usuario, Identity.Claim.Consultar)]
         public Task<JsonResult> GetUsuarioByCpf(string cpf)
         {
