@@ -80,6 +80,7 @@ namespace WebApp.Controllers
                     Estado = collection["ddlEstado"].ToString(),
                     MunicipioId = collection["ddlMunicipio"].ToString(),
                     LocalidadeId = collection["ddlLocalidade"].ToString() == "" ? usu.LocalidadeId : collection["ddlLocalidade"].ToString(),
+                    ProfissionalId = collection["ddlProfissional"].ToString(),
                     DeficienciaId = collection["ddlDeficiencia"].ToString(),
                     Etnia = collection["ddlEtnia"].ToString(),
                     Sexo = collection["ddlSexo"].ToString(),
@@ -99,6 +100,8 @@ namespace WebApp.Controllers
                                         ? string.IsNullOrEmpty(searchFilter.Etnia)
                                             ? string.IsNullOrEmpty(searchFilter.Nome)
                                                 ? string.IsNullOrEmpty(searchFilter.Matricula)
+                                                    ? string.IsNullOrEmpty(searchFilter.ProfissionalId)
+                                                    : false
                                                 : false
                                             : false
                                         : false
