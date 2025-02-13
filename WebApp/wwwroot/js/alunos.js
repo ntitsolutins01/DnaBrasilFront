@@ -119,6 +119,35 @@ var vm = new Vue({
 
                     self.ShowLoad(false, "pFiltro");
                 });
+
+                $("#ddlLocalidade").change(function () {
+                    var id = $("#ddlLocalidade").val();
+
+                    var urlProfissional = "../../Profissional/GetProfissionaisByLocalidade/?id=" + id;
+
+                    var ddlSource = "#ddlProfissional";
+
+                    $.getJSON(urlProfissional,
+                        { id: $(ddlSource).val() },
+                        function (data) {
+                            if (data.length > 0) {
+                                var items = '<option value="">Selecionar Profissional</option>';
+                                $("#ddlProfissional").empty;
+                                $.each(data,
+                                    function (i, row) {
+                                        items += "<option value='" + row.value + "'>" + row.text + "</option>";
+                                    });
+                                $("#ddlProfissional").html(items);
+                            }
+                            else {
+                                new PNotify({
+                                    title: 'Profissional',
+                                    text: 'Profissional não encontrados.',
+                                    type: 'warning'
+                                });
+                            }
+                        });
+                });
             }
 
             //self.GetPesquisaAluno();

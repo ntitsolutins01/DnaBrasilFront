@@ -137,7 +137,7 @@ var vm = new Vue({
                 $("#ddlModalidade").change(function () {
                     var modalidadeId = $("#ddlModalidade").val();
 
-                    var profissionalId = $("#profissionalIdMinhasTurmas").val();
+                    var profissionalId = $("#ddlProfissional").val();
 
                     var url = "../Profissional/GetTurmasByModalidadeIdProfissionalId";
 

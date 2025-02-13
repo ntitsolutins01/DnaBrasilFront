@@ -117,7 +117,7 @@ namespace WebApp.Controllers
                 var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentoAll(), "Id", "Nome", searchFilter.FomentoId);
                 var deficiencias = new SelectList(ApiClientFactory.Instance.GetDeficienciaAll().Where(x => x.Status), "Id", "Nome", searchFilter.DeficienciaId);
                 var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome", usu.Uf);
-
+                var profissionais = new SelectList(ApiClientFactory.Instance.GetProfissionaisByLocalidade(Convert.ToInt32(usu.LocalidadeId)), "Id", "Nome");
 
                 List<SelectListDto> listSexo = new List<SelectListDto>
                 {
@@ -166,7 +166,8 @@ namespace WebApp.Controllers
                     ListSexos = sexos,
                     ListLocalidades = localidades!,
                     Alunos = result.Alunos,
-                    SearchFilter = searchFilter
+                    SearchFilter = searchFilter,
+                    ListProfissionais = profissionais
 
                 };
                 return View(model);
