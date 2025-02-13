@@ -27,7 +27,7 @@ namespace WebApp.Controllers
         /// <summary>
         /// Construtor da página
         /// </summary>
-        /// <param name="appSettings">configurações de urls do sistema</param>
+        /// <param name="appSettings">Configurações de urls do sistema</param>
         public TextoLaudoController(IOptions<UrlSettings> appSettings)
         {
             _appSettings = appSettings;
@@ -41,9 +41,9 @@ namespace WebApp.Controllers
         /// <summary>
         /// Listagem do Texto de Laudo 
         /// </summary>
-        /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
-        /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
-        /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+        /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+        /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+        /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
         /// <returns></returns>
         public IActionResult Index(int? crud, int? notify, string message = null)
         {
@@ -57,9 +57,9 @@ namespace WebApp.Controllers
         /// <summary>
         /// Tela para Inclusão do Texto de Laudo 
         /// </summary>
-        /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
-        /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
-        /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+        /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+        /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+        /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
         /// <returns></returns>
         //[ClaimsAuthorize("ConfiguracaoSistema", "Incluir")]
         public ActionResult Create(int? crud, int? notify, string message = null)
@@ -83,8 +83,8 @@ namespace WebApp.Controllers
         /// <summary>
         /// Ação de Inclusão do Texto de Laudo 
         /// </summary>
-        /// <param name="collection">coleção de dados para inclusao do Texto de Laudo </param>
-        /// <returns>retorna mensagem de inclusao através do parametro crud</returns>
+        /// <param name="collection">Coleção de dados para inclusao do Texto de Laudo </param>
+        /// <returns>Retorna mensagem de inclusao através do parametro crud</returns>
         //[ClaimsAuthorize("Usuario", "Incluir")]
         [HttpPost]
         public async Task<ActionResult> Create(IFormCollection collection)
@@ -117,8 +117,8 @@ namespace WebApp.Controllers
         /// <summary>
         /// Ação de Alteração do Texto de Laudo 
         /// </summary>
-        /// <param name="collection">coleção de dados para alteração do Texto de Laudo </param>
-        /// <returns>retorna mensagem de alteração através do parametro crud</returns>
+        /// <param name="collection">Coleção de dados para alteração do Texto de Laudo </param>
+        /// <returns>Retorna mensagem de alteração através do parametro crud</returns>
         //[ClaimsAuthorize("Usuario", "Alterar")]
         public async Task<ActionResult> Edit(IFormCollection collection)
         {
@@ -149,8 +149,8 @@ namespace WebApp.Controllers
         /// <summary>
         /// Ação de Exclusão do Texto de Laudo 
         /// </summary>
-        /// <param name="id">identificador do Texto de Laudo </param>
-        /// <returns>retorna mensagem de exclusão através do parametro crud</returns>
+        /// <param name="id">Identificador do Texto de Laudo </param>
+        /// <returns>Retorna mensagem de exclusão através do parametro crud</returns>
         //[ClaimsAuthorize("Usuario", "Excluir")]
         public ActionResult Delete(int id)
         {
