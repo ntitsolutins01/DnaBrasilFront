@@ -32,7 +32,7 @@ namespace WebApp.Models
         public string SexoId { get; set; }
         public string? NomePerfil { get; set; }
         public AlunosFilterDto SearchFilter { get; set; }
-
+        public ModeloCarteirinhaDto ModeloCarteirinha { get; set; } 
 
         public class CreateUpdateDadosAlunoCommand
         {

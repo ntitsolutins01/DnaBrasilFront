@@ -1,7 +1,7 @@
 ﻿@model WebApp.Models.ControlePresencaModel
 @{
-	ViewData["Title"] = "Listagem de ControlePresencas";
-	Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Listagem de ControlePresencas";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div id="vControlePresenca">
@@ -56,12 +56,72 @@
                     <footer class="panel-footer">
                         <div class="row">
                             <div class="col-sm-2 pull-right">
-                                <button type="submit" class="btn btn-block btn-primary pull-right"><i class="fa fa-search"></i> &nbsp;&nbsp;Pesquisar</button>
+                                <button type="submit" class="btn btn-block btn-info pull-right">
+                                    <i class="fa fa-search"></i> &nbsp;&nbsp;Pesquisar
+                                </button>
                             </div>
                         </div>
                     </footer>
                 </section>
             }
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <section class="panel">
+                <header class="panel-heading">
+                    <div class="panel-actions">
+                        <a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
+                    </div>
+                    <h2 class="panel-title">Controle de Presença</h2>
+                </header>
+                <div class="panel-body">
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Atividade / Modalidade <span class="required">*</span></label>
+                        <div class="col-sm-4">
+                            <select class="form-control populate select2" name="ddlModalidade" id="ddlModalidade"
+                                    title="Por favor informe a Atividade / Modalidade." required style="width:100%"
+                                    asp-for="AtividadeModalidadeId" asp-items="Model.ListAtividadesModalidades">
+                                <option value="">Selecionar Atividade / Modalidade</option>
+                            </select>
+                        </div>
+                        <label class="col-sm-1 control-label">Dias da Semana </label>
+                        <div class="col-sm-5">
+                            <input id="diaSemana" name="diaSemana" disabled
+                                   type="text" class="form-control" :value="editDto.DiasSemana"
+                                   maxlength="14" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label text-sm-right pt-2">Turma <span class="required">*</span></label>
+                        <div class="col-md-4">
+                            <select class="form-control populate select2" name="ddlTurma" id="ddlTurma"
+                                    title="Por favor informe a turma." required style="width:100%">
+                                <option value="">Selecionar Turma</option>
+                            </select>
+                        </div>
+
+                        <label class="col-sm-1 control-label">Estrutura </label>
+                        <div class="col-sm-5">
+                            <input id="estrutura" name="estrutura" disabled
+                                   type="text" class="form-control" :value="editDto.Estrutura"
+                                   maxlength="14" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-6">
+                        </div>
+
+                        <label class="col-sm-1 control-label">Categoria </label>
+                        <div class="col-sm-5">
+                            <input id="categoria" name="categoria" :value="editDto.Categoria"
+                                   type="text" class="form-control" disabled
+                                   maxlength="14" />
+                        </div>
+                    </div>
+                </div>
+            </section>
         </div>
     </div>
     <div class="row">
@@ -74,225 +134,103 @@
                     <h2 class="panel-title">Listagem de Controles de Presenças</h2>
                 </header>
                 <div class="panel-body">
-                    <div class="form-group row">
-                        <div class="col-sm-2 pull-right">
-                            <a href="@Url.Action("Create", "ControlePresenca")" id="addToTable" class="btn btn-block btn-primary pull-right"><i class="fa fa-plus"></i> &nbsp;&nbsp;Novo Controle</a>
-                        </div>
-                    </div>
+
                     <table class="table table-bordered table-striped mb-0" id="datatable-default">
                         <thead>
-                        <tr>
-                            <th class="text-center">Id</th>
-                            <th class="text-center">Aluno</th>
-                            <th class="text-center">Localidade</th>
-                                <th class="text-center" style="width: 10%;">Controle</th>
-                            <th class="text-center">Data</th>
-                            <th class="text-center">Justificativa</th>
-                            <th class="text-center">Ações</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach (var item in Model.ControlesPresencas.Items)
-                        {
                             <tr>
-                                <td class="text-center" style="width:20px;">@Html.DisplayFor(modelItem => item.Id)</td>
-                                <td class="text-center">@Html.DisplayFor(modelItem => item.NomeAluno)</td>
-                                <td class="text-center">@Html.DisplayFor(modelItem => item.NomeLocalidade)</td>
-                                @if (item.Controle == "P")
-                                {
-                                        <td class="text-center"><span class="label label-success" style="display: block;">Presente</span></td>
-                                }
-                                else
-                                {
-                                        <td class="text-center"><span class="label label-danger" style="display: block;">Falta</span></td>
-                                }
-                                <td class="text-center">@Html.DisplayFor(modelItem => item.Data)</td>
-                                <td class="text-center">@Html.DisplayFor(modelItem => item.Justificativa)</td>
-                                <td class="actions text-center">
-                                    <a data-toggle="tooltip" data-placement="top" title="Editar"
-                                       href='javascript:(crud.EditModal(@item.Id))'
-                                           class="on-default edit-row" style='color: #FF9800' style="display: block;">
-                                        <i class="fa fa-pencil"></i>
-                                    </a>
-                                    <a data-toggle="tooltip" data-placement="top" title="Excluir" href='javascript:(crud.DeleteModal(@item.Id))'
-                                           class="on-default remove-row" style=" cursor: pointer;color: #F44336"><i class="fa fa-trash"></i></a>
-                                </td>
+                                <th>Presença / Falta</th>
+                                <th>Nome Aluno</th>
+                                <th>Justificativa</th>
+                                <th>Ação</th>
                             </tr>
-                        }
-                        </tbody>
+                        </thead>
                     </table>
                 </div>
             </section>
         </div>
     </div>
-    <!-- Modal -->
-    <div class="modal fade" id="mdDeleteControlePresenca" tabindex="-1" role="dialog" aria-labelledby="mdDeleteControlePresencaLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="mdDeleteControlePresencaLabel">
-                        <i class="fa fa-trash"></i> &nbsp;&nbsp;<strong>Exclusão de ControlePresenca</strong>
-                    </h5>
-                </div>
-                <div class="modal-body">
-                    <div class="modal-icon">
-                        <i class="fa fa-question-circle"></i>
-                    </div>
-                    <div class="modal-text">
-                        <input type="hidden" id="deleteControlePresencaId"/>
-                        <p class="mb-0">Tem certeza que deseja <b>excluir</b> esse registro?</p>
-                    </div>
-                    <div class="modal-wrapper">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-thumbs-o-down"></i> &nbsp;&nbsp;Não</button>
-                    <a id="deleteControlePresencaHref" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-thumbs-o-up"></i> &nbsp;&nbsp;Sim</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Modal -->
-    <div class="modal fade" id="mdEditControlePresenca" tabindex="-1" role="dialog" aria-labelledby="mdEditControlePresencaLabel" aria-hidden="true">
-        <div class="modal-dialog modal-md" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="mdEditControlePresencaLabel">
-                        <i class="fa fa-pencil"></i> &nbsp;&nbsp;<strong>Alterar ControlePresenca</strong>
-                    </h5>
-                </div>
-                @using (@Html.BeginForm("Edit", "ControlePresenca", FormMethod.Post, new { id = "formEditControlePresenca", @class = "form-horizontal" }))
-                {
-                    <input type="hidden" name="editControlePresencaId" :value="editDto.Id"/>
-                    <input type="hidden" name="editAlunoId" :value="editDto.AlunoId"/>
-
-                    <div class="modal-body">
-                        <div class="form-group row">
-                            <label class="col-sm-3 control-label text-sm-right pt-2">Município / UF</label>
-                            <div class="col-sm-5">
-                                <input type="text" name="municipio" class="form-control" :value="editDto.MunicipioEstado" readonly/>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-3 control-label text-sm-right pt-2">Localidade</label>
-                            <div class="col-sm-9">
-                                <input type="text" name="localidade" class="form-control" :value="editDto.NomeLocalidade" readonly/>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label text-sm-right pt-2">Aluno <span class="required">*</span></label>
-                            <div class="col-md-9">
-                                <input type="text" name="aluno" class="form-control" :value="editDto.NomeAluno" readonly/>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-3 control-label text-sm-right pt-2">Controle <span class="required">*</span></label>
-                            <div class="col-sm-4">
-                                <div class="radio-custom radio-success">
-                                    <input type="radio" id="controlePresente" name="controle" value="P" required title="Por favor selecione uma opção" :checked="editDto.Controle === 'P'">
-                                    <label>Presente</label>
-                                </div>
-                                <div class="radio-custom radio-danger">
-                                    <input type="radio" id="controleFalta" name="controle" value="F" required title="Por favor selecione uma opção" :checked="editDto.Controle === 'F'">
-                                    <label>Falta</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label text-sm-right pt-2">Justificativa <span class="required">*</span></label>
-                            <div class="col-sm-9">
-                                <textarea class="form-control" rows="3" maxlength="500" :value="editDto.Justificativa" name="justificativa"></textarea>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-remove"></i> &nbsp;&nbsp;Cancelar</button>
-                        <button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
-                    </div>
-                }
-            </div>
-        </div>
-    </div>
 </div>
 
 @section CssSpecificVendor {
-	<link rel="stylesheet" href="~/assets/vendor/select2/css/select2.css" />
-	<link rel="stylesheet" href="~/assets/vendor/select2-bootstrap-theme/select2-bootstrap.min.css" />
+    <link rel="stylesheet" href="~/assets/vendor/select2/css/select2.css" />
+    <link rel="stylesheet" href="~/assets/vendor/select2-bootstrap-theme/select2-bootstrap.min.css" />
     <link rel="stylesheet" href="~/assets/vendor/datatables/media/css/dataTables.bootstrap4.css" />
 }
 @section Scripts {
-	<script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
-	<script src="~/assets/vendor/select2/js/select2.js"></script>
+    <script src="~/assets/vendor/ios7-switch/ios7-switch.js"></script>
+    <script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
+    <script src="~/assets/vendor/select2/js/select2.js"></script>
+    <script src="~/assets/vendor/jquery-mask/jquery.mask.js"></script>
     <script src="~/assets/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
-	<script src="~/js/formatTable.js"></script>
     <script src="~/assets/vendor/datatables/media/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/js/formatTable.js"></script>
     <script src="~/js/ControlesPresencas.js"></script>
 
-	<script>
+    <script>
 
-		(function ($) {
+        (function ($) {
 
-			'use strict';
-			var crub = @ViewBag.CrudMessage;
+            'use strict';
+            var crub = @ViewBag.CrudMessage;
 
-			if (crub === 1) {
-				new PNotify({
-					title: 'ControlePresenca',
-					text: 'Cadastro realizado com sucesso!',
-					type: 'success'
-				});
-				crub = 0;
-			} else if (crub === 2) {
-				new PNotify({
-					title: 'ControlePresenca',
-					text: 'Dados alterados com sucesso.',
-					type: 'warning',
-					icon: 'fa fa-pencil'
-				});
-				crub = 0;
-			} else if (crub === 3) {
-				new PNotify({
-					title: 'ControlePresenca',
-					text: 'Registro excluído com sucesso.',
-					type: 'error',
-					icon: 'fa fa-trash-o'
-				});
-				crub = 0;
-			}
+            if (crub === 1) {
+                new PNotify({
+                    title: 'ControlePresenca',
+                    text: 'Cadastro realizado com sucesso!',
+                    type: 'success'
+                });
+                crub = 0;
+            } else if (crub === 2) {
+                new PNotify({
+                    title: 'ControlePresenca',
+                    text: 'Dados alterados com sucesso.',
+                    type: 'warning',
+                    icon: 'fa fa-pencil'
+                });
+                crub = 0;
+            } else if (crub === 3) {
+                new PNotify({
+                    title: 'ControlePresenca',
+                    text: 'Registro excluído com sucesso.',
+                    type: 'error',
+                    icon: 'fa fa-trash-o'
+                });
+                crub = 0;
+            }
 
 
-			var notify = @ViewBag.NotifyMessage;
-			var messagem = '@ViewBag.Notify';
+            var notify = @ViewBag.NotifyMessage;
+            var messagem = '@ViewBag.Notify';
 
-			if (notify === 0) {
-				new PNotify({
-					title: 'ControlePresenca',
-					text: messagem,
-					type: 'success'
-				});
-				crub = 0;
-			} else if (notify === 1) {
-				new PNotify({
-					title: 'ControlePresenca',
-					text: messagem,
-					type: 'warning'
-				});
-				crub = 0;
-			} else if (notify === 2) {
-				new PNotify({
-					title: 'ControlePresenca',
-					text: messagem,
-					type: 'error'
-				});
-				crub = 0;
-			}
+            if (notify === 0) {
+                new PNotify({
+                    title: 'ControlePresenca',
+                    text: messagem,
+                    type: 'success'
+                });
+                crub = 0;
+            } else if (notify === 1) {
+                new PNotify({
+                    title: 'ControlePresenca',
+                    text: messagem,
+                    type: 'warning'
+                });
+                crub = 0;
+            } else if (notify === 2) {
+                new PNotify({
+                    title: 'ControlePresenca',
+                    text: messagem,
+                    type: 'error'
+                });
+                crub = 0;
+            }
 
-			if ($.isFunction($.fn['tooltip'])) {
-				$('[data-toggle=tooltip],[rel=tooltip]').tooltip({ container: 'body' });
-			}
+            if ($.isFunction($.fn['tooltip'])) {
+                $('[data-toggle=tooltip],[rel=tooltip]').tooltip({ container: 'body' });
+            }
 
-		}).apply(this, [jQuery]);
-	</script>
+        }).apply(this, [jQuery]);
+    </script>
 }
 
 

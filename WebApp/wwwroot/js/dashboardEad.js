@@ -230,30 +230,30 @@ var vm = new Vue({
             };
 
             //Busca indicadores de acordo com o filtro selecionado
-            //axios.post("DashboardEad/GetIndicadoresAlunosByFilter", obj, axiosConfig).then(result => {
-            //    var self = this;
-            //    self.ShowLoad(true, "pIndicadores");
+            axios.post("DashboardEad/GetIndicadoresAlunosByFilter", obj, axiosConfig).then(result => {
+                var self = this;
+                self.ShowLoad(true, "pIndicadores");
 
-            //    $("#cadastrosMasculinos").text(result.data.dashboard.cadastrosMasculinos);
-            //    $("#avaliacoesDna").text(result.data.dashboard.avaliacoesDna);
-            //    $("#laudosAndamentos").text(result.data.dashboard.laudosAndamentos);
-            //    $("#laudosFinalizados").text(result.data.dashboard.laudosFinalizados);
-            //    $("#cadastrosFemininos").text(result.data.dashboard.cadastrosFemininos);
-            //    $("#alunosCadastrados").text(result.data.dashboard.alunosCadastrados);
-            //    $("#laudosMasculinos").text(result.data.dashboard.laudosMasculinos);
-            //    $("#laudosFemininos").text(result.data.dashboard.laudosFemininos);
+                $("#cadastrosMasculinos").text(result.data.dashboard.cadastrosMasculinos);
+                $("#avaliacoesDna").text(result.data.dashboard.avaliacoesDna);
+                $("#laudosAndamentos").text(result.data.dashboard.laudosAndamentos);
+                $("#laudosFinalizados").text(result.data.dashboard.laudosFinalizados);
+                $("#cadastrosFemininos").text(result.data.dashboard.cadastrosFemininos);
+                $("#alunosCadastrados").text(result.data.dashboard.alunosCadastrados);
+                $("#laudosMasculinos").text(result.data.dashboard.laudosMasculinos);
+                $("#laudosFemininos").text(result.data.dashboard.laudosFemininos);
 
-            //    self.ShowLoad(false, "pIndicadores");
+                self.ShowLoad(false, "pIndicadores");
 
-            //}).catch(error => {
-            //    Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
+            }).catch(error => {
+                Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
 
-            //    self.ShowLoad(false, "pIndicadores");
-            //});
+                self.ShowLoad(false, "pIndicadores");
+            });
 
-            //monta grafico de Tipo de cursos concluidos por sexo
-            //axios.post("DashboardEad/GetGraficosSaudeByFilter", obj, axiosConfig).then(result => {
-            //    var self = this;
+            monta grafico de Tipo de cursos concluidos por sexo
+            axios.post("DashboardEad/GetGraficosSaudeByFilter", obj, axiosConfig).then(result => {
+                var self = this;
 
             self.ShowLoad(true, "pTipoCursosConcluidos");
 

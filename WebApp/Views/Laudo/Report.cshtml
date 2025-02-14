@@ -85,22 +85,22 @@
                     <div class="container-title-info">
                         <span>MEU TALENTO</span>
                         <span>
-                            @if (Model.Laudo.Modalidade == null)
+                            @if (Model.Modalidade.Nome == null)
                             {
                                 <text>Não Definido</text>
                             }
                             else
                             {
-                                <text>@Model.Laudo.Modalidade</text>
+                                <text>@Model.Modalidade.Nome</text>
                             }
                         </span>
                     </div>
-                    @if (Model.Laudo.ModalidadeByteImage != null)
+                    @if (Model.Modalidade.ByteImage != null)
                     {
-                        <div class="img-qrcode-info"
+                        <div class="img-modalidade"
                              style=" background-size: cover;">
                             @{
-                                var base64 = Convert.ToBase64String(Model.Laudo.ModalidadeByteImage);
+                                var base64 = Convert.ToBase64String(Model.Modalidade.ByteImage);
                                 var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
                             }
                             <img src="@imgSrc" />
@@ -109,10 +109,10 @@
                     }
                     else
                     {
-                        @* <div class="img-qrcode-info"
+                        @* <div class="img-modalidade"
                              style="background-image: url('/assets/assets_Laudo/qrCode.svg'); background-size: cover;">
                         </div> *@
-                        <div class="img-qrcode-info"
+                        <div class="img-modalidade"
                              style="background-image: url('/assets/assets_Laudo/icon_info_esporte.png'); background-size: cover;">
                         </div>
                     }
@@ -301,15 +301,15 @@
                             </div>
                         }
                         @* <div class="row-info">
-                        <span class="label-info">Modalidade</span>
+                        <span class="label-info">NomeModalidade</span>
                         <span class="value-info">
-                        @if (Model.Laudo.Modalidade == null)
+                        @if (Model.Laudo.NomeModalidade == null)
                         {
                         <text>Em desenvolvimento</text>
                         }
                         else
                         {
-                        <text>@Model.Laudo.Modalidade</text>
+                        <text>@Model.Laudo.NomeModalidade</text>
                         }
                         </span>
                         </div>*@
@@ -370,7 +370,16 @@
                     </div>
                     <div class="container-laudo-text">
                         <span>Profissional</span>
-                        <span>@Model.Profissional.Nome</span>
+                        <span>
+                            @if (Model.Profissional == null)
+                            {
+                                <text>Não Definido</text>
+                            }
+                            else
+                            {
+                                <text>@Model.Profissional.Nome</text>
+                            }
+                        </span>
                         <span>
                             O percentual abaixo apresenta a variação dos
                             Indicadores frente ao histórico
@@ -633,7 +642,16 @@
                     </div>
                     <div class="container-laudo-text">
                         <span>Profissional</span>
-                        <span>@Model.Profissional.Nome</span>
+                        <span>
+                            @if (Model.Profissional == null)
+                            {
+                                <text>Não Definido</text>
+                            }
+                            else
+                            {
+                                <text>@Model.Profissional.Nome</text>
+                            }
+                        </span>
                         <span>
                             O percentual abaixo apresenta a variação dos
                             Indicadores frente ao histórico
@@ -759,7 +777,16 @@
                     </div>
                     <div class="container-laudo-text">
                         <span>Profissional</span>
-                        <span>@Model.Profissional.Nome</span>
+                        <span>
+                            @if (Model.Profissional == null)
+                            {
+                                <text>Não Definido</text>
+                            }
+                            else
+                            {
+                                <text>@Model.Profissional.Nome</text>
+                            }
+                        </span>
                         <span>
                             O percentual abaixo apresenta a variação dos
                             Indicadores frente ao histórico
@@ -889,7 +916,16 @@
                     </div>
                     <div class="container-laudo-text">
                         <span>Profissional</span>
-                        <span>@Model.Profissional.Nome</span>
+                        <span>
+                            @if (Model.Profissional == null)
+                            {
+                                <text>Não Definido</text>
+                            }
+                            else
+                            {
+                                <text>@Model.Profissional.Nome</text>
+                            }
+                        </span>
                         <span>
                             O percentual abaixo apresenta a variação dos
                             Indicadores frente ao histórico
@@ -931,7 +967,7 @@
 
                             @foreach (var item in Model.ListVocacional)
                             {
-                                if (item.Id == Model.Laudo.VocacionalId)
+                                if (item.Id == Model.Laudo.EncaminhamentoVocacionalId)
                                 {
                                     <div class="row-vida">
                                         <div class="label-vida">
@@ -955,7 +991,7 @@
                                                 <span>@item.Nome</span>
                                             </div>
                                         </div>
-                                        <div class="value-vida">
+                                        <div class="value-vida" style="border: double;border-color: #5B5C9C;">
                                             <span>
                                                 @item.Descricao
                                             </span>
@@ -1038,7 +1074,16 @@
                     </div>
                     <div class="container-laudo-text">
                         <span>Profissional</span>
-                        <span>@Model.Profissional.Nome</span>
+                        <span>
+                            @if (Model.Profissional == null)
+                            {
+                                <text>Não Definido</text>
+                            }
+                            else
+                            {
+                                <text>@Model.Profissional.Nome</text>
+                            }
+                        </span>
                         <span>
                             O percentual abaixo apresenta a variação dos
                             Indicadores frente ao histórico
@@ -1128,7 +1173,16 @@
                     </div>
                     <div class="container-laudo-text">
                         <span>Profissional</span>
-                        <span>@Model.Profissional.Nome</span>
+                        <span>
+                            @if (Model.Profissional == null)
+                            {
+                                <text>Não Definido</text>
+                            }
+                            else
+                            {
+                                <text>@Model.Profissional.Nome</text>
+                            }
+                        </span>
                         <span>
                             O percentual abaixo apresenta a variação dos
                             Indicadores frente ao histórico
@@ -1165,8 +1219,36 @@
                         <div class="container-2-saude">
                             <div class="container-icon-saude">
                                 <div class="circle-saude" style="background-color: #E96D53"></div>
-                                <div class="icon-saude"
-                                     style="background-image: url('/assets/assets_Laudo/laudo-vocacao-1.png'); background-size: cover;">
+                                @if (Model.EncaminhamentoSaudeBucal.ByteImage != null)
+                                {
+                                    var base64 = Convert.ToBase64String(Model.EncaminhamentoSaudeBucal.ByteImage);
+                                    var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+
+                                    <img src="@imgSrc" style="width:100%;" />
+                                    @* <div class="icon-saude"
+                                         style="background-image: url('/assets/assets_Laudo/laudo-vocacao-1.png'); background-size: cover;"> *@
+                                }
+                                else
+                                {
+                                    <div class="icon-saude"
+                                         style="background-image: url('/assets/assets_Laudo/laudo-vocacao-1.png'); background-size: cover;">
+                                    </div>
+                                }
+                            </div>
+                            <div class="label-vida-container-1"
+                                 style="background-color: #5B5C9C;">
+                                <div class="label-vida-icon" style="background-size: cover;">
+                                    @if (Model.EncaminhamentoSaudeBucal.ByteImage != null)
+                                    {
+                                        var base64 = Convert.ToBase64String(Model.EncaminhamentoSaudeBucal.ByteImage);
+                                        var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+
+                                        <img src="@imgSrc" style="width:100%;" />
+                                    }
+                                    else
+                                    {
+                                        <img src="~/assets/assets_Laudo/img-vocacao/laudo-vocacao-1.png" style="width:100%;" />
+                                    }
                                 </div>
                             </div>
                             <div class="container-3-saude">

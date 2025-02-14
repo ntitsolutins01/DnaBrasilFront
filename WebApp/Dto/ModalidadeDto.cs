@@ -1,31 +1,36 @@
-﻿namespace WebApp.Dto
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+
+namespace WebApp.Dto
 {
     public class ModalidadeDto
     {
-        public string Id { get; set; }
-        public string Nome { get; set; }
-        public int Vo2MaxIni { get; set; }
-        public int Vo2MaxFim { get; set; }
-        public int VinteMetrosIni { get; set; }
-        public int VinteMetrosFim { get; set; }
-        public int ShutlleRunIni { get; set; }
-        public int ShutlleRunFim { get; set; }
-        public int FlexibilidadeIni { get; set; }
-        public int FlexibilidadeFim { get; set; }
-        public int PreensaoManualIni { get; set; }
-        public int PreensaoManualFim { get; set; }
-        public int AbdominalPranchaIni { get; set; }
-        public int AbdominalPranchaFim { get; set; }
-        public int ImpulsaoIni { get; set; }
-        public int ImpulsaoFim { get; set; }
-        public int EnvergaduraIni { get; set; }
-        public int EnvergaduraFim { get; set; }
-        public int PesoIni { get; set; }
-        public int PesoFim { get; set; }
-        public int AlturaIni { get; set; }
-        public int AlturaFim { get; set; }
-        public bool Status { get; set; }
-        public int? LinhaAcaoId { get; set; }
-        public string? LinhaAcao { get; set; }
+        public int Id { get; init; }
+        public string? Nome { get; init; }
+        public int Vo2MaxIni { get; init; }
+        public int Vo2MaxFim { get; init; }
+        public int VinteMetrosIni { get; init; }
+        public int VinteMetrosFim { get; init; }
+        public int ShutlleRunIni { get; init; }
+        public int ShutlleRunFim { get; init; }
+        public int FlexibilidadeIni { get; init; }
+        public int FlexibilidadeFim { get; init; }
+        public int PreensaoManualIni { get; init; }
+        public int PreensaoManualFim { get; init; }
+        public int AbdominalPranchaIni { get; init; }
+        public int AbdominalPranchaFim { get; init; }
+        public int ImpulsaoIni { get; init; }
+        public int ImpulsaoFim { get; init; }
+        public int EnvergaduraIni { get; init; }
+        public int EnvergaduraFim { get; init; }
+        public int PesoIni { get; init; }
+        public int PesoFim { get; init; }
+        public int AlturaIni { get; init; }
+        public int AlturaFim { get; init; }
+        public bool Status { get; init; } = true;
+        public byte[]? ByteImage { get; init; }
+        public string? NomeByteImage { get; init; }
+        public int? LinhaAcaoId { get; init; }
+        public string? LinhaAcao { get; init; }
+        public SelectList ListLinhasAcoes { get; set; }
     }
 }

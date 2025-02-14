@@ -14,6 +14,7 @@ using WebApp.Dto;
 using ClosedXML.Excel;
 using System.Diagnostics;
 using DocumentFormat.OpenXml.Presentation;
+using log4net;
 
 namespace WebApp.Controllers
 {
@@ -22,11 +23,15 @@ namespace WebApp.Controllers
     {
         private readonly IOptions<UrlSettings> _appSettings;
         private readonly IWebHostEnvironment _host;
+        private readonly ILog _logger;
 
-        public LaudoController(IOptions<UrlSettings> appSettings, IWebHostEnvironment host)
+        public LaudoController(IOptions<UrlSettings> appSettings, 
+            IWebHostEnvironment host, 
+            ILog logger)
         {
             _appSettings = appSettings;
             _host = host;
+            _logger = logger;
             ApplicationSettings.WebApiUrl = _appSettings.Value.WebApiBaseUrl;
         }
 
@@ -35,12 +40,14 @@ namespace WebApp.Controllers
         {
             try
             {
+                _logger.Info($"Usuario Logado: {User.Identity.Name}");
+
                 var usuario = User.Identity.Name;
 
                 SetNotifyMessage(notify, message);
                 SetCrudMessage(crud);
 
-                var usu = ApiClientFactory.Instance.GetUsuarioByEmail(usuario);
+                var usu = await ApiClientFactory.Instance.GetUsuarioByEmail(usuario);
 
 
                 var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentoAll(), "Id", "Nome");
@@ -90,7 +97,7 @@ namespace WebApp.Controllers
                     Finalizado = finalizado != "",
                     PageNumber = 1,
 #if DEBUG
-                    PageSize = 10
+                    PageSize = 300
 #else
                     PageSize = 1000
 #endif
@@ -117,22 +124,22 @@ namespace WebApp.Controllers
             }
             catch (Exception e)
             {
-                Console.Write(e.StackTrace);
+                _logger.Error(e.StackTrace);
                 return RedirectToAction(nameof(Error), new { notify = (int)EnumNotify.Error, message = e.Message });
 
             }
         }
 
         [ClaimsAuthorize(ClaimType.Laudo, Claim.Detalhar)]
-        public ActionResult Details(int id)
+        public async Task<ActionResult> Details(int id)
         {
             var laudo = ApiClientFactory.Instance.GetLaudoByAluno(id);
 
             var consumoAlimentar = laudo.ConsumoAlimentarId == null ? null : ApiClientFactory.Instance.GetConsumoAlimentarById((int)laudo.ConsumoAlimentarId);
             var saudeBucal = laudo.SaudeBucalId == null ? null : ApiClientFactory.Instance.GetConsumoAlimentarById((int)laudo.SaudeBucalId);
 
-            var aluno = ApiClientFactory.Instance.GetAlunoById(id);
-            var profissional = ApiClientFactory.Instance.GetProfissionalById(Convert.ToInt32(aluno.ProfissionalId));
+            var aluno = await ApiClientFactory.Instance.GetAlunoById(id);
+            var profissional = laudo.ProfissionalId == null ? null : ApiClientFactory.Instance.GetProfissionalById(Convert.ToInt32(aluno.ProfissionalId));
             var talentoEsportivo = laudo.TalentoEsportivoId == null ? null : ApiClientFactory.Instance.GetTalentoEsportivoByAluno((int)laudo.AlunoId!);
             var encaminhamentoImc = laudo.SaudeId == null ? null : ApiClientFactory.Instance.GetEncaminhamentoBySaudeId(Convert.ToInt32(laudo.SaudeId));
             var qualidadeDeVida = laudo.QualidadeDeVidaId == null ? null : ApiClientFactory.Instance.GetEncaminhamentoByQualidadeDeVidaId((int)laudo.QualidadeDeVidaId);
@@ -158,15 +165,15 @@ namespace WebApp.Controllers
         }
 
         //[ClaimsAuthorize(ClaimType.Laudo, Claim.Ver)]
-        public ActionResult Report(int id)
+        public async Task<ActionResult> Report(int id)
         {
             var laudo = ApiClientFactory.Instance.GetLaudoByAluno(id);
 
             var consumoAlimentar = laudo.ConsumoAlimentarId == null ? null : ApiClientFactory.Instance.GetConsumoAlimentarById((int)laudo.ConsumoAlimentarId);
-            var saudeBucal = laudo.SaudeBucalId == null ? null : ApiClientFactory.Instance.GetConsumoAlimentarById((int)laudo.SaudeBucalId);
+            var saudeBucal = laudo.SaudeBucalId == null ? null : ApiClientFactory.Instance.GetSaudeBucalById((int)laudo.SaudeBucalId);
 
-            var aluno = ApiClientFactory.Instance.GetAlunoById(id);
-            var profissional = ApiClientFactory.Instance.GetProfissionalById(Convert.ToInt32(aluno.ProfissionalId));
+            var aluno = await ApiClientFactory.Instance.GetAlunoById(id);
+            var profissional = laudo.ProfissionalId == null ? null : ApiClientFactory.Instance.GetProfissionalById(Convert.ToInt32(aluno.ProfissionalId));
             var talentoEsportivo = laudo.TalentoEsportivoId == null ? null : ApiClientFactory.Instance.GetTalentoEsportivoByAluno((int)laudo.AlunoId!);
             var encaminhamentoImc = laudo.SaudeId == null ? null : ApiClientFactory.Instance.GetEncaminhamentoBySaudeId(Convert.ToInt32(laudo.SaudeId));
             var qualidadeDeVida = laudo.QualidadeDeVidaId == null ? null : ApiClientFactory.Instance.GetEncaminhamentoByQualidadeDeVidaId((int)laudo.QualidadeDeVidaId);
@@ -174,6 +181,7 @@ namespace WebApp.Controllers
             var encaminhamentoConsumoAlimentar = laudo.ConsumoAlimentarId == null ? null : ApiClientFactory.Instance.GetEncaminhamentoById((int)consumoAlimentar.Encaminhamento.Id);
             var encaminhamentoSaudeBucal = laudo.SaudeBucalId == null ? null : ApiClientFactory.Instance.GetEncaminhamentoById((int)saudeBucal.Encaminhamento.Id);
             var desempenho = ApiClientFactory.Instance.GetDesempenhoByAluno(Convert.ToInt32(laudo.AlunoId));
+            var modalidade = ApiClientFactory.Instance.GetModalidadeById(Convert.ToInt32(laudo.ModalidadeId));
 
             var model = new LaudoModel()
             {
@@ -185,13 +193,14 @@ namespace WebApp.Controllers
                 ListVocacional = vocacional,
                 EncaminhamentoSaudeBucal = encaminhamentoSaudeBucal,
                 EncaminhamentoConsumoAlimentar = encaminhamentoConsumoAlimentar,
-                Desempenho = desempenho
+                Desempenho = desempenho,
+                Modalidade = modalidade
             };
             return View(model);
         }
 
         [ClaimsAuthorize(ClaimType.Laudo, Claim.Incluir)]
-        public ActionResult Create(int? crud, int? notify, string message = null)
+        public async Task<ActionResult> Create(int? crud, int? notify, string message = null)
         {
             try
             {
@@ -200,7 +209,7 @@ namespace WebApp.Controllers
 
                 var usuario = User.Identity.Name;
 
-                var usu = ApiClientFactory.Instance.GetUsuarioByEmail(usuario);
+                var usu = await ApiClientFactory.Instance.GetUsuarioByEmail(usuario);
 
                 var questionarioVocacional =
                     ApiClientFactory.Instance.GetQuestionarioByTipoLaudo((int)EnumTipoLaudo.Vocacional).OrderBy(o => o.Questao).ToList();
@@ -235,7 +244,7 @@ namespace WebApp.Controllers
 
                 if (usu.LocalidadeId != null)
                 {
-                    var resultAlunos = ApiClientFactory.Instance.GetAlunosByLocalidade(Convert.ToInt32(usu.LocalidadeId));
+                    var resultAlunos = ApiClientFactory.Instance.GetAlunosByLocalidade(Convert.ToInt32(usu.LocalidadeId)).Where(x => x.PossuiLaudo == false);
 
                     alunos = new SelectList(resultAlunos, "Id", "Nome");
 
@@ -366,10 +375,7 @@ namespace WebApp.Controllers
                             StatusSaudeBucal = listSaudeBucal.Count == totalRespSaudeBucal ? "F" : "A"
                         });
                 }
-
-                var listPropSaude = collection.Where(item => item.Key.Contains("Saude"));
-
-
+                
                 var commandSaude = new SaudeModel.CreateUpdateSaudeCommand()
                 {
                     ProfissionalId = collection["ddlProfissional"] == ""
@@ -420,6 +426,15 @@ namespace WebApp.Controllers
                     commandTalentoEsportivo.AptidaoFisica != null && commandTalentoEsportivo.Agilidade != null)
                 {
                     command.TalentoEsportivoId = (int)await ApiClientFactory.Instance.CreateTalentoEsportivo(commandTalentoEsportivo);
+
+                    var encaminhamento = ApiClientFactory.Instance.GetTalentoEsportivoById((int)command.TalentoEsportivoId)
+                        .Encaminhamento;
+
+                    var modalidade = ApiClientFactory.Instance.GetModalidadeAll()
+                        .FirstOrDefault(x => x.Nome.Contains(encaminhamento.Nome));
+
+                    command.ModalidadeId = modalidade!.Id;
+
                 }
                 else
                 {
@@ -677,6 +692,19 @@ namespace WebApp.Controllers
                     await ApiClientFactory.Instance.UpdateTalentoEsportivo((int)laudo.TalentoEsportivoId, commandTalentoEsportivo);
 
                     command.TalentoEsportivoId = laudo.TalentoEsportivoId;
+
+                    if (laudo.ModalidadeId ==null)
+                    {
+                        var modalidade = ApiClientFactory.Instance.GetModalidadeAll()
+                            .FirstOrDefault(x => x.Nome.Contains(laudo.EncaminhamentoTexto));
+
+                        command.ModalidadeId = modalidade!.Id;
+                    }
+                    else
+                    {
+                        command.ModalidadeId = laudo.ModalidadeId;
+                    }
+
                 }
                 else
                 {
@@ -710,7 +738,7 @@ namespace WebApp.Controllers
         }
 
         [ClaimsAuthorize(ClaimType.Laudo, Claim.Alterar)]
-        public ActionResult Edit(int id, int? crud, int? notify, string message = null)
+        public async Task<ActionResult> Edit(int id, int? crud, int? notify, string message = null)
         {
             try
             {
@@ -728,7 +756,7 @@ namespace WebApp.Controllers
 
                 var laudo = ApiClientFactory.Instance.GetLaudoById(id);
 
-                var aluno = ApiClientFactory.Instance.GetAlunoById((int)laudo.AlunoId);
+                var aluno = await ApiClientFactory.Instance.GetAlunoById((int)laudo.AlunoId);
 
                 var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome", aluno.Estado);
 
@@ -852,7 +880,7 @@ namespace WebApp.Controllers
 
                 foreach (var laudo in result.Laudos.Items)
                 {
-                    var aluno = ApiClientFactory.Instance.GetAlunoById((int)laudo.AlunoId);
+                    var aluno = await ApiClientFactory.Instance.GetAlunoById((int)laudo.AlunoId);
                     var profissional = ApiClientFactory.Instance.GetProfissionalById(Convert.ToInt32(aluno.ProfissionalId));
                     var talentoEsportivo = laudo.TalentoEsportivoId == null ? null :
                         ApiClientFactory.Instance.GetTalentoEsportivoByAluno((int)laudo.AlunoId);
@@ -867,6 +895,7 @@ namespace WebApp.Controllers
                     var encaminhamentoSaudeBucal = laudo.SaudeBucalId == null ? null :
                         ApiClientFactory.Instance.GetEncaminhamentoById((int)laudo.SaudeBucalId);
                     var desempenho = ApiClientFactory.Instance.GetDesempenhoByAluno(Convert.ToInt32(laudo.AlunoId));
+                    var modalidade = ApiClientFactory.Instance.GetModalidadeById(Convert.ToInt32(laudo.ModalidadeId));
 
                     laudoModels.Add(new LaudoModel
                     {
@@ -879,7 +908,8 @@ namespace WebApp.Controllers
                         ListVocacional = vocacional,
                         EncaminhamentoSaudeBucal = encaminhamentoSaudeBucal,
                         EncaminhamentoConsumoAlimentar = encaminhamentoConsumoAlimentar,
-                        Desempenho = desempenho
+                        Desempenho = desempenho,
+                        Modalidade = modalidade
                     });
                 }
 
@@ -936,6 +966,12 @@ namespace WebApp.Controllers
                 ws.Cell(1, 4).Value = "Email";
                 ws.Cell(1, 5).Value = "Telefone";
                 ws.Cell(1, 6).Value = "Celular";
+                ws.Cell(1, 7).Value = "Saúde";
+                ws.Cell(1, 8).Value = "Talento Esportivo";
+                ws.Cell(1, 9).Value = "Consumo Alimentar";
+                ws.Cell(1, 10).Value = "Saúde Bucal";
+                ws.Cell(1, 11).Value = "Qualidade de Vida";
+                ws.Cell(1, 12).Value = "Vocacional";
                 int row = 2;
                 foreach (var item in result.Laudos.Items.ToList())
                 {
@@ -945,6 +981,12 @@ namespace WebApp.Controllers
                     ws.Cell("D" + row).Value = item.Email;
                     ws.Cell("E" + row).Value = item.Telefone;
                     ws.Cell("F" + row).Value = item.Celular;
+                    ws.Cell("G" + row).Value = item.SaudeId != null ? "X" : "" ;
+                    ws.Cell("H" + row).Value = item.TalentoEsportivoId != null ? "X" : "" ;
+                    ws.Cell("I" + row).Value = item.ConsumoAlimentarId != null ? "X" : "" ;
+                    ws.Cell("J" + row).Value = item.SaudeBucalId != null ? "X" : "" ;
+                    ws.Cell("K" + row).Value = item.QualidadeDeVidaId != null ? "X" : "" ;
+                    ws.Cell("L" + row).Value = item.VocacionalId != null ? "X" : "" ;
                     row++;
                 }
 

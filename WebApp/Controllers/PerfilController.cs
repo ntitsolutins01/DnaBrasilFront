@@ -1,13 +1,9 @@
-﻿using Infraero.Relprev.CrossCutting.Enumerators;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using NuGet.Protocol.Plugins;
 using System.Collections;
 using System.Collections.Specialized;
 using System.Security.Claims;
-using WebApp.Areas.Identity.Models;
 using WebApp.Configuration;
 using WebApp.Data;
 using WebApp.Dto;
@@ -15,16 +11,25 @@ using WebApp.Enumerators;
 using WebApp.Factory;
 using WebApp.Models;
 using WebApp.Utility;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace WebApp.Controllers
 {
+    /// <summary>
+    /// Controle de Perfil
+    /// </summary>
     public class PerfilController : BaseController
     {
+
+        #region Parametros
+
         private readonly ApplicationDbContext _db;
         private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly UserManager<IdentityUser> _userManager;
         private readonly IOptions<UrlSettings> _appSettings;
+
+
+        #endregion
+
+        #region Constructor
 
         public PerfilController(ApplicationDbContext db,
             RoleManager<IdentityRole> roleManager,
@@ -32,11 +37,21 @@ namespace WebApp.Controllers
         {
             _db = db;
             _roleManager = roleManager;
-            _userManager = userManager;
             _appSettings = appSettings;
             ApplicationSettings.WebApiUrl = _appSettings.Value.WebApiBaseUrl;
         }
 
+        #endregion
+
+        #region Main Methods
+
+        /// <summary>
+        /// Listagem de Perfil
+        /// </summary>
+        /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
+        /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
+        /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+        /// <returns></returns>
         //[ClaimsAuthorize("Perfil", "Consultar")]
         public ActionResult Index(int? crud, int? notify, string message = null)
         {
@@ -47,7 +62,10 @@ namespace WebApp.Controllers
             return View(new PerfilModel { Perfis = response });
         }
 
-        //[ClaimsAuthorize("Perfil", "Incluir")]
+        /// <summary>
+        /// Tela para Inclusão de Perfil
+        /// </summary>
+        /// <returns>returns true false</returns>
         public ActionResult Create()
         {
             var responseModulos = ApiClientFactory.Instance.GetModulosAll();
@@ -56,6 +74,11 @@ namespace WebApp.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Ação de Inclusão de Perfil
+        /// </summary>
+        /// <param name="collection">coleção de dados para inclusao de Perfil</param>
+        /// <returns>retorna mensagem de inclusao através do parametro crud</returns>
         //[ClaimsAuthorize("Perfil", "Incluir")]
         [HttpPost]
         public async Task<ActionResult> Create(IFormCollection collection)
@@ -103,9 +126,14 @@ namespace WebApp.Controllers
             }
         }
 
+        /// <summary>
+        /// Ação de Alteração de Perfil
+        /// </summary>
+        /// <param name="id">Identificador de Perfil</param>
+        /// <returns>retorna mensagem de alteração através do parametro crud</returns>
         //[ClaimsAuthorize("Perfil", "Alterar")]
         public ActionResult Edit(int id)
-        {   
+        {
             // todo: Fábio não edita perfil quando existe modulo sem funcionalidade
             var perfil = ApiClientFactory.Instance.GetPerfilById(id);
 
@@ -133,6 +161,12 @@ namespace WebApp.Controllers
                 });
         }
 
+        /// <summary>
+        /// Ação de Alteração de Perfil
+        /// </summary>
+        /// <param name="id">Identificador de Perfil</param>
+        /// <param name="collection">coleção de dados para alteração de Perfil</param>
+        /// <returns>retorna mensagem de alteração através do parametro crud</returns>
         //[ClaimsAuthorize("Perfil", "Alterar")]
         [HttpPost]
         public async Task<ActionResult> Edit(int id, IFormCollection collection)
@@ -201,6 +235,11 @@ namespace WebApp.Controllers
             }
         }
 
+        /// <summary>
+        ///  Ação de Exclusão do Perfil
+        /// </summary>
+        /// <param name="id">identificador do Perfil</param>
+        /// <returns>retorna mensagem de exclusão através do parametro crud</returns>
         //[ClaimsAuthorize("Perfil", "Excluir")]
         public async Task<ActionResult> DeleteAsync(int id)
         {
@@ -215,7 +254,7 @@ namespace WebApp.Controllers
                     var result = await _roleManager.DeleteAsync(obj);
                 }
 
-                var resultDelete =  ApiClientFactory.Instance.DeletePerfil(id);
+                var resultDelete = ApiClientFactory.Instance.DeletePerfil(id);
 
                 return RedirectToAction(nameof(Index), new { crud = (int)EnumCrud.Deleted });
 
@@ -224,7 +263,7 @@ namespace WebApp.Controllers
                 //    return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = "Existe  usuário vinculado a esse perfil." });
                 //}
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return RedirectToAction(nameof(Index),
                     new
@@ -235,6 +274,15 @@ namespace WebApp.Controllers
             }
         }
 
+        #endregion
+
+        #region Get Methods
+
+        /// <summary>
+        ///Busca Perfil por ID de função de rede Asp
+        /// </summary>
+        /// <param name="aspNetRoleId">aspNetRoleId</param>
+        /// <returns>Retorna a Perfil</returns>
         private PerfilDto GetPerfilByAspNetRoleId(string aspNetRoleId)
         {
             var entity = _db.Roles.Where(x => x.Id == aspNetRoleId).Select(item => new PerfilDto { Nome = item.Name, AspNetRoleId = item.Id }).FirstOrDefault();
@@ -251,4 +299,8 @@ namespace WebApp.Controllers
             return entity;
         }
     }
+
+    #endregion
+
+
 }

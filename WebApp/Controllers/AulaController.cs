@@ -12,33 +12,41 @@ using WebApp.Utility;
 
 namespace WebApp.Controllers;
 
+/// <summary>
+/// Controle de Aula
+/// </summary>
 public class AulaController : BaseController
 {
-    #region Constructor
+
+    #region Parametros
+
     private readonly IOptions<UrlSettings> _appSettings;
     private readonly IWebHostEnvironment _host;
+
+    #endregion
+
+    #region Constructor
 
     /// <summary>
     /// Construtor da página
     /// </summary>
-    /// <param name="app">configurações de urls do sistema</param>
-    /// <param name="host">informações da aplicação em execução</param>
+    /// <param name="appSettings">Configurações de urls do sistema</param>
+    /// <param name="host">Informações da aplicação em execução</param>
     public AulaController(IOptions<UrlSettings> appSettings, IWebHostEnvironment host)
     {
         _appSettings = appSettings;
-        _host = host;
         ApplicationSettings.WebApiUrl = _appSettings.Value.WebApiBaseUrl;
+        _host = host;
     }
     #endregion
 
-    #region Crud Methods
+    #region Main Methods
     /// <summary>
     /// Listagem de Aula
     /// </summary>
-    /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
-    /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
-    /// <param name="collection">lista de filtros selecionados para pesquisa de alunos</param>
-    /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+    /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+    /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+    /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
     [ClaimsAuthorize(ClaimType.Aula, Identity.Claim.Consultar)]
     public IActionResult Index(int? crud, int? notify, string message = null)
     {
@@ -50,19 +58,22 @@ public class AulaController : BaseController
     }
 
     /// <summary>
-    /// Tela para inclusão de Aula
+    /// Tela para Inclusão de Aula
     /// </summary>
-    /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
-    /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
-    /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+    /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+    /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+    /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
     [ClaimsAuthorize(ClaimType.Aula, Identity.Claim.Incluir)]
-    public ActionResult Create(int? crud, int? notify, string message = null)
+    public async Task<ActionResult> Create(int? crud, int? notify, string message = null)
     {
         try
         {
             SetNotifyMessage(notify, message);
             SetCrudMessage(crud);
-            var professores = new SelectList(ApiClientFactory.Instance.GetUsuarioAll().Where(x => x.Perfil.Id == (int)EnumPerfil.Professor), "Id", "Nome");
+
+            //criar metodo que busca Usuarios por PerfilId
+            var usuario = ApiClientFactory.Instance.GetUsuarioAll().Where(x => x.Perfil.Id == (int)EnumPerfil.Professor);
+            var professores = new SelectList(usuario, "Id", "Nome");
             var tipoCurso = new SelectList(ApiClientFactory.Instance.GetTipoCursosAll(), "Id", "Nome");
 
             return View(new AulaModel()
@@ -79,10 +90,10 @@ public class AulaController : BaseController
     }
 
     /// <summary>
-    /// Ação de inclusão do Aula
+    /// Ação de Inclusão do Aula
     /// </summary>
-    /// <param name="collection">coleção de dados para inclusao de Aula</param>
-    /// <returns>retorna mensagem de inclusao através do parametro crud</returns>
+    /// <param name="collection">Coleção de dados para inclusao de Aula</param>
+    /// <returns>Retorna mensagem de inclusao através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.Aula, Identity.Claim.Incluir)]
     [HttpPost]
     public async Task<ActionResult> Create(IFormCollection collection)
@@ -119,7 +130,7 @@ public class AulaController : BaseController
 				command.Material = filePath;
 				command.NomeMaterial = fileName;
 
-				using Stream fileStream = new FileStream(filePath, FileMode.Create);
+                await using Stream fileStream = new FileStream(filePath, FileMode.Create);
                 await file.CopyToAsync(fileStream);
             }
 
@@ -134,11 +145,10 @@ public class AulaController : BaseController
     }
 
     /// <summary>
-    /// Ação de alteração do Aula
+    /// Ação de Alteração do Aula
     /// </summary>
-    /// <param name="id">identificador do Aula</param>
-    /// <param name="collection">coleção de dados para alteração de Aula</param>
-    /// <returns>retorna mensagem de alteração através do parametro crud</returns>
+    /// <param name="id">Identificador do Aula</param>
+    /// <returns>Retorna mensagem de alteração através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.Aula, Identity.Claim.Alterar)]
     public async Task<ActionResult> Edit(IFormCollection collection)
     {
@@ -199,12 +209,11 @@ public class AulaController : BaseController
     }
 
     /// <summary>
-    /// Ação de exclusão do Aula
+    /// Ação de Exclusão do Aula
     /// </summary>
-    /// <param name="id">identificador do Aula</param>
-    /// <param name="collection">coleção de dados para exclusão de Aula</param>
-    /// <returns>retorna mensagem de exclusão através do parametro crud</returns>
-    [ClaimsAuthorize(ClaimType.Aula, Identity.Claim.Excluir)]
+    /// <param name="id">Identificador do Aula</param>
+    /// <param name="collection">Coleção de dados para exclusão de Aula</param>
+    [ClaimsAuthorize(ClaimType.Aluno, Claim.Excluir)]
     public ActionResult Delete(int id)
     {
         try
@@ -226,6 +235,11 @@ public class AulaController : BaseController
 
     #region Get Methods
 
+    /// <summary>
+    /// Busca de Aula por Id
+    /// </summary>
+    /// <param name="id">Identificador de Aula</param>
+    /// <returns>Retorna a Aula</returns>
     public Task<AulaDto> GetAulaById(int id)
     {
         var result = ApiClientFactory.Instance.GetAulaById(id);

@@ -783,19 +783,19 @@ var vm = new Vue({
                         borderRadius: 5,
                         data: [{
                             name: 'ABAIXO DO NORMAL',
-                            y: result.data.dashboard.percentualSaude.ABAIXODONORMAL,
+                            y: result.data.dashboard.listTotalizadorSaudeBucal.percentualSaude.ABAIXODONORMAL,
                             z: 50
                         }, {
                             name: 'NORMAL',
-                            y: result.data.dashboard.percentualSaude.NORMAL,
+                            y: result.data.dashboard.listTotalizadorSaudeBucal.percentualSaude.NORMAL,
                             z: 50
                         }, {
                             name: 'SOBREPESO',
-                            y: result.data.dashboard.percentualSaude.SOBREPESO,
+                            y: result.data.dashboard.listTotalizadorSaudeBucal.percentualSaude.SOBREPESO,
                             z: 50
                         }, {
                             name: 'OBESIDADE',
-                            y: result.data.dashboard.percentualSaude.OBESIDADE,
+                            y: result.data.dashboard.listTotalizadorSaudeBucal.percentualSaude.OBESIDADE,
                             z: 50
                         }],
                         colors: [

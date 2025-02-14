@@ -434,7 +434,7 @@
                                     </li>
                                 }
 
-                                @if ((await AuthorizationService.AuthorizeAsync(User, ModuloAccess.ControleMaterial)).Succeeded)
+                                @* @if ((await AuthorizationService.AuthorizeAsync(User, ModuloAccess.ControleMaterial)).Succeeded)
                                 {
                                     <li class="nav-parent">
                                         <a href="#">
@@ -469,15 +469,9 @@
                                             </li>
                                         </ul>
                                     </li>
-                                    @* <li class="nav-parent nav-expanded">
-                                        <a href="@Url.Action("Index", "ControleMaterial")">
-                                            <i class="fa fa-file-text" aria-hidden="true"></i>
-                                            <span>Controle Materiais</span>
-                                        </a>
-                                    </li> *@
-                                }
+                                } *@
 
-                                @if ((await AuthorizationService.AuthorizeAsync(User, ModuloAccess.Atividade)).Succeeded)
+                                @* @if ((await AuthorizationService.AuthorizeAsync(User, ModuloAccess.Atividade)).Succeeded)
                                 {
                                     <li class="nav-parent nav-expanded">
                                         <a href="@Url.Action("Index", "Atividade")">
@@ -485,7 +479,7 @@
                                             <span>Atividades</span>
                                         </a>
                                     </li>
-                                }
+                                } *@
                                 @if ((await AuthorizationService.AuthorizeAsync(User, ModuloAccess.Nota)).Succeeded)
                                 {
                                     <li class="nav-parent nav-expanded">

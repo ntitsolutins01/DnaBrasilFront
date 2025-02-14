@@ -136,7 +136,7 @@ var vm = new Vue({
                         Descricao: result.data.descricao,
                         CargaHoraria: result.data.cargaHoraria,
                         Status: result.data.status,
-                        Imagem: result.data.imagem,
+                        Imagem: "\Cursos" + result.data.imagem.split("\Cursos")[1],
                         NomeImagem: result.data.nomeImagem
                     };
                 });

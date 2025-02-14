@@ -9,19 +9,41 @@ using WebApp.Utility;
 
 namespace WebApp.Controllers
 {
+    /// <summary>
+    /// Controle de Divisao Administrativa
+    /// </summary>
     public class DivisaoAdministrativaController : BaseController
 	{
-		private readonly ILogger<DivisaoAdministrativaController> _logger;
-		private readonly IOptions<UrlSettings> _appSettings;
+        #region Parametro
 
+        private readonly ILogger<DivisaoAdministrativaController> _logger;
+        private readonly IOptions<UrlSettings> _appSettings;
 
-		public DivisaoAdministrativaController(ILogger<DivisaoAdministrativaController> logger, IOptions<UrlSettings> appSettings)
-		{
-			_logger = logger;
-			_appSettings = appSettings;
-			ApplicationSettings.WebApiUrl = _appSettings.Value.WebApiBaseUrl;
-		}
-		
+        #endregion
+
+        #region Constructor
+
+        /// <summary>
+        ///  Construtor da página
+        /// </summary>
+        /// <param name="logger">logger</param>
+        /// <param name="appSettings">configurações de urls do sistema</param>
+        public DivisaoAdministrativaController(ILogger<DivisaoAdministrativaController> logger, IOptions<UrlSettings> appSettings)
+        {
+            _logger = logger;
+            _appSettings = appSettings;
+            ApplicationSettings.WebApiUrl = _appSettings.Value.WebApiBaseUrl;
+        }
+
+        #endregion
+
+        #region Get Methods
+
+        /// <summary>
+        ///  Busca Municipio por Uf
+        /// </summary>
+        /// <param name="uf">uf</param>
+        /// <returns>Retorna a um Municipio</returns>
         public Task<JsonResult> GetMunicipioByUf(string uf)
         {
             try
@@ -39,7 +61,11 @@ namespace WebApp.Controllers
         }
 
 
-
+        /// <summary>
+        /// Busca um Municipio por Fomento
+        /// </summary>
+        /// <param name="id">Identificador de Municipio por Fomento</param>
+        /// <returns>Retorna a um Municipio por fomento</returns>
         public Task<JsonResult> GetMunicipioByFomento(string id)
         {
             try
@@ -63,4 +89,7 @@ namespace WebApp.Controllers
             }
         }
     }
+
+    #endregion
+
 }

@@ -41,6 +41,12 @@ namespace WebApp.Models
             public required int QuantidadeAluno { get; set; }
             public required string DiasSemana { get; set; }
         }
-	}
+
+        public class CreateUpdateAtividadeAlunosCommand
+        {
+            public required int AtividadeId { get; set; }
+            public required string AlunosIds { get; set; }
+        }
+    }
 
 }

@@ -9,6 +9,9 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
+    <meta name="color-scheme" content="normal">
+    <meta name="color-profile" content="CMYK">
+    <meta name="print-color-adjust" content="exact">
     <title>Carteirinha @Model.Aluno.Nome</title>
     <link rel="stylesheet" href="~/assets/styles_Carteirinha/impressao-carteirinha.css" />
     <link rel="stylesheet" href="~/assets/vendor/font-awesome/css/font-awesome.css"/>
@@ -29,7 +32,7 @@
 <div class="preview-wrapper">
     <div class="preview-container">
         <!-- Frente da carteirinha -->
-        <div class="page frente-page">
+            <div class="page frente-page" style="background-image: url(/assets/styles_Carteirinha/modelos/carteirinha-frente.png);">
             <div class="student-info">
                 <div class="info-row">
                     <label>NOME DO ESTUDANTE:</label>
@@ -52,7 +55,7 @@
                     <span>@Model.Aluno.Id</span>
                 </div>
                 <div class="activity-info">
-                    @Model.Aluno.ModalidadeLinhaAcao
+                        @Model.Aluno.Modalidades
                 </div>
             </div>
             <div class="photo-container">
@@ -83,7 +86,7 @@
         </div>
 
         <!-- Verso da carteirinha -->
-        <div class="page verso-page">
+            <div class="page verso-page" style="background-image: url(/assets/styles_Carteirinha/modelos/@Model.ModeloCarteirinha.NomeImagem);">
             <div class="main-content-verso">
                 <div class="info-row-verso">
                     <label>MUNICÍPIO/ESTADO:</label>
@@ -98,40 +101,105 @@
     </div>
 </div>
 
-<script>
-    function printFull() {
-        // Remove no-print class
-        document
-            .querySelectorAll('.frente-page')
-            .forEach(function(page) {
-                page.classList.remove('no-print');
-            });
-        document
-            .querySelectorAll('.verso-page')
-            .forEach(function(page) {
-                page.classList.remove('no-print');
-            });
+    <script>
+        // Função auxiliar para configurar a impressão
+        function setupPrintConfig() {
+            // Forçar melhor qualidade de impressão
+            if (window.matchMedia) {
+                const mediaQueryList = window.matchMedia('print');
+                mediaQueryList.addListener(function(mql) {
+                    if (mql.matches) {
+                        // Configurações de impressão
+                        document.body.style.webkitPrintColorAdjust = 'exact';
+                        document.body.style.printColorAdjust = 'exact';
+                    }
+                });
+            }
+        }
 
-        // Print
-        window.print();
-    }
+        function printFull() {
+            setupPrintConfig();
 
-    function printVerso() {
-        // Add/remove no-print class
-        document
-            .querySelectorAll('.frente-page')
-            .forEach(function(page) {
-                page.classList.add('no-print');
-            });
-        document
-            .querySelectorAll('.verso-page')
-            .forEach(function(page) {
-                page.classList.remove('no-print');
-            });
+            document
+                .querySelectorAll('.frente-page')
+                .forEach(function(page) {
+                    page.classList.remove('no-print');
+                    // Garantir que as imagens estejam completamente carregadas
+                    const images = page.getElementsByTagName('img');
+                    Array.from(images).forEach(img => {
+                        if (!img.complete) {
+                            img.onload = function() {
+                                window.print();
+                            };
+                            return;
+                        }
+                    });
+                });
 
-        // Print
-        window.print();
-    }
-</script>
+            document
+                .querySelectorAll('.verso-page')
+                .forEach(function(page) {
+                    page.classList.remove('no-print');
+                    // Garantir que as imagens estejam completamente carregadas
+                    const images = page.getElementsByTagName('img');
+                    Array.from(images).forEach(img => {
+                        if (!img.complete) {
+                            img.onload = function() {
+                                window.print();
+                            };
+                            return;
+                        }
+                    });
+                });
+
+            // Print com pequeno delay para garantir renderização
+            setTimeout(() => {
+                window.print();
+            }, 100);
+        }
+
+        function printVerso() {
+            setupPrintConfig();
+
+            // Add/remove no-print class
+            document
+                .querySelectorAll('.frente-page')
+                .forEach(function(page) {
+                    page.classList.add('no-print');
+                });
+
+            document
+                .querySelectorAll('.verso-page')
+                .forEach(function(page) {
+                    page.classList.remove('no-print');
+                    // Garantir que as imagens estejam completamente carregadas
+                    const images = page.getElementsByTagName('img');
+                    Array.from(images).forEach(img => {
+                        if (!img.complete) {
+                            img.onload = function() {
+                                window.print();
+                            };
+                            return;
+                        }
+                    });
+                });
+
+            // Print com pequeno delay para garantir renderização
+            setTimeout(() => {
+                window.print();
+            }, 100);
+        }
+
+        // Configurar listener para evento de beforeprint
+        if (window.matchMedia) {
+            window.matchMedia('print').addListener(function(mql) {
+                if (mql.matches) {
+                    // Configurações adicionais antes da impressão
+                    document.body.style.webkitPrintColorAdjust = 'exact';
+                    document.body.style.printColorAdjust = 'exact';
+                }
+            });
+        }
+    </script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-﻿@using WebApp.Enumerators
+@using WebApp.Enumerators
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @model WebApp.Models.ProfissionalModel
 @{
@@ -56,7 +56,7 @@
                 <ul class="nav nav-tabs tabs-primary">
 
                     <li class="active">
-                        <a href="#overview" data-toggle="tab">Alterar</a>
+                        <a href="#overview" data-toggle="tab">Meus Dados</a>
                     </li>
                     @* *@
                     <li>
@@ -67,7 +67,6 @@
                     <div id="overview" class="tab-pane active">
                         @using (@Html.BeginForm("Profile", "Profissional", FormMethod.Post, new { id = "formProfile", @class = "form-horizontal" }))
                         {
-                            <h4 class="mb-xlg">Meus Dados</h4>
                             <input hidden="ProfissionalId" value="@Model.Profissional.Id" id="profissionalId" name="profissionalId" />
                             <fieldset>
                                 <div class="form-group">
@@ -172,7 +171,7 @@
                                 </div>
                             </fieldset>
 
-                            <hr class="dotted tall">
+                            @* <hr class="dotted tall">
                             <h4 class="mb-xlg">Alterar Senha</h4>
                             <fieldset class="mb-xl">
                                 <div class="form-group">
@@ -187,12 +186,12 @@
                                         <input type="text" class="form-control" id="perfilConfirmaNovaSenha" name="perfilConfirmaNovaSenha">
                                     </div>
                                 </div>
-                            </fieldset>
+                            </fieldset> *@
                             <div class="panel-footer">
                                 <div class="row">
                                     <div class="col-md-9 col-md-offset-3">
-                                        <button type="submit" class="btn btn-danger pull-right" style="margin-left: 5px;"><i class="fa fa-remove"></i> &nbsp;&nbsp;Cancelar</button>
-                                        @* <button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button> *@
+                                        @*  <button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;"><i class="fa fa-remove"></i> &nbsp;&nbsp;Cancelar</button>
+                                         <button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button> *@
                                     </div>
                                 </div>
                             </div>
@@ -201,8 +200,8 @@
                     <div id="minhasTurmas" class="tab-pane">
                         @using (@Html.BeginForm("MinhasTurmas", "Profissional", FormMethod.Post, new { id = "formMinhasTurmas", @class = "form-horizontal" }))
                         {
-                            <h4 class="mb-xlg">Meus Dados</h4>
-                            <input hidden="ProfissionalId" value="@Model.Profissional.Id" id="profissionalIdMinhasTurmas" name="profissionalIdMinhasTurmas" />
+                            <input type="hidden" id="profissionalIdMinhasTurmas" name="profissionalIdMinhasTurmas" value="@Model.Profissional.Id" />
+                            <input type="hidden" id="update" name="update" :value="editDto.Update" />
                             <fieldset>
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label">Atividade / Modalidade <span class="required">*</span></label>
@@ -216,44 +215,36 @@
                                 </div>
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label text-sm-right pt-2">Turma <span class="required">*</span></label>
-                                    <div class="col-md-3">
+                                    <div class="col-md-4">
                                         <select class="form-control populate select2" name="ddlTurma" id="ddlTurma"
-                                                title="Por favor selecione uma turma." required style="width:100%">
+                                                title="Por favor informe a turma." required style="width:100%">
                                             <option value="">Selecionar Turma</option>
-                                            <option value="T1">T1</option>
-                                            <option value="T2">T2</option>
-                                            <option value="T3">T3</option>
-                                            <option value="T4">T4</option>
                                         </select>
                                     </div>
-                                    <label class="col-sm-1 control-label">Categoria </label>
-                                    <div class="col-sm-3">
-                                        <input id="categoria" name="categoria"
-                                               type="text" class="form-control" disabled
-                                               maxlength="14" />
-                                    </div>
+
                                     <label class="col-sm-1 control-label">Estrutura </label>
-                                    <div class="col-sm-2">
+                                    <div class="col-sm-4">
                                         <input id="estrutura" name="estrutura" disabled
-                                               type="text" class="form-control" 
+                                               type="text" class="form-control" :value="editDto.Estrutura"
                                                maxlength="14" />
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label">Dia da Semana </label>
+                                    <label class="col-sm-2 control-label">Dias da Semana </label>
                                     <div class="col-sm-3">
                                         <input id="diaSemana" name="diaSemana" disabled
-                                               type="text" class="form-control" 
+                                               type="text" class="form-control" :value="editDto.DiasSemana"
                                                maxlength="14" />
                                     </div>
-                                    <label class="col-sm-1 control-label">Horário </label>
-                                    <div class="col-sm-2">
-                                        <input id="horario" name="horario" disabled
-                                               type="text" class="form-control" 
+                                    <label class="col-sm-1 control-label">Categoria </label>
+                                    <div class="col-sm-3">
+                                        <input id="categoria" name="categoria" :value="editDto.Categoria"
+                                               type="text" class="form-control" disabled
                                                maxlength="14" />
                                     </div>
                                 </div>
-                                <div id="divDeficiencia" name="divDeficiencia">
+
+                                <div id="divAlunos" name="divAlunos">
                                     <div class="form-group">
                                         <label class="col-sm-1 control-label">&nbsp;&nbsp; </label>
                                         <div class="col-sm-12">
@@ -263,74 +254,35 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-sm-2 control-label">Deficiência</label>
+                                        <label class="col-sm-2 control-label">Aluno</label>
                                         <div class="col-sm-4">
-                                            <select class="form-control populate select2" name="ddlDeficiencia" id="ddlDeficiencia"
-                                                    title="Por favor selecione uma deficiência.">
-                                                <option value="">Selecionar Deficiência</option>
+                                            <select class="form-control populate select2" name="ddlAluno" id="ddlAluno"
+                                                    style="width: 100%" title="Por favor selecione o aluno."
+                                                    asp-for="AlunoId" asp-items="Model.ListAlunos">
+                                                <option value="0">Selecionar Aluno</option>
                                             </select>
                                         </div>
                                         <div class="col-sm-1">
-                                            <a type="button" class="ml-xs btn btn-success" href='javascript:(crud.AddDeficiencia())'>
+                                            <a type="button" class="ml-xs btn btn-success" href='javascript:(crud.AddAluno())'>
                                                 <i class="fa fa-plus"></i>
                                             </a>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <input type="hidden" name="arrDeficiencias"/>
+                                        <input type="hidden" name="arrAlunos" />
                                         <label class="col-sm-2 control-label">Adicionados</label>
                                         <div class="col-sm-10">
-                                            <table class="table table-bordered table-striped mb-0" id="deficienciaDataTable">
+                                            <table class="adicionados table table-bordered table-striped mb-0" id="alunoDataTable" name="alunoDataTable">
                                                 <thead>
-                                                <tr>
-                                                    <th>Id</th>
-                                                    <th>Nome Deficiência</th>
-                                                    <th>Ação</th>
-                                                </tr>
+                                                    <tr>
+                                                        <th>Id</th>
+                                                        <th>Nome Aluno</th>
+                                                        <th>Ação</th>
+                                                    </tr>
                                                 </thead>
                                             </table>
+
                                         </div>
-                                    </div>
-
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-sm-1 control-label">&nbsp;&nbsp; </label>
-                                    <div class="col-sm-12">
-                                        <blockquote class="info">
-                                            <strong>Listagem de Alunos</strong>
-                                        </blockquote>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    @* <label class="col-sm-2 control-label">Modalidade</label>
-                                    <div class="col-sm-4">
-                                        <select class="form-control populate select2" name="ddlModalidade" id="ddlModalidade"
-                                                style="width: 100%" title="Por favor selecione o turno."
-                                                asp-for="ModalidadeId" asp-items="Model.ListModalidades">
-                                            <option value="0">Selecionar Modalidade</option>
-                                        </select>
-                                    </div> *@
-                                    <div class="col-sm-1">
-                                        <a type="button" class="ml-xs btn btn-success" href='javascript:(crud.AddModalidade())'>
-                                            <i class="fa fa-plus"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <input type="hidden" name="arrModalidades" />
-                                    <label class="col-sm-2 control-label">Adicionados</label>
-                                    <div class="col-sm-10">
-                                        <table class="adicionados table table-bordered table-striped mb-0" id="modalidadeDataTable">
-                                            <thead>
-                                            <tr>
-                                                <th>Id</th>
-                                                <th>Nome Modalidade</th>
-                                                <th>Deficiência</th>
-                                                <th>Ação</th>
-                                            </tr>
-                                            </thead>
-                                        </table>
-
                                     </div>
                                 </div>
                             </fieldset>
@@ -338,8 +290,8 @@
                             <div class="panel-footer">
                                 <div class="row">
                                     <div class="col-md-9 col-md-offset-3">
-                                        <button type="submit" class="btn btn-danger pull-right" style="margin-left: 5px;"><i class="fa fa-remove"></i> &nbsp;&nbsp;Cancelar</button>
-                                        @* <button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button> *@
+                                        @* *@<button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;"><i class="fa fa-remove"></i> &nbsp;&nbsp;Cancelar</button>
+                                        <button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
                                     </div>
                                 </div>
                             </div>
@@ -356,6 +308,7 @@
     <link rel="stylesheet" href="~/assets/vendor/select2-bootstrap-theme/select2-bootstrap.min.css" />
     <link rel="stylesheet" href="~/assets/vendor/bootstrap-multiselect/bootstrap-multiselect.css" />
     <link href="~/assets/vendor/bootstrap-datepicker/css/bootstrap-datepicker3.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/assets/vendor/datatables/media/css/dataTables.bootstrap4.css" />
 }
 @section Scripts {
     <script src="~/assets/vendor/ios7-switch/ios7-switch.js"></script>
@@ -364,6 +317,8 @@
     <script src="~/assets/vendor/jquery-mask/jquery.mask.js"></script>
     <script src="~/assets/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
     <script src="~/assets/vendor/bootstrap-datepicker/locales/bootstrap-datepicker.pt-BR.min.js"></script>
+    <script src="~/assets/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
+    <script src="~/assets/vendor/datatables/media/js/dataTables.bootstrap4.min.js"></script>
     <script src="~/js/profissional.js"></script>
     <script>
 
@@ -379,6 +334,14 @@
 
             // Set the value
             $("#ddlModalidades").val(dataarray);
+
+            //set filter
+            $("#ddlModalidades").multiselect({
+                enableFiltering: true,
+                    enableCaseInsensitiveFiltering: true,
+                    maxHeight: 200,
+                    dropUp: true
+            });
 
             // Then refresh
             $("#ddlModalidades").multiselect("refresh");

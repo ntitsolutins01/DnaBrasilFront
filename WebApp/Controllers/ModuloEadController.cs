@@ -13,6 +13,9 @@ using WebApp.Utility;
 
 namespace WebApp.Controllers;
 
+/// <summary>
+/// Contrtole de Modulo Ead
+/// </summary>
 [Authorize(Policy = ModuloAccess.ConfiguracaoSistemaEad)]
 public class ModuloEadController : BaseController
 {
@@ -33,7 +36,7 @@ public class ModuloEadController : BaseController
 
     #region Crud Methods
     /// <summary>
-    /// Listagem de ModuloEad
+    /// Listagem de Modulo Ead
     /// </summary>
     /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
     /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
@@ -50,7 +53,7 @@ public class ModuloEadController : BaseController
     }
 
     /// <summary>
-    /// Tela para inclusão de Modulo Ead
+    /// Tela para Inclusão de Modulo Ead
     /// </summary>
     /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
     /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
@@ -82,9 +85,9 @@ public class ModuloEadController : BaseController
     }
 
     /// <summary>
-    /// Ação de inclusão do ModuloEad
+    /// Ação de Inclusão do Modulo Ead
     /// </summary>
-    /// <param name="collection">coleção de dados para inclusao de ModuloEad</param>
+    /// <param name="collection">coleção de dados para inclusao de Modulo Ead</param>
     /// <returns>retorna mensagem de inclusao através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.ModuloEad, Identity.Claim.Incluir)]
     [HttpPost]
@@ -126,10 +129,10 @@ public class ModuloEadController : BaseController
 
 
     /// <summary>
-    /// Ação de alteração do ModuloEad
+    /// Ação de Alteração do Modulo Ead
     /// </summary>
-    /// <param name="id">identificador do ModuloEad</param>
-    /// <param name="collection">coleção de dados para alteração de ModuloEad</param>
+    /// <param name="id">identificador do Modulo Ead</param>
+    /// <param name="collection">coleção de dados para alteração de Modulo Ead</param>
     /// <returns>retorna mensagem de alteração através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.ModuloEad, Identity.Claim.Alterar)]
     public async Task<ActionResult> Edit(IFormCollection collection)
@@ -170,10 +173,10 @@ public class ModuloEadController : BaseController
     }
 
     /// <summary>
-    /// Ação de exclusão do ModuloEad
+    /// Ação de Exclusão do Modulo Ead
     /// </summary>
-    /// <param name="id">identificador do ModuloEad</param>
-    /// <param name="collection">coleção de dados para exclusão de ModuloEad</param>
+    /// <param name="id">identificador do Modulo Ead</param>
+    /// <param name="collection">coleção de dados para exclusão de Modulo Ead</param>
     /// <returns>retorna mensagem de exclusão através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.ModuloEad, Identity.Claim.Excluir)]
     public ActionResult Delete(int id)
@@ -189,25 +192,16 @@ public class ModuloEadController : BaseController
 		}
     }
 
-    public Task<JsonResult> GetCursosAllByTipoCursoId(string id)
-    {
-        try
-        {
-            if (string.IsNullOrEmpty(id)) throw new Exception("Tipo de Curso não informado.");
-            var resultLocal = ApiClientFactory.Instance.GetCursosAllByTipoCursoId(Convert.ToInt32(id));
-
-            return Task.FromResult(Json(new SelectList(resultLocal, "Id", "Titulo")));
-
-        }
-        catch (Exception ex)
-        {
-            return Task.FromResult(Json(ex.Message));
-        }
-    }
+    
     #endregion
 
     #region Get Methods
 
+    /// <summary>
+    /// Busca Modulo por Id
+    /// </summary>
+    /// <param name="id">Identificador de Modulo</param>
+    /// <returns>Retorna a Modulo</returns>
     public Task<ModuloEadDto> GetModuloEadById(int id)
     {
         var result = ApiClientFactory.Instance.GetModuloEadById(id);
@@ -217,7 +211,7 @@ public class ModuloEadController : BaseController
 
 
     /// <summary>
-    /// Método de busca todos os módulos Ead pelo id do curso
+    ///  Busca todos os módulos Ead pelo id do curso
     /// </summary>
     /// <param name="id">Id do curso</param>
     /// <returns>Retorna um json com todos os módulos ead</returns>
@@ -236,5 +230,27 @@ public class ModuloEadController : BaseController
             return Task.FromResult(Json(ex.Message));
         }
     }
+
+    /// <summary>
+    /// Busca todos os Cursos pelo id Tipo Curso 
+    /// </summary>
+    /// <param name="id">Id do curso</param>
+    /// <returns>Retorna um json com todos os Cursos</returns>
+    public Task<JsonResult> GetCursosAllByTipoCursoId(string id)
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(id)) throw new Exception("Tipo de Curso não informado.");
+            var resultLocal = ApiClientFactory.Instance.GetCursosAllByTipoCursoId(Convert.ToInt32(id));
+
+            return Task.FromResult(Json(new SelectList(resultLocal, "Id", "Titulo")));
+
+        }
+        catch (Exception ex)
+        {
+            return Task.FromResult(Json(ex.Message));
+        }
+    }
+
     #endregion
 }

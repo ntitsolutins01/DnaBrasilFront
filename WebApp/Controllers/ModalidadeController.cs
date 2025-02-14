@@ -12,16 +12,41 @@ using WebApp.Utility;
 
 namespace WebApp.Controllers
 {
+    /// <summary>
+    /// Controle de Modalidade
+    /// </summary>
     public class ModalidadeController : BaseController
     {
+
+        #region Parametros
+
         private readonly IOptions<UrlSettings> _appSettings;
 
+        #endregion
+
+        #region Constructor
+
+        /// <summary>
+        /// Construtor da página
+        /// </summary>
+        /// <param name="appSettings">configurações de urls do sistema</param>
         public ModalidadeController(IOptions<UrlSettings> appSettings)
         {
             _appSettings = appSettings;
             ApplicationSettings.WebApiUrl = _appSettings.Value.WebApiBaseUrl;
         }
 
+        #endregion
+
+        #region Main Methods
+
+        /// <summary>
+        /// Listagem de Modalidade
+        /// </summary>
+        /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
+        /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
+        /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+        /// <returns></returns>
         public IActionResult Index(int? crud, int? notify, string message = null)
         {
             SetNotifyMessage(notify, message);
@@ -29,9 +54,16 @@ namespace WebApp.Controllers
             var response = ApiClientFactory.Instance.GetModalidadeAll();
             var linhasAcoes = new SelectList(ApiClientFactory.Instance.GetLinhasAcoesAll(), "Id", "Nome");
 
-            return View(new ModalidadeModel() { Modalidades = response, ListLinhasAcoes = linhasAcoes});
+            return View(new ModalidadeModel() { Modalidades = response, ListLinhasAcoes = linhasAcoes });
         }
 
+        /// <summary>
+        /// Tela para Inclusão de Modalidade
+        /// </summary>
+        /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
+        /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
+        /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+        /// <returns></returns>
         //[ClaimsAuthorize("ConfiguracaoSistema", "Incluir")]
         public ActionResult Create(int? crud, int? notify, string message = null)
         {
@@ -39,9 +71,14 @@ namespace WebApp.Controllers
             SetCrudMessage(crud);
             var linhasAcoes = new SelectList(ApiClientFactory.Instance.GetLinhasAcoesAll(), "Id", "Nome");
 
-            return View(new ModalidadeModel{ListLinhasAcoes = linhasAcoes});
+            return View(new ModalidadeModel { ListLinhasAcoes = linhasAcoes });
         }
 
+        /// <summary>
+        /// Ação de Inclusão de Modalidade
+        /// </summary>
+        /// <param name="collection">coleção de dados para inclusao de Modalidade</param>
+        /// <returns>retorna mensagem de inclusao através do parametro crud</returns>
         //[ClaimsAuthorize("Usuario", "Incluir")]
         [HttpPost]
         public async Task<ActionResult> Create(IFormCollection collection)
@@ -77,18 +114,20 @@ namespace WebApp.Controllers
 
                 foreach (var file in collection.Files)
                 {
-	                if (file.Length <= 0) continue;
+                    if (file.Length <= 0) continue;
 
-	                using (var ms = new MemoryStream())
-	                {
-		                file.CopyToAsync(ms);
-		                var byteIMage = ms.ToArray();
-		                command.ByteImage = byteIMage;
-	                }
+                    command.NomeByteImage = Path.GetFileName(collection.Files[0].FileName);
+
+                    using (var ms = new MemoryStream())
+                    {
+                        file.CopyToAsync(ms);
+                        var byteIMage = ms.ToArray();
+                        command.ByteImage = byteIMage;
+                    }
                 }
 
 
-				await ApiClientFactory.Instance.CreateModalidade(command);
+                await ApiClientFactory.Instance.CreateModalidade(command);
 
                 return RedirectToAction(nameof(Index), new { crud = (int)EnumCrud.Created });
             }
@@ -98,6 +137,11 @@ namespace WebApp.Controllers
             }
         }
 
+        /// <summary>
+        /// Ação de Alteração de Modalidade
+        /// </summary>
+        /// <param name="collection">coleção de dados para alteração de Modalidade</param>
+        /// <returns>retorna mensagem de alteração através do parametro crud</returns>
         //[ClaimsAuthorize("Usuario", "Alterar")]
         public async Task<ActionResult> Edit(IFormCollection collection)
         {
@@ -131,21 +175,33 @@ namespace WebApp.Controllers
 
             foreach (var file in collection.Files)
             {
-	            if (file.Length <= 0) continue;
+                if (file.Length <= 0) continue;
 
-	            using (var ms = new MemoryStream())
-	            {
-		            file.CopyToAsync(ms);
-		            var byteIMage = ms.ToArray();
-		            command.ByteImage = byteIMage;
-	            }
+                command.NomeByteImage = Path.GetFileName(collection.Files[0].FileName);
+
+                using (var ms = new MemoryStream())
+                {
+                    await file.CopyToAsync(ms);
+                    command.ByteImage = ms.ToArray();
+                }
             }
 
-			await ApiClientFactory.Instance.UpdateModalidade(command.Id, command);
+            if (!collection.Files.Any())
+            {
+                var currentModalidade = ApiClientFactory.Instance.GetModalidadeById(command.Id);
+                command.ByteImage = currentModalidade.ByteImage;
+            }
+
+            await ApiClientFactory.Instance.UpdateModalidade(command.Id, command);
 
             return RedirectToAction(nameof(Index), new { crud = (int)EnumCrud.Updated });
         }
 
+        /// <summary>
+        /// Ação de Exclusão do Modalidade
+        /// </summary>
+        /// <param name="id">identificador do Modalidade</param>
+        /// <returns>retorna mensagem de exclusão através do parametro crud</returns>
         //[ClaimsAuthorize("Usuario", "Excluir")]
         public ActionResult Delete(int id)
         {
@@ -160,13 +216,37 @@ namespace WebApp.Controllers
             }
         }
 
+        #endregion
+
+        #region Get Methods
+
+        /// <summary>
+        /// Busca  Modalidade por Id
+        /// </summary>
+        /// <param name="id">Identificador de Modalidade</param>
+        /// <returns>Retorna a Modalidade</returns>
+        /// <exception cref="Exception"></exception>
         public Task<ModalidadeDto> GetModalidadeById(int id)
         {
-            var result = ApiClientFactory.Instance.GetModalidadeById(id);
+            try
+            {
+                var result = ApiClientFactory.Instance.GetModalidadeById(id);
+                var linhasAcoes = new SelectList(ApiClientFactory.Instance.GetLinhasAcoesAll(), "Id", "Nome", result.LinhaAcaoId);
+                result.ListLinhasAcoes = linhasAcoes;
 
-            return Task.FromResult(result);
+                return Task.FromResult(result);
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
         }
 
+        /// <summary>
+        /// Busca Modalidade por id de Linha de Acao
+        /// </summary>
+        /// <param name="id">Identificador de Modalidade</param>
+        /// <returns>Retorna a Modalidade</returns>
         [ClaimsAuthorize(ClaimType.Modalidade, Claim.Consultar)]
         public Task<JsonResult> GetModalidadesByLinhaAcaoId(string id)
         {
@@ -184,4 +264,8 @@ namespace WebApp.Controllers
             }
         }
     }
+
+    #endregion
+
+
 }

@@ -14,6 +14,7 @@ using System.Text.RegularExpressions;
 using WebApp.Configuration;
 using WebApp.Identity;
 using WebApp.Authorization;
+using log4net;
 
 namespace WebApp.Controllers
 {
@@ -23,12 +24,18 @@ namespace WebApp.Controllers
     //[Authorize(Policy = ModuloAccess.ControleAcesso)]
     public class UsuarioController : BaseController
     {
-        #region Constructor
+
+        #region Parametros
 
         private readonly IEmailSender _emailSender;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IWebHostEnvironment _host;
+        private readonly ILog _logger;
+
+        #endregion
+
+        #region Constructor
 
         /// <summary>
         /// Construtor da página
@@ -38,22 +45,28 @@ namespace WebApp.Controllers
         /// <param name="userManager">gerenciador de identidade de usuários</param>
         /// <param name="host">informações da aplicação em execução</param>
         /// <param name="roleManager">gerenciador de regras de permissoes</param>
-        public UsuarioController(IOptions<UrlSettings> app, IEmailSender emailSender,
-            UserManager<IdentityUser> userManager, IWebHostEnvironment host, RoleManager<IdentityRole> roleManager)
+        /// <param name="logger">gerenciador de log</param>
+        public UsuarioController(IOptions<UrlSettings> app,
+            IEmailSender emailSender,
+            UserManager<IdentityUser> userManager,
+            IWebHostEnvironment host,
+            RoleManager<IdentityRole> roleManager,
+            ILog logger)
         {
             _emailSender = emailSender;
             _userManager = userManager;
             _host = host;
             _roleManager = roleManager;
+            _logger = logger;
             ApplicationSettings.WebApiUrl = app.Value.WebApiBaseUrl;
         }
 
         #endregion
 
-        #region Crud Methods
+        #region Main Methods
 
         /// <summary>
-        /// Listagem de usuário
+        /// Listagem de Usuário
         /// </summary>
         /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
         /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
@@ -74,7 +87,7 @@ namespace WebApp.Controllers
         }
 
         /// <summary>
-        /// Tela para inclusão de Usuario
+        /// Tela para Inclusão de Usuario
         /// </summary>
         /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
         /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
@@ -96,7 +109,7 @@ namespace WebApp.Controllers
         }
 
         /// <summary>
-        /// Ação de inclusão do Usuario
+        /// Ação de Inclusão do Usuario
         /// </summary>
         /// <param name="collection">coleção de dados para inclusao de Usuario</param>
         /// <returns>retorna mensagem de inclusao através do parametro crud</returns>
@@ -189,12 +202,12 @@ namespace WebApp.Controllers
         }
 
         /// <summary>
-        /// Tela de alteração de Usuario
+        /// Tela de Alteração de Usuario
         /// </summary>
-        /// <param name="id">id do usuario</param>
+        /// <param name="id">id do Usuario</param>
         /// <exception cref="ArgumentNullException">Mensagem de erro ao alterar o tentar acessar tela de alteração do Usuario</exception>
         [ClaimsAuthorize(ClaimType.Usuario, Identity.Claim.Alterar)]
-        public ActionResult Edit(string id, int? crud, int? notify, string message = null)
+        public async Task<ActionResult> Edit(string id, int? crud, int? notify, string message = null)
         {
             try
             {
@@ -203,7 +216,7 @@ namespace WebApp.Controllers
 
                 UsuarioModel model = new UsuarioModel();
 
-                var obj = ApiClientFactory.Instance.GetUsuarioById(id) ?? throw new ArgumentNullException("Usuário não encontrado.");
+                var obj = await ApiClientFactory.Instance.GetUsuarioById(id) ?? throw new ArgumentNullException("Usuário não encontrado.");
 
                 var resultPerfil = ApiClientFactory.Instance.GetPerfilAll();
 
@@ -234,7 +247,7 @@ namespace WebApp.Controllers
         }
 
         /// <summary>
-        /// Ação de alteração do Usuario
+        /// Ação de Alteração do Usuario
         /// </summary>
         /// <param name="id">identificador do Usuario</param>
         /// <param name="collection">coleção de dados para alteração de Usuario</param>
@@ -247,7 +260,7 @@ namespace WebApp.Controllers
             {
                 //var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-                var usuario = ApiClientFactory.Instance.GetUsuarioById(id.ToString());
+                var usuario = await ApiClientFactory.Instance.GetUsuarioById(id.ToString());
 
                 var perfil = ApiClientFactory.Instance.GetPerfilById(Convert.ToInt32(collection["ddlPerfis"].ToString()));
 
@@ -289,7 +302,7 @@ namespace WebApp.Controllers
         }
 
         /// <summary>
-        /// Ação de exclusão do Usuario
+        /// Ação de Exclusão do Usuario
         /// </summary>
         /// <param name="id">identificador do Usuario</param>
         /// <param name="collection">coleção de dados para exclusão de Usuario</param>
@@ -299,7 +312,7 @@ namespace WebApp.Controllers
         {
             try
             {
-                var usuario = ApiClientFactory.Instance.GetUsuarioById(id.ToString()) ?? throw new ArgumentNullException("Usuário não encontrado.");
+                var usuario = await ApiClientFactory.Instance.GetUsuarioById(id.ToString()) ?? throw new ArgumentNullException("Usuário não encontrado.");
 
                 var user = _userManager.Users.FirstOrDefault(x => x.Email == usuario.Email);
 
@@ -346,24 +359,48 @@ namespace WebApp.Controllers
         /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
         /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
         /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
-        public ActionResult Profile(int? crud, int? notify, string message = null)
+        public async Task<ActionResult> Profile(int? crud, int? notify, string message = null)
         {
-            SetNotifyMessage(notify, message);
-            SetCrudMessage(crud);
-
-            //usuario logado
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (User.Identity == null) return Redirect("/Account/Logout");
-            var usuario = User.Identity.Name;
-
-            if (usuario == null) return Redirect("/Account/Logout");
-            var usu = ApiClientFactory.Instance.GetUsuarioByEmail(usuario);
-
-            var model = new UsuarioModel
+            try
             {
-                Usuario = usu
-            };
-            return View(model);
+                _logger.Info($"Usuario Logado User.Identity.Name: {User.Identity.Name}");
+
+                SetNotifyMessage(notify, message);
+                SetCrudMessage(crud);
+
+                //Busca usuario por email
+                //var usuario = User.Identity.Name;
+                //if (usuario == null) return Redirect("/Account/Logout");
+                //_logger.Info($"Busca Usuario por email: {usuario}");
+                //var usu1 = ApiClientFactory.Instance.GetUsuarioByEmail(usuario);
+
+                //Busca usuario por AspNetUserId
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                _logger.Info($"Busca Usuario por AspNetUserId: {userId}");
+                if (userId != null)
+                {
+                    var usu = await ApiClientFactory.Instance.GetUsuarioByAspNetUserId(userId);
+
+                    _logger.Info($"Retorno de GetUsuarioByAspNetUserId");
+                    _logger.Info(Newtonsoft.Json.JsonConvert.SerializeObject(usu));
+
+                    var model = new UsuarioModel
+                    {
+                        Usuario = usu
+                    };
+                    return View(model);
+                }
+                else
+                {
+                    _logger.Warn($"AspNetUserId não encontrado para o email: {User.Identity.Name}");
+                    throw new Exception($"AspNetUserId não encontrado para o email: {User.Identity.Name}");
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e.StackTrace);
+                throw;
+            }
 
         }
 

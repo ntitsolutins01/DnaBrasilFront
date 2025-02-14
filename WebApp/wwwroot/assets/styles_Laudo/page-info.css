@@ -51,6 +51,11 @@
         height: 100%;
     }
 
+.img-modalidade img {
+    width: 100px;
+    height: 100px;
+}
+
 .container-text-info {
     width: 220px;
     height: 168px;

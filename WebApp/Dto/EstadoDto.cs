@@ -6,6 +6,7 @@
         public string? Sigla { get; init; }
         public string? Nome { get; init; }
         public List<MunicipioDto>? Municipios { get; set; }
+        public required int CodigoIbge { get; init; }
 
     }
 }

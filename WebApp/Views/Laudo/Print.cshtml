@@ -46,22 +46,22 @@
                 <div class="text-info">
                     <div class="talent-label">MEU TALENTO</div>
                     <div class="talent-name">
-                        @if (@laudo.Laudo.Modalidade == null)
+                        @if (@laudo.Modalidade.Nome == null)
                         {
                             <text>Não Definido</text>
                         }
                         else
                         {
-                            <text>@laudo.Laudo.Modalidade</text>
+                            <text>@laudo.Modalidade.Nome</text>
                         }
                     </div>
                 </div>
-                @if (@laudo.Laudo.ModalidadeByteImage != null)
+                @if (@laudo.Modalidade.ByteImage != null)
                 {
                     <div class="img-qrcode-info"
                          style=" background-size: cover;">
                         @{
-                            var base64 = Convert.ToBase64String(@laudo.Laudo.ModalidadeByteImage);
+                            var base64 = Convert.ToBase64String(@laudo.Modalidade.ByteImage);
                             var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
                         }
                         <img src="@imgSrc" />
@@ -76,7 +76,7 @@
                     <div class="img-qrcode-info"
                          style="background-image: url('/assets/assets_Laudo/icon_info_esporte.png'); background-size: cover;">
 
-                        @*<img src="/assets/assets_Laudo/icon_info_esporte.png" alt="Vamos colocar uma imagem padrão pra todas as modalidades por exemplo uma estrela sei la " class="sport-icon" />*@
+                        @*<img src="/assets/assets_Laudo/icon_info_esporte.png" alt="Vamos colocar uma imagem padrão pra todas as NomeModalidades por exemplo uma estrela sei la " class="sport-icon" />*@
                     </div>
                 }
                     

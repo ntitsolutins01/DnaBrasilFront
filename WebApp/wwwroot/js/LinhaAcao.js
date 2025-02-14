@@ -100,6 +100,8 @@ var vm = new Vue({
                 self.editDto.Nome = result.data.nome;
                 self.editDto.Status = result.data.status;
 
+                
+
             }).catch(error => {
                 Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
             });

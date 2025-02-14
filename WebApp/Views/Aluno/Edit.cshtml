@@ -22,7 +22,7 @@
                     </header>
                     <div class="panel-body">
                         <div class="form-group">
-                            <label class="col-sm-1 control-label">Foto</label>
+                            @* <label class="col-sm-1 control-label">Foto</label>
                             <div class="col-sm-4">
                                 <div class="fileupload fileupload-new" data-provides="fileupload">
                                     <div class="input-append">
@@ -38,7 +38,7 @@
                                         <a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload">Remover</a>
                                     </div>
                                 </div>
-                            </div>
+                            </div> *@
                             <label class="col-sm-1 control-label">CPF </label>
                             <div class="col-sm-3">
                                 <input id="cpf" name="cpf"
@@ -277,6 +277,14 @@
 
             // Set the value
             $("#ddlModalidades").val(dataarray);
+
+            //set filter
+            $("#ddlModalidades").multiselect({
+                enableFiltering: true,
+                enableCaseInsensitiveFiltering: true,
+                maxHeight: 200,
+                dropUp: true
+            });
 
             // Then refresh
             $("#ddlModalidades").multiselect("refresh");

@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.IO.Compression;
-using Microsoft.CodeAnalysis;
 using WebApp.Authorization;
 using WebApp.Configuration;
 using WebApp.Dto;
@@ -39,7 +37,7 @@ public class EventoController : BaseController
     }
     #endregion
 
-    #region Crud Methods
+    #region Main Methods
 
     /// <summary>
     /// Listagem de Evento
@@ -58,7 +56,7 @@ public class EventoController : BaseController
     }
 
     /// <summary>
-    /// Tela para inclusão de Evento
+    /// Tela para Inclusão de Evento
     /// </summary>
     /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
     /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
@@ -88,9 +86,9 @@ public class EventoController : BaseController
     }
 
     /// <summary>
-    /// Ação de inclusão do Evento
+    /// Ação de Inclusão do Evento
     /// </summary>
-    /// <param name="collection">coleção de dados para inclusao de Evento</param>
+    /// <param name="collection">coleção de dados para Inclusao de Evento</param>
     /// <returns>retorna mensagem de inclusao através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.Evento, Identity.Claim.Incluir)]
     [HttpPost]
@@ -147,9 +145,9 @@ public class EventoController : BaseController
     }
 
     /// <summary>
-    /// Ação de exclusão do Evento
+    /// Ação de Exclusão do Evento
     /// </summary>
-    /// <param name="id">identificador do Evento</param>
+    /// <param name="id">Identificador do Evento</param>
     /// <returns>retorna mensagem de exclusão através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.Evento, Identity.Claim.Excluir)]
     public ActionResult Delete(int id)
@@ -172,10 +170,10 @@ public class EventoController : BaseController
 
 	#region Methods
 	/// <summary>
-	/// Ação de upload de fotos do evento
+	/// Ação de Upload de fotos do Evento
 	/// </summary>
-	/// <param name="collection">arquivo de upload realizado</param>
-	/// <returns>retorna mensagem de upload realizado através do parametro notfy e message</returns>
+	/// <param name="collection">arquivo de Upload realizado</param>
+	/// <returns>retorna mensagem de Upload realizado através do parametro notfy e message</returns>
 	[HttpPost]
 	[ClaimsAuthorize(ClaimType.Evento, Claim.Incluir)]
 	public async Task<ActionResult> Upload(IFormCollection collection)
@@ -219,10 +217,10 @@ public class EventoController : BaseController
 	}
 
 	/// <summary>
-	/// Ação de download de fotos do evento
+	/// Ação de Download de Fotos do Evento
 	/// </summary>
-	/// <param name="id">Id do evento</param>
-	/// <returns>retorna fotos para download</returns>
+	/// <param name="id">Id do Evento</param>
+	/// <returns>retorna Fotos para Download</returns>
 	[ClaimsAuthorize(ClaimType.Evento, Claim.Incluir)]
 	public ActionResult Download(int id)
 	{
@@ -285,7 +283,7 @@ public class EventoController : BaseController
     }
 
     /// <summary>
-    /// Tela para inclusão de Controle de Presença do Evento
+    /// Tela para Inclusão de Controle de Presença do Evento
     /// </summary>
     /// <param name="eventoId">Id do Evento </param>
     /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
@@ -349,9 +347,9 @@ public class EventoController : BaseController
     }
 
     /// <summary>
-    /// Ação para inclusão de Controle de Presença do Evento
+    /// Ação para Inclusão de Controle de Presença do Evento
     /// </summary>
-    /// <param name="collection">coleção de dados para inclusao de Controle de Presença do Evento</param>
+    /// <param name="collection">coleção de dados para Inclusao de Controle de Presença do Evento</param>
     /// <returns>retorna mensagem de inclusao através do parametro crud</returns>
     [HttpPost]
     [ClaimsAuthorize(ClaimType.Evento, Identity.Claim.Alterar)]
@@ -390,7 +388,7 @@ public class EventoController : BaseController
     }
 
     /// <summary>
-    /// Ação de alteração do Controle de Presença do Evento
+    /// Ação de Alteração do Controle de Presença do Evento
     /// </summary>
     /// <param name="collection">coleção de dados para alteração de controle de presença do Evento</param>
     /// <returns>retorna mensagem de alteração através do parametro crud</returns>
@@ -433,10 +431,10 @@ public class EventoController : BaseController
 
     #region Get Methods
     /// <summary>
-    /// Busca um evento por Id
+    /// Busca um Evento por Id
     /// </summary>
-    /// <param name="id">Id do evento</param>
-    /// <returns>Entidade evento</returns>
+    /// <param name="id">Id do Evento</param>
+    /// <returns>Entidade Evento</returns>
     public Task<EventoDto> GetEventoById(int id)
     {
         var result = ApiClientFactory.Instance.GetEventoById(id);
