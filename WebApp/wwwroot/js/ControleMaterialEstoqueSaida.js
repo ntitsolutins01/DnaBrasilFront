@@ -123,6 +123,76 @@
                         }
                     }
                 });
+
+                //clique de escolha do select
+                $("#ddlEstado").change(function () {
+
+                    self.ShowLoad(true, "pFiltro");
+
+                    var sigla = $("#ddlEstado").val();
+
+                    var url = "../../DivisaoAdministrativa/GetMunicipioByUf?uf=" + sigla;
+
+                    var ddlSource = "#ddlMunicipio";
+
+                    $.getJSON(url,
+                        { id: $(ddlSource).val() },
+                        function (data) {
+                            if (data.length > 0) {
+                                var items = '<option value="">Selecionar Municipio</option>';
+                                $("#ddlMunicipio").empty;
+                                $.each(data,
+                                    function (i, row) {
+                                        items += "<option value='" + row.value + "'>" + row.text + "</option>";
+                                    });
+                                $("#ddlMunicipio").html(items);
+                            }
+                            else {
+                                new PNotify({
+                                    title: 'Usuario',
+                                    text: data,
+                                    type: 'warning'
+                                });
+                            }
+                        });
+
+                    self.ShowLoad(false, "pFiltro");
+                });
+
+                //clique de escolha do select
+                $("#ddlMunicipio").change(function () {
+
+                    self.ShowLoad(true, "pFiltro");
+
+                    var id = $("#ddlMunicipio").val();
+
+                    var url = "../Localidade/GetLocalidadeByMunicipio?id=" + id;
+
+                    var ddlSource = "#ddlLocalidade";
+
+                    $.getJSON(url,
+                        { id: $(ddlSource).val() },
+                        function (data) {
+                            if (data.length > 0) {
+                                var items = '<option value="">Selecionar Localidade</option>';
+                                $("#ddlLocalidade").empty;
+                                $.each(data,
+                                    function (i, row) {
+                                        items += "<option value='" + row.value + "'>" + row.text + "</option>";
+                                    });
+                                $("#ddlLocalidade").html(items);
+                            }
+                            else {
+                                new PNotify({
+                                    title: 'Localidades',
+                                    text: 'Localidades não encontradas.',
+                                    type: 'warning'
+                                });
+                            }
+                        });
+
+                    self.ShowLoad(false, "pFiltro");
+                });
             }
         }).apply(this, [jQuery]);
     },
