@@ -301,7 +301,7 @@ public class EventoController : BaseController
 
             var evento = ApiClientFactory.Instance.GetEventoById(eventoId);
 
-            var listAlunos = ApiClientFactory.Instance.GetAlunosByLocalidade(Convert.ToInt32(evento.LocalidadeId));
+            var listAlunos = ApiClientFactory.Instance.GetAlunosByLocalidadeId(Convert.ToInt32(evento.LocalidadeId));
 
             var alunos = new SelectList(listAlunos, "Id", "Nome"); 
 
@@ -327,7 +327,7 @@ public class EventoController : BaseController
 
                 await ApiClientFactory.Instance.CreateDados(command);
 
-                convidado = ApiClientFactory.Instance.GetAlunosByLocalidade(Convert.ToInt32(evento.LocalidadeId))
+                convidado = ApiClientFactory.Instance.GetAlunosByLocalidadeId(Convert.ToInt32(evento.LocalidadeId))
                     .FirstOrDefault(x => x.Convidado);
             }
 

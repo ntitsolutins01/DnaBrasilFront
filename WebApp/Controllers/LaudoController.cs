@@ -73,7 +73,7 @@ namespace WebApp.Controllers
 
                 if (usu.LocalidadeId != null)
                 {
-                    var resultAlunos = ApiClientFactory.Instance.GetAlunosByLocalidade(Convert.ToInt32(usu.LocalidadeId));
+                    var resultAlunos = ApiClientFactory.Instance.GetAlunosByLocalidadeId(Convert.ToInt32(usu.LocalidadeId));
 
                     alunos = new SelectList(resultAlunos, "Id", "Nome");
                 }
@@ -244,7 +244,7 @@ namespace WebApp.Controllers
 
                 if (usu.LocalidadeId != null)
                 {
-                    var resultAlunos = ApiClientFactory.Instance.GetAlunosByLocalidade(Convert.ToInt32(usu.LocalidadeId)).Where(x => x.PossuiLaudo == false);
+                    var resultAlunos = ApiClientFactory.Instance.GetAlunosByLocalidadeId(Convert.ToInt32(usu.LocalidadeId)).Where(x => x.PossuiLaudo == false);
 
                     alunos = new SelectList(resultAlunos, "Id", "Nome");
 
@@ -766,7 +766,7 @@ namespace WebApp.Controllers
 
                 var profissionais = new SelectList(ApiClientFactory.Instance.GetProfissionaisByLocalidade(Convert.ToInt32(aluno.LocalidadeId)), "Id", "Nome", aluno.ProfissionalId);
 
-                var alunos = new SelectList(ApiClientFactory.Instance.GetAlunosByLocalidade(Convert.ToInt32(aluno.LocalidadeId)), "Id", "Nome", aluno.Id);
+                var alunos = new SelectList(ApiClientFactory.Instance.GetAlunosByLocalidadeId(Convert.ToInt32(aluno.LocalidadeId)), "Id", "Nome", aluno.Id);
 
                 var saude = new SaudeDto();
 

@@ -107,7 +107,7 @@ namespace WebApp.Controllers
 
                 if (usu.LocalidadeId != null)
                 {
-                    var resultAlunos = ApiClientFactory.Instance.GetAlunosByLocalidade(Convert.ToInt32(usu.LocalidadeId));
+                    var resultAlunos = ApiClientFactory.Instance.GetAlunosByLocalidadeId(Convert.ToInt32(usu.LocalidadeId));
 
                     alunos =  new SelectList(resultAlunos, "Id", "Nome");
 
@@ -213,7 +213,7 @@ namespace WebApp.Controllers
                         ListLocalidades = localidades!,
                         ListAlunos = alunos,
                     });
-                var resultAlunos = ApiClientFactory.Instance.GetAlunosByLocalidade(Convert.ToInt32(usu.LocalidadeId));
+                var resultAlunos = ApiClientFactory.Instance.GetAlunosByLocalidadeId(Convert.ToInt32(usu.LocalidadeId));
 
                 alunos = new SelectList(resultAlunos, "Id", "Nome");
 

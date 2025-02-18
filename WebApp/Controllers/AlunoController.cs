@@ -846,21 +846,21 @@ namespace WebApp.Controllers
         /// <param name="id">Identificador da localidade</param>
         /// <returns>Retorna a lista de alunos</returns>
         [ClaimsAuthorize(ClaimType.Aluno, Claim.Consultar)]
-        public async Task<JsonResult> GetAlunosByLocalidade(string id)
+        public async Task<JsonResult> GetAlunosByLocalidadeId(string id)
         {
             try
             {
-                _logger.Info($"Busca de alunos por localidade GetAlunosByLocalidade: {id}");
+                _logger.Info($"Busca de alunos por localidade GetAlunosByLocalidadeId: {id}");
 
                 if (string.IsNullOrEmpty(id)) throw new Exception("Localidade não informada.");
-                var resultLocal = await ApiClientFactory.Instance.GetNomeAlunosAll(id);
+                var resultLocal = await ApiClientFactory.Instance.GetNomeAlunosByLocalidadeId(Convert.ToInt32(id));
 
                 return new JsonResult(new SelectList(resultLocal, "Id", "Nome"));
 
             }
             catch (Exception ex)
             {
-                _logger.Error($"Busca de alunos por localidade GetAlunosByLocalidade: {ex.StackTrace}");
+                _logger.Error($"Busca de alunos por localidade GetAlunosByLocalidadeId: {ex.StackTrace}");
                 return new JsonResult(ex.StackTrace);
             }
         }
