@@ -458,11 +458,6 @@
                                                 </a>
                                             </li>
                                             <li>
-                                                <a href="@Url.Action("Index", "ControleMensalEstoque")">
-                                                    Controle Mensal de Estoque
-                                                </a>
-                                            </li>
-                                            <li>
                                                 <a href="@Url.Action("Index", "ControleMaterialEstoqueSaida")">
                                                     Registro de Entrada/Saida
                                                 </a>
@@ -470,7 +465,6 @@
                                         </ul>
                                     </li>
                                 }
-                                
 
                                 @if ((await AuthorizationService.AuthorizeAsync(User, ModuloAccess.Atividade)).Succeeded)
                                 {
