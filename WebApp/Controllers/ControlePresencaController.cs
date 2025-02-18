@@ -14,6 +14,7 @@ using WebApp.Models;
 using WebApp.Utility;
 using Claim = WebApp.Identity.Claim;
 using WebApp.Authorization;
+using System.Linq;
 
 namespace WebApp.Controllers
 {
@@ -100,14 +101,24 @@ namespace WebApp.Controllers
 
                 SelectList alunos = null;
 
+                SelectList modalidades = null;
+
+                SelectList profissionais = null;
+
                 if (usu.LocalidadeId != null)
                 {
-                    var resultAlunos = ApiClientFactory.Instance.GetAlunosByLocalidade(Convert.ToInt32(usu.LocalidadeId));
+                    var resultAlunos = ApiClientFactory.Instance.GetAlunosByLocalidadeId(Convert.ToInt32(usu.LocalidadeId));
 
                     alunos =  new SelectList(resultAlunos, "Id", "Nome");
+
+                    var listAtividades = await ApiClientFactory.Instance.GetAtividadeByLocalidadeId(Convert.ToInt32(usu.LocalidadeId));
+
+                    modalidades = new SelectList(listAtividades.Select(s => new { Id = s.ModalidadeId, Nome = s.NomeModalidade }).ToList(), "Id", "Nome");
+
+                    profissionais = new SelectList(ApiClientFactory.Instance.GetProfissionaisByLocalidade(Convert.ToInt32(usu.LocalidadeId)), "Id", "Nome");
                 }
 
-                var listModalidades = new SelectList(ApiClientFactory.Instance.GetModalidadeAll(), "Id", "Nome");
+                //var listModalidades = new SelectList(ApiClientFactory.Instance.GetModalidadeAll(), "Id", "Nome");
                 //var profissionais = 
                 //    ApiClientFactory.Instance.GetProfissionaisByLocalidade(Convert.ToInt32(usu.LocalidadeId));
 
@@ -137,8 +148,8 @@ namespace WebApp.Controllers
                     ListLocalidades = localidades!,
                     ListAlunos = alunos,
                     ControlesPresencas = response.ControlesPresencas,
-                    ListAtividadesModalidades = listModalidades,
-                    //ListProfissionais = profissionais!
+                    ListAtividadesModalidades = modalidades,
+                    ListProfissionais = profissionais!
 
                 };
                 return View(model);
@@ -202,7 +213,7 @@ namespace WebApp.Controllers
                         ListLocalidades = localidades!,
                         ListAlunos = alunos,
                     });
-                var resultAlunos = ApiClientFactory.Instance.GetAlunosByLocalidade(Convert.ToInt32(usu.LocalidadeId));
+                var resultAlunos = ApiClientFactory.Instance.GetAlunosByLocalidadeId(Convert.ToInt32(usu.LocalidadeId));
 
                 alunos = new SelectList(resultAlunos, "Id", "Nome");
 

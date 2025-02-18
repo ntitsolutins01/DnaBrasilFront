@@ -17,13 +17,13 @@
                         <h2 class="panel-title">Filtro de pesquisa</h2>
                     </header>
                     <div class="panel-body">
-                        <label class="col-sm-2 control-label">Fomento:</label>
+                        @* <label class="col-sm-2 control-label">Fomento:</label>
                         <div class="col-md-4 form-group">
                             <select class="form-control populate select2" name="ddlFomento" id="ddlFomento" style="width:100%"
                                     asp-for="FomentoId" asp-items="Model.ListFomentos">
                                 <option value="">Selecionar Fomento</option>
                             </select>
-                        </div>
+                        </div> *@
                         <label class="col-sm-2 control-label">Estado:</label>
                         <div class="col-md-4 form-group">
                             <select class="form-control populate select2" name="ddlEstado" id="ddlEstado" style="width:100%"
@@ -43,6 +43,22 @@
                             <select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade" style="width:100%"
                                     asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
                                 <option value="">Selecionar Localidade</option>
+                            </select>
+                        </div>
+                        <label class="col-sm-2 control-label">Profissional:</label>
+                        <div class="col-md-4 form-group">
+                            <select class="form-control populate select2" name="ddlProfissional" id="ddlProfissional"
+                                    title="Por favor informe o profissional." required style="width:100%"
+                                    asp-for="ProfissionalId" asp-items="Model.ListProfissionais">
+                                <option value="">Selecionar Profissional</option>
+                            </select>
+                        </div>
+                        <label class="col-sm-2 control-label">Atividade / Modalidade:</label>
+                        <div class="col-sm-4 form-group">
+                            <select class="form-control populate select2" name="ddlModalidade" id="ddlModalidade"
+                                    title="Por favor informe a Atividade / Modalidade." required style="width:100%"
+                                    asp-for="AtividadeModalidadeId" asp-items="Model.ListAtividadesModalidades">
+                                <option value="">Selecionar Atividade / Modalidade</option>
                             </select>
                         </div>
                         <label class="col-sm-2 control-label">Aluno:</label>
@@ -78,14 +94,7 @@
                 <div class="panel-body">
 
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">Atividade / Modalidade <span class="required">*</span></label>
-                        <div class="col-sm-4">
-                            <select class="form-control populate select2" name="ddlModalidade" id="ddlModalidade"
-                                    title="Por favor informe a Atividade / Modalidade." required style="width:100%"
-                                    asp-for="AtividadeModalidadeId" asp-items="Model.ListAtividadesModalidades">
-                                <option value="">Selecionar Atividade / Modalidade</option>
-                            </select>
-                        </div>
+                        
                         <label class="col-sm-1 control-label">Dias da Semana </label>
                         <div class="col-sm-5">
                             <input id="diaSemana" name="diaSemana" disabled

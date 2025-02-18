@@ -110,7 +110,7 @@ var vm = new Vue({
                 $("#ddlLocalidade").change(function () {
                     var id = $("#ddlLocalidade").val();
 
-                    var url = "../../Aluno/GetAlunosByLocalidade?id=" + id;
+                    var url = "../../Aluno/GetAlunosByLocalidadeId?id=" + id;
                     $.getJSON(url,
                     { id: id },
                         function (data) {
@@ -137,7 +137,7 @@ var vm = new Vue({
                 $("#ddlModalidade").change(function () {
                     var modalidadeId = $("#ddlModalidade").val();
 
-                    var profissionalId = $("#profissionalIdMinhasTurmas").val();
+                    var profissionalId = $("#ddlProfissional").val();
 
                     var url = "../Profissional/GetTurmasByModalidadeIdProfissionalId";
 

@@ -145,6 +145,8 @@ namespace WebApp.Controllers
         //[ClaimsAuthorize("Usuario", "Alterar")]
         public async Task<ActionResult> Edit(IFormCollection collection)
         {
+            var status = collection["editStatus"].ToString() == "" ? false : true;
+
             var command = new ModalidadeModel.CreateUpdateModalidadeCommand
             {
                 Id = Convert.ToInt32(collection["editModalidadeId"]),
@@ -170,7 +172,7 @@ namespace WebApp.Controllers
                 PesoFim = Convert.ToInt32(collection["pesoFim"].ToString()),
                 AlturaIni = Convert.ToInt32(collection["alturaIni"].ToString()),
                 AlturaFim = Convert.ToInt32(collection["alturaFim"].ToString()),
-                Status = collection["editStatus"].ToString() == "" ? false : true
+                Status = status
             };
 
             foreach (var file in collection.Files)
