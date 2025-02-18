@@ -18,10 +18,20 @@ namespace WebApp.Models
         public List<MaterialDto> Materiais { get; set; }
         public SelectList ListMateriais { get; set; }
         public int MaterialId { get; set; }
+        public string EstadoId { get; set; }
+        public SelectList ListEstados { get; set; }
+        public SelectList ListMunicipios { get; set; }
+        public string MunicipioId { get; set; }
+        public LocalidadeDto Localidade { get; set; }
+        public List<LocalidadeDto> Localidades { get; set; }
+        public SelectList ListLocalidades { get; set; }
+        public string LocalidadeId { get; set; }
 
         public class CreateUpdateControleMaterialEstoqueSaidaCommand
         {
             public int Id { get; set; }
+            public int MunicipioId { get; set; }
+            public int LocalidadeId { get; set; }
             public int MaterialId { get; set; }
             public  int Quantidade { get; set; }
             public string? Solicitante { get; set; }
