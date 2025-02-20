@@ -990,9 +990,12 @@ namespace WebApp.Controllers
                     row++;
                 }
 
-                var filePath = Path.Combine(_host.WebRootPath, "Exportacao/laudo.xlsx");
-                if (!Directory.Exists(Path.Combine(_host.WebRootPath, "Exportacao")))
-                    Directory.CreateDirectory(Path.Combine(_host.WebRootPath, "Exportacao"));
+                var exportPath = Path.Combine(_host.ContentRootPath, "Exportacao");
+                var fileName = $"laudo_{DateTime.Now:yyyyMMddHHmmss}.xlsx";
+                var filePath = Path.Combine(exportPath, fileName);
+
+                if (!Directory.Exists(exportPath))
+                    Directory.CreateDirectory(exportPath);
 
                 workbook.SaveAs(filePath);
 
