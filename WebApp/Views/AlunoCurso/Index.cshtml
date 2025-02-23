@@ -1,0 +1,332 @@
+﻿@model WebApp.Models.AlunoCursoModel
+@{
+    ViewData["Title"] = "Listagem de AlunosCursos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="vAlunoCurso">
+    <div class="row">
+        <div class="col-lg-12">
+            <section class="panel">
+                <div class="tabs">
+                    <ul class="nav nav-tabs tabs-primary">
+                        <div class="form-group row">
+                            <div class="col-sm-12 pull-right">
+                                <a href="@Url.Action("Create", "AlunoCurso")" id="addToTable" class="btn btn-primary pull-right"><i class="fa fa-plus"></i>&nbsp;&nbsp;Cadastrar Aluno </a>
+                            </div>
+                        </div>
+                        <li class="active">
+                            <a href="#overview" data-toggle="tab" aria-expanded="true">Meus Cursos</a>
+                        </li>
+                        <li class="">
+                            <a href="#edit" data-toggle="tab" aria-expanded="false">Meus Certificados</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div id="overview" class="tab-pane active">
+                            @if (Model.Cursos != null)
+                            {
+                                foreach (var item in Model.Cursos)
+                                {
+                                    <section class="panel panel-horizontal">
+                                        <header class="panel-heading bg-primary">
+                                            <div class="panel-heading-icon">
+                                                <i class="fa fa-music"></i>
+                                            </div>
+                                        </header>
+                                        <div class="panel-body p-lg">
+                                            <h3 class="text-weight-semibold mt-sm">@item.Titulo</h3>
+                                            <p>@item.Descricao</p>
+                                        </div>
+                                    </section>
+                                }
+                            }
+                        </div>
+                        <div id="edit" class="tab-pane">
+
+                            <form class="form-horizontal" method="get">
+                                <h4 class="mb-xlg">Personal Information</h4>
+                                <fieldset>
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label" for="profileFirstName">First Name</label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control" id="profileFirstName">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label" for="profileLastName">Last Name</label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control" id="profileLastName">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label" for="profileAddress">Address</label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control" id="profileAddress">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label" for="profileCompany">Company</label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control" id="profileCompany">
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <hr class="dotted tall">
+                                <h4 class="mb-xlg">About Yourself</h4>
+                                <fieldset>
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label" for="profileBio">Biographical Info</label>
+                                        <div class="col-md-8">
+                                            <textarea class="form-control" rows="3" id="profileBio"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-xs-3 control-label mt-xs pt-none">Public</label>
+                                        <div class="col-md-8">
+                                            <div class="checkbox-custom checkbox-default checkbox-inline mt-xs">
+                                                <input type="checkbox" checked="" id="profilePublic">
+                                                <label for="profilePublic"></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <hr class="dotted tall">
+                                <h4 class="mb-xlg">Change Password</h4>
+                                <fieldset class="mb-xl">
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label" for="profileNewPassword">New Password</label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control" id="profileNewPassword">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label" for="profileNewPasswordRepeat">Repeat New Password</label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control" id="profileNewPasswordRepeat">
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <div class="panel-footer">
+                                    <div class="row">
+                                        <div class="col-md-9 col-md-offset-3">
+                                            <button type="submit" class="btn btn-primary">Submit</button>
+                                            <button type="reset" class="btn btn-default">Reset</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="mdDeleteAlunoCurso" tabindex="-1" role="dialog" aria-labelledby="mdDeleteAlunoCursoLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="mdDeleteAlunoCursoLabel">
+                        <i class="fa fa-trash"></i> &nbsp;&nbsp;<strong>Exclusão de AlunoCurso</strong>
+                    </h5>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-icon">
+                        <i class="fa fa-question-circle"></i>
+                    </div>
+                    <div class="modal-text">
+                        <input type="hidden" id="deleteAlunoCursoId" />
+                        <p class="mb-0">Tem certeza que deseja <b>excluir</b> esse registro?</p>
+                    </div>
+                    <div class="modal-wrapper">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-thumbs-o-down"></i> &nbsp;&nbsp;Não</button>
+                    <a id="deleteAlunoCursoHref" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-thumbs-o-up"></i> &nbsp;&nbsp;Sim</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="mdEditAlunoCurso" tabindex="-1" role="dialog" aria-labelledby="mdEditAlunoCursoLabel" aria-hidden="true">
+        <div class="modal-dialog modal-md" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="mdEditAlunoCursoLabel">
+                        <i class="fa fa-pencil"></i> &nbsp;&nbsp;<strong>Alterar AlunoCurso</strong>
+                    </h5>
+                </div>
+                @using (@Html.BeginForm("Edit", "AlunoCurso", FormMethod.Post, new { id = "formEditAlunoCurso", @class = "form-horizontal", @enctype = "multipart/form-data" }))
+                {
+                    <div class="modal-body">
+                        <input type="hidden" name="editAlunoCursoId" :value="editDto.Id" />
+                        <div class="form-group row">
+                            <label class="col-sm-3 control-label text-sm-right pt-2">Professor <span class="required">*</span></label>
+                            <div class="col-sm-5">
+                                <select class="form-control populate select2" name="ddlProfessor" id="ddlProfessor" style="width:100%"
+                                        required title="Por favor selecione o professor">
+                                    <option value="">Selecionar Professor</option>
+                                </select>
+                            </div>
+                            <label class="col-sm-2 control-label text-sm-right pt-2">Carga Horária <span class="required">*</span></label>
+                            <div class="col-sm-2">
+                                <input type="text" id="cargaHoraria" name="cargaHoraria" class="form-control" maxlength="6"
+                                       title="Por favor informe o valor final." required :value="editDto.CargaHoraria" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-3 control-label text-sm-right pt-2">Titulo da AlunoCurso <span class="required">*</span></label>
+                            <div class="col-sm-9">
+                                <input type="text" name="nome" :value="editDto.Titulo" class="form-control"
+                                       maxlength="150"
+                                       title="Por favor informe o nome do curso." required />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label text-sm-right pt-2">Descrição </label>
+                            <div class="col-sm-9">
+                                <textarea class="form-control" rows="7" maxlength="500" name="descricao" v-model="editDto.Descricao" id="descricao"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label text-sm-right pt-2">Video </label>
+                            <div class="col-sm-9">
+                                <textarea class="form-control" rows="7" maxlength="500" name="video" v-model="editDto.Video" id="video"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Material Didático</label>
+                            <div class="col-sm-9">
+                                <div class="fileupload fileupload-new" data-provides="fileupload">
+                                    <div class="input-append">
+                                        <div class="uneditable-input">
+                                            <i class="fa fa-file fileupload-exists"></i>
+                                            <span class="fileupload-preview">{{ editDto.NomeMaterial }}</span>
+                                        </div>
+                                        <span class="btn btn-default btn-file">
+                                            <span class="fileupload-exists">Alterar</span>
+                                            <span class="fileupload-new">Selecionar Arquivo</span>
+                                            <input type="file" id="arquivo" name="arquivo" />
+                                        </span>
+                                        <a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload">Remover</a>
+                                    </div>
+                                    <div v-if="editDto.NomeMaterial" class="mt-2">
+                                        <code>Material Didático atual: {{ editDto.NomeMaterial }}</code>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-3 control-label text-sm-right pt-2">Status</label>
+                            <div class="col-md-9">
+                                <div class="switch switch-sm switch-primary">
+                                    <div v-show="editDto.Status">
+                                        <input type="checkbox" id="editStatus" name="editStatus" data-plugin-ios-switch checked="checked" />
+                                    </div>
+                                    <div v-show="!editDto.Status">
+                                        <input type="checkbox" id="editStatus" name="editStatus" data-plugin-ios-switch />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-remove"></i> &nbsp;&nbsp;Cancelar</button>
+                        <button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section CssSpecificVendor {
+    <link rel="stylesheet" href="~/assets/vendor/bootstrap-fileupload/bootstrap-fileupload.min.css" />
+    <link rel="stylesheet" href="~/assets/vendor/select2/css/select2.css" />
+    <link rel="stylesheet" href="~/assets/vendor/select2-bootstrap-theme/select2-bootstrap.min.css" />
+    <link rel="stylesheet" href="~/assets/vendor/datatables/media/css/dataTables.bootstrap4.css" />
+}
+@section Scripts {
+    <script src="~/assets/vendor/bootstrap-fileupload/bootstrap-fileupload.min.js"></script>
+    <script src="~/assets/vendor/select2/js/select2.js"></script>
+    <script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
+    <script src="~/assets/vendor/jquery-mask/jquery.mask.js"></script>
+    <script src="~/assets/vendor/ios7-switch/ios7-switch.js"></script>
+    <script src="~/assets/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
+    <script src="~/assets/vendor/datatables/media/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/js/formatTable.js"></script>
+    <script src="~/js/AlunoCurso.js"></script>
+
+    <script>
+
+        (function ($) {
+
+            'use strict';
+            var crub = @ViewBag.CrudMessage;
+
+            if (crub === 1) {
+                new PNotify({
+                    title: 'Métrica',
+                    text: 'Cadastro realizado com sucesso!',
+                    type: 'success'
+                });
+                crub = 0;
+            } else if (crub === 2) {
+                new PNotify({
+                    title: 'Métrica',
+                    text: 'Dados alterados com sucesso.',
+                    type: 'warning',
+                    icon: 'fa fa-pencil'
+                });
+                crub = 0;
+            } else if (crub === 3) {
+                new PNotify({
+                    title: 'Métrica',
+                    text: 'Registro excluído com sucesso.',
+                    type: 'error',
+                    icon: 'fa fa-trash-o'
+                });
+                crub = 0;
+            }
+
+
+            var notify = @ViewBag.NotifyMessage;
+            var messagem = '@ViewBag.Notify';
+
+            if (notify === 0) {
+                new PNotify({
+                    title: 'Métrica',
+                    text: messagem,
+                    type: 'success'
+                });
+                crub = 0;
+            } else if (notify === 1) {
+                new PNotify({
+                    title: 'Métrica',
+                    text: messagem,
+                    type: 'warning'
+                });
+                crub = 0;
+            } else if (notify === 2) {
+                new PNotify({
+                    title: 'Métrica',
+                    text: messagem,
+                    type: 'error'
+                });
+                crub = 0;
+            }
+
+            if ($.isFunction($.fn['tooltip'])) {
+                $('[data-toggle=tooltip],[rel=tooltip]').tooltip({ container: 'body' });
+            }
+
+        }).apply(this, [jQuery]);
+    </script>
+}
+
+
+
