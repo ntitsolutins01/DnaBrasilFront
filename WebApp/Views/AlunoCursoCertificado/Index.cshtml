@@ -27,11 +27,14 @@
                     </ul>
                     <div class="tab-content">
                         <div id="overview" class="tab-pane active">
+                            
                             @if (Model.Cursos != null)
                             {
                                 foreach (var item in Model.Cursos)
                                 {
-                                    <!-- Exemplo para cada seção de curso -->
+                                    var progresso = Model.AlunosCursos?
+                                        .FirstOrDefault(ac => ac.CursoId == item.Id)?
+                                        .Progresso ?? 0;
                                     <section class="panel panel-horizontal">
                                         <header class="panel-heading" style="heigth: 90px; width: 160px">
                                             @if (item.Imagem != null)
@@ -42,6 +45,16 @@
                                         <div class="panel-body p-lg">
                                             <h3 class="text-weight-semibold mt-sm">@item.Titulo</h3>
                                             <p>@item.Descricao</p>
+                                            <div class="progress" style="height: 20px;">
+                                                <div class="progress-bar bg-primary"
+                                                     role="progressbar"
+                                                     style="width: @progresso%"
+                                                     aria-valuenow="@progresso"
+                                                     aria-valuemin="0"
+                                                     aria-valuemax="100">
+                                                    @progresso%
+                                                </div>
+                                            </div>
                                         </div>
                                     </section>
                                 }

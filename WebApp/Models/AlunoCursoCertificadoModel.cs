@@ -1,10 +1,11 @@
+using System.Collections;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using WebApp.Dto;
 
 namespace WebApp.Models
 {
 	public class AlunoCursoCertificadoModel
-	{
+    {
         public AlunoCursoDto AlunoCurso { get; set; }
         public List<AlunoCursoDto> AlunosCursos { get; set; }
         public int AlunoId { get; set; }
