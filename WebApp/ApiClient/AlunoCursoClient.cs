@@ -18,7 +18,7 @@ namespace WebApp.ApiClient
         /// </summary>
         /// <param name="command">Objeto para inclusão de AlunoCurso</param>
         /// <returns>Id de AlunoCurso inserido</returns>
-        public Task<long> CreateAlunoCurso (AlunoCursoModel.CreateUpdateAlunoCursoCommand command)
+        public Task<long> CreateAlunoCurso (AlunoCursoCertificadoModel.CreateUpdateAlunoCursoCommand command)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
                 $"{ResourceAlunoCurso }"));
@@ -31,7 +31,7 @@ namespace WebApp.ApiClient
         /// <param name="id">Id de alteração de AlunoCurso</param>
         /// <param name="command">Objeto de alteração de AlunoCurso</param>
         /// <returns>Retorna true ou false</returns>
-        public Task<bool> UpdateAlunoCurso (int id, AlunoCursoModel.CreateUpdateAlunoCursoCommand command)
+        public Task<bool> UpdateAlunoCurso (int id, AlunoCursoCertificadoModel.CreateUpdateAlunoCursoCommand command)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
                 $"{ResourceAlunoCurso }/{id}"));

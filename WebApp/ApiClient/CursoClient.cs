@@ -88,10 +88,10 @@ namespace WebApp.ApiClient
         }
         
         /// <summary>
-        /// Busca todos os Cursos por id 
+        /// Busca todos os Cursos por AlunoId 
         /// </summary>
-        /// <param name="tipoCursoId">Id do tipo de curso</param>
-        /// <returns>Retorna a lista por Curso id</returns>
+        /// <param name="tipoCursoId">Id do  curso</param>
+        /// <returns>Retorna a lista por Curso</returns>
         public List<CursoDto> GetCursosByAlunoId(int alunoId)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,

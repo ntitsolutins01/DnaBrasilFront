@@ -15,7 +15,7 @@ namespace WebApp.Controllers;
 /// <summary>
 /// Controle de AlunoCurso
 /// </summary>
-public class AlunoCursoController : BaseController
+public class AlunoCursoCertificadoController : BaseController
 {
 
     #region Parametros
@@ -32,7 +32,7 @@ public class AlunoCursoController : BaseController
     /// </summary>
     /// <param name="appSettings">Configurações de urls do sistema</param>
     /// <param name="host">Informações da aplicação em execução</param>
-    public AlunoCursoController(IOptions<UrlSettings> appSettings, IWebHostEnvironment host)
+    public AlunoCursoCertificadoController(IOptions<UrlSettings> appSettings, IWebHostEnvironment host)
     {
         _appSettings = appSettings;
         ApplicationSettings.WebApiUrl = _appSettings.Value.WebApiBaseUrl;
@@ -58,7 +58,7 @@ public class AlunoCursoController : BaseController
         var aluno = ApiClientFactory.Instance.GetAlunoByEmail(usuario);
         var cursos = ApiClientFactory.Instance.GetCursosByAlunoId(aluno.Id);
 
-        return View(new AlunoCursoModel()
+        return View(new AlunoCursoCertificadoModel()
         {
             AlunoId = aluno.Id,
             Cursos = cursos
@@ -72,7 +72,7 @@ public class AlunoCursoController : BaseController
     /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
     /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
     [ClaimsAuthorize(ClaimType.Curso, Identity.Claim.Incluir)]
-    public async Task<ActionResult> Create(int? crud, int? notify, string message = null)
+    public async Task<ActionResult> CreateAlunoCurso(int? crud, int? notify, string message = null)
     {
         try
         {
@@ -82,7 +82,7 @@ public class AlunoCursoController : BaseController
             var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome");
             var cursos = new SelectList(ApiClientFactory.Instance.GetCursosAll(), "Id", "Titulo");
 
-            return View(new AlunoCursoModel()
+            return View(new AlunoCursoCertificadoModel()
             {
                 ListEstados = estados,
                 ListCursos = cursos
@@ -102,17 +102,74 @@ public class AlunoCursoController : BaseController
     /// <returns>Retorna mensagem de inclusao através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.Curso, Identity.Claim.Incluir)]
     [HttpPost]
-    public async Task<ActionResult> Create(IFormCollection collection)
+    public async Task<ActionResult> CreateAlunoCurso(IFormCollection collection)
     {
         try
         {
-            var command = new AlunoCursoModel.CreateUpdateAlunoCursoCommand
+            var command = new AlunoCursoCertificadoModel.CreateUpdateAlunoCursoCommand
             {
                 AlunoId = Convert.ToInt32(collection["ddlAluno"].ToString()),
                 CursoId = Convert.ToInt32(collection["ddlCurso"].ToString())
             };
 
             await ApiClientFactory.Instance.CreateAlunoCurso(command);
+
+            return RedirectToAction(nameof(Index), new { crud = (int)EnumCrud.Created });
+        }
+        catch (Exception e)
+        {
+            return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = "Erro ao executar esta ação. Favor entrar em contato com o administrador do sistema." });
+        }
+    }
+
+    /// <summary>
+    /// Tela para Inclusão de AlunoCertificado
+    /// </summary>
+    /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+    /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+    /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
+    [ClaimsAuthorize(ClaimType.Curso, Identity.Claim.Incluir)]
+    public async Task<ActionResult> CreateAlunoCertificado(int? crud, int? notify, string message = null)
+    {
+        try
+        {
+            SetNotifyMessage(notify, message);
+            SetCrudMessage(crud);
+
+            var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome");
+            var certificados = new SelectList(ApiClientFactory.Instance.GetCertificadosAll(), "Id", "NomeImagemFrente");
+
+            return View(new AlunoCursoCertificadoModel()
+            {
+                ListEstados = estados,
+                ListCertificados = certificados
+            });
+        }
+        catch (Exception e)
+        {
+            Console.Write(e.StackTrace);
+            return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = e.Message });
+        }
+    }
+
+    /// <summary>
+    /// Ação de Inclusão do AlunoCertificado
+    /// </summary>
+    /// <param name="collection">Coleção de dados para inclusao de AlunoCertificado</param>
+    /// <returns>Retorna mensagem de inclusao através do parametro crud</returns>
+    [ClaimsAuthorize(ClaimType.Curso, Identity.Claim.Incluir)]
+    [HttpPost]
+    public async Task<ActionResult> CreateAlunoCertificado(IFormCollection collection)
+    {
+        try
+        {
+            var command = new AlunoCursoCertificadoModel.CreateUpdateAlunoCertificadoCommand
+            {
+                AlunoId = Convert.ToInt32(collection["ddlAluno"].ToString()),
+                CertificadoId = Convert.ToInt32(collection["ddlCertificado"].ToString())
+            };
+
+            await ApiClientFactory.Instance.CreateAlunoCertificado(command);
 
             return RedirectToAction(nameof(Index), new { crud = (int)EnumCrud.Created });
         }

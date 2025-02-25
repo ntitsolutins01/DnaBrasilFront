@@ -1,6 +1,6 @@
-﻿@model WebApp.Models.AlunoCursoModel
+﻿@model WebApp.Models.AlunoCursoCertificadoModel
 @{
-    ViewData["Title"] = "Listagem de AlunosCursos";
+    ViewData["Title"] = "Meus Cursos";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -12,7 +12,10 @@
                     <ul class="nav nav-tabs tabs-primary">
                         <div class="form-group row">
                             <div class="col-sm-12 pull-right">
-                                <a href="@Url.Action("Create", "AlunoCurso")" id="addToTable" class="btn btn-primary pull-right"><i class="fa fa-plus"></i>&nbsp;&nbsp;Cadastrar Aluno </a>
+                                <a href="@Url.Action("CreateAlunoCurso", "AlunoCursoCertificado")" id="addToTable" class="btn btn-primary pull-right"><i class="fa fa-plus"></i>&nbsp;&nbsp;Cadastrar Aluno </a>
+                            </div>
+                            <div class="col-sm-12 pull-right">
+                                <a href="@Url.Action("CreateAlunoCertificado", "AlunoCursoCertificado")" id="addToTable" class="btn btn-primary pull-right"><i class="fa fa-plus"></i>&nbsp;&nbsp;Cadastrar Certificado </a>
                             </div>
                         </div>
                         <li class="active">
@@ -45,7 +48,24 @@
                             }
                         </div>
                         <div id="edit" class="tab-pane">
-
+                            @if (Model.Certificados != null)
+                            {
+                                foreach (var item in Model.Certificados)
+                                {
+                                    <!-- Exemplo para cada seção de curso -->
+                                    <section class="panel panel-horizontal">
+                                        <header class="panel-heading" style="heigth: 90px; width: 160px">
+                                            @if (item.ImagemFrente != null)
+                                            {
+                                                <img width="50" src="~/Certificados/@Html.DisplayFor(modelItem => item.ImagemFrente)">
+                                            }
+                                        </header>
+                                        <div class="panel-body p-lg">
+                                            <h3 class="text-weight-semibold mt-sm">@item.NomeImagemFrente</h3>
+                                        </div>
+                                    </section>
+                                }
+                            }
                         </div>
                     </div>
                 </div>

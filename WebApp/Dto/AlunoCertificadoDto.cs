@@ -2,11 +2,11 @@
 
 namespace WebApp.Dto
 {
-    public class AlunoCursoDto
+    public class AlunoCertificadoDto
     {
         public required int Id { get; set; }
         public required int AlunoId { get; set; }
-        public required int CursoId { get; set; }
-        public int Progresso { get; set; }
+        public required int CertificadoId { get; set; }
+        public DateTimeOffset? Created { get; set; }
     }
 }
