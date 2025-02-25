@@ -1,0 +1,125 @@
+/* Estilos para sobrescrever o theme.css */
+.card-box {
+    margin-bottom: 20px !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,.12), 0 1px 2px rgba(0,0,0,.24) !important;
+    transition: all 0.3s cubic-bezier(.25,.8,.25,1) !important;
+}
+
+    .card-box:hover {
+        box-shadow: 0 5px 15px rgba(0,0,0,.1), 0 5px 5px rgba(0,0,0,.12) !important;
+    }
+
+#vAlunoCurso .widget-summary {
+    display: flex !important;
+    width: 100% !important;
+}
+
+#vAlunoCurso .widget-summary-col {
+    padding: 10px !important;
+}
+
+    #vAlunoCurso .widget-summary-col.widget-summary-col-icon {
+        width: 200px !important;
+        min-width: 200px !important;
+        flex-shrink: 0 !important;
+        padding-right: 25px !important;
+        padding-left: 15px !important;
+    }
+
+/* Sobrescrita específica para o summary-icon */
+#vAlunoCurso .widget-summary .summary-icon {
+    margin: 10px auto !important;
+    text-align: center !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 150px !important;
+    height: 150px !important; /* Quadrado */
+    line-height: normal !important; /* Sobrescrever a line-height do theme.css */
+    background-color: #f5f5f5 !important;
+    border-radius: 4px !important; /* Sobrescrever border-radius do theme.css */
+    -webkit-border-radius: 4px !important; /* Sobrescrever -webkit-border-radius do theme.css */
+    overflow: hidden !important;
+    border: 1px solid #e5e5e5 !important;
+    color: inherit !important; /* Sobrescrever a cor forçada no theme.css */
+}
+
+    #vAlunoCurso .widget-summary .summary-icon img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        border-radius: 0 !important;
+    }
+
+#vAlunoCurso .summary {
+    margin-bottom: 15px !important;
+    padding-left: 10px !important;
+}
+
+#vAlunoCurso .summary-title {
+    font-weight: 600 !important;
+}
+
+#vAlunoCurso .summary-footer {
+    padding-top: 5px !important;
+    padding-left: 10px !important;
+}
+
+#vAlunoCurso .progress.light {
+    background-color: #f6f7f8 !important;
+    height: 20px !important;
+    margin-bottom: 10px !important;
+}
+
+#vAlunoCurso .progress-bar {
+    line-height: 20px !important;
+    font-weight: 600 !important;
+}
+
+#vAlunoCurso .curso-descricao {
+    max-height: 80px !important;
+    overflow-y: auto !important;
+    margin-bottom: 10px !important;
+    padding-left: 10px !important;
+}
+
+#vAlunoCurso .panel-actions {
+    float: right !important;
+    margin-top: 0 !important;
+    right: 0 !important;
+    position: absolute !important;
+}
+
+/* Ajuste para os botões no corpo do painel */
+#vAlunoCurso .panel-body .form-group {
+    margin-bottom: 15px !important;
+}
+
+/* Corrigir os ícones de fallback */
+#vAlunoCurso .widget-summary .summary-icon i.fa {
+    font-size: 4.2rem !important;
+    color: #0088cc !important;
+}
+
+@media (max-width: 767px) {
+    #vAlunoCurso .widget-summary {
+        flex-direction: column !important;
+    }
+
+    #vAlunoCurso .widget-summary-col.widget-summary-col-icon {
+        width: 100% !important;
+        text-align: center !important;
+        margin-bottom: 15px !important;
+        padding-right: 10px !important;
+    }
+
+    #vAlunoCurso .summary-icon {
+        margin: 0 auto !important;
+    }
+
+    #vAlunoCurso .col-sm-2.pull-right {
+        float: none !important;
+        width: 100% !important;
+        margin-bottom: 10px !important;
+    }
+}
