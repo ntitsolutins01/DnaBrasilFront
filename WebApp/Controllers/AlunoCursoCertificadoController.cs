@@ -57,11 +57,13 @@ public class AlunoCursoCertificadoController : BaseController
 
         var aluno = ApiClientFactory.Instance.GetAlunoByEmail(usuario);
         var cursos = ApiClientFactory.Instance.GetCursosByAlunoId(aluno.Id);
+        var certificados = ApiClientFactory.Instance.GetCertificadosByAlunoId(aluno.Id);
 
         return View(new AlunoCursoCertificadoModel()
         {
             AlunoId = aluno.Id,
-            Cursos = cursos
+            Cursos = cursos,
+            Certificados = certificados
         });
     }
 

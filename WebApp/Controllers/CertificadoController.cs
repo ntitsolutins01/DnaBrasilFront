@@ -126,16 +126,16 @@ namespace WebApp.Controllers
                         fileNameFrente = Path.GetFileName(file.FileName);
                         filePathFrente = filePath;
 
-                        command.ImagemFrente = fileNameFrente;
-                        command.NomeImagemFrente = filePathFrente;
+                        command.ImagemFrente = filePathFrente;
+                        command.NomeImagemFrente = fileNameFrente;
                     }
                     else if (i == 1)
                     {
                         fileNameVerso = Path.GetFileName(file.FileName);
                         filePathVerso = filePath;
 
-                        command.ImagemVerso = fileNameVerso;
-                        command.NomeImagemVerso = filePathVerso;
+                        command.ImagemVerso = filePathVerso;
+                        command.NomeImagemVerso = fileNameVerso;
                     }
 
                     using Stream fileStream = new FileStream(filePath, FileMode.Create);

@@ -78,7 +78,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="mdDeleteAlunoCursoLabel">
-                        <i class="fa fa-trash"></i> &nbsp;&nbsp;<strong>Exclusão de Aluno-Curso</strong>
+                        <i class="fa fa-trash"></i> &nbsp;&nbsp;<strong>Exclusão de Meus Cursos</strong>
                     </h5>
                 </div>
                 <div class="modal-body">
@@ -105,7 +105,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="mdEditAlunoCursoLabel">
-                        <i class="fa fa-pencil"></i> &nbsp;&nbsp;<strong>Alterar Aluno-Curso</strong>
+                        <i class="fa fa-pencil"></i> &nbsp;&nbsp;<strong>Alterar Meus Cursos</strong>
                     </h5>
                 </div>
                 @using (@Html.BeginForm("Edit", "AlunoCurso", FormMethod.Post, new { id = "formEditAlunoCurso", @class = "form-horizontal", @enctype = "multipart/form-data" }))
@@ -208,6 +208,7 @@
     <script src="~/assets/vendor/datatables/media/js/dataTables.bootstrap4.min.js"></script>
     <script src="~/js/formatTable.js"></script>
     <script src="~/js/AlunoCurso.js"></script>
+    <script src="~/js/AlunoCertificado.js"></script>
 
     <script>
 
@@ -218,14 +219,14 @@
 
             if (crub === 1) {
                 new PNotify({
-                    title: 'Aluno-Curso',
+                    title: 'Meus Cursos',
                     text: 'Cadastro realizado com sucesso!',
                     type: 'success'
                 });
                 crub = 0;
             } else if (crub === 2) {
                 new PNotify({
-                    title: 'Aluno-Curso',
+                    title: 'Meus Cursos',
                     text: 'Dados alterados com sucesso.',
                     type: 'warning',
                     icon: 'fa fa-pencil'
@@ -233,7 +234,7 @@
                 crub = 0;
             } else if (crub === 3) {
                 new PNotify({
-                    title: 'Aluno-Curso',
+                    title: 'Meus Cursos',
                     text: 'Registro excluído com sucesso.',
                     type: 'error',
                     icon: 'fa fa-trash-o'
@@ -247,21 +248,21 @@
 
             if (notify === 0) {
                 new PNotify({
-                    title: 'Aluno-Curso',
+                    title: 'Meus Cursos',
                     text: messagem,
                     type: 'success'
                 });
                 crub = 0;
             } else if (notify === 1) {
                 new PNotify({
-                    title: 'Aluno-Curso',
+                    title: 'Meus Cursos',
                     text: messagem,
                     type: 'warning'
                 });
                 crub = 0;
             } else if (notify === 2) {
                 new PNotify({
-                    title: 'Aluno-Curso',
+                    title: 'Meus Cursos',
                     text: messagem,
                     type: 'error'
                 });
