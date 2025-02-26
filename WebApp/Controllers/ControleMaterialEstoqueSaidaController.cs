@@ -11,6 +11,7 @@ using WebApp.Factory;
 using WebApp.Identity;
 using WebApp.Models;
 using WebApp.Utility;
+using WebApp.Views;
 
 namespace WebApp.Controllers;
 
@@ -67,7 +68,7 @@ public class ControleMaterialEstoqueSaidaController : BaseController
         {
             SetNotifyMessage(notify, message);
             SetCrudMessage(crud);
-            var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Id", "Nome");
+            var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome");
             var tipoMateriais = new SelectList(ApiClientFactory.Instance.GetTiposMateriaisAll(), "Id", "Nome");
 
             return View(new ControleMaterialEstoqueSaidaModel()
@@ -104,6 +105,8 @@ public class ControleMaterialEstoqueSaidaController : BaseController
 
             var command0 = new ControleMaterialEstoqueSaidaModel.CreateUpdateControleMaterialEstoqueSaidaCommand
             {
+                MunicipioId = Convert.ToInt32(collection["ddlMunicipio"].ToString()),
+                LocalidadeId = Convert.ToInt32(collection["ddlLocalidade"].ToString()),
                 MaterialId = Convert.ToInt32(collection["ddlMaterial"].ToString()),
                 Quantidade = quantidade,
                 Solicitante = collection["solicitante"].ToString()
