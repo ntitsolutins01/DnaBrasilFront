@@ -669,7 +669,8 @@ namespace WebApp.Controllers
                         {
                             Id = a.LocalidadeId,
                             Nome = a.NomeLocalidade
-                        }
+                        },
+                        Modalidades = a.Modalidades
                     }).ToList(),
                     ModeloCarteirinha = modeloCarteirinha
                 });

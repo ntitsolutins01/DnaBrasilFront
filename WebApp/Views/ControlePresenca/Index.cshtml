@@ -61,13 +61,38 @@
                                 <option value="">Selecionar Atividade / Modalidade</option>
                             </select>
                         </div>
-                        <label class="col-sm-2 control-label">Aluno:</label>
+                        <label class="col-sm-2 control-label text-sm-right pt-2">Turma:</label>
+                        <div class="col-md-4 form-group">
+                            <select class="form-control populate select2" name="ddlTurma" id="ddlTurma"
+                                    title="Por favor informe a turma." required style="width:100%">
+                                <option value="">Selecionar Turma</option>
+                            </select>
+                        </div>
+                        <label class="col-sm-2 control-label">Estrutura </label>
+                        <div class="col-sm-4 form-group">
+                            <input id="estrutura" name="estrutura" disabled
+                                   type="text" class="form-control" :value="editDto.Estrutura"
+                                   maxlength="14" />
+                        </div>
+                        <label class="col-sm-2 control-label">Dias da Semana </label>
+                        <div class="col-sm-4 form-group">
+                            <input id="diaSemana" name="diaSemana" disabled
+                                   type="text" class="form-control" :value="editDto.DiasSemana"
+                                   maxlength="14" />
+                        </div>
+                        <label class="col-sm-2 control-label">Categoria </label>
+                        <div class="col-sm-4 form-group">
+                            <input id="categoria" name="categoria" :value="editDto.Categoria"
+                                   type="text" class="form-control" disabled
+                                   maxlength="14" />
+                        </div>
+                        @* <label class="col-sm-2 control-label">Aluno:</label>
                         <div class="col-md-4 form-group">
                             <select class="form-control populate select2" name="ddlAluno" id="ddlAluno" style="width:100%"
                                     asp-for="AlunoId" asp-items="Model.ListAlunos">
                                 <option value="">Selecionar Aluno</option>
                             </select>
-                        </div>
+                        </div> *@
                     </div>
                     <footer class="panel-footer">
                         <div class="row">
@@ -83,57 +108,6 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-12">
-            <section class="panel">
-                <header class="panel-heading">
-                    <div class="panel-actions">
-                        <a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
-                    </div>
-                    <h2 class="panel-title">Controle de Presença</h2>
-                </header>
-                <div class="panel-body">
-
-                    <div class="form-group">
-                        
-                        <label class="col-sm-1 control-label">Dias da Semana </label>
-                        <div class="col-sm-5">
-                            <input id="diaSemana" name="diaSemana" disabled
-                                   type="text" class="form-control" :value="editDto.DiasSemana"
-                                   maxlength="14" />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label text-sm-right pt-2">Turma <span class="required">*</span></label>
-                        <div class="col-md-4">
-                            <select class="form-control populate select2" name="ddlTurma" id="ddlTurma"
-                                    title="Por favor informe a turma." required style="width:100%">
-                                <option value="">Selecionar Turma</option>
-                            </select>
-                        </div>
-
-                        <label class="col-sm-1 control-label">Estrutura </label>
-                        <div class="col-sm-5">
-                            <input id="estrutura" name="estrutura" disabled
-                                   type="text" class="form-control" :value="editDto.Estrutura"
-                                   maxlength="14" />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-6">
-                        </div>
-
-                        <label class="col-sm-1 control-label">Categoria </label>
-                        <div class="col-sm-5">
-                            <input id="categoria" name="categoria" :value="editDto.Categoria"
-                                   type="text" class="form-control" disabled
-                                   maxlength="14" />
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </div>
-    </div>
-    <div class="row">
         <div class="col-lg-12">
             <section class="panel">
                 <header class="panel-heading">
@@ -144,13 +118,12 @@
                 </header>
                 <div class="panel-body">
 
-                    <table class="table table-bordered table-striped mb-0" id="datatable-default">
+                    <table class="table table-bordered table-striped mb-0" id="alunoDataTable">
                         <thead>
                             <tr>
                                 <th>Presença / Falta</th>
                                 <th>Nome Aluno</th>
                                 <th>Justificativa</th>
-                                <th>Ação</th>
                             </tr>
                         </thead>
                     </table>

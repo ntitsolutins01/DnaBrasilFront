@@ -231,13 +231,13 @@
                                 </div>
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label">Dias da Semana </label>
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-4">
                                         <input id="diaSemana" name="diaSemana" disabled
                                                type="text" class="form-control" :value="editDto.DiasSemana"
                                                maxlength="14" />
                                     </div>
                                     <label class="col-sm-1 control-label">Categoria </label>
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-4">
                                         <input id="categoria" name="categoria" :value="editDto.Categoria"
                                                type="text" class="form-control" disabled
                                                maxlength="14" />
@@ -255,7 +255,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label class="col-sm-2 control-label">Aluno</label>
-                                        <div class="col-sm-4">
+                                        <div class="col-sm-5">
                                             <select class="form-control populate select2" name="ddlAluno" id="ddlAluno"
                                                     style="width: 100%" title="Por favor selecione o aluno."
                                                     asp-for="AlunoId" asp-items="Model.ListAlunos">

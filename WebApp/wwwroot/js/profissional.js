@@ -3,7 +3,6 @@
     data: {
         params: {
             cpf: "",
-            ambientes: [],
             alunos: [],
             visible: false
         },

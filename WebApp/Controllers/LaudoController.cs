@@ -961,38 +961,43 @@ namespace WebApp.Controllers
                 workbook.AddWorksheet("sheetName");
                 var ws = workbook.Worksheet("sheetName");
                 ws.Cell(1, 1).Value = "Matrícula";
-                ws.Cell(1, 2).Value = "Aluno";
-                ws.Cell(1, 3).Value = "Localidade";
-                ws.Cell(1, 4).Value = "Email";
-                ws.Cell(1, 5).Value = "Telefone";
-                ws.Cell(1, 6).Value = "Celular";
-                ws.Cell(1, 7).Value = "Saúde";
-                ws.Cell(1, 8).Value = "Talento Esportivo";
-                ws.Cell(1, 9).Value = "Consumo Alimentar";
-                ws.Cell(1, 10).Value = "Saúde Bucal";
-                ws.Cell(1, 11).Value = "Qualidade de Vida";
-                ws.Cell(1, 12).Value = "Vocacional";
+                ws.Cell(1, 2).Value = "Idade";
+                ws.Cell(1, 3).Value = "Aluno";
+                ws.Cell(1, 4).Value = "Localidade";
+                ws.Cell(1, 5).Value = "Email";
+                ws.Cell(1, 6).Value = "Telefone";
+                ws.Cell(1, 7).Value = "Celular";
+                ws.Cell(1, 8).Value = "Saúde";
+                ws.Cell(1, 9).Value = "Talento Esportivo";
+                ws.Cell(1, 10).Value = "Consumo Alimentar";
+                ws.Cell(1, 11).Value = "Saúde Bucal";
+                ws.Cell(1, 12).Value = "Qualidade de Vida";
+                ws.Cell(1, 13).Value = "Vocacional";
                 int row = 2;
                 foreach (var item in result.Laudos.Items.ToList())
                 {
                     ws.Cell("A" + row).Value = item.Id;
-                    ws.Cell("B" + row).Value = item.NomeAluno;
-                    ws.Cell("C" + row).Value = item.NomeLocalidade;
-                    ws.Cell("D" + row).Value = item.Email;
-                    ws.Cell("E" + row).Value = item.Telefone;
-                    ws.Cell("F" + row).Value = item.Celular;
-                    ws.Cell("G" + row).Value = item.SaudeId != null ? "X" : "" ;
-                    ws.Cell("H" + row).Value = item.TalentoEsportivoId != null ? "X" : "" ;
-                    ws.Cell("I" + row).Value = item.ConsumoAlimentarId != null ? "X" : "" ;
-                    ws.Cell("J" + row).Value = item.SaudeBucalId != null ? "X" : "" ;
-                    ws.Cell("K" + row).Value = item.QualidadeDeVidaId != null ? "X" : "" ;
-                    ws.Cell("L" + row).Value = item.VocacionalId != null ? "X" : "" ;
+                    ws.Cell("B" + row).Value = item.DtNascimento == null ? 0 : GetIdade((DateTime)item.DtNascimento, DateTime.Now);
+                    ws.Cell("C" + row).Value = item.NomeAluno;
+                    ws.Cell("D" + row).Value = item.NomeLocalidade;
+                    ws.Cell("E" + row).Value = item.Email;
+                    ws.Cell("F" + row).Value = item.Telefone;
+                    ws.Cell("G" + row).Value = item.Celular;
+                    ws.Cell("H" + row).Value = item.SaudeId != null ? "X" : "" ;
+                    ws.Cell("I" + row).Value = item.TalentoEsportivoId != null ? "X" : "" ;
+                    ws.Cell("J" + row).Value = item.ConsumoAlimentarId != null ? "X" : "" ;
+                    ws.Cell("K" + row).Value = item.SaudeBucalId != null ? "X" : "" ;
+                    ws.Cell("L" + row).Value = item.QualidadeDeVidaId != null ? "X" : "" ;
+                    ws.Cell("M" + row).Value = item.VocacionalId != null ? "X" : "" ;
                     row++;
                 }
 
-                var filePath = Path.Combine(_host.WebRootPath, "Exportacao/laudo.xlsx");
-                if (!Directory.Exists(Path.Combine(_host.WebRootPath, "Exportacao")))
-                    Directory.CreateDirectory(Path.Combine(_host.WebRootPath, "Exportacao"));
+                var exportPath = Path.Combine(_host.ContentRootPath, "Exportacao");
+                var fileName = $"laudo_{DateTime.Now:yyyyMMddHHmmss}.xlsx";
+                var filePath = Path.Combine(exportPath, fileName);
+
+                if (!Directory.Exists(exportPath))
+                    Directory.CreateDirectory(exportPath);
 
                 workbook.SaveAs(filePath);
 
@@ -1016,6 +1021,34 @@ namespace WebApp.Controllers
             }
         }
 
+        /// <summary>
+        /// Calcula quantidade de anos passdos com base em duas datas, caso encontre qualquer problema retorna 0 
+        /// </summary>
+        /// <param name="data">Data inicial</param>
+        /// <param name="now">Data final ou deixar nula para data atual</param>
+        /// <returns>Retorna inteiro com quantiadde de anos</returns>
+        private static int GetIdade(DateTime data, DateTime? now = null)
+        {
+            // Carrega a data do dia para comparação caso data informada seja nula
+
+            now = ((now == null) ? DateTime.Now : now);
+
+            try
+            {
+                int YearsOld = (now.Value.Year - data.Year);
+
+                if (now.Value.Month < data.Month || (now.Value.Month == data.Month && now.Value.Day < data.Day))
+                {
+                    YearsOld--;
+                }
+
+                return YearsOld > 18 ? 99 : YearsOld < 4 ? 4 : YearsOld;
+            }
+            catch
+            {
+                return 0;
+            }
+        }
 
     }
 }
