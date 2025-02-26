@@ -115,6 +115,11 @@ namespace WebApp.ApiClient
             return Get<List<AtividadeDto>>(requestUrl);
         }
 
+        /// <summary>
+        /// Busca Alunos por Id da atividade
+        /// </summary>
+        /// <param name="id">Id da atividade</param>
+        /// <returns>Retorna a Lista de Alunos </returns>
         public List<AtividadeAlunosDto> GetAtividadeAlunosByAtividadeId(int id)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
@@ -122,6 +127,20 @@ namespace WebApp.ApiClient
             return Get<List<AtividadeAlunosDto>>(requestUrl);
         }
 
+        /// <summary>
+        /// Busca atividades por id da localidade
+        /// </summary>
+        /// <param name="id">Id da localidade</param>
+        /// <returns>Retorna a lista de atividades</returns>
+        public async Task<List<AtividadeDto>> GetAtividadeByLocalidadeId(int id)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceAtividade}/Localidade/{id}"));
+            return Get<List<AtividadeDto>>(requestUrl);
+        }
+
         #endregion
+
+
     }
 }

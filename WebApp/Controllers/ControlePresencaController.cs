@@ -14,13 +14,14 @@ using WebApp.Models;
 using WebApp.Utility;
 using Claim = WebApp.Identity.Claim;
 using WebApp.Authorization;
+using System.Linq;
 
 namespace WebApp.Controllers
 {
     /// <summary>
     /// Controle de Presença
     /// </summary>
-    [Authorize(Policy = ModuloAccess.ControlePresenca)]
+    //[Authorize(Policy = ModuloAccess.ControlePresenca)]
     public class ControlePresencaController : BaseController
 	{
         private readonly ILog _logger;
@@ -79,7 +80,7 @@ namespace WebApp.Controllers
 
                 var usu = await ApiClientFactory.Instance.GetUsuarioByAspNetUserId(userId);
 
-                var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentoAll(), "Id", "Nome");
+                //var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentoAll(), "Id", "Nome");
                 var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome", usu.Uf);
 
                 SelectList municipios = null;
@@ -100,14 +101,20 @@ namespace WebApp.Controllers
 
                 SelectList alunos = null;
 
+                SelectList profissionais = null;
+
                 if (usu.LocalidadeId != null)
                 {
-                    var resultAlunos = ApiClientFactory.Instance.GetAlunosByLocalidade(Convert.ToInt32(usu.LocalidadeId));
+                    var resultAlunos = ApiClientFactory.Instance.GetAlunosByLocalidadeId(Convert.ToInt32(usu.LocalidadeId));
 
                     alunos =  new SelectList(resultAlunos, "Id", "Nome");
+
+                    var listAtividades = await ApiClientFactory.Instance.GetAtividadeByLocalidadeId(Convert.ToInt32(usu.LocalidadeId));
+
+                    profissionais = new SelectList(ApiClientFactory.Instance.GetProfissionaisByLocalidade(Convert.ToInt32(usu.LocalidadeId)), "Id", "Nome");
                 }
 
-                var listModalidades = new SelectList(ApiClientFactory.Instance.GetModalidadeAll(), "Id", "Nome");
+                //var listModalidades = new SelectList(ApiClientFactory.Instance.GetModalidadeAll(), "Id", "Nome");
                 //var profissionais = 
                 //    ApiClientFactory.Instance.GetProfissionaisByLocalidade(Convert.ToInt32(usu.LocalidadeId));
 
@@ -131,14 +138,13 @@ namespace WebApp.Controllers
 
                 var model = new ControlePresencaModel()
                 {
-                    ListFomentos = fomentos,
+                    //ListFomentos = fomentos,
                     ListEstados = estados,
                     ListMunicipios = municipios!,
                     ListLocalidades = localidades!,
                     ListAlunos = alunos,
                     ControlesPresencas = response.ControlesPresencas,
-                    ListAtividadesModalidades = listModalidades,
-                    //ListProfissionais = profissionais!
+                    ListProfissionais = profissionais!
 
                 };
                 return View(model);
@@ -202,7 +208,7 @@ namespace WebApp.Controllers
                         ListLocalidades = localidades!,
                         ListAlunos = alunos,
                     });
-                var resultAlunos = ApiClientFactory.Instance.GetAlunosByLocalidade(Convert.ToInt32(usu.LocalidadeId));
+                var resultAlunos = ApiClientFactory.Instance.GetAlunosByLocalidadeId(Convert.ToInt32(usu.LocalidadeId));
 
                 alunos = new SelectList(resultAlunos, "Id", "Nome");
 
@@ -321,6 +327,27 @@ namespace WebApp.Controllers
             var result = ApiClientFactory.Instance.GetControlePresencaById(id);
 
             return Task.FromResult(result);
+        }
+
+        /// <summary>
+        /// Busca uma lista de modalidades pelo id do profissional
+        /// </summary>
+        /// <param name="id">Id do profissional a ser buscado</param>
+        /// <returns>Retorna uma lista json de Modalidades </returns>
+        public Task<JsonResult> GetModalidadesByProfissionalId(string id)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(id)) throw new Exception("Profissional não informado.");
+
+                var resultLocal = ApiClientFactory.Instance.GetModalidadesByProfissionalId(Convert.ToInt32(id));
+
+                return Task.FromResult(Json(new SelectList(resultLocal, "Id", "Nome")));
+            }
+            catch (Exception ex)
+            {
+                return Task.FromResult(Json(ex));
+            }
         }
 
         #endregion

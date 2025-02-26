@@ -596,7 +596,7 @@ namespace WebApp.Controllers
                     profissional.ModalidadesIds);
 
                 var listAlunos =
-                    new SelectList(await ApiClientFactory.Instance.GetNomeAlunosAll(null), "Id",
+                    new SelectList(await ApiClientFactory.Instance.GetNomeAlunosByLocalidadeId(Convert.ToInt32(profissional.LocalidadeId)), "Id",
                         "Nome");
 
                 return View(new ProfissionalModel()

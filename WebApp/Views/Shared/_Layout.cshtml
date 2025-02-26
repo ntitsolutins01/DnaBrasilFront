@@ -466,7 +466,7 @@
                                     </li>
                                 }
 
-                                @* @if ((await AuthorizationService.AuthorizeAsync(User, ModuloAccess.Atividade)).Succeeded)
+                                @if ((await AuthorizationService.AuthorizeAsync(User, ModuloAccess.Atividade)).Succeeded)
                                 {
                                     <li class="nav-parent nav-expanded">
                                         <a href="@Url.Action("Index", "Atividade")">
@@ -474,7 +474,7 @@
                                             <span>Atividades</span>
                                         </a>
                                     </li>
-                                } *@
+                                }
                                 @if ((await AuthorizationService.AuthorizeAsync(User, ModuloAccess.Nota)).Succeeded)
                                 {
                                     <li class="nav-parent nav-expanded">

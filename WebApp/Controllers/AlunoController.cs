@@ -80,6 +80,7 @@ namespace WebApp.Controllers
                     Estado = collection["ddlEstado"].ToString(),
                     MunicipioId = collection["ddlMunicipio"].ToString(),
                     LocalidadeId = collection["ddlLocalidade"].ToString() == "" ? usu.LocalidadeId : collection["ddlLocalidade"].ToString(),
+                    ProfissionalId = collection["ddlProfissional"].ToString(),
                     DeficienciaId = collection["ddlDeficiencia"].ToString(),
                     Etnia = collection["ddlEtnia"].ToString(),
                     Sexo = collection["ddlSexo"].ToString(),
@@ -99,6 +100,8 @@ namespace WebApp.Controllers
                                         ? string.IsNullOrEmpty(searchFilter.Etnia)
                                             ? string.IsNullOrEmpty(searchFilter.Nome)
                                                 ? string.IsNullOrEmpty(searchFilter.Matricula)
+                                                    ? string.IsNullOrEmpty(searchFilter.ProfissionalId)
+                                                    : false
                                                 : false
                                             : false
                                         : false
@@ -117,7 +120,7 @@ namespace WebApp.Controllers
                 var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentoAll(), "Id", "Nome", searchFilter.FomentoId);
                 var deficiencias = new SelectList(ApiClientFactory.Instance.GetDeficienciaAll().Where(x => x.Status), "Id", "Nome", searchFilter.DeficienciaId);
                 var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome", usu.Uf);
-
+                var profissionais = new SelectList(ApiClientFactory.Instance.GetProfissionaisByLocalidade(Convert.ToInt32(usu.LocalidadeId)), "Id", "Nome");
 
                 List<SelectListDto> listSexo = new List<SelectListDto>
                 {
@@ -166,7 +169,8 @@ namespace WebApp.Controllers
                     ListSexos = sexos,
                     ListLocalidades = localidades!,
                     Alunos = result.Alunos,
-                    SearchFilter = searchFilter
+                    SearchFilter = searchFilter,
+                    ListProfissionais = profissionais
 
                 };
                 return View(model);
@@ -533,13 +537,15 @@ namespace WebApp.Controllers
         /// <param name="estadoId">Id de estudo</param>
         /// <param name="municipioId">Id de municipio</param>
         /// <param name="localidadeId">Id de localidade</param>
+        /// <param name="profissionalId">Id do profissional</param>
         /// <param name="deficienciaId">Id de deficiencia</param>
         /// <param name="etniaId">Id de etnia</param>
         /// <param name="sexoId">Id de sexo</param>
         /// <returns>Retorna impresao de carteirinha</returns>
         [ClaimsAuthorize(ClaimType.Aluno, Claim.Incluir)]
         public async Task<ActionResult> ImprimirCarteirinhasLote(string ids, string fomentoId = null, string estadoId = null,
-            string municipioId = null, string localidadeId = null, string deficienciaId = null, string etniaId = null, string sexoId = null)
+            string municipioId = null, string localidadeId = null, string profissionalId = null, string deficienciaId = null,
+            string etniaId = null, string sexoId = null)
         {
             try
             {
@@ -582,12 +588,13 @@ namespace WebApp.Controllers
                         Estado = estadoId,
                         MunicipioId = municipioId,
                         LocalidadeId = localidadeId,
+                        ProfissionalId = profissionalId,
                         DeficienciaId = deficienciaId,
                         Etnia = etniaId,
                         Sexo = sexoId
                     };
 
-                    _logger.Info($"Filtros aplicados: Sexo={searchFilter.Sexo}, Fomento={searchFilter.FomentoId}");
+                    _logger.Info($"Filtros aplicados: Sexo={searchFilter.Sexo}, Fomento={searchFilter.FomentoId}, Profissional={searchFilter.ProfissionalId}");
                     var result = await ApiClientFactory.Instance.GetAlunosByFilter(searchFilter);
 
                     // Esse trecho comentado está bugando algo, deixa comentado por enquanto
@@ -662,8 +669,9 @@ namespace WebApp.Controllers
                         {
                             Id = a.LocalidadeId,
                             Nome = a.NomeLocalidade
-                        }
-                    }).ToList(), // Convertendo para List<AlunoIndexDto>
+                        },
+                        Modalidades = a.Modalidades
+                    }).ToList(),
                     ModeloCarteirinha = modeloCarteirinha
                 });
             }
@@ -839,21 +847,21 @@ namespace WebApp.Controllers
         /// <param name="id">Identificador da localidade</param>
         /// <returns>Retorna a lista de alunos</returns>
         [ClaimsAuthorize(ClaimType.Aluno, Claim.Consultar)]
-        public async Task<JsonResult> GetAlunosByLocalidade(string id)
+        public async Task<JsonResult> GetAlunosByLocalidadeId(string id)
         {
             try
             {
-                _logger.Info($"Busca de alunos por localidade GetAlunosByLocalidade: {id}");
+                _logger.Info($"Busca de alunos por localidade GetAlunosByLocalidadeId: {id}");
 
                 if (string.IsNullOrEmpty(id)) throw new Exception("Localidade não informada.");
-                var resultLocal = await ApiClientFactory.Instance.GetNomeAlunosAll(id);
+                var resultLocal = await ApiClientFactory.Instance.GetNomeAlunosByLocalidadeId(Convert.ToInt32(id));
 
                 return new JsonResult(new SelectList(resultLocal, "Id", "Nome"));
 
             }
             catch (Exception ex)
             {
-                _logger.Error($"Busca de alunos por localidade GetAlunosByLocalidade: {ex.StackTrace}");
+                _logger.Error($"Busca de alunos por localidade GetAlunosByLocalidadeId: {ex.StackTrace}");
                 return new JsonResult(ex.StackTrace);
             }
         }
