@@ -215,6 +215,29 @@ namespace WebApp.Controllers
                 return Task.FromResult(Json(ex));
             }
         }
+
+        /// <summary>
+        /// Busca Localidades pelo id do fomento
+        /// </summary>
+        /// <param name="id">Id do fomento</param>
+        /// <returns>Retorna um json com a lista de localidades</returns>
+        public Task<JsonResult> GetLocalidadesByFomentoId(string id)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(id)) throw new Exception("Fomento não informado.");
+                var fomento = ApiClientFactory.Instance.GetFomentoLocalidadesByLocalidadeId(Convert.ToInt32(id));
+
+                //var localidades = new SelectList(ApiClientFactory.Instance.GetLocalidadesByIds(fomento.LocalidadesIds), "Id", "Nome");
+
+                return Task.FromResult(Json(null));
+
+            }
+            catch (Exception ex)
+            {
+                return Task.FromResult(Json(ex));
+            }
+        }
     }
 
     #endregion
