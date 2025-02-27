@@ -72,6 +72,7 @@ namespace WebApp.Controllers
 
                 _logger.Info($"Busca Usuario por AspNetUserId: {userId}");
 
+                var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentosAll(), "Id", "Nome");
                 if (userId == null)
                 {
                     _logger.Warn($"AspNetUserId não encontrado para o email: {User.Identity.Name}");
