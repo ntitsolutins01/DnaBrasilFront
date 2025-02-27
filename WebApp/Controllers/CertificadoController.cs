@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
 using WebApp.Configuration;
@@ -69,11 +69,11 @@ namespace WebApp.Controllers
             {
                 SetNotifyMessage(notify, message);
                 SetCrudMessage(crud);
-                var tipoCurso = new SelectList(ApiClientFactory.Instance.GetTipoCursosAll(), "Id", "Nome");
+                var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentosAll(), "Id", "Nome");
 
-                return View(new CertificadoModel()
+                return View(new CertificadoModel
                 {
-                    ListTipoCursos = tipoCurso
+                    ListFomentos = fomentos
                 });
             }
             catch (Exception e)
@@ -94,7 +94,7 @@ namespace WebApp.Controllers
             {
                 var command = new CertificadoModel.CreateUpdateCertificadoCommand
                 {
-                    CursoId = Convert.ToInt32(collection["ddlCurso"].ToString()),
+                    FomentoId = Convert.ToInt32(collection["ddlFomento"].ToString()),
                     HtmlFrente = collection["HtmlFrente"].ToString(),
                     HtmlVerso = collection["HtmlVerso"].ToString(),
                     Status = collection["Status"].ToString().ToLower() == "on"
@@ -186,7 +186,7 @@ namespace WebApp.Controllers
             var command = new CertificadoModel.CreateUpdateCertificadoCommand
             {
                 Id = id,
-                CursoId = Convert.ToInt32(collection["CursoId"].ToString()),
+                FomentoId = Convert.ToInt32(collection["FomentoId"].ToString()),
                 ImagemFrente = collection["ImagemFrente"].ToString(),
                 ImagemVerso = collection["ImagemVerso"].ToString(),
                 HtmlFrente = collection["HtmlFrente"].ToString(),
@@ -232,22 +232,5 @@ namespace WebApp.Controllers
 
             return Task.FromResult(result);
         }
-
-        /// <summary>
-        /// Método de busca todos os Certificado pelo id do tipo de Certificado
-        /// </summary>
-        /// <param name="id">Id do tipo de curso</param>
-        /// <returns>Retorna um json com todos os Certificado</returns>
-        public JsonResult GetCursosByTipoCursoId(int id)
-        {
-            var cursos = ApiClientFactory.Instance.GetCursosAllByTipoCursoId(id);
-            return Json(cursos);
-        }
-
-        #endregion
-
-
-
-
     }
 }

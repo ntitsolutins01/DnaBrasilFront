@@ -47,7 +47,7 @@ namespace WebApp.Controllers
 
             var dashboardEad = new DashboardEadDto();
 
-            var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentoAll(), "Id", "Nome", dashboardEad.FomentoId);
+            var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentosAll(), "Id", "Nome", dashboardEad.FomentoId);
             var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome", dashboardEad.Estado);
             var tipoCurso = new SelectList(ApiClientFactory.Instance.GetTipoCursosAll(), "Id", "Nome");
 
