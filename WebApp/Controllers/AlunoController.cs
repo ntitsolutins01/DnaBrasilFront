@@ -117,7 +117,10 @@ namespace WebApp.Controllers
                         .Where(x => x.MunicipioId == usu.MunicipioId.ToString()).ToList();
                 }
 
+                //var listFomentos = ApiClientFactory.Instance.GetFomentosAll();
+                //var fomentos = new SelectList(listFomentos, "Id", "Nome", searchFilter.FomentoId);
                 var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentosAll(), "Id", "Nome", searchFilter.FomentoId);
+
                 var deficiencias = new SelectList(ApiClientFactory.Instance.GetDeficienciaAll().Where(x => x.Status), "Id", "Nome", searchFilter.DeficienciaId);
                 var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome", usu.Uf);
                 var profissionais = new SelectList(ApiClientFactory.Instance.GetProfissionaisByLocalidade(Convert.ToInt32(usu.LocalidadeId)), "Id", "Nome");
@@ -150,6 +153,23 @@ namespace WebApp.Controllers
 
                 SelectList localidades = null;
 
+                //if (usu.MunicipioId != null)
+                //{
+                //    var fomento = ApiClientFactory.Instance.GetFomentoLocalidadesByLocalidadeId(Convert.ToInt32(usu.LocalidadeId));
+
+                //    IEnumerable<LocalidadeDto> resultLocalidades;
+
+                //    resultLocalidades = usu.Perfil.Id != (int)EnumPerfil.Administrador
+                //        ? ApiClientFactory.Instance.GetLocalidadeByMunicipio(usu.MunicipioId.ToString())
+                //            .Where(x => fomento.LocalidadesIds.Contains(x.Id))
+                //        : ApiClientFactory.Instance.GetLocalidadeByMunicipio(usu.MunicipioId.ToString());
+
+                //    if (resultLocalidades != null)
+                //        localidades = new SelectList(resultLocalidades, "Id", "Nome", usu.LocalidadeId);
+
+                //    fomentos = new SelectList(listFomentos, "Id", "Nome", fomento.Id);
+                //}
+
                 if (usu.MunicipioId != null)
                 {
                     var resultLocalidades = ApiClientFactory.Instance.GetLocalidadeByMunicipio(usu.MunicipioId.ToString());
@@ -157,7 +177,6 @@ namespace WebApp.Controllers
                     if (resultLocalidades != null)
                         localidades = new SelectList(resultLocalidades, "Id", "Nome", usu.LocalidadeId);
                 }
-
 
                 var model = new AlunoModel
                 {

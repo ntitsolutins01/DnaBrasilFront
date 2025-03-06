@@ -90,8 +90,41 @@
                     </div>
                     <footer class="panel-footer">
                         <div class="row">
+                            @{
+                                bool nenhumFiltroSelecionado = string.IsNullOrEmpty(Model.FomentoId) &&
+                                                               string.IsNullOrEmpty(Model.EstadoId) &&
+                                                               string.IsNullOrEmpty(Model.MunicipioId) &&
+                                                               string.IsNullOrEmpty(Model.LocalidadeId) &&
+                                                               string.IsNullOrEmpty(Model.AlunoId) &&
+                                                               string.IsNullOrEmpty(Model.TipoLaudoId);
+
+                                bool semResultados = Model.Laudos?.Items == null || !Model.Laudos.Items.Any();
+
+                                bool mostrarAlerta = nenhumFiltroSelecionado || (Context.Request.Method == "POST" && semResultados);
+
+                                if (mostrarAlerta)
+                                {
+                                    
+                                    <div class="col-sm-6 pull-left">
+                                        <div class="alert alert-info" style="padding-bottom: 6px;padding-top: 6px; !important; margin-bottom: 0px; !important">
+                                            <strong>Info:</strong> Para exportação / impressão de laudos selecione o filtro e clique em
+                                            <a href="" class="alert-link">Exportar / Imprimir</a>.
+                                        </div>
+                                    </div>
+                                }
+                            }
                             <div class="col-sm-2 pull-right">
                                 <button type="submit" class="btn btn-block btn-primary pull-right"><i class="fa fa-search"></i> &nbsp;&nbsp;Pesquisar</button>
+                            </div>
+                            <div class="col-sm-2 pull-right">
+                                <a href="@Url.Action("ExportLaudo", "Laudo")" id="btnExportarLaudo" class="btn btn-block btn-danger pull-right">
+                                    <i class="fa fa-download"></i> &nbsp;&nbsp;Exportar Laudos
+                                </a>
+                            </div>
+                            <div class="col-sm-2 pull-right">
+                                <a href="@Url.Action("Print", "Laudo")" id="btnImprimirLaudo" class="btn btn-block btn-purple pull-right" target="_blank">
+                                    <i class="fa fa-print"></i> &nbsp;&nbsp;Imprimir Laudos
+                                </a>
                             </div>
                         </div>
                     </footer>
@@ -109,49 +142,13 @@
                     </header>
                     <div class="panel-body">
                         <div class="form-group row">
-                            @{
-                                bool nenhumFiltroSelecionado = string.IsNullOrEmpty(Model.FomentoId) &&
-                                string.IsNullOrEmpty(Model.EstadoId) &&
-                                string.IsNullOrEmpty(Model.MunicipioId) &&
-                                string.IsNullOrEmpty(Model.LocalidadeId) &&
-                                string.IsNullOrEmpty(Model.AlunoId) &&
-                                string.IsNullOrEmpty(Model.TipoLaudoId);
-
-                                bool semResultados = Model.Laudos?.Items == null || !Model.Laudos.Items.Any();
-
-                                bool mostrarAlerta = nenhumFiltroSelecionado || (Context.Request.Method == "POST" && semResultados);
-
-                                if (mostrarAlerta)
-                                {
-                                    <div class="col-sm-6 pull-left">
-                                        <div class="alert alert-warning" style="padding-bottom: 6px;padding-top: 6px; !important; margin-bottom: 0px; !important">
-                                            <strong>Atenção!</strong> Os laudos listados são referentes ao seu <a href="" class="alert-link">Estado/Município/Localidade</a> de cadastro.
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-8 pull-left">
-                                        &nbsp;&nbsp;
-                                    </div>
-                                    <div class="col-sm-6 pull-left">
-                                        <div class="alert alert-info" style="padding-bottom: 6px;padding-top: 6px; !important; margin-bottom: 0px; !important">
-                                            <strong>Info:</strong> Para exportação / impressão de laudos selecione o filtro e clique em
-                                            <a href="" class="alert-link">Exportar / Imprimir Laudos</a>.
-                                        </div>
-                                    </div>
-                                }
-                            }
-
+                            <div class="col-sm-6 pull-left">
+                                <div class="alert alert-warning" style="padding-bottom: 6px;padding-top: 6px; !important; margin-bottom: 0px; !important">
+                                    <strong>Atenção!</strong> Os laudos listados são referentes ao seu <a href="" class="alert-link">Estado/Município/Localidade</a> de cadastro.
+                                </div>
+                            </div>
                             <div class="col-sm-2 pull-right">
                                 <a href="@Url.Action("Create", "Laudo")" id="addToTable" class="btn btn-block btn-primary pull-right"><i class="fa fa-plus"></i> Novo Laudo </a>
-                            </div>
-                            <div class="col-sm-2 pull-right">
-                                <a href="@Url.Action("ExportLaudo", "Laudo")" id="btnExportarLaudo" class="btn btn-block btn-danger pull-right">
-                                    <i class="fa fa-download"></i> &nbsp;&nbsp;Exportar Laudos
-                                </a>
-                            </div>
-                            <div class="col-sm-2 pull-right">
-                                <a href="@Url.Action("Print", "Laudo")" id="btnImprimirLaudo" class="btn btn-block btn-purple pull-right" target="_blank">
-                                    <i class="fa fa-print"></i> &nbsp;&nbsp;Imprimir Laudos
-                                </a>
                             </div>
                         </div>
                         <table class="table table-bordered table-striped mb-0" id="datatable-default">
