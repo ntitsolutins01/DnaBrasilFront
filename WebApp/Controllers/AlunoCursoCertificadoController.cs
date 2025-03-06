@@ -108,13 +108,13 @@ public class AlunoCursoCertificadoController : BaseController
     {
         try
         {
-            var command = new AlunoCursoCertificadoModel.CreateUpdateAlunoCursoCommand
+            var command = new AlunoModel.CreateUpdateAlunoCursoCommand
             {
                 AlunoId = Convert.ToInt32(collection["ddlAluno"].ToString()),
-                CursoId = Convert.ToInt32(collection["ddlCurso"].ToString())
+                CursosId = collection["ddlCurso"].ToString()
             };
 
-            await ApiClientFactory.Instance.CreateAlunoCurso(command);
+            await ApiClientFactory.Instance.CreateAlunoCursos(command);
 
             return RedirectToAction(nameof(Index), new { crud = (int)EnumCrud.Created });
         }
@@ -165,13 +165,13 @@ public class AlunoCursoCertificadoController : BaseController
     {
         try
         {
-            var command = new AlunoCursoCertificadoModel.CreateUpdateAlunoCertificadoCommand
+            var command = new AlunoModel.CreateUpdateAlunoCertificadoCommand
             {
                 AlunoId = Convert.ToInt32(collection["ddlAluno"].ToString()),
-                CertificadoId = Convert.ToInt32(collection["ddlCertificado"].ToString())
+                CertificadosId = collection["ddlCertificado"].ToString()
             };
 
-            await ApiClientFactory.Instance.CreateAlunoCertificado(command);
+            await ApiClientFactory.Instance.CreateAlunoCertificados(command);
 
             return RedirectToAction(nameof(Index), new { crud = (int)EnumCrud.Created });
         }

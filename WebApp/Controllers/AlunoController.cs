@@ -854,7 +854,7 @@ namespace WebApp.Controllers
                 _logger.Info($"Busca de alunos por localidade GetAlunosByLocalidadeId: {id}");
 
                 if (string.IsNullOrEmpty(id)) throw new Exception("Localidade não informada.");
-                var resultLocal = ApiClientFactory.Instance.GetAlunosByLocalidade(Convert.ToInt32(id));
+                var resultLocal = ApiClientFactory.Instance.GetAlunosByLocalidadeId(Convert.ToInt32(id));
 
                 return new JsonResult(new SelectList(resultLocal, "Id", "Nome"));
 
