@@ -1,0 +1,213 @@
+@model ControlePresencaModel
+
+@{
+    ViewData["Title"] = "Impressão de Relatório de Presença";
+    Layout = "";
+}
+
+@functions {
+    public string GetMesNome(int mes)
+    {
+        string[] meses = new string[]
+        {
+            "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+            "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+        };
+
+        if (mes < 1 || mes > 12)
+        {
+            return "Mês inválido";
+        }
+
+        return meses[mes - 1];
+    }
+}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, orientation=landscape" />
+    <title>relatorio-frequencia-@Model.ControlePresenca.NomeAluno</title>
+    <link rel="stylesheet" href="~/assets/assets_RF/index.css" media="all" />
+    <link rel="stylesheet" href="~/assets/assets_RF/pages.css" media="all" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+</head>
+
+<body>
+    <!-- Barra de navegação fixa -->
+    <div class="navigation-bar">
+        <!-- Navegação de páginas -->
+        <div class="page-navigation">
+            <button class="nav-button" id="prevButton" onclick="previousPage()" title="Página Anterior">
+                <span class="material-icons">arrow_upward</span>
+            </button>
+            <div class="page-counter">
+                <span id="currentPage">0</span>
+                <span>/</span>
+                <span id="totalPages">0</span>
+            </div>
+            <button class="nav-button" id="nextButton" onclick="nextPage()" title="Próxima Página">
+                <span class="material-icons">arrow_downward</span>
+            </button>
+        </div>
+        <!-- Botões de ação -->
+        <div class="action-buttons">
+            <button class="action-button" onclick="printDocument()" title="Imprimir">
+                <span class="material-icons">print</span>
+            </button>
+            <button class="action-button" onclick="downloadDocument()" title="Baixar">
+                <span class="material-icons">download</span>
+            </button>
+        </div>
+    </div>
+    <!-- Página 1 -->
+    <div class="page-container page1">
+        <div class="newContainer">
+            <!-- Header -->
+            <header class="report-header">
+                <div class="report-logo"></div>
+                <div class="report-title">
+                    <span class="report-title-small">RELATÓRIO DE</span>
+                    <span class="report-title-large">FREQUÊNCIA</span>
+                </div>
+                <div class="report-icon"></div>
+            </header>
+
+            <!-- Seção de informações -->
+            <section class="info-section">
+                <!-- Container principal de informações -->
+                <div class="info-main">
+                    <!-- Perfil -->
+                    <div class="profile-side">
+                        <div class="avatar-image">
+                            @*@if (Model.ControlePresenca.ByteImage != null)
+                            {
+                                var base64 = Convert.ToBase64String(Model.ControlePresenca.ByteImage);
+                                var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+                                <img src="@imgSrc" alt="Avatar do usuário" class="avatar-image" />
+                            }
+                            else
+                            {
+                                <img src="/assets/images/user-square.jpg" alt="Avatar do usuário" class="avatar-image" />
+                            }*@<img src="/assets/images/user-square.jpg" alt="Avatar do usuário" class="avatar-image" />
+                        </div>
+                    </div>
+
+                    <!-- Informações do aluno -->
+                    <div class="student-info">
+                        <div class="info-row">
+                            <span class="info-label">ALUNO</span>
+                            <span class="info-value">@Model.ControlePresenca.NomeAluno</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">MATRÍCULA</span>
+                            <span class="info-value">@Model.ControlePresenca.AlunoId</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">MUNICIPIO/ESTADO</span>
+                            <span class="info-value">@Model.ControlePresenca.MunicipioEstado</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">UNIDADE ESCOLAR</span>
+                            <span class="info-value">@Model.ControlePresenca.NomeLocalidade</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">PERÍODO</span>
+                            <span class="info-value">Todo o mês de @GetMesNome(Model.ControlePresenca.Mes)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Container direito (tabela e info da turma) -->
+                <div class="right-container">
+                    <!-- Tabela de Status -->
+                    <div class="status-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>STATUS</th>
+                                    <th>QUANTIDADE</th>
+                                    <th>HORAS</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Presença</td>
+                                    <td>10</td>
+                                    <td>40</td>
+                                </tr>
+                                <tr>
+                                    <td>Falta</td>
+                                    <td>10</td>
+                                    <td>40</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Informações da turma -->
+                    <div class="class-info">
+                        <div class="serie-info">
+                            <span class="serie-label">SÉRIE:</span>
+                            <span>8º ANO</span>
+                        </div>
+                        <div class="turma-info">
+                            <span class="turma-label">TURMA:</span>
+                            <span>D</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Seção da tabela de frequência -->
+            <section class="frequency-section">
+                <div class="frequency-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>TURMA</th>
+                                <th>HORARIO</th>
+                                <th>DIAS DA SEMANA</th>
+                                <th>MODALIDADE</th>
+                                <th>PRESENÇA</th>
+                                <th>FALTA</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- O loop irá duplicar o <tr> -->
+                            <tr>
+                                <td>T1</td>
+                                <td>9:00 - 9:50</td>
+                                <td>SEG - QUA</td>
+                                <td>Basquete</td>
+                                <td>7</td>
+                                <td>1</td>
+                            </tr>
+                            <tr>
+                                <td>T2</td>
+                                <td>9:00 - 9:50</td>
+                                <td>TER - QUI</td>
+                                <td>Xadrez</td>
+                                <td>8</td>
+                                <td>0</td>
+                            </tr>
+                            <tr>
+                                <td>T3</td>
+                                <td>9:00 - 9:50</td>
+                                <td>SEX</td>
+                                <td>Reforço</td>
+                                <td>8</td>
+                                <td>0</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script src="~/assets/assets_RF/index.js"></script>
+</body>
+</html>
