@@ -326,7 +326,15 @@ var vm = new Vue({
             }).catch(error => {
                 Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
             });
-        }
+        },
+        handlePrintSubmit: function (itemId, mes) {
+            if (itemId) {
+                window.location.href = "/ControlePresenca/ImprimirFrequencia?id=" + itemId + "&mes=" + mes;
+                return false; // Impede o submit do form
+            } else {
+                return true; // Permite o submit do form para impressão em lote
+            }
+        },
     }
 });
 
@@ -340,5 +348,31 @@ var crud = {
         $('input[name="editControlePresencaId"]').attr('value', id);
         $('#mdEditControlePresenca').modal('show');
         vm.EditControlePresenca(id)
-    }
+    },
+    ImprimirFrequencia: function (id) {
+        $('#itemId').val(id);
+        $('#mdMesImpressao').modal('show');
+    },
 };
+
+function submitForm() {
+    var itemId = $('#itemId').val();
+    var mes = $('#ddlMes').val();
+
+    if (!mes) {
+        new PNotify({
+            title: 'Atenção',
+            text: 'Por favor, selecione um mês.',
+            type: 'warning'
+        });
+        return false;
+    }
+
+    if (itemId) {
+        // Impressão individual
+        vm.handlePrintSubmit(itemId, mes);
+    } else {
+        // Impressão em lote
+        $('#formImprimir').submit();
+    }
+}
