@@ -25,6 +25,30 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
+        /// Inclusão de AlunoCurso
+        /// </summary>
+        /// <param name="command">Objeto para inclusão de AlunoCurso</param>
+        /// <returns>Id de AlunoCurso inserido</returns>
+        public Task<long> CreateAlunoCursos(AlunoModel.CreateUpdateAlunoCursoCommand command)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceAlunos}/Cursos"));
+            return Post(requestUrl, command);
+        }
+
+        /// <summary>
+        /// Inclusão de AlunoCertificado
+        /// </summary>
+        /// <param name="command">Objeto para inclusão de AlunoCertificado</param>
+        /// <returns>Id de AlunoCertificado inserido</returns>
+        public Task<long> CreateAlunoCertificados(AlunoModel.CreateUpdateAlunoCertificadoCommand command)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceAlunos}/Certificados"));
+            return Post(requestUrl, command);
+        }
+
+        /// <summary>
         /// Alteração do Aluno
         /// </summary>
         /// <param name="id">Id de alteração do Aluno</param>
@@ -130,7 +154,7 @@ namespace WebApp.ApiClient
         /// </summary>
         /// <param name="id">Id de Aluno a ser buscado</param>
         /// <returns>Retorna a uma localidade</returns>
-        public List<AlunoIndexDto> GetAlunosByLocalidade(int id)
+        public List<AlunoIndexDto> GetAlunosByLocalidadeId(int id)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
                 $"{ResourceAlunos}/Localidade/{id}"));
@@ -142,10 +166,10 @@ namespace WebApp.ApiClient
         /// </summary>
         /// <param name="id">Id da localidade a ser buscado</param>
         /// <returns>Retorna a todos os Aluno</returns>
-        public async Task<List<SelectListDto>> GetNomeAlunosAll(string id)
+        public async Task<List<SelectListDto>> GetNomeAlunosByLocalidadeId(int id)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceAlunos}/NomeAlunos/{id}"));
+                $"{ResourceAlunos}/NomeAlunos/Localidade/{id}"));
             return Get<List<SelectListDto>>(requestUrl);
         }
 

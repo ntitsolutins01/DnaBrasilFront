@@ -14,6 +14,9 @@ using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
 namespace WebApp.Controllers
 {
+    /// <summary>
+	/// Controle de Plano Aula
+	/// </summary>
     [Authorize(Policy = ModuloAccess.PlanoAula)]
     public class PlanoAulaController : BaseController
 	{
@@ -30,8 +33,15 @@ namespace WebApp.Controllers
 		}
         #endregion
 
-        #region Crud Methods
+        #region Main Methods
 
+        /// <summary>
+        /// Listagem do Plano de Aula
+        /// </summary>
+        /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
+        /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
+        /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+        /// <returns></returns>
         [ClaimsAuthorize(ClaimType.PlanoAula, Claim.Consultar)]
         public IActionResult Index(int? crud, int? notify, string message = null)
 		{
@@ -43,6 +53,13 @@ namespace WebApp.Controllers
 			return View(new PlanoAulaModel() { PlanosAulas = response, ListModalidades = modalidades });
 		}
 
+        /// <summary>
+        /// Tela para Inclusão do Plano de Aula
+        /// </summary>
+        /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
+        /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
+        /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+        /// <returns></returns>
         [ClaimsAuthorize(ClaimType.PlanoAula, Claim.Incluir)]
         public ActionResult Create(int? crud, int? notify, string message = null)
 		{
@@ -54,6 +71,11 @@ namespace WebApp.Controllers
 			return View(new PlanoAulaModel() { ListModalidades = modalidades });
 		}
 
+        /// <summary>
+        /// Ação de Inclusão do Plano  de Aula
+        /// </summary>
+        /// <param name="collection">coleção de dados para inclusao de Plano Aula</param>
+        /// <returns>retorna mensagem de inclusao através do parametro crud</returns>
         [ClaimsAuthorize(ClaimType.PlanoAula, Claim.Incluir)]
         [HttpPost]
 		public async Task<ActionResult> Create(IFormCollection collection)
@@ -95,6 +117,11 @@ namespace WebApp.Controllers
 			}
 		}
 
+        /// <summary>
+        /// Ação de Alteração do Plano de Aula
+        /// </summary>
+        /// <param name="collection">coleção de dados para alteração de Plano Aula</param>
+        /// <returns>retorna mensagem de alteração através do parametro crud</returns>
         [ClaimsAuthorize(ClaimType.PlanoAula, Claim.Alterar)]
         public async Task<ActionResult> Edit(IFormCollection collection)
 		{
@@ -132,6 +159,11 @@ namespace WebApp.Controllers
 			}
 		}
 
+        /// <summary>
+        /// Ação de Exclusão do Plano de Aula
+        /// </summary>
+        /// <param name="id">identificador do Plano de Aula</param>
+        /// <returns></returns>
         [ClaimsAuthorize(ClaimType.PlanoAula, Claim.Excluir)]
         public ActionResult Delete(int id)
 		{
@@ -153,6 +185,11 @@ namespace WebApp.Controllers
 			}
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="id"></param>
+		/// <returns></returns>
         [ClaimsAuthorize(ClaimType.PlanoAula, Claim.Download)]
         public ActionResult Download(int id)
         {
@@ -177,6 +214,11 @@ namespace WebApp.Controllers
 
         #region Get Methods
 
+        /// <summary>
+		/// Busca Plano de Aula por Id
+		/// </summary>
+		/// <param name="id">Identificador de Plano de Aula</param>
+		/// <returns>Retorna a Categoria</returns>
         [ClaimsAuthorize(ClaimType.PlanoAula, Claim.Consultar)]
         public Task<PlanoAulaDto> GetPlanoAulaById(int id)
 		{

@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
-using NuGet.Protocol.Core.Types;
 using WebApp.Configuration;
 using WebApp.Dto;
 using WebApp.Enumerators;
@@ -11,16 +9,40 @@ using WebApp.Utility;
 
 namespace WebApp.Controllers
 {
+    /// <summary>
+    /// Controle do Tipo Parceria 
+    /// </summary>
     public class TipoParceriaController : BaseController
     {
+        #region Parametros
+
         private readonly IOptions<UrlSettings> _appSettings;
 
+        #endregion
+
+        #region Constructor
+
+        /// <summary>
+        /// Construtor da página
+        /// </summary>
+        /// <param name="appSettings">configurações de urls do sistema</param>
         public TipoParceriaController(IOptions<UrlSettings> appSettings)
         {
             _appSettings = appSettings;
             ApplicationSettings.WebApiUrl = _appSettings.Value.WebApiBaseUrl;
         }
 
+        #endregion
+
+        #region Main Methods
+
+        /// <summary>
+        /// Listagem do Tipo Parceria 
+        /// </summary>
+        /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
+        /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
+        /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+        /// <returns></returns>
         public IActionResult Index(int? crud, int? notify, string message = null)
         {
             SetNotifyMessage(notify, message);
@@ -30,6 +52,13 @@ namespace WebApp.Controllers
             return View(new TipoParceriaModel() { TipoParcerias = response });
         }
 
+        /// <summary>
+        /// Tela para Inclusão do Tipo Parceria 
+        /// </summary>
+        /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
+        /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
+        /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+        /// <returns></returns>
         //[ClaimsAuthorize("ConfiguracaoSistema", "Incluir")]
         public ActionResult Create(int? crud, int? notify, string message = null)
         {
@@ -40,6 +69,11 @@ namespace WebApp.Controllers
             return View();
         }
 
+        /// <summary>
+        /// Ação de Inclusão do Tipo Parceria 
+        /// </summary>
+        /// <param name="collection">coleção de dados para inclusao do Tipo Parceria </param>
+        /// <returns>retorna mensagem de inclusao através do parametro crud</returns>
         //[ClaimsAuthorize("Usuario", "Incluir")]
         [HttpPost]
         public async Task<ActionResult> Create(IFormCollection collection)
@@ -63,6 +97,11 @@ namespace WebApp.Controllers
             }
         }
 
+        /// <summary>
+        ///  Ação de Alteração do Tipo Parceria 
+        /// </summary>
+        /// <param name="collection">coleção de dados para alteração do Tipo Parceria </param>
+        /// <returns>retorna mensagem de alteração através do parametro crud</returns>
         //[ClaimsAuthorize("Usuario", "Alterar")]
         public async Task<ActionResult> Edit(IFormCollection collection)
         {
@@ -79,6 +118,11 @@ namespace WebApp.Controllers
             return RedirectToAction(nameof(Index), new { crud = (int)EnumCrud.Updated });
         }
 
+        /// <summary>
+        /// Ação de Exclusão do Tipo Parceria 
+        /// </summary>
+        /// <param name="id">identificador do Tipo Parceria </param>
+        /// <returns>retorna mensagem de exclusão através do parametro crud</returns>
         //[ClaimsAuthorize("Usuario", "Excluir")]
         public ActionResult Delete(int id)
         {
@@ -93,6 +137,15 @@ namespace WebApp.Controllers
             }
         }
 
+        #endregion
+
+        #region Get Methods
+
+        /// <summary>
+        /// Busca Tipo Parceria  por Id
+        /// </summary>
+        /// <param name="id">Identificador do Tipo Parceria</param>
+        /// <returns>Retorna a Tipo Parceria</returns>
         public Task<TipoParceriaDto> GetTipoParceriaById(int id)
         {
             var result = ApiClientFactory.Instance.GetTipoParceriaById(id);
@@ -101,5 +154,9 @@ namespace WebApp.Controllers
         }
     }
 
-    
+    #endregion
+
+
+
+
 }

@@ -46,6 +46,7 @@
             'ddlEstado',
             'ddlMunicipio',
             'ddlLocalidade',
+            'ddlProfissional',
             'ddlDeficiencia',
             'ddlEtnia',
             'ddlSexo'
@@ -60,15 +61,30 @@
             estadoId: $('#ddlEstado').val(),
             municipioId: $('#ddlMunicipio').val(),
             localidadeId: $('#ddlLocalidade').val(),
+            profissionalId: $('#ddlProfissional').val(),
             deficienciaId: $('#ddlDeficiencia').val(),
             etniaId: $('#ddlEtnia').val(),
             sexoId: $('#ddlSexo').val()
         };
     }
 
-    function handleBatchPrint() {
+    function handleBatchPrint(e) {
+        if (e) {
+            e.preventDefault();
+        }
+
         const selectedIds = getSelectedIds();
         const hasFilters = hasSelectedFilters();
+        const fomentoId = $('#ddlFomento').val();
+
+        if (!fomentoId) {
+            new PNotify({
+                title: 'Atenção',
+                text: 'Por favor, selecione o Fomento antes de realizar a impressão em lote.',
+                type: 'warning'
+            });
+            return;
+        }
 
         if (!hasFilters && selectedIds.length === 0) {
             new PNotify({
@@ -76,7 +92,7 @@
                 text: 'Por favor, selecione alguns alunos ou aplique filtros para impressão em lote.',
                 type: 'warning'
             });
-            return false;
+            return;
         }
 
         const filters = getSelectedFilters();
@@ -99,7 +115,7 @@
 
         $('#btnImprimirLote').on('click', function (e) {
             e.preventDefault();
-            handleBatchPrint();
+            handleBatchPrint(e);
         });
     });
 

@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
 using WebApp.Authorization;
 using WebApp.Configuration;
@@ -11,7 +10,9 @@ using WebApp.Models;
 using WebApp.Utility;
 
 namespace WebApp.Controllers;
-
+/// <summary>
+/// Controle de Grupo Material
+/// </summary>
 public class GrupoMaterialController : BaseController
 {
     #region Constructor
@@ -29,9 +30,9 @@ public class GrupoMaterialController : BaseController
     }
     #endregion
 
-    #region Crud Methods
+    #region Main Methods
     /// <summary>
-    /// Listagem de GrupoMaterial
+    /// Listagem de Grupo Material
     /// </summary>
     /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
     /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
@@ -48,7 +49,7 @@ public class GrupoMaterialController : BaseController
     }
 
     /// <summary>
-    /// Tela para inclusão de Grupo Material
+    /// Tela para Inclusão de Grupo Material
     /// </summary>
     /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
     /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
@@ -72,9 +73,9 @@ public class GrupoMaterialController : BaseController
     }
 
     /// <summary>
-    /// Ação de inclusão do GrupoMaterial
+    /// Ação de Inclusão do Grupo Material
     /// </summary>
-    /// <param name="collection">coleção de dados para inclusao de GrupoMaterial</param>
+    /// <param name="collection">coleção de dados para inclusao de Grupo Material</param>
     /// <returns>retorna mensagem de inclusao através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.GrupoMaterial, Identity.Claim.Incluir)]
     [HttpPost]
@@ -106,10 +107,10 @@ public class GrupoMaterialController : BaseController
     }
 
     /// <summary>
-    /// Ação de alteração do GrupoMaterial
+    /// Ação de Alteração do Grupo Material
     /// </summary>
-    /// <param name="id">identificador do GrupoMaterial</param>
-    /// <param name="collection">coleção de dados para alteração de GrupoMaterial</param>
+    /// <param name="id">identificador do Grupo Material</param>
+    /// <param name="collection">coleção de dados para alteração de Grupo Material</param>
     /// <returns>retorna mensagem de alteração através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.GrupoMaterial, Identity.Claim.Alterar)]
     public async Task<ActionResult> Edit(IFormCollection collection)
@@ -133,10 +134,10 @@ public class GrupoMaterialController : BaseController
     }
 
     /// <summary>
-    /// Ação de exclusão do GrupoMaterial
+    /// Ação de Exclusão do Grupo Material
     /// </summary>
-    /// <param name="id">identificador do GrupoMaterial</param>
-    /// <param name="collection">coleção de dados para exclusão de GrupoMaterial</param>
+    /// <param name="id">identificador do Grupo Material</param>
+    /// <param name="collection">coleção de dados para exclusão de Grupo Material</param>
     /// <returns>retorna mensagem de exclusão através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.GrupoMaterial, Identity.Claim.Excluir)]
     public ActionResult Delete(int id)
@@ -157,10 +158,10 @@ public class GrupoMaterialController : BaseController
     #region Get Methods
 
     /// <summary>
-    /// Método de busca de controle de material por id
+    ///  Busca Grupo Materail por id
     /// </summary>
-    /// <param name="id">id do material </param>
-    /// <returns>retorna o objeto controle de material</returns>
+    /// <param name="id">id do Grupo Material </param>
+    /// <returns>retorna o objeto controle de Grupo Material</returns>
     [ClaimsAuthorize(ClaimType.GrupoMaterial, Identity.Claim.Consultar)]
     public Task<GrupoMaterialDto> GetGrupoMaterialById(int id)
     {

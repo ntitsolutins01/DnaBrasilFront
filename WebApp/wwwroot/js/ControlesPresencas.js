@@ -1,6 +1,10 @@
 var vm = new Vue({
     el: "#vControlePresenca",
     data: {
+        params: {
+            alunos: [],
+            visible: false
+        },
         loading: false,
         editDto: { Id: "", Controle: "", Justificativa: "", Data: "", NomeAluno: "", MunicipioEstado: "", NomeLocalidade: "", AlunoId: "" }
     },
@@ -12,6 +16,17 @@ var vm = new Vue({
             var formid = $('form')[1].id;
 
             if (formid === "formPesquisarAluno") {
+
+                if (typeof Switch !== 'undefined' && $.isFunction(Switch)) {
+
+                    $(function () {
+                        $('[data-plugin-ios-switch]').each(function () {
+                            var $this = $(this);
+
+                            $this.themePluginIOS7Switch();
+                        });
+                    });
+                }
 
                 var $select = $(".select2").select2({
                     allowClear: true
@@ -37,9 +52,11 @@ var vm = new Vue({
                     $(this).trigger('blur');
                 });
 
-
                 //clique de escolha do select
                 $("#ddlEstado").change(function () {
+
+                    self.ShowLoad(true, "pFiltro");
+
                     var sigla = $("#ddlEstado").val();
 
                     var url = "../../DivisaoAdministrativa/GetMunicipioByUf?uf=" + sigla;
@@ -66,10 +83,15 @@ var vm = new Vue({
                                 });
                             }
                         });
+
+                    self.ShowLoad(false, "pFiltro");
                 });
 
                 //clique de escolha do select
                 $("#ddlMunicipio").change(function () {
+
+                    self.ShowLoad(true, "pFiltro");
+
                     var id = $("#ddlMunicipio").val();
 
                     var url = "../../Localidade/GetLocalidadeByMunicipio?id=" + id;
@@ -96,18 +118,16 @@ var vm = new Vue({
                                 });
                             }
                         });
+
+                    self.ShowLoad(false, "pFiltro");
                 });
 
-                //clique de escolha do select
                 $("#ddlLocalidade").change(function () {
                     var id = $("#ddlLocalidade").val();
 
-                    var url = "../../Aluno/GetAlunosByLocalidade?id=" + id;
-
-                    var ddlSource = "#ddlAluno";
-
+                    var url = "../../Aluno/GetAlunosByLocalidadeId?id=" + id;
                     $.getJSON(url,
-                        { id: $(ddlSource).val() },
+                    { id: id },
                         function (data) {
                             if (data.length > 0) {
                                 var items = '<option value="">Selecionar Aluno</option>';
@@ -120,85 +140,8 @@ var vm = new Vue({
                             }
                             else {
                                 new PNotify({
-                                    title: 'Alunos',
-                                    text: 'Alunos não encontrados.',
-                                    type: 'warning'
-                                });
-                            }
-                        });
-                });
-            }
-            if (formid === "formEditControlePresenca") {
-
-                $("#formEditControlePresenca").validate({
-                    highlight: function (label) {
-                        $(label).closest('.form-group').removeClass('has-success').addClass('has-error');
-                    },
-                    success: function (label) {
-                        $(label).closest('.form-group').removeClass('has-error');
-                        label.remove();
-                    },
-                    errorPlacement: function (error, element) {
-                        var placement = element.closest('.input-group');
-                        if (!placement.get(0)) {
-                            placement = element;
-                        }
-                        if (error.text() !== '') {
-                            placement.after(error);
-                        }
-                    }
-                });
-            }
-
-            if (formid === "formControlePresenca") {
-                //skin select
-                var $select = $(".select2").select2({
-                    allowClear: true
-                });
-
-                $(".select2").each(function () {
-                    var $this = $(this),
-                        opts = {};
-
-                    var pluginOptions = $this.data('plugin-options');
-                    if (pluginOptions)
-                        opts = pluginOptions;
-
-                    $this.themePluginSelect2(opts);
-                });
-
-                /*
-                 * When you change the value the select via select2, it triggers
-                 * a 'change' event, but the jquery validation plugin
-                 * only re-validates on 'blur'*/
-
-                $select.on('change', function () {
-                    $(this).trigger('blur');
-                });
-
-                $("#ddlEstado").change(function () {
-                    var sigla = $("#ddlEstado").val();
-
-                    var url = "../DivisaoAdministrativa/GetMunicipioByUf?uf=" + sigla;
-
-                    var ddlSource = "#ddlMunicipio";
-
-                    $.getJSON(url,
-                        { id: $(ddlSource).val() },
-                        function (data) {
-                            if (data.length > 0) {
-                                var items = '<option value="">Selecionar Municipio</option>';
-                                $("#ddlMunicipio").empty;
-                                $.each(data,
-                                    function (i, row) {
-                                        items += "<option value='" + row.value + "'>" + row.text + "</option>";
-                                    });
-                                $("#ddlMunicipio").html(items);
-                            }
-                            else {
-                                new PNotify({
-                                    title: 'Fomento',
-                                    text: 'Municípios não encontrados.',
+                                    title: 'Aluno',
+                                    text: "Aluno não encontrado.",
                                     type: 'warning'
                                 });
                             }
@@ -206,29 +149,27 @@ var vm = new Vue({
                 });
 
                 //clique de escolha do select
-                $("#ddlMunicipio").change(function () {
-                    var id = $("#ddlMunicipio").val();
+                $("#ddlProfissional").change(function () {
+                    var profissionalId = $("#ddlProfissional").val();
 
-                    var url = "../../Localidade/GetLocalidadeByMunicipio?id=" + id;
-
-                    var ddlSource = "#ddlLocalidade";
+                    var url = "../ControlePresenca/GetModalidadesByProfissionalId";
 
                     $.getJSON(url,
-                        { id: $(ddlSource).val() },
+                        { id: profissionalId },
                         function (data) {
                             if (data.length > 0) {
-                                var items = '<option value="">Selecionar Localidade</option>';
-                                $("#ddlLocalidade").empty;
+                                var items = '<option value="">Selecionar Atividade / Modalidade</option>';
+                                $("#ddlModalidade").empty;
                                 $.each(data,
                                     function (i, row) {
                                         items += "<option value='" + row.value + "'>" + row.text + "</option>";
                                     });
-                                $("#ddlLocalidade").html(items);
+                                $("#ddlModalidade").html(items);
                             }
                             else {
                                 new PNotify({
-                                    title: 'Localidades',
-                                    text: 'Localidades não encontradas.',
+                                    title: 'Profissional',
+                                    text: "O Profissional selecionado não possui atividades / modalidades cadastradas.",
                                     type: 'warning'
                                 });
                             }
@@ -236,54 +177,112 @@ var vm = new Vue({
                 });
 
                 //clique de escolha do select
-                $("#ddlLocalidade").change(function () {
-                    var id = $("#ddlLocalidade").val();
+                $("#ddlModalidade").change(function () {
+                    var modalidadeId = $("#ddlModalidade").val();
 
-                    var url = "../../Aluno/GetAlunosByLocalidade?id=" + id;
+                    var profissionalId = $("#ddlProfissional").val();
 
-                    var ddlSource = "#ddlAluno";
+                    var url = "../Profissional/GetTurmasByModalidadeIdProfissionalId";
 
                     $.getJSON(url,
-                        { id: $(ddlSource).val() },
+                        { modalidadeId: modalidadeId, profissionalId: profissionalId },
                         function (data) {
                             if (data.length > 0) {
-                                var items = '<option value="">Selecionar Aluno</option>';
-                                $("#ddlAluno").empty;
+                                var items = '<option value="">Selecionar Turma</option>';
+                                $("#ddlTurma").empty;
                                 $.each(data,
                                     function (i, row) {
                                         items += "<option value='" + row.value + "'>" + row.text + "</option>";
                                     });
-                                $("#ddlAluno").html(items);
+                                $("#ddlTurma").html(items);
                             }
                             else {
                                 new PNotify({
-                                    title: 'Alunos',
-                                    text: 'Alunos não encontrados.',
+                                    title: 'Profissional',
+                                    text: "O Profissional selecionado não possui turmas cadastradas.",
                                     type: 'warning'
                                 });
                             }
                         });
                 });
 
-                $("#formControlePresenca").validate({
-                    highlight: function (label) {
-                        $(label).closest('.form-group').removeClass('has-success').addClass('has-error');
-                    },
-                    success: function (label) {
-                        $(label).closest('.form-group').removeClass('has-error');
-                        label.remove();
-                    },
-                    errorPlacement: function (error, element) {
-                        var placement = element.closest('.input-group');
-                        if (!placement.get(0)) {
-                            placement = element;
-                        }
-                        if (error.text() !== '') {
-                            placement.after(error);
-                        }
+                //clique de escolha do select
+                $("#ddlTurma").change(function () {
+
+                    var id = $("#ddlTurma").val();
+
+                    if (id === "") {
+                        Site.Notification("Profissional", "Por favor selecione uma turma", "warning");
                     }
+
+                    var url = "../Atividade/GetAtividadeById";
+
+                    var urlDataTable = "../Atividade/GetAtividadeAlunosByAtividadeId";
+
+                    axios.get(url, {
+                        params: {
+                            id: id
+                        }
+                    }).then(result => {
+                        $("#divAlunos").show();
+                        self.editDto.Categoria = result.data.nomeCategoria;
+                        self.editDto.Estrutura = result.data.nomeEstrutura;
+                        self.editDto.DiasSemana = result.data.diasSemana;
+                        self.editDto.Horario = result.data.hrInicial + " - " + result.data.hrFinal;
+
+                        axios.get(urlDataTable, {
+                            params: {
+                                id: id
+                            }
+                        }).then(result => {
+                            if (result.data.length > 0) {
+
+                                self.editDto.Update = true;
+
+                                $.each(result.data,
+                                    function (i, item) {
+
+                                        $('#alunoDataTable').DataTable().destroy();
+
+                                        var table = $('#alunoDataTable').DataTable({
+                                            columnDefs: [
+                                                { "className": "text-center", "targets": "_all" }
+                                            ]
+                                        });
+
+                                        table.row.add([
+                                        "<div class='switch switch-sm switch-success'>" +
+                                        "    <input type='checkbox' id='habilitado' name='habilitado' data-plugin-ios-switch />" +
+                                        "</div>",
+                                        item.alunoId + " - " + item.nome,
+                                        "<div class='input-group input-group-icon'>" +
+                                        "    <textarea id='justificativa" + item.alunoId + "' name='justificativa" + item.alunoId +"' rows='3' class='form-control form-control-lg'></textarea>" +
+                                        "    <span class='input-group-addon'>" +
+                                        "        <span class='icon icon-lg'>" +
+                                        "            <i class='fa fa-file-text-o'></i>" +
+                                        "        </span>" +
+                                        "    </span>" +
+                                        "</div>"])  .draw();
+
+                                        self.params.alunos.push(item.alunoId.toString());
+
+                                    });
+
+                                $('input[name="arrAlunos"]').attr('value', self.params.alunos);
+                            } else {
+
+                                self.editDto.Update = false;
+                            }
+                        }).catch(error => {
+                            Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
+                        });
+
+                    }).catch(error => {
+                        Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
+                    });
                 });
             }
+
         }).apply(this, [jQuery]);
     },
     methods: {

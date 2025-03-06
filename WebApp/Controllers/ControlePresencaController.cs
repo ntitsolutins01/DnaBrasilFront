@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using log4net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -13,12 +14,18 @@ using WebApp.Models;
 using WebApp.Utility;
 using Claim = WebApp.Identity.Claim;
 using WebApp.Authorization;
+using System.Linq;
 
 namespace WebApp.Controllers
 {
-    [Authorize(Policy = ModuloAccess.ControlePresenca)]
+    /// <summary>
+    /// Controle de Presença
+    /// </summary>
+    //[Authorize(Policy = ModuloAccess.ControlePresenca)]
     public class ControlePresencaController : BaseController
 	{
+        private readonly ILog _logger;
+
         #region Constructor
 
         private readonly UserManager<IdentityUser> _userManager;
@@ -28,38 +35,53 @@ namespace WebApp.Controllers
         /// </summary>
         /// <param name="appSettings">configurações de url da api</param>
         /// <param name="userManager">gerenciador de identidade de usuários</param>
-        public ControlePresencaController(IOptions<UrlSettings> appSettings, UserManager<IdentityUser> userManager)
+        /// <param name="logger">Log de mensagens da aplicação</param>
+        public ControlePresencaController(IOptions<UrlSettings> appSettings, UserManager<IdentityUser> userManager, ILog logger)
         {
             _userManager = userManager;
+            _logger = logger;
             ApplicationSettings.WebApiUrl = appSettings.Value.WebApiBaseUrl;
         }
 
         #endregion
 
-
-        #region Crud Methods
+        #region Main Methods
 
         /// <summary>
-        /// 
+        /// Listagem de Controle de Presença 
         /// </summary>
-        /// <param name="crud"></param>
-        /// <param name="notify"></param>
-        /// <param name="collection"></param>
-        /// <param name="message"></param>
-        /// <returns></returns>
+        /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+        /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+        /// <param name="collection">Parametro que indica o tipo de notificação realizada</param>
+        /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
+        /// <returns>Returs true false</returns>
         [ClaimsAuthorize(ClaimType.ControlePresenca, Claim.Consultar)]
         public async Task<ActionResult> Index(int? crud, int? notify, IFormCollection collection, string message = null)
         {
             try
             {
+                _logger.Info($"Usuario Logado em ControlePresenca.Index User.Identity.Name : {User.Identity.Name}");
+
                 var usuario = User.Identity.Name;
 
                 SetNotifyMessage(notify, message);
                 SetCrudMessage(crud);
+                
+                //Busca usuario por AspNetUserId
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-                var usu = await ApiClientFactory.Instance.GetUsuarioByEmail(usuario);
+                _logger.Info($"Busca Usuario por AspNetUserId: {userId}");
 
                 var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentosAll(), "Id", "Nome");
+                if (userId == null)
+                {
+                    _logger.Warn($"AspNetUserId não encontrado para o email: {User.Identity.Name}");
+                    throw new Exception($"AspNetUserId não encontrado para o email: {User.Identity.Name}");
+                }
+
+                var usu = await ApiClientFactory.Instance.GetUsuarioByAspNetUserId(userId);
+
+                //var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentoAll(), "Id", "Nome");
                 var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome", usu.Uf);
 
                 SelectList municipios = null;
@@ -80,12 +102,22 @@ namespace WebApp.Controllers
 
                 SelectList alunos = null;
 
+                SelectList profissionais = null;
+
                 if (usu.LocalidadeId != null)
                 {
-                    var resultAlunos = ApiClientFactory.Instance.GetAlunosByLocalidade(Convert.ToInt32(usu.LocalidadeId));
+                    var resultAlunos = ApiClientFactory.Instance.GetAlunosByLocalidadeId(Convert.ToInt32(usu.LocalidadeId));
 
                     alunos =  new SelectList(resultAlunos, "Id", "Nome");
+
+                    var listAtividades = await ApiClientFactory.Instance.GetAtividadeByLocalidadeId(Convert.ToInt32(usu.LocalidadeId));
+
+                    profissionais = new SelectList(ApiClientFactory.Instance.GetProfissionaisByLocalidade(Convert.ToInt32(usu.LocalidadeId)), "Id", "Nome");
                 }
+
+                //var listModalidades = new SelectList(ApiClientFactory.Instance.GetModalidadeAll(), "Id", "Nome");
+                //var profissionais = 
+                //    ApiClientFactory.Instance.GetProfissionaisByLocalidade(Convert.ToInt32(usu.LocalidadeId));
 
                 var searchFilter = new ControlesPresencasFilterDto()
                 {
@@ -107,12 +139,13 @@ namespace WebApp.Controllers
 
                 var model = new ControlePresencaModel()
                 {
-                    ListFomentos = fomentos,
+                    //ListFomentos = fomentos,
                     ListEstados = estados,
                     ListMunicipios = municipios!,
                     ListLocalidades = localidades!,
                     ListAlunos = alunos,
-                    ControlesPresencas = response.ControlesPresencas
+                    ControlesPresencas = response.ControlesPresencas,
+                    ListProfissionais = profissionais!
 
                 };
                 return View(model);
@@ -126,7 +159,13 @@ namespace WebApp.Controllers
             }
         }
 
-
+        /// <summary>
+        /// Tela para Inclusão de Controle de Presença
+        /// </summary>
+        /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+        /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+        /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
+        /// <returns>Returns true love </returns>
         [ClaimsAuthorize(ClaimType.ControlePresenca, Claim.Incluir)]
         public async Task<ActionResult> Create(int? crud, int? notify, string message = null)
 		{
@@ -170,7 +209,7 @@ namespace WebApp.Controllers
                         ListLocalidades = localidades!,
                         ListAlunos = alunos,
                     });
-                var resultAlunos = ApiClientFactory.Instance.GetAlunosByLocalidade(Convert.ToInt32(usu.LocalidadeId));
+                var resultAlunos = ApiClientFactory.Instance.GetAlunosByLocalidadeId(Convert.ToInt32(usu.LocalidadeId));
 
                 alunos = new SelectList(resultAlunos, "Id", "Nome");
 
@@ -191,6 +230,11 @@ namespace WebApp.Controllers
 			}
 		}
 
+        /// <summary>
+        /// Ação de Inclusão de Controle de Presença
+        /// </summary>
+        /// <param name="collection">Coleção de dados para Inclusao de Controle de Presença</param>
+        /// <returns>Retorna mensagem de inclusao através do parametro crud</returns>
         [HttpPost]
         [ClaimsAuthorize(ClaimType.ControlePresenca, Claim.Incluir)]
 		public async Task<ActionResult> Create(IFormCollection collection)
@@ -223,6 +267,11 @@ namespace WebApp.Controllers
 			}
 		}
 
+        /// <summary>
+        /// Ação de Alteração de Controle de Presença 
+        /// </summary>
+        /// <param name="collection">Coleção de dados para alteração de Controle de Presença</param>
+        /// <returns>Retorna mensagem de alteração através do parametro crud</returns>
         [ClaimsAuthorize(ClaimType.ControlePresenca, Claim.Alterar)]
         public async Task<ActionResult> Edit(IFormCollection collection)
 		{
@@ -245,6 +294,11 @@ namespace WebApp.Controllers
 			}
 		}
 
+        /// <summary>
+        /// Ação de Exclusão de Controle de Presença 
+        /// </summary>
+        /// <param name="id">Identificador do Controle de Categoria</param>
+        /// <returns>Retorna mensagem de exclusão através do parametro crud</returns>
         [ClaimsAuthorize(ClaimType.ControlePresenca, Claim.Excluir)]
         public ActionResult Delete(int id)
 		{
@@ -261,13 +315,43 @@ namespace WebApp.Controllers
 
         #endregion
 
+        #region Get Methods
+
+        /// <summary>
+        /// Busca Controle de Presença  por Id
+        /// </summary>
+        /// <param name="id">Identificador de Controle de Presença</param>
+        /// <returns>Retorna a Categoria</returns>
         [ClaimsAuthorize(ClaimType.ControlePresenca, Claim.Consultar)]
         public Task<ControlePresencaDto> GetControlePresencaById(int id)
-		{
-			var result = ApiClientFactory.Instance.GetControlePresencaById(id);
+        {
+            var result = ApiClientFactory.Instance.GetControlePresencaById(id);
 
-			return Task.FromResult(result);
-		}
+            return Task.FromResult(result);
+        }
 
-	}
+        /// <summary>
+        /// Busca uma lista de modalidades pelo id do profissional
+        /// </summary>
+        /// <param name="id">Id do profissional a ser buscado</param>
+        /// <returns>Retorna uma lista json de Modalidades </returns>
+        public Task<JsonResult> GetModalidadesByProfissionalId(string id)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(id)) throw new Exception("Profissional não informado.");
+
+                var resultLocal = ApiClientFactory.Instance.GetModalidadesByProfissionalId(Convert.ToInt32(id));
+
+                return Task.FromResult(Json(new SelectList(resultLocal, "Id", "Nome")));
+            }
+            catch (Exception ex)
+            {
+                return Task.FromResult(Json(ex));
+            }
+        }
+
+        #endregion
+
+    }
 }

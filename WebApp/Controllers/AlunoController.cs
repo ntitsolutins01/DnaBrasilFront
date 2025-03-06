@@ -11,7 +11,6 @@ using WebApp.Factory;
 using WebApp.Identity;
 using WebApp.Models;
 using WebApp.Utility;
-using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 using QRCoder;
 using Claim = WebApp.Identity.Claim;
 using log4net;
@@ -19,25 +18,32 @@ using DocumentFormat.OpenXml.Office2010.Excel;
 
 namespace WebApp.Controllers
 {
+    /// <summary>
+    /// Controle de Aluno
+    /// </summary>
     [Authorize(Policy = ModuloAccess.Aluno)]
     public class AlunoController : BaseController
     {
-        #region Constructor
+        #region Parametros
 
         private readonly IOptions<UrlSettings> _appSettings;
-        private readonly IHostingEnvironment _host;
+        private readonly IWebHostEnvironment _host;
         private readonly ILog _logger;
+
+        #endregion
+
+        #region Constructor
 
         /// <summary>
         /// Construtor da página
         /// </summary>
-        /// <param name="app">configurações de urls do sistema</param>
+        /// <param name="appSettings">configurações de urls do sistema</param>
         /// <param name="host">informações da aplicação em execução</param>
-        public AlunoController(IOptions<UrlSettings> app,
-            IHostingEnvironment host,
+        public AlunoController(IOptions<UrlSettings> appSettings,
+            IWebHostEnvironment host,
             ILog logger)
         {
-            _appSettings = app;
+            _appSettings = appSettings;
             ApplicationSettings.WebApiUrl = _appSettings.Value.WebApiBaseUrl;
             _host = host;
             _logger = logger;
@@ -48,10 +54,10 @@ namespace WebApp.Controllers
         /// <summary>
         /// Listagem de Alunos
         /// </summary>
-        /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
-        /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
-        /// <param name="collection">lista de filtros selecionados para pesquisa de alunos</param>
-        /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+        /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+        /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+        /// <param name="collection">Lista de filtros selecionados para pesquisa de alunos</param>
+        /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
         [ClaimsAuthorize(ClaimType.Aluno, Claim.Consultar)]
         public async Task<ActionResult> Index(int? crud, int? notify, IFormCollection collection, string message = null)
         {
@@ -74,6 +80,7 @@ namespace WebApp.Controllers
                     Estado = collection["ddlEstado"].ToString(),
                     MunicipioId = collection["ddlMunicipio"].ToString(),
                     LocalidadeId = collection["ddlLocalidade"].ToString() == "" ? usu.LocalidadeId : collection["ddlLocalidade"].ToString(),
+                    ProfissionalId = collection["ddlProfissional"].ToString(),
                     DeficienciaId = collection["ddlDeficiencia"].ToString(),
                     Etnia = collection["ddlEtnia"].ToString(),
                     Sexo = collection["ddlSexo"].ToString(),
@@ -93,6 +100,8 @@ namespace WebApp.Controllers
                                         ? string.IsNullOrEmpty(searchFilter.Etnia)
                                             ? string.IsNullOrEmpty(searchFilter.Nome)
                                                 ? string.IsNullOrEmpty(searchFilter.Matricula)
+                                                    ? string.IsNullOrEmpty(searchFilter.ProfissionalId)
+                                                    : false
                                                 : false
                                             : false
                                         : false
@@ -111,7 +120,7 @@ namespace WebApp.Controllers
                 var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentosAll(), "Id", "Nome", searchFilter.FomentoId);
                 var deficiencias = new SelectList(ApiClientFactory.Instance.GetDeficienciaAll().Where(x => x.Status), "Id", "Nome", searchFilter.DeficienciaId);
                 var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome", usu.Uf);
-
+                var profissionais = new SelectList(ApiClientFactory.Instance.GetProfissionaisByLocalidade(Convert.ToInt32(usu.LocalidadeId)), "Id", "Nome");
 
                 List<SelectListDto> listSexo = new List<SelectListDto>
                 {
@@ -160,7 +169,8 @@ namespace WebApp.Controllers
                     ListSexos = sexos,
                     ListLocalidades = localidades!,
                     Alunos = result.Alunos,
-                    SearchFilter = searchFilter
+                    SearchFilter = searchFilter,
+                    ListProfissionais = profissionais
 
                 };
                 return View(model);
@@ -175,11 +185,11 @@ namespace WebApp.Controllers
         }
 
         /// <summary>
-        /// Tela para inclusão de aluno
+        /// Tela para Inclusão de Aluno
         /// </summary>
-        /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
-        /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
-        /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+        /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+        /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+        /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
         [ClaimsAuthorize(ClaimType.Aluno, Claim.Incluir)]
         public ActionResult Create(int? crud, int? notify, string message = null)
         {
@@ -213,12 +223,12 @@ namespace WebApp.Controllers
         }
 
         /// <summary>
-        /// Tela para alteração de aluno
+        /// Tela para Alteração de Aluno
         /// </summary>
-        /// <param name="id">identificador do aluno</param>
-        /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
-        /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
-        /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+        /// <param name="id">Identificador do aluno</param>
+        /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+        /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+        /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
         [ClaimsAuthorize(ClaimType.Aluno, Claim.Alterar)]
         public async Task<ActionResult> Edit(int id, int? crud, int? notify, string message = null)
         {
@@ -275,10 +285,10 @@ namespace WebApp.Controllers
         }
 
         /// <summary>
-        /// Ação de inclusao do aluno
+        /// Ação de Inclusao do Aluno
         /// </summary>
-        /// <param name="collection">coleção de dados para inclusao de aluno</param>
-        /// <returns>retorna mensagem de inclusao através do parametro crud</returns>
+        /// <param name="collection">Coleção de dados para inclusao de aluno</param>
+        /// <returns>Retorna mensagem de inclusao através do parametro crud</returns>
         [HttpPost]
         [ClaimsAuthorize(ClaimType.Aluno, Claim.Incluir)]
         public async Task<ActionResult> CreateDados(IFormCollection collection)
@@ -359,11 +369,11 @@ namespace WebApp.Controllers
         }
 
         /// <summary>
-        /// Ação de alteração do aluno
+        /// Ação de Alteração do Aluno
         /// </summary>
-        /// <param name="id">identificador do aluno</param>
-        /// <param name="collection">coleção de dados para alteração de aluno</param>
-        /// <returns>retorna mensagem de alteração através do parametro crud</returns>
+        /// <param name="id">Identificador do aluno</param>
+        /// <param name="collection">Coleção de dados para alteração de aluno</param>
+        /// <returns>Retorna mensagem de alteração através do parametro crud</returns>
         [HttpPost]
         [ClaimsAuthorize(ClaimType.Aluno, Claim.Alterar)]
         public async Task<ActionResult> Edit(int id, IFormCollection collection)
@@ -433,10 +443,10 @@ namespace WebApp.Controllers
         }
 
         /// <summary>
-        /// Ação de upload de foto do aluno
+        /// Ação de Upload de Foto do Aluno
         /// </summary>
-        /// <param name="collection">arquivo de upload realizado</param>
-        /// <returns>retorna mensagem de upload realizado através do parametro notfy e message</returns>
+        /// <param name="collection">Arquivo de upload realizado</param>
+        /// <returns>Retorna mensagem de upload realizado através do parametro notfy e message</returns>
         [HttpPost]
         //[ClaimsAuthorize(ClaimType.Aluno, Claim.Upload)]
         public async Task<ActionResult> Upload(IFormCollection collection)
@@ -476,9 +486,9 @@ namespace WebApp.Controllers
         }
 
         /// <summary>
-        /// Ação de exclusão do aluno
+        /// Ação de Exclusão do Aluno
         /// </summary>
-        /// <param name="id">Id de exclusão de Aluno</param>
+        /// <param name="id">Id de exclusão de aluno</param>
         /// <returns>Retorna true ou false</returns>
         [ClaimsAuthorize(ClaimType.Aluno, Claim.Excluir)]
         public ActionResult Delete(int id)
@@ -498,7 +508,7 @@ namespace WebApp.Controllers
 		}
 
         /// <summary>
-        /// Tela para impressao de carteirinha
+        /// Tela para Impressao de Carteirinha
         /// </summary>
         /// <param name="id">Id do Aluno</param>
         /// <param name="fomentoId">Id do Fomento</param>
@@ -519,9 +529,23 @@ namespace WebApp.Controllers
         }
 
 
+        /// <summary>
+        /// Acao de Imprimir Carteirinha por Lote
+        /// </summary>
+        /// <param name="ids">ids</param>
+        /// <param name="fomentoId">Id de fomento</param>
+        /// <param name="estadoId">Id de estudo</param>
+        /// <param name="municipioId">Id de municipio</param>
+        /// <param name="localidadeId">Id de localidade</param>
+        /// <param name="profissionalId">Id do profissional</param>
+        /// <param name="deficienciaId">Id de deficiencia</param>
+        /// <param name="etniaId">Id de etnia</param>
+        /// <param name="sexoId">Id de sexo</param>
+        /// <returns>Retorna impresao de carteirinha</returns>
         [ClaimsAuthorize(ClaimType.Aluno, Claim.Incluir)]
         public async Task<ActionResult> ImprimirCarteirinhasLote(string ids, string fomentoId = null, string estadoId = null,
-            string municipioId = null, string localidadeId = null, string deficienciaId = null, string etniaId = null, string sexoId = null)
+            string municipioId = null, string localidadeId = null, string profissionalId = null, string deficienciaId = null,
+            string etniaId = null, string sexoId = null)
         {
             try
             {
@@ -564,12 +588,13 @@ namespace WebApp.Controllers
                         Estado = estadoId,
                         MunicipioId = municipioId,
                         LocalidadeId = localidadeId,
+                        ProfissionalId = profissionalId,
                         DeficienciaId = deficienciaId,
                         Etnia = etniaId,
                         Sexo = sexoId
                     };
 
-                    _logger.Info($"Filtros aplicados: Sexo={searchFilter.Sexo}, Fomento={searchFilter.FomentoId}");
+                    _logger.Info($"Filtros aplicados: Sexo={searchFilter.Sexo}, Fomento={searchFilter.FomentoId}, Profissional={searchFilter.ProfissionalId}");
                     var result = await ApiClientFactory.Instance.GetAlunosByFilter(searchFilter);
 
                     // Esse trecho comentado está bugando algo, deixa comentado por enquanto
@@ -644,8 +669,9 @@ namespace WebApp.Controllers
                         {
                             Id = a.LocalidadeId,
                             Nome = a.NomeLocalidade
-                        }
-                    }).ToList(), // Convertendo para List<AlunoIndexDto>
+                        },
+                        Modalidades = a.Modalidades
+                    }).ToList(),
                     ModeloCarteirinha = modeloCarteirinha
                 });
             }
@@ -662,7 +688,14 @@ namespace WebApp.Controllers
             }
         }
 
-
+        /// <summary>
+        /// Tela de Visualizasao do Profile Aluno
+        /// </summary>
+        /// <param name="id">Identificador do aluno</param>
+        /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+        /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+        /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
+        /// <returns>Retorna mensagem de alteração através do parametro crud</returns>
         [ClaimsAuthorize(ClaimType.Aluno, Claim.Alterar)]
         public async Task<ActionResult> Profile(int id, int? crud, int? notify, string message = null)
         {
@@ -720,7 +753,11 @@ namespace WebApp.Controllers
             }
         }
 
-        
+        /// <summary>
+        /// Tela de Visualizasao do Profile Aluno
+        /// </summary>
+        /// <param name="collection">Coleção de dados para alteração de aluno</param>
+        /// <returns>Retorna mensagem de alteração através do parametro crud</returns>
         [HttpPost]
         [ClaimsAuthorize(ClaimType.Aluno, Claim.Incluir)]
         public async Task<ActionResult> Profile(IFormCollection collection)
@@ -805,35 +842,35 @@ namespace WebApp.Controllers
         #region Get Methods
 
         /// <summary>
-        /// Busca de alunos por localidade
+        /// Busca de Alunos por Localidade
         /// </summary>
-        /// <param name="id">identificador da localidade</param>
-        /// <returns>retorna a lista de alunos</returns>
+        /// <param name="id">Identificador da localidade</param>
+        /// <returns>Retorna a lista de alunos</returns>
         [ClaimsAuthorize(ClaimType.Aluno, Claim.Consultar)]
-        public async Task<JsonResult> GetAlunosByLocalidade(string id)
+        public async Task<JsonResult> GetAlunosByLocalidadeId(string id)
         {
             try
             {
-                _logger.Info($"Busca de alunos por localidade GetAlunosByLocalidade: {id}");
+                _logger.Info($"Busca de alunos por localidade GetAlunosByLocalidadeId: {id}");
 
                 if (string.IsNullOrEmpty(id)) throw new Exception("Localidade não informada.");
-                var resultLocal = await ApiClientFactory.Instance.GetNomeAlunosAll(id);
+                var resultLocal = ApiClientFactory.Instance.GetAlunosByLocalidadeId(Convert.ToInt32(id));
 
                 return new JsonResult(new SelectList(resultLocal, "Id", "Nome"));
 
             }
             catch (Exception ex)
             {
-                _logger.Error($"Busca de alunos por localidade GetAlunosByLocalidade: {ex.StackTrace}");
+                _logger.Error($"Busca de alunos por localidade GetAlunosByLocalidadeId: {ex.StackTrace}");
                 return new JsonResult(ex.StackTrace);
             }
         }
 
         /// <summary>
-        /// Busca de idade do Aluno por Id
+        /// Busca de Idade do Aluno por Id
         /// </summary>
-        /// <param name="id">identificador do aluno</param>
-        /// <returns>retorna a idade do aluno</returns>
+        /// <param name="id">Identificador do aluno</param>
+        /// <returns>Retorna a idade do aluno</returns>
         [ClaimsAuthorize(ClaimType.Aluno, Claim.Consultar)]
         public async Task<JsonResult> GetAlunoIdadeById(string id)
         {
@@ -855,10 +892,10 @@ namespace WebApp.Controllers
         }
 
         /// <summary>
-        /// Busca de aluno por id
+        /// Busca de Aluno por id
         /// </summary>
-        /// <param name="id">identificador do aluno</param>
-        /// <returns>retorna o aluno</returns>
+        /// <param name="id">Identificador do aluno</param>
+        /// <returns>Retorna o aluno</returns>
         [ClaimsAuthorize(ClaimType.Aluno, Claim.Consultar)]
         public async Task<JsonResult> GetAlunoById(string id)
         {
@@ -908,27 +945,41 @@ namespace WebApp.Controllers
         #endregion
 
         #region Private Methods
+
+        /// <summary>
+        /// Gera Qr Code
+        /// </summary>
+        /// <param name="alunoId">Id de aluno</param>
+        /// <returns>Retorna o qrCode</returns>
         private static byte[]? GeraQrCode(long alunoId)
         {
             var text = $"http://dnadobrasil.org.br/Identity/Account/ControlePresenca?alunoId={alunoId}";
 
-            QRCodeGenerator QrGenerator = new QRCodeGenerator();
-            QRCodeData QrCodeInfo = QrGenerator.CreateQrCode(text, QRCodeGenerator.ECCLevel.Q);
-            QRCode QrCode = new QRCode(QrCodeInfo);
-            Bitmap QrBitmap = QrCode.GetGraphic(60);
+            QRCodeGenerator qrGenerator = new QRCodeGenerator();
+            QRCodeData qrCodeInfo = qrGenerator.CreateQrCode(text, QRCodeGenerator.ECCLevel.Q);
+            QRCode qrCode = new QRCode(qrCodeInfo);
+            Bitmap qrBitmap = qrCode.GetGraphic(60);
 
-            return BitmapToBytes(QrBitmap);
+            return BitmapToBytes(qrBitmap);
         }
 
+        /// <summary>
+        /// Busca os Bytes de Bitmap
+        /// </summary>
+        /// <param name="img">Bytemap de imagem </param>
+        /// <returns>Retrona um stream array</returns>
         private static Byte[] BitmapToBytes(Bitmap img)
         {
-            using (MemoryStream stream = new MemoryStream())
-            {
-                img.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
-                return stream.ToArray();
-            }
+            using MemoryStream stream = new MemoryStream();
+            img.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
+            return stream.ToArray();
         }
 
+        /// <summary>
+        /// Busca Imagem
+        /// </summary>
+        /// <param name="sBase64String">sBase64String</param>
+        /// <returns>Retorna a imagem</returns>
         private byte[] GetImage(string sBase64String)
         {
             byte[] bytes = null;

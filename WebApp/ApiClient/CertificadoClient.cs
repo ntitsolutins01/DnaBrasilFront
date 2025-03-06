@@ -76,6 +76,18 @@ namespace WebApp.ApiClient
             return Get<List<CertificadoDto>>(requestUrl);
         }
 
+        /// <summary>
+        /// Busca todos os Certificados por AlunoId 
+        /// </summary>
+        /// <param name="tipoCertificadoId">Id do  certificado</param>
+        /// <returns>Retorna a lista por Certificado</returns>
+        public List<CertificadoDto> GetCertificadosByAlunoId(int alunoId)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceCertificado}/Aluno/{alunoId}"));
+            return Get<List<CertificadoDto>>(requestUrl);
+        }
+
         #endregion
     }
 }

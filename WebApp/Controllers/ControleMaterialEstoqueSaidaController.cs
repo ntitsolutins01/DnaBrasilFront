@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using DocumentFormat.OpenXml.Presentation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
@@ -10,35 +11,40 @@ using WebApp.Factory;
 using WebApp.Identity;
 using WebApp.Models;
 using WebApp.Utility;
+using WebApp.Views;
 
 namespace WebApp.Controllers;
 
+/// <summary>
+/// Controle de Material de Estoque e Saida
+/// </summary> 
 [Authorize(Policy = ModuloAccess.ConfiguracaoSistemaEad)]
 public class ControleMaterialEstoqueSaidaController : BaseController
 {
+
     #region Constructor
     private readonly IOptions<UrlSettings> _appSettings;
 
     /// <summary>
     /// Construtor da página
     /// </summary>
-    /// <param name="app">configurações de urls do sistema</param>
-    /// <param name="host">informações da aplicação em execução</param>
+    /// <param name="appSettings">Configurações de urls do sistema</param>
+    /// <param name="host">Informações da aplicação em execução</param>
     public ControleMaterialEstoqueSaidaController(IOptions<UrlSettings> appSettings)
     {
         _appSettings = appSettings;
         ApplicationSettings.WebApiUrl = _appSettings.Value.WebApiBaseUrl;
     }
     #endregion
-
-    #region Crud Methods
+     
+    #region Main Methods
     /// <summary>
-    /// Listagem de ControleMaterialEstoqueSaida
+    /// Listagem de Controle de Material de Estoque e Saida
     /// </summary>
-    /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
-    /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
-    /// <param name="collection">lista de filtros selecionados para pesquisa de alunos</param>
-    /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+    /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+    /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+    /// <param name="collection">Lista de filtros selecionados para pesquisa de alunos</param>
+    /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
     [ClaimsAuthorize(ClaimType.ControleMaterialEstoqueSaida, Identity.Claim.Consultar)]
     public IActionResult Index(int? crud, int? notify, string message = null)
     {
@@ -50,11 +56,11 @@ public class ControleMaterialEstoqueSaidaController : BaseController
     }
 
     /// <summary>
-    /// Tela para inclusão de Modulo Ead
+    /// Tela para Inclusão de Controle de Material de Estoque e Saida
     /// </summary>
-    /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
-    /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
-    /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+    /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+    /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+    /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
     [ClaimsAuthorize(ClaimType.ControleMaterialEstoqueSaida, Identity.Claim.Incluir)]
     public ActionResult Create(int? crud, int? notify, string message = null)
     {
@@ -62,11 +68,13 @@ public class ControleMaterialEstoqueSaidaController : BaseController
         {
             SetNotifyMessage(notify, message);
             SetCrudMessage(crud);
+            var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome");
             var tipoMateriais = new SelectList(ApiClientFactory.Instance.GetTiposMateriaisAll(), "Id", "Nome");
 
             return View(new ControleMaterialEstoqueSaidaModel()
             {
-                ListTiposMateriais = tipoMateriais
+                ListTiposMateriais = tipoMateriais,
+                ListEstados = estados
             });
         }
         catch (Exception e)
@@ -78,20 +86,29 @@ public class ControleMaterialEstoqueSaidaController : BaseController
     }
 
     /// <summary>
-    /// Ação de inclusão do ControleMaterialEstoqueSaida
+    /// Ação de Inclusão do ControleMaterialEstoqueSaida
     /// </summary>
-    /// <param name="collection">coleção de dados para inclusao de ControleMaterialEstoqueSaida</param>
-    /// <returns>retorna mensagem de inclusao através do parametro crud</returns>
+    /// <param name="collection">Coleção de dados para inclusao de ControleMaterialEstoqueSaida</param>
+    /// <returns>Retorna mensagem de inclusao através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.ControleMaterialEstoqueSaida, Identity.Claim.Incluir)]
     [HttpPost]
     public async Task<ActionResult> Create(IFormCollection collection)
     {
         try
         {
+            var quantidade = Convert.ToInt32(collection["quantidade"].ToString());
+
+            if (collection["e/s"].ToString() != "on")
+            {
+                quantidade = -quantidade;
+            }
+
             var command0 = new ControleMaterialEstoqueSaidaModel.CreateUpdateControleMaterialEstoqueSaidaCommand
             {
+                MunicipioId = Convert.ToInt32(collection["ddlMunicipio"].ToString()),
+                LocalidadeId = Convert.ToInt32(collection["ddlLocalidade"].ToString()),
                 MaterialId = Convert.ToInt32(collection["ddlMaterial"].ToString()),
-                Quantidade = Convert.ToInt32(collection["quantidade"].ToString()),
+                Quantidade = quantidade,
                 Solicitante = collection["solicitante"].ToString()
             };
 
@@ -103,7 +120,7 @@ public class ControleMaterialEstoqueSaidaController : BaseController
                 Id = material.Id,
                 UnidadeMedida = material.UnidadeMedida,
                 Descricao = material.Descricao,
-                QtdAdquirida = material.QtdAdquirida + Convert.ToInt32(collection["quantidade"].ToString())
+                QtdAdquirida = material.QtdAdquirida + quantidade
             };
 
             await ApiClientFactory.Instance.CreateControleMaterialEstoqueSaida(command0);
@@ -119,11 +136,11 @@ public class ControleMaterialEstoqueSaidaController : BaseController
 
 
     /// <summary>
-    /// Ação de alteração do ControleMaterialEstoqueSaida
+    /// Ação de Alteração Controle de Material de Estoque e Saida
     /// </summary>
-    /// <param name="id">identificador do ControleMaterialEstoqueSaida</param>
-    /// <param name="collection">coleção de dados para alteração de ControleMaterialEstoqueSaida</param>
-    /// <returns>retorna mensagem de alteração através do parametro crud</returns>
+    /// <param name="id">Identificador do ControleMaterialEstoqueSaida</param>
+    /// <param name="collection">Coleção de dados para alteração de ControleMaterialEstoqueSaida</param>
+    /// <returns>Retorna mensagem de alteração através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.ControleMaterialEstoqueSaida, Identity.Claim.Alterar)]
     public async Task<ActionResult> Edit(IFormCollection collection)
     {
@@ -146,11 +163,11 @@ public class ControleMaterialEstoqueSaidaController : BaseController
     }
 
     /// <summary>
-    /// Ação de exclusão do ControleMaterialEstoqueSaida
+    /// Ação de exclusão de Controle de Material de Estoque e Saida
     /// </summary>
-    /// <param name="id">identificador do ControleMaterialEstoqueSaida</param>
-    /// <param name="collection">coleção de dados para exclusão de ControleMaterialEstoqueSaida</param>
-    /// <returns>retorna mensagem de exclusão através do parametro crud</returns>
+    /// <param name="id">Identificador Controle de Material de Estoque e Saida</param>
+    /// <param name="collection">Coleção de dados para exclusão de ControleMaterialEstoqueSaida</param>
+    /// <returns>Retorna mensagem de exclusão através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.ControleMaterialEstoqueSaida, Identity.Claim.Excluir)]
     public ActionResult Delete(int id)
     {
@@ -159,7 +176,7 @@ public class ControleMaterialEstoqueSaidaController : BaseController
             var controleSaida =
                 ApiClientFactory.Instance.GetControleMaterialEstoqueSaidaById(id);
 
-            var material = 
+            var material =
                 ApiClientFactory.Instance.GetMaterialById(controleSaida.MaterialId);
 
             var command = new MaterialModel.CreateUpdateMaterialCommand
@@ -199,11 +216,58 @@ public class ControleMaterialEstoqueSaidaController : BaseController
 
     #region Get Methods
 
+    /// <summary>
+    /// Busca de Controle de Material de Estoque e Saida por Id
+    /// </summary>
+    /// <param name="id">Identificador de Controle de Material de Estoque e Saida </param>
+    /// <returns>Retorna o Controle de Material de Estoque e Saida</returns>
     public Task<ControleMaterialEstoqueSaidaDto> GetControleMaterialEstoqueSaidaById(int id)
     {
         var result = ApiClientFactory.Instance.GetControleMaterialEstoqueSaidaById(id);
 
         return Task.FromResult(result);
+    }
+
+    /// <summary>
+    /// Método de busca todos os Municipios pelo nome do Estado
+    /// </summary>
+    /// <param name="id">Sigla do Estado</param>
+    /// <returns>Retorna um json com todos os municipios</returns>
+    public Task<JsonResult> GetMunicipiosByUf(string uf)
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(uf)) throw new Exception("Uf não informada.");
+            var resultLocal = ApiClientFactory.Instance.GetMunicipiosByUf(uf);
+
+            return Task.FromResult(Json(new SelectList(resultLocal, "Id", "Nome")));
+
+        }
+        catch (Exception ex)
+        {
+            return Task.FromResult(Json(ex.Message));
+        }
+    }
+
+    /// <summary>
+    /// Método de busca todos as Localidades pelo nome do municipio
+    /// </summary>
+    /// <param name="id">Nome do Municipio</param>
+    /// <returns>Retorna um json com todos as localidades</returns>
+    public Task<JsonResult> GetLocalidadeByMunicipio(string id)
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(id)) throw new Exception("Municipio não informado.");
+            var resultLocal = ApiClientFactory.Instance.GetLocalidadeByMunicipio(id);
+
+            return Task.FromResult(Json(new SelectList(resultLocal, "Id", "Nome")));
+
+        }
+        catch (Exception ex)
+        {
+            return Task.FromResult(Json(ex.Message));
+        }
     }
     #endregion
 }

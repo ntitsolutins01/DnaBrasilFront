@@ -1,4 +1,4 @@
-﻿using System.Security.Claims;
+using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.RegularExpressions;
@@ -23,15 +23,30 @@ using System.Reflection;
 
 namespace WebApp.Controllers
 {
+    /// <summary>
+    /// Controle de Profissional
+    /// </summary>
     [Authorize(Policy = ModuloAccess.Profissional)]
     public class ProfissionalController : BaseController
     {
+
         private readonly IEmailSender _emailSender;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IWebHostEnvironment _host;
         private readonly ILog _logger;
 
+        #region Contructor
+
+        /// <summary>
+        /// Profissional Controller
+        /// </summary>
+        /// <param name="appSettings">AppSettings</param>
+        /// <param name="emailSender">Remetende de Email</param> 
+        /// <param name="userManager">Gerenciador de Usuario</param>
+        /// <param name="host">Hospedar</param>
+        /// <param name="roleManager">Gerente de Funçao</param>
+        /// <param name="logger">Registrador</param>
         public ProfissionalController(IOptions<UrlSettings> appSettings,
             IEmailSender emailSender,
             UserManager<IdentityUser> userManager,
@@ -47,6 +62,17 @@ namespace WebApp.Controllers
             ApplicationSettings.WebApiUrl = appSettings.Value.WebApiBaseUrl;
         }
 
+        #endregion
+
+        #region Main Methods
+
+        /// <summary>
+        /// Listagem do Profissional
+        /// </summary>
+        /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+        /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+        /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
+        /// <returns></returns>
         [ClaimsAuthorize(ClaimType.Profissional, Claim.Consultar)]
         public IActionResult Index(int? crud, int? notify, string message = null)
         {
@@ -72,7 +98,12 @@ namespace WebApp.Controllers
             }
         }
 
-
+        /// <summary>
+        /// Tela para Inclusao do Profissional
+        /// </summary>
+        /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+        /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+        /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
         [ClaimsAuthorize(ClaimType.Profissional, Claim.Incluir)]
         public ActionResult Create(int? crud, int? notify, string message = null)
         {
@@ -120,6 +151,11 @@ namespace WebApp.Controllers
             }
         }
 
+        /// <summary>
+        /// Ação de Inclusão do Profissional
+        /// </summary>
+        /// <param name="collection">Coleção de dados para inclusao do Profissional</param>
+        /// <returns>Retorna mensagem de inclusao através do parametro crud</returns>
         [HttpPost]
         [ClaimsAuthorize(ClaimType.Profissional, Claim.Incluir)]
         public async Task<ActionResult> Create(IFormCollection collection)
@@ -210,7 +246,14 @@ namespace WebApp.Controllers
             }
         }
 
-
+        /// <summary>
+        /// Ação de Alteração do Profissional
+        /// </summary>
+        /// <param name="id">Identificador do Profissional</param>
+        /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+        /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+        /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
+        /// <returns></returns>
         [ClaimsAuthorize(ClaimType.Profissional, Claim.Alterar)]
         public ActionResult Edit(int id, int? crud, int? notify, string message = null)
         {
@@ -261,6 +304,12 @@ namespace WebApp.Controllers
             }
         }
 
+        /// <summary>
+        /// Ação de Alteração do Profissional
+        /// </summary>
+        /// <param name="id">Identificador do Profissional</param>
+        /// <param name="collection">Coleção de dados para alteração do Profissional</param>
+        /// <returns>Retorna mensagem de alteração através do parametro crud</returns>
         [HttpPost]
         [ClaimsAuthorize(ClaimType.Profissional, Claim.Alterar)]
         public async Task<ActionResult> Edit(int id, IFormCollection collection)
@@ -317,6 +366,11 @@ namespace WebApp.Controllers
             }
         }
 
+        /// <summary>
+        /// Açao de Inclusao de Modalidade
+        /// </summary>
+        /// <param name="collection">Coleção de dados para Inclusao de Modalidade</param>
+        /// <returns>Retorna mensagem de inclusao através do parametro crud</returns>
         [HttpPost]
         [ClaimsAuthorize(ClaimType.Profissional, Claim.Incluir)]
         public async Task<ActionResult> CreateModalidade(IFormCollection collection)
@@ -342,6 +396,12 @@ namespace WebApp.Controllers
             }
         }
 
+        /// <summary>
+        /// Ação de Exclusão do Profissional
+        /// </summary>
+        /// <param name="id">Identificador do Profissional</param>
+        /// <param name="collection">Coleção de dados para exclusão do Profissional</param>
+        /// <returns>Retorna mensagem de exclusão através do parametro crud</returns>
         [ClaimsAuthorize(ClaimType.Profissional, Claim.Excluir)]
         public async Task<ActionResult> Delete(int id)
         {
@@ -396,42 +456,11 @@ namespace WebApp.Controllers
             return null;
         }
 
-        [ClaimsAuthorize(ClaimType.Profissional, Claim.Consultar)]
-        public Task<ProfissionalDto> GetProfissionalById(int id)
-        {
-            var result = ApiClientFactory.Instance.GetProfissionalById(id);
-
-            return Task.FromResult(result);
-        }
-
-        [ClaimsAuthorize(ClaimType.Profissional, Claim.Consultar)]
-        public Task<bool> GetProfissionalByEmail(string email)
-        {
-            if (string.IsNullOrEmpty(email)) throw new Exception("Email não informado.");
-            var result = ApiClientFactory.Instance.GetProfissionalByEmail(email);
-
-            if (result == null)
-            {
-                return Task.FromResult(true);
-            }
-
-            return Task.FromResult(false);
-        }
-
-        [ClaimsAuthorize(ClaimType.Profissional, Claim.Consultar)]
-        public Task<bool> GetProfissionalByCpf(string cpf)
-        {
-            if (string.IsNullOrEmpty(cpf)) throw new Exception("Cpf não informado.");
-            var result = ApiClientFactory.Instance.GetProfissionalByCpf(Regex.Replace(cpf, "[^0-9a-zA-Z]+", ""));
-
-            if (result == null)
-            {
-                return Task.FromResult(true);
-            }
-
-            return Task.FromResult(false);
-        }
-
+        /// <summary>
+        /// Açao de Inclusao de Habiliatar
+        /// </summary>
+        /// <param name="collection">Coleção de dados para Inclusao de Habiliatr</param>
+        /// <returns>Retorna mensagem de inclusao através do parametro crud</returns>
         [HttpPost]
         [ClaimsAuthorize(ClaimType.Profissional, Claim.Habilitar)]
         public async Task<ActionResult> Habilitar(IFormCollection collection)
@@ -498,22 +527,13 @@ namespace WebApp.Controllers
             }
         }
 
-        [ClaimsAuthorize(ClaimType.Profissional, Claim.Consultar)]
-        public Task<JsonResult> GetProfissionaisByLocalidade(string id)
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(id)) throw new Exception("Localidadee não informada.");
-                var resultLocal = ApiClientFactory.Instance.GetProfissionaisByLocalidade(Convert.ToInt32(id));
-
-                return Task.FromResult(Json(new SelectList(resultLocal, "Id", "Nome")));
-
-            }
-            catch (Exception ex)
-            {
-                return Task.FromResult(Json(ex));
-            }
-        }
+        /// <summary>
+        /// Açao de Enviar Email de Novo Usuario
+        /// </summary>
+        /// <param name="user">User</param>
+        /// <param name="email">Email</param>
+        /// <param name="nome">Nome</param>
+        /// <returns>Retorna a Email</returns>
         private async Task SendNewUserEmail(IdentityUser user, string email, string nome)
         {
             var code = await _userManager.GeneratePasswordResetTokenAsync(user);
@@ -530,28 +550,12 @@ namespace WebApp.Controllers
                 message);
         }
 
-        public Task<JsonResult> GetProfissionaisByLocalidadeId(string id)
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(id)) throw new Exception("Localidade não informada.");
-                var resultLocal = ApiClientFactory.Instance.GetProfissionaisByLocalidade(Convert.ToInt32(id));
-
-                return Task.FromResult(Json(new SelectList(resultLocal, "Id", "Titulo")));
-
-            }
-            catch (Exception ex)
-            {
-                return Task.FromResult(Json(ex.Message));
-            }
-        }
-
         /// <summary>
         /// Tela de Visualização do Profile do Profissional Logado
         /// </summary>
-        /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
-        /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
-        /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+        /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+        /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+        /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
         [ClaimsAuthorize(ClaimType.Profissional, Claim.Consultar)]
         public async Task<ActionResult> Profile(int? crud, int? notify, string message = null)
         {
@@ -592,7 +596,7 @@ namespace WebApp.Controllers
                     profissional.ModalidadesIds);
 
                 var listAlunos =
-                    new SelectList(ApiClientFactory.Instance.GetNomeAlunosByProfissionalId(profissional.Id), "Id",
+                    new SelectList(await ApiClientFactory.Instance.GetNomeAlunosByLocalidadeId(Convert.ToInt32(profissional.LocalidadeId)), "Id",
                         "Nome");
 
                 return View(new ProfissionalModel()
@@ -612,10 +616,10 @@ namespace WebApp.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Tela de Visualização do Profile do Profissional
         /// </summary>
-        /// <param name="collection"></param>
-        /// <returns></returns>
+        /// <param name="collection">Coleção de dados para Visualizacao do Profile</param>
+        /// <returns>Retorna a profile</returns>
         [HttpPost]
         [ClaimsAuthorize(ClaimType.Profissional, Claim.AlterarProfile)]
         public async Task<ActionResult> Profile(IFormCollection collection)
@@ -678,7 +682,11 @@ namespace WebApp.Controllers
             }
         }
 
-
+        /// <summary>
+        /// Tela de Visualização de Minhas turmas
+        /// </summary>
+        /// <param name="collection">Coleção de dados para Visualizacao de Minhas Turmas</param>
+        /// <returns>Retrona a Minhas Turmas</returns>
         [ClaimsAuthorize(ClaimType.Profissional, Claim.Consultar)]
         public async Task<ActionResult> MinhasTurmas(IFormCollection collection)
         {
@@ -709,6 +717,85 @@ namespace WebApp.Controllers
             }
         }
 
+        #endregion
+
+        #region Get Methods
+
+        /// <summary>
+        /// Busca Profissional por Id
+        /// </summary>
+        /// <param name="id">Identificador do Profissional</param>
+        /// <returns>Retorna a lista do Profissional</returns>
+        [ClaimsAuthorize(ClaimType.Profissional, Claim.Consultar)]
+        public Task<ProfissionalDto> GetProfissionalById(int id)
+        {
+            var result = ApiClientFactory.Instance.GetProfissionalById(id);
+
+            return Task.FromResult(result);
+        }
+
+        /// <summary>
+        /// Busca de Profisional por Id
+        /// </summary>
+        /// <param name="email">Email</param>
+        /// <returns>Retrona a Profissional</returns>
+        /// <exception cref="Exception"></exception>
+        [ClaimsAuthorize(ClaimType.Profissional, Claim.Consultar)]
+        public Task<bool> GetProfissionalByEmail(string email)
+        {
+            if (string.IsNullOrEmpty(email)) throw new Exception("Email não informado.");
+            var result = ApiClientFactory.Instance.GetProfissionalByEmail(email);
+
+            if (result == null)
+            {
+                return Task.FromResult(true);
+            }
+
+            return Task.FromResult(false);
+        }
+
+        /// <summary>
+        /// Busca Profissional por Cpf
+        /// </summary>
+        /// <param name="cpf">cpf</param>
+        /// <returns>Retorna a Profissional por Cpf</returns>
+        /// <exception cref="Exception"></exception>
+        [ClaimsAuthorize(ClaimType.Profissional, Claim.Consultar)]
+        public Task<bool> GetProfissionalByCpf(string cpf)
+        {
+            if (string.IsNullOrEmpty(cpf)) throw new Exception("Cpf não informado.");
+            var result = ApiClientFactory.Instance.GetProfissionalByCpf(Regex.Replace(cpf, "[^0-9a-zA-Z]+", ""));
+
+            if (result == null)
+            {
+                return Task.FromResult(true);
+            }
+
+            return Task.FromResult(false);
+        }
+
+        /// <summary>
+        /// Busca Profissionais por Localidade
+        /// </summary>
+        /// <param name="id">Identificador de Profissional por Localidade</param>
+        /// <returns>Retorna a Profissional por Localidade</returns>
+        [ClaimsAuthorize(ClaimType.Profissional, Claim.Consultar)]
+        public Task<JsonResult> GetProfissionaisByLocalidade(string id)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(id)) throw new Exception("Localidadee não informada.");
+                var resultLocal = ApiClientFactory.Instance.GetProfissionaisByLocalidade(Convert.ToInt32(id));
+
+                return Task.FromResult(Json(new SelectList(resultLocal, "Id", "Nome")));
+
+            }
+            catch (Exception ex)
+            {
+                return Task.FromResult(Json(ex));
+            }
+        }
+
         /// <summary>
         /// Busca lista de turmas pelo id da modalidade e id do profissional 
         /// </summary>
@@ -734,5 +821,9 @@ namespace WebApp.Controllers
 
 
     }
+
+    #endregion
+
+
 
 }

@@ -9,6 +9,7 @@ namespace WebApp.ApiClient
     public partial class DnaApiClient
     {
         private const string ResourceFomento = "Fomentos";
+
         #region Main Methods
 
         /// <summary>
@@ -85,6 +86,18 @@ namespace WebApp.ApiClient
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
                 $"{ResourceFomento}"));
             return Get<List<FomentoDto>>(requestUrl);
+        }
+
+        /// <summary>
+        /// Busca o o fomento pelo id da localidade atraves da tabela FomentoLocalidades
+        /// </summary>
+        /// <param name="id">Id da localidade</param>
+        /// <returns>Retorna o objeto do fomento</returns>
+        public FomentoDto GetFomentoLocalidadesByLocalidadeId(int id)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceFomento}/Fomento/Localidade/{id}"));
+            return Get<FomentoDto>(requestUrl);
         }
 
         #endregion
