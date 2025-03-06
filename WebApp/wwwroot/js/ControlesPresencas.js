@@ -1,6 +1,10 @@
 var vm = new Vue({
     el: "#vControlePresenca",
     data: {
+        params: {
+            alunos: [],
+            visible: false
+        },
         loading: false,
         editDto: { Id: "", Controle: "", Justificativa: "", Data: "", NomeAluno: "", MunicipioEstado: "", NomeLocalidade: "", AlunoId: "" }
     },
@@ -12,6 +16,17 @@ var vm = new Vue({
             var formid = $('form')[1].id;
 
             if (formid === "formPesquisarAluno") {
+
+                if (typeof Switch !== 'undefined' && $.isFunction(Switch)) {
+
+                    $(function () {
+                        $('[data-plugin-ios-switch]').each(function () {
+                            var $this = $(this);
+
+                            $this.themePluginIOS7Switch();
+                        });
+                    });
+                }
 
                 var $select = $(".select2").select2({
                     allowClear: true
@@ -110,7 +125,7 @@ var vm = new Vue({
                 $("#ddlLocalidade").change(function () {
                     var id = $("#ddlLocalidade").val();
 
-                    var url = "../../Aluno/GetAlunosByLocalidade?id=" + id;
+                    var url = "../../Aluno/GetAlunosByLocalidadeId?id=" + id;
                     $.getJSON(url,
                     { id: id },
                         function (data) {
@@ -134,10 +149,38 @@ var vm = new Vue({
                 });
 
                 //clique de escolha do select
+                $("#ddlProfissional").change(function () {
+                    var profissionalId = $("#ddlProfissional").val();
+
+                    var url = "../ControlePresenca/GetModalidadesByProfissionalId";
+
+                    $.getJSON(url,
+                        { id: profissionalId },
+                        function (data) {
+                            if (data.length > 0) {
+                                var items = '<option value="">Selecionar Atividade / Modalidade</option>';
+                                $("#ddlModalidade").empty;
+                                $.each(data,
+                                    function (i, row) {
+                                        items += "<option value='" + row.value + "'>" + row.text + "</option>";
+                                    });
+                                $("#ddlModalidade").html(items);
+                            }
+                            else {
+                                new PNotify({
+                                    title: 'Profissional',
+                                    text: "O Profissional selecionado não possui atividades / modalidades cadastradas.",
+                                    type: 'warning'
+                                });
+                            }
+                        });
+                });
+
+                //clique de escolha do select
                 $("#ddlModalidade").change(function () {
                     var modalidadeId = $("#ddlModalidade").val();
 
-                    var profissionalId = $("#profissionalIdMinhasTurmas").val();
+                    var profissionalId = $("#ddlProfissional").val();
 
                     var url = "../Profissional/GetTurmasByModalidadeIdProfissionalId";
 
@@ -156,7 +199,7 @@ var vm = new Vue({
                             else {
                                 new PNotify({
                                     title: 'Profissional',
-                                    text: "O Profissional logado não possui atividades e turmas cadastradas.",
+                                    text: "O Profissional selecionado não possui turmas cadastradas.",
                                     type: 'warning'
                                 });
                             }
@@ -207,9 +250,19 @@ var vm = new Vue({
                                             ]
                                         });
 
-                                        table.row.add([item.alunoId.toString(), item.alunoId + " - " + item.nome,
-                                        "<a style='color:#F44336' href='javascript:(crud.DeleteAluno(\"" + item.alunoId + "\"))'><i class='fa fa-trash'></i></a>"])
-                                            .draw();
+                                        table.row.add([
+                                        "<div class='switch switch-sm switch-success'>" +
+                                        "    <input type='checkbox' id='habilitado' name='habilitado' data-plugin-ios-switch />" +
+                                        "</div>",
+                                        item.alunoId + " - " + item.nome,
+                                        "<div class='input-group input-group-icon'>" +
+                                        "    <textarea id='justificativa" + item.alunoId + "' name='justificativa" + item.alunoId +"' rows='3' class='form-control form-control-lg'></textarea>" +
+                                        "    <span class='input-group-addon'>" +
+                                        "        <span class='icon icon-lg'>" +
+                                        "            <i class='fa fa-file-text-o'></i>" +
+                                        "        </span>" +
+                                        "    </span>" +
+                                        "</div>"])  .draw();
 
                                         self.params.alunos.push(item.alunoId.toString());
 
@@ -273,7 +326,15 @@ var vm = new Vue({
             }).catch(error => {
                 Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
             });
-        }
+        },
+        handlePrintSubmit: function (itemId, mes) {
+            if (itemId) {
+                window.location.href = "/ControlePresenca/ImprimirFrequencia?id=" + itemId + "&mes=" + mes;
+                return false; // Impede o submit do form
+            } else {
+                return true; // Permite o submit do form para impressão em lote
+            }
+        },
     }
 });
 
@@ -287,5 +348,31 @@ var crud = {
         $('input[name="editControlePresencaId"]').attr('value', id);
         $('#mdEditControlePresenca').modal('show');
         vm.EditControlePresenca(id)
-    }
+    },
+    ImprimirFrequencia: function (id) {
+        $('#itemId').val(id);
+        $('#mdMesImpressao').modal('show');
+    },
 };
+
+function submitForm() {
+    var itemId = $('#itemId').val();
+    var mes = $('#ddlMes').val();
+
+    if (!mes) {
+        new PNotify({
+            title: 'Atenção',
+            text: 'Por favor, selecione um mês.',
+            type: 'warning'
+        });
+        return false;
+    }
+
+    if (itemId) {
+        // Impressão individual
+        vm.handlePrintSubmit(itemId, mes);
+    } else {
+        // Impressão em lote
+        $('#formImprimir').submit();
+    }
+}

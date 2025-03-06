@@ -98,7 +98,7 @@ namespace WebApp.Areas.Identity.Pages.Account
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             ListEstados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome");
-            ListFomentos = new SelectList(ApiClientFactory.Instance.GetFomentoAll(), "Id", "Nome");
+            ListFomentos = new SelectList(ApiClientFactory.Instance.GetFomentosAll(), "Id", "Nome");
 
             List<SelectListDto> list = new List<SelectListDto>
             {

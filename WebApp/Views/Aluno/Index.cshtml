@@ -18,11 +18,11 @@
                         <h2 class="panel-title">Filtro de pesquisa</h2>
                     </header>
                     <div class="panel-body" id="pFiltro">
-                        <label class="col-sm-2 control-label">Fomento:</label>
+                        <label class="col-sm-2 control-label">Fomento / Contrato: <span class="required">*</span></label>
                         <div class="col-md-4 form-group">
                             <select class="form-control populate select2" name="ddlFomento" id="ddlFomento" style="width:100%"
                                     asp-for="FomentoId" asp-items="Model.ListFomentos">
-                                <option value="">Selecionar Fomento</option>
+                                <option value="">Selecionar Fomento / Contrato</option>
                             </select>
                         </div>
                         <label class="col-sm-2 control-label">Estado:</label>
@@ -44,6 +44,14 @@
                             <select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade" style="width:100%"
                                     asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
                                 <option value="">Selecionar Localidade</option>
+                            </select>
+                        </div>
+                        <label class="col-sm-2 control-label">Profissional:</label>
+                        <div class="col-md-4 form-group">
+                            <select class="form-control populate select2" name="ddlProfissional" id="ddlProfissional"
+                                    title="Por favor informe o profissional." required style="width:100%"
+                                    asp-for="ProfissionalId" asp-items="Model.ListProfissionais">
+                                <option value="">Selecionar Profissional</option>
                             </select>
                         </div>
                         <label class="col-sm-2 control-label">Deficiencia:</label>
@@ -83,11 +91,41 @@
                         </div>
                     </div>
                     <footer class="panel-footer">
-                        <div class="row">
+                        <div class="form-group row">
+                            <!-- Primeiro alerta à esquerda -->
+                            <div class="col-sm-6 pull-left">
+                                <div class="alert alert-info" style="padding-bottom: 6px;padding-top: 6px; !important; margin-bottom: 0px; !important">
+                                    <strong>Info:</strong> Para impressão em lote selecione o filtro e clique em <a href="" class="alert-link">Impressão em Lote</a>.
+                                </div>
+                            </div>
+        
+                            <!-- Espaço entre alertas -->
+                            <div class="col-sm-8 pull-left">
+                                &nbsp;&nbsp;
+                            </div>
+        
+                            <!-- Segundo alerta à esquerda -->
+                            <div class="col-sm-6 pull-left">
+                                <div class="alert alert-warning" style="padding-bottom: 6px;padding-top: 6px; !important; margin-bottom: 0px; !important">
+                                    <strong>Atenção:</strong> Lembre-se de selecionar o fomento e a localidade para que o sistema encontre a carteirinha corretamente.
+                                </div>
+                            </div>
+        
+                            <!-- Botões à direita -->
                             <div class="col-sm-2 pull-right">
                                 <button type="submit" class="btn btn-block btn-info pull-right">
                                     <i class="fa fa-search"></i> &nbsp;&nbsp;Pesquisar
                                 </button>
+                            </div>
+                            <div class="col-sm-2 pull-right">
+                                <a id="btnImprimirLote" class="btn btn-block btn-warning pull-right">
+                                    <i class="fa fa-print"></i> &nbsp;&nbsp;Impressão em Lote
+                                </a>
+                            </div>
+                            <div class="col-sm-2 pull-right">
+                                <a id="btnImprimirA4" class="btn btn-block btn-success pull-right">
+                                    <i class="fa fa-file-pdf-o"></i> &nbsp;&nbsp;Impressão A4
+                                </a>
                             </div>
                         </div>
                     </footer>
@@ -132,26 +170,13 @@
                     </div>
                     </div>
                     */
-                    <div class="col-sm-8 pull-left">
-                        <div class="alert alert-info" style="padding-bottom: 6px;padding-top: 6px; !important; margin-bottom: 10px; !important">
-                            <strong>Info:</strong> Para impressão em lote selecione o filtro e clique em <a href="" class="alert-link">Impressão em Lote</a>.
-                        </div>
-                    </div>
-                    <div class="col-sm-8 pull-left">
-                        <div class="alert alert-info" style="padding-bottom: 6px;padding-top: 6px; !important; margin-bottom: 10px; !important">
-                            <strong>Info:</strong> Lembre-se de selecionar o fomento e a localidade para que o sistema encontre a carteirinha corretamente.
-                        </div>
-                    </div>
+                    
 
                 }
                 <div class="col-sm-2 pull-right">
                     <a href="@Url.Action("Create", "Aluno")" id="addToTable" class="btn btn-block btn-primary pull-right"><i class="fa fa-plus"></i>  &nbsp;&nbsp;Novo Aluno </a>
                 </div>
-                <div class="col-sm-2 pull-right">
-                    <a id="btnImprimirLote" class="btn btn-block btn-info pull-right">
-                        <i class="fa fa-print"></i> &nbsp;&nbsp;Impressão em Lote
-                    </a>
-                </div>
+                
             </div>
             <table class="table table-bordered table-striped mb-0" id="datatable-default">
                 <thead>
