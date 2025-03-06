@@ -24,17 +24,14 @@ namespace WebApp.Models
 
         public class CreateUpdateAlunoCursoCommand
 		{
-			public int Id { get; set; }
             public required int AlunoId { get; set; }
-			public required int CursoId { get; set; }
-			public int Progresso { get; set; }
+			public required string CursosId { get; set; }
         }
 
         public class CreateUpdateAlunoCertificadoCommand
         {
-            public int Id { get; set; }
             public required int AlunoId { get; set; }
-            public required int CertificadoId { get; set; }
+            public required string CertificadosId { get; set; }
         }
     }
 
