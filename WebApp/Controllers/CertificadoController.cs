@@ -113,19 +113,16 @@ namespace WebApp.Controllers
                 for (int i = 0; i < collection.Files.Count; i++)
                 {
                     var file = collection.Files[i];
-
                     if (file.Length <= 0) continue;
 
                     string extension = ".jpg";
                     string newFileName = Path.ChangeExtension(Guid.NewGuid().ToString(), extension);
                     string filePath = Path.Combine(certificadosPath, newFileName);
 
-                    // Salva a imagem dependendo do índice
                     if (i == 0)
                     {
                         fileNameFrente = Path.GetFileName(file.FileName);
                         filePathFrente = filePath;
-
                         command.ImagemFrente = filePathFrente;
                         command.NomeImagemFrente = fileNameFrente;
                     }
@@ -133,7 +130,6 @@ namespace WebApp.Controllers
                     {
                         fileNameVerso = Path.GetFileName(file.FileName);
                         filePathVerso = filePath;
-
                         command.ImagemVerso = filePathVerso;
                         command.NomeImagemVerso = fileNameVerso;
                     }
