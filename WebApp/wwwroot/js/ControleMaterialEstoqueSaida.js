@@ -124,7 +124,6 @@
                     }
                 });
 
-                //clique de escolha do select
                 $("#ddlEstado").change(function () {
 
                     self.ShowLoad(true, "pFiltro");
@@ -159,14 +158,13 @@
                     self.ShowLoad(false, "pFiltro");
                 });
 
-                //clique de escolha do select
                 $("#ddlMunicipio").change(function () {
 
                     self.ShowLoad(true, "pFiltro");
 
                     var id = $("#ddlMunicipio").val();
 
-                    var url = "../Localidade/GetLocalidadeByMunicipio?id=" + id;
+                    var url = "../../Localidade/GetLocalidadeByMunicipio?id=" + id;
 
                     var ddlSource = "#ddlLocalidade";
 
