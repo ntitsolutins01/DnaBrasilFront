@@ -9,8 +9,7 @@ var vm = new Vue({
         (function ($) {
             'use strict';
 
-
-
+            //skin select
             var $select = $(".select2").select2({
                 allowClear: true
             });
