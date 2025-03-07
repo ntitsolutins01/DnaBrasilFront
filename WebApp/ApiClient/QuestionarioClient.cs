@@ -39,7 +39,7 @@ namespace WebApp.ApiClient
         /// <summary>
         /// Exclusão de Questionário
         /// </summary>
-        /// <param name="id">Id de exclusao de Questionário</param>
+        /// <param name="id">Id de exclusão de Questionário</param>
         /// <returns>Retorna true ou false</returns>
         public Task<bool> DeleteQuestionario(int id)
         {
@@ -78,7 +78,7 @@ namespace WebApp.ApiClient
         /// <summary>
         ///  Busca Quetionário por Tipo de Laudo
         /// </summary>
-        /// <param name="id">id de Questionário por Laudo</param>
+        /// <param name="id">Id de Questionário por Laudo</param>
         /// <returns>Retorna a uma Lista de Questionário</returns>
         public List<QuestionarioDto> GetQuestionarioByTipoLaudo(int id)
         {

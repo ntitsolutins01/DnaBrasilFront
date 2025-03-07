@@ -66,7 +66,7 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
-        ///  busca uma única Saúde Bucal
+        ///  Busca uma única Saúde Bucal
         /// </summary>
         /// <param name="id">Id de Saúde Bucal a ser buscada</param>
         /// <returns>Retorna o objeto de Saúde Bucal</returns>

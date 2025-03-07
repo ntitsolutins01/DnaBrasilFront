@@ -13,10 +13,10 @@ namespace WebApp.ApiClient
         #region Main Methods
 
         /// <summary>
-        /// Inclusão de Localidade
+        /// Inclusão da Localidade
         /// </summary>
-        /// <param name="command">Objeto de inclusão de Localidade</param>
-        /// <returns>Id de Localidade inserido</returns>
+        /// <param name="command">Objeto de inclusão da Localidade</param>
+        /// <returns>Retorna id da Localidade inserido</returns>
         public Task<long> CreateLocalidade(LocalidadeModel.CreateUpdateLocalidadeCommand command)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
@@ -25,10 +25,10 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
-        /// Alteração de Localidade
+        /// Alteração da Localidade
         /// </summary>
-        /// <param name="id">Id de alteração de localidade</param>
-        /// <param name="command">Objeto de alteração de Localidade</param>
+        /// <param name="id">Id de alteração da localidade</param>
+        /// <param name="command">Objeto de alteração da Localidade</param>
         /// <returns>Retorna true ou false</returns>
         public Task<bool> UpdateLocalidade(int id, LocalidadeModel.CreateUpdateLocalidadeCommand command)
         {
@@ -38,9 +38,9 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
-        /// Exclusão de Localidade
+        /// Exclusão da Localidade
         /// </summary>
-        /// <param name="id">Id de exclusao de Localidade</param>
+        /// <param name="id">Id de exclusão da Localidade</param>
         /// <returns>Retorna true ou false</returns>
         public Task<bool> DeleteLocalidade(int id)
         {
@@ -64,10 +64,10 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
-        /// Busca uma única Localidade
+        /// Busca Localidade por id 
         /// </summary>
-        /// <param name="id">Id de Localidade a ser buscada</param>
-        /// <returns>Retorna o objeto de uma  Localidade</returns>
+        /// <param name="id">Id da Localidade a ser buscada</param>
+        /// <returns>Retorna o objeto de Localidade</returns>
         public LocalidadeDto GetLocalidadeById(int id)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
@@ -78,8 +78,8 @@ namespace WebApp.ApiClient
         /// <summary>
         /// Busca Localidade por Municipio
         /// </summary>
-        /// <param name="id">Id de Localidade por Municipio</param>
-        /// <returns>retorna uma lista de Localidade</returns>
+        /// <param name="id">Id da Localidade por Municipio</param>
+        /// <returns>Retorna uma lista de Localidade</returns>
         public List<LocalidadeDto> GetLocalidadeByMunicipio(string id)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
@@ -90,8 +90,8 @@ namespace WebApp.ApiClient
         /// <summary>
         /// Busca Localidade por Fomento
         /// </summary>
-        /// <param name="id">id de Localidade por Fomento</param>
-        /// <returns>retorna a uma Lista de Localidade</returns>
+        /// <param name="id">Id da Localidade por Fomento</param>
+        /// <returns>Retorna a uma Lista de Localidade</returns>
         public List<LocalidadeDto> GetLocalidadeByFomento(int id)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,

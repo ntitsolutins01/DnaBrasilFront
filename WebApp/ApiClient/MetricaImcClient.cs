@@ -16,7 +16,7 @@ namespace WebApp.ApiClient
         /// inclusão de Métrica Imc
         /// </summary>
         /// <param name="command">Objeto de inclusão de Métrica Imc</param>
-        /// <returns>Retorna Id de novas Métrica Imc</returns>
+        /// <returns>Retorna id de novas Métrica Imc</returns>
         public Task<long> CreateMetricaImc (MetricaImcModel.CreateUpdateMetricaImcCommand command)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,

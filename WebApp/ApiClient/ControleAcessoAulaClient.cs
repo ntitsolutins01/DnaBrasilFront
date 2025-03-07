@@ -13,10 +13,10 @@ namespace WebApp.ApiClient
         #region Main Methods
 
         /// <summary>
-        /// Inclusão de ControleAcessoAula
+        /// Inclusão do Controle de Acesso de Aula
         /// </summary>
-        /// <param name="command">Objeto para inclusão de ControleAcessoAula</param>
-        /// <returns>Id de ControleAcessoAula inserido</returns>
+        /// <param name="command">Objeto para inclusão do Controle de Acesso de Aula</param>
+        /// <returns>Id do Controle de Acesso de Aula inserido</returns>
         public Task<long> CreateControleAcessoAula (ControleAcessoAulaModel.CreateUpdateControleAcessoAulaCommand command)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
@@ -25,7 +25,7 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
-        /// Alteração de ControleAcessoAula
+        /// Alteração do Controle de Acesso de Aula
         /// </summary>
         /// <param name="id">Id de alteração de ControleAcessoAula</param>
         /// <param name="command">Objeto de alteração de ControleAcessoAula</param>
@@ -38,9 +38,9 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
-        /// Exclusão de ControleAcessoAula
+        /// Exclusão do Controle de Acesso de Aula
         /// </summary>
-        /// <param name="id">Id de exclusao da ControleAcessoAula</param>
+        /// <param name="id">Id de exclusão do Controle de Acesso de Aula</param>
         /// <returns>Retorna true ou false</returns>
         public Task<bool> DeleteControleAcessoAula (int id)
         {

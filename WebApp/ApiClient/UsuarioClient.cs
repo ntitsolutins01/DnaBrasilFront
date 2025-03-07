@@ -87,8 +87,8 @@ namespace WebApp.ApiClient
         /// <summary>
         /// Busca Usuário por Id de Rede 
         /// </summary>
-        /// <param name="aspNetUserId">id de Usuário por rede </param>
-        /// <returns>retorna um objeto de Usuário</returns>
+        /// <param name="aspNetUserId">Id de Usuário por rede </param>
+        /// <returns>Retorna um objeto de Usuário</returns>
         public async Task<UsuarioDto> GetUsuarioByAspNetUserId(string aspNetUserId)
 		{
 			var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
@@ -99,8 +99,8 @@ namespace WebApp.ApiClient
         /// <summary>
         /// Busca Usuário por Cpf
         /// </summary>
-        /// <param name="cpf">cpf</param>
-        /// <returns>retona uma Lista por Cpf</returns>
+        /// <param name="cpf">Cpf</param>
+        /// <returns>Retona uma Lista por Cpf</returns>
         public async Task<UsuarioDto> GetUsuarioByCpf(string cpf)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
@@ -111,7 +111,7 @@ namespace WebApp.ApiClient
         /// <summary>
         /// Busca Usuário por Email
         /// </summary>
-        /// <param name="email">email</param>
+        /// <param name="email">Email</param>
         /// <returns>Retorna a lista por email </returns>
         public async Task<UsuarioDto> GetUsuarioByEmail(string email)
         {

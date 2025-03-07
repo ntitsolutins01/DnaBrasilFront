@@ -13,10 +13,10 @@ namespace WebApp.ApiClient
         #region Main Methods
 
         /// <summary>
-        /// Inclusão de Fomento
+        /// Inclusão do Fomento
         /// </summary>
-        /// <param name="command">Objeto para inclusão de Fomento</param>
-        /// <returns>Id de Fomento inserido</returns>
+        /// <param name="command">Objeto para inclusão do Fomento</param>
+        /// <returns>Id do Fomento inserido</returns>
         public Task<long> CreateFomento(FomentoModel.CreateUpdateFomentoCommand command)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
@@ -25,10 +25,10 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
-        ///  Alteração de Fomento
+        ///  Alteração do Fomento
         /// </summary>
-        /// <param name="id">Id de alteração de Fomento</param>
-        /// <param name="command">Objeto de alteração de Fomento</param>
+        /// <param name="id">Id de alteração do Fomento</param>
+        /// <param name="command">Objeto de alteração do Fomento</param>
         /// <returns>Retorna true ou false</returns>
         public Task<bool> UpdateFomento(int id, FomentoModel.CreateUpdateFomentoCommand command)
         {
@@ -38,9 +38,9 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
-        /// Exclusão de Fomento
+        /// Exclusão do fomento
         /// </summary>
-        /// <param name="id">Id de exclusao de Fomento</param>
+        /// <param name="id">Id de exclusão do fomento</param>
         /// <returns>Retorna true ou false</returns>
         public Task<bool> DeleteFomento(int id)
         {
@@ -56,7 +56,7 @@ namespace WebApp.ApiClient
         /// <summary>
         /// Busca um único Fomento
         /// </summary>
-        /// <param name="id">Id de Fomento a ser buscado</param>
+        /// <param name="id">Id do Fomento a ser buscado</param>
         /// <returns>Retorna um objeto de Fomento</returns>
         public FomentoDto GetFomentoById(int id)
         {
@@ -89,7 +89,7 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
-        /// Busca o o fomento pelo id da localidade atraves da tabela FomentoLocalidades
+        /// Busca fomento de localidades pelo id da localidade
         /// </summary>
         /// <param name="id">Id da localidade</param>
         /// <returns>Retorna o objeto do fomento</returns>

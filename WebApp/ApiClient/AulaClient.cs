@@ -14,10 +14,10 @@ namespace WebApp.ApiClient
         #region Main Methods
 
         /// <summary>
-        /// Inclusão de Aula
+        /// Inclusão de aula
         /// </summary>
-        /// <param name="command">Objeto para inclusão de Aula</param>
-        /// <returns>Id de Aula inserido</returns>
+        /// <param name="command">Objeto para a inclusão de aula</param>
+        /// <returns>ID de aula inserido</returns>
         public Task<long> CreateAula (AulaModel.CreateUpdateAulaCommand command)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
@@ -28,8 +28,8 @@ namespace WebApp.ApiClient
         /// <summary>
         /// Alteração de Aula
         /// </summary>
-        /// <param name="id">Id de alteração de Aula</param>
-        /// <param name="command">Objeto de alteração de Aula</param>
+        /// <param name="id">ID de alteração de aula</param>
+        /// <param name="command">Objeto de alteração de aula</param>
         /// <returns>Retorna true ou false</returns>
         public Task<bool> UpdateAula (int id, AulaModel.CreateUpdateAulaCommand command)
         {
@@ -39,9 +39,9 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
-        /// Exclusão de Aula
+        /// Exclusão de aula
         /// </summary>
-        /// <param name="id">Id de exclusão de Aula</param>
+        /// <param name="id">ID de exclusão de aula</param>
         /// <returns>Retorna true ou false</returns>
         public Task<bool> DeleteAula (int id)
         {
@@ -55,10 +55,10 @@ namespace WebApp.ApiClient
         #region Methods
 
         /// <summary>
-        /// Busca uma única Aula
+        /// Busca de uma única aula
         /// </summary>
-        /// <param name="id">Id da Aula a ser buscada</param>
-        /// <returns>Retorna o objeto de Aula</returns>
+        /// <param name="id">ID da aula a ser buscada</param>
+        /// <returns>Retorna o objeto de aula</returns>
         public AulaDto GetAulaById(int id)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
@@ -67,15 +67,21 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
-        /// Busca todas as Aulas cadastradas
+        /// Busca todas as aulas cadastradas
         /// </summary>
-        /// <returns>Retorna a lista de Aula</returns>
+        /// <returns>Retorna a lista de aula</returns>
         public List<AulaDto> GetAulasAll()
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
                 $"{ResourceAula}"));
             return Get<List<AulaDto>>(requestUrl);
         }
+
+        /// <summary>
+        /// Busca todas as aulas por ID de módulo EAD
+        /// </summary>
+        /// <param name="id">ID do módulo EAD a ser buscado</param>
+        /// <returns>Retorna o módulo EAD</returns>
         public List<AulaDto> GetAulasAllByModuloEadId(int id)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,

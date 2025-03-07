@@ -39,7 +39,7 @@ namespace WebApp.ApiClient
         /// <summary>
         /// Exclusão de Modulo
         /// </summary>
-        /// <param name="id">Id de exclusao de Modulo</param>
+        /// <param name="id">Id de exclusão de Modulo</param>
         /// <returns>Retorna true ou false</returns>
         public Task<bool> DeleteModulo(int id)
         {
@@ -76,7 +76,7 @@ namespace WebApp.ApiClient
         /// <summary>
         /// Exclusão de Funcionalidade
         /// </summary>
-        /// <param name="id">Id de exclusao de Funcionalidade</param>
+        /// <param name="id">Id de exclusão de Funcionalidade</param>
         /// <returns>Retorna true ou false</returns>
         public Task<bool> DeleteFuncionalidade(int id)
         {

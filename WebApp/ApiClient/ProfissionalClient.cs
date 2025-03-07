@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using WebApp.Dto;
+﻿using WebApp.Dto;
 using WebApp.Models;
 
 namespace WebApp.ApiClient
@@ -14,9 +13,9 @@ namespace WebApp.ApiClient
         #region Main Methods
 
         /// <summary>
-        /// Inclusão de Profissionais
+        /// Inclusão de Profissional
         /// </summary>
-        /// <param name="command">Objeto de inclusão de Profissionais</param>
+        /// <param name="command">Objeto de inclusão de Profissional</param>
         /// <returns>Id de Profissional inserido</returns>
         public Task<long> CreateProfissional(ProfissionalModel.CreateUpdateProfissionalCommand command)
         {
@@ -26,10 +25,10 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
-        /// Alteração de Profissionais
+        /// Alteração de Profissional
         /// </summary>
-        /// <param name="id">Id de alteração de Profissionais</param>
-        /// <param name="command">Objeto de alteração de Profissionais</param>
+        /// <param name="id">Id de alteração de Profissional</param>
+        /// <param name="command">Objeto de alteração de Profissional</param>
         /// <returns>Retorna true ou false</returns>
 		public Task<bool> UpdateProfissional(int id, ProfissionalModel.CreateUpdateProfissionalCommand command)
 		{
@@ -39,9 +38,9 @@ namespace WebApp.ApiClient
 		}
 
         /// <summary>
-        /// exclusão de Profissionais
+        /// Exclusão de Profissional
         /// </summary>
-        /// <param name="id">Id de exclusão de Profissionais</param>
+        /// <param name="id">Id de exclusão de Profissional</param>
         /// <returns>Retorna true ou false</returns>
 		public Task<bool> DeleteProfissional(int id)
         {
@@ -67,7 +66,7 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
-        /// Busca todos os Profissionaiss cadastrados
+        /// Busca todos os Profissionais cadastrados
         /// </summary>
         /// <returns>Retorna a lista de Profissionais</returns>
         public List<ProfissionalDto> GetProfissionalAll()
@@ -80,8 +79,8 @@ namespace WebApp.ApiClient
         /// <summary>
         /// Busca profissional por Cpf
         /// </summary>
-        /// <param name="cpf">cpf</param>
-        /// <returns>retorna Profissional por cpf</returns>
+        /// <param name="cpf">Cpf</param>
+        /// <returns>Retorna Profissional por cpf</returns>
         public ProfissionalDto GetProfissionalByCpf(string cpf)
         {
 	        var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
@@ -92,8 +91,8 @@ namespace WebApp.ApiClient
         /// <summary>
         ///  Busca o Profissional por Email
         /// </summary>
-        /// <param name="email">email</param>
-        /// <returns>retorna um Profissional por Email</returns>
+        /// <param name="email">Email</param>
+        /// <returns>Retorna um Profissional por Email</returns>
         public async Task<ProfissionalDto> GetProfissionalByEmail(string email)
         {
 	        var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
@@ -102,10 +101,10 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
-        /// busca uma lista de Profissionais por Localidade
+        /// Busca uma lista de Profissional por Localidade
         /// </summary>
-        /// <param name="id">id de Profissionais por  localidade</param>
-        /// <returns>retrona uma lista de Profissionais</returns>
+        /// <param name="id">Id de Profissional por  localidade</param>
+        /// <returns>Retorna uma lista de Profissional</returns>
         public List<ProfissionalDto> GetProfissionaisByLocalidade(int id)
         {
 	        var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,

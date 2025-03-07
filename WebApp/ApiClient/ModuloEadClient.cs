@@ -40,7 +40,7 @@ namespace WebApp.ApiClient
         /// <summary>
         /// Exclusão de Modulo Ead
         /// </summary>
-        /// <param name="id">Id de exclusao da Modulo Ead</param>
+        /// <param name="id">Id de exclusão da Modulo Ead</param>
         /// <returns>Retorna true ou false</returns>
         public Task<bool> DeleteModuloEad (int id)
         {
@@ -79,8 +79,8 @@ namespace WebApp.ApiClient
         /// <summary>
         /// Busca todos os modulo Ead por Curso id
         /// </summary>
-        /// <param name="cursoId">id por Curso</param>
-        /// <returns>retorna lista de Modulo Ead por Curso</returns>
+        /// <param name="cursoId">Id por Curso</param>
+        /// <returns>Retorna lista de Modulo Ead por Curso</returns>
         public List<ModuloEadDto> GetModulosEadAllByCursoId(int cursoId)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,

@@ -13,10 +13,10 @@ namespace WebApp.ApiClient
         #region Main Methods
 
         /// <summary>
-        /// Inclusão de Controle de Presença
+        /// Inclusão do Controle de Presença
         /// </summary>
-        /// <param name="command">Objeto de inclusão de Controle de Presença</param>
-        /// <returns>Id de Controle de Presença inserido</returns>
+        /// <param name="command">Objeto de inclusão do Controle de Presença</param>
+        /// <returns>Id do Controle de Presença inserido</returns>
         public Task<long> CreateControlePresenca(ControlePresencaModel.CreateUpdateControlePresencaCommand command)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
@@ -25,10 +25,10 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
-        /// Alteração de Controle de Presença
+        /// Alteração do Controle de Presença
         /// </summary>
-        /// <param name="id">Id de alteração  Controle de Presença</param>
-        /// <param name="command">Objeto de alteração  Controle de Presença</param>
+        /// <param name="id">Id de alteração do Controle de Presença</param>
+        /// <param name="command">Objeto de alteração do Controle de Presença</param>
         /// <returns>Retorna true ou false</returns>
         public Task<bool> UpdateControlePresenca(int id, ControlePresencaModel.CreateUpdateControlePresencaCommand command)
         {
@@ -38,9 +38,9 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
-        /// Exclusão  Controle de Presença
+        /// Exclusão do Controle de Presença
         /// </summary>
-        /// <param name="id">Id de exclusao de Controle de Presença</param>
+        /// <param name="id">Id de exclusão do Controle de Presença</param>
         /// <returns>Retorna true ou false</returns>
         public Task<bool> DeleteControlePresenca(int id)
         {
@@ -66,7 +66,7 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
-        /// Busca o controle de Presença por Evento id
+        /// Busca o Controle de Presença por Evento id
         /// </summary>
         /// <param name="alunoId">Id do Aluno</param>
         /// <returns>Retorna a lista de Controle de Presença</returns>
@@ -78,11 +78,11 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
-        /// Busca todos os Controle de Presenças cadastradas
+        /// Busca todos os Controles de Presença Cadastrados
         /// </summary>
         /// <param name="pageNumber">Numero da Pagina</param>
         /// <param name="pageSize">Tamnho da Pagina</param>
-        /// <returns>Retorna a lista de Controle de Presenças</returns>
+        /// <returns>Retorna a lista do Controle de Presenças</returns>
         public PaginatedListDto<ControlePresencaDto> GetControlesPresencasAll(int pageNumber = 1, int pageSize = 10)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
@@ -91,7 +91,7 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
-        /// Busca o controle de presença por id Evento
+        /// Busca o Controle de Presença por id Evento
         /// </summary>
         /// <param name="eventoId">Id Evento</param>
         /// <returns>Retorna a lista de Controle de Presença</returns>
@@ -103,7 +103,7 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
-        ///  Busca o controle de presença por filtro
+        ///  Busca o Controle de Presença por filtro
         /// </summary>
         /// <param name="searchFilter">Filtro de pesquisa</param>
         /// <returns>Retorna o objeto de controle de presença</returns>

@@ -41,7 +41,7 @@ namespace WebApp.ApiClient
         /// <summary>
         /// Exclusão de Estrutura
         /// </summary>
-        /// <param name="id">Id de exclusao da Estrutura</param>
+        /// <param name="id">Id de exclusão da Estrutura</param>
         /// <returns>Retorna true ou false</returns>
         public Task<bool> DeleteEstrutura (int id)
         {
@@ -78,7 +78,7 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
-        /// Busca todas as estruturas por localidade
+        /// Busca todas as Estruturas por localidade
         /// </summary>
         /// <param name="id">Id de Estrutura da localidade</param>
         /// <returns>Retorna a lista de Estruturas</returns>

@@ -532,15 +532,15 @@ namespace WebApp.Controllers
         /// <summary>
         /// Acao de Imprimir Carteirinha por Lote
         /// </summary>
-        /// <param name="ids">ids</param>
-        /// <param name="fomentoId">Id de fomento</param>
-        /// <param name="estadoId">Id de estudo</param>
-        /// <param name="municipioId">Id de municipio</param>
-        /// <param name="localidadeId">Id de localidade</param>
+        /// <param name="ids">Ids</param>
+        /// <param name="fomentoId">Id do fomento</param>
+        /// <param name="estadoId">Id do estudo</param>
+        /// <param name="municipioId">Id do municipio</param>
+        /// <param name="localidadeId">Id da localidade</param>
         /// <param name="profissionalId">Id do profissional</param>
-        /// <param name="deficienciaId">Id de deficiencia</param>
-        /// <param name="etniaId">Id de etnia</param>
-        /// <param name="sexoId">Id de sexo</param>
+        /// <param name="deficienciaId">Id da deficiencia</param>
+        /// <param name="etniaId">Id da etnia</param>
+        /// <param name="sexoId">Id do sexo</param>
         /// <returns>Retorna impresao de carteirinha</returns>
         [ClaimsAuthorize(ClaimType.Aluno, Claim.Incluir)]
         public async Task<ActionResult> ImprimirCarteirinhasLote(string ids, string fomentoId = null, string estadoId = null,

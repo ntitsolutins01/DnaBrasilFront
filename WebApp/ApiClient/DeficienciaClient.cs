@@ -55,7 +55,7 @@ namespace WebApp.ApiClient
         #region Methods
 
         /// <summary>
-        /// Busca todas as Deficiencia cadastradas
+        /// Busca todas as Deficiencias cadastradas
         /// </summary>
         /// <returns>Retorna a lista de Deficiencia</returns>
         public List<DeficienciaDto> GetDeficienciaAll()

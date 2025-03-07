@@ -40,7 +40,7 @@ namespace WebApp.ApiClient
         /// <summary>
         /// Exclusão de Escolaridade
         /// </summary>
-        /// <param name="id">Id de exclusao de Escolaridade</param>
+        /// <param name="id">Id de exclusão de Escolaridade</param>
         /// <returns>Retorna true ou false</returns>
         public Task<bool> DeleteEscolaridade(int id)
         {

@@ -16,7 +16,7 @@ namespace WebApp.ApiClient
         /// Inclusão de Aluno
         /// </summary>
         /// <param name="command">Objeto para inclusão do Aluno</param>
-        /// <returns>Id do Aluno inserido</returns>
+        /// <returns>ID do Aluno inserido</returns>
         public Task<long> CreateDados(AlunoModel.CreateUpdateDadosAlunoCommand command)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
@@ -27,7 +27,7 @@ namespace WebApp.ApiClient
         /// <summary>
         /// Alteração do Aluno
         /// </summary>
-        /// <param name="id">Id de alteração do Aluno</param>
+        /// <param name="id">ID da alteração do Aluno</param>
         /// <param name="command">Objeto de alteração do Aluno</param>
         /// <returns>Retorna true ou false</returns>
         public Task<bool> UpdateDados(int id, AlunoModel.CreateUpdateDadosAlunoCommand command)
@@ -38,10 +38,10 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
-        /// Alteração de Qr Code do Aluno
+        /// Alteração do QR Code do Aluno
         /// </summary>
-        /// <param name="id">Id de alteração de Qr Code do Aluno</param>
-        /// <param name="command">Objeto de alteração de Qr Code Aluno</param>
+        /// <param name="id">ID da alteração do QR Code do Aluno</param>
+        /// <param name="command">Objeto para alteração do QR Code do Aluno</param>
         /// <returns>Retorna true ou false</returns>
         public Task<bool> UpdateQrCode(int id, AlunoModel.CreateUpdateDadosAlunoCommand command)
         {
@@ -51,10 +51,10 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
-        /// Alteração da Foto do Aluno
+        /// Alteração da foto do Aluno
         /// </summary>
-        /// <param name="id">Id de alteração da Foto do Aluno</param>
-        /// <param name="command">Objeto de alteração da Foto do Aluno</param>
+        /// <param name="id">ID da alteração da foto do Aluno</param>
+        /// <param name="command">Objeto para alteração da foto do Aluno</param>
         /// <returns>Retorna true ou false</returns>
         public Task<bool> UpdateAlunoFoto(int id, AlunoModel.CreateUpdateDadosAlunoCommand command)
         {
@@ -65,7 +65,7 @@ namespace WebApp.ApiClient
         /// <summary>
         /// Exclusão de Aluno
         /// </summary>
-        /// <param name="id">Id de exclusão de Aluno </param>
+        /// <param name="id">ID da exclusão do Aluno </param>
         /// <returns>Retorna true ou false</returns>
         public Task<bool> DeleteDados(int id)
         {
@@ -79,7 +79,7 @@ namespace WebApp.ApiClient
         #region Methods
 
         /// <summary>
-        /// Busca todos os Aulo
+        /// Buscar todos os Alunos
         /// </summary>
         /// <returns>Retorna a lista de Aluno</returns>
         public List<AlunoDto> GetAlunosAll()
@@ -90,10 +90,10 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
-        /// Busca um único Aluno
+        /// Buscar um único Aluno
         /// </summary>
-        /// <param name="id">Id de Aluno a ser buscado</param>
-        /// <returns>Retorna o objeto de Aluno</returns>
+        /// <param name="id">ID do Aluno a ser buscado</param>
+        /// <returns>Retorna o objeto do Aluno</returns>
         public async Task<AlunoDto> GetAlunoById(int id)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
@@ -102,10 +102,10 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
-        /// Busca Aluno por Email
+        /// Buscar Aluno por e-mail
         /// </summary>
         /// <param name="email">email</param>
-        /// <returns>Retorna uma lista de Email</returns>
+        /// <returns>Retorna uma lista de email</returns>
         public AlunoDto GetAlunoByEmail(string email)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
@@ -114,10 +114,10 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
-        /// Busca Aluno por Rede Asp
+        /// Busca o Aluno por rede ASP
         /// </summary>
-        /// <param name="aspNetUserId">aspNetUserId</param>
-        /// <returns>Retorna o Aluno por rede</returns>
+        /// <param name="aspNetUserId">AspNetUserId</param>
+        /// <returns>Retorna o aluno por rede</returns>
         public AlunoDto GetAlunoByAspNetUser(string aspNetUserId)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
@@ -126,10 +126,10 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
-        /// Busca Aluno por Localidade
+        /// Busca o Aluno por localidade
         /// </summary>
-        /// <param name="id">Id de Aluno a ser buscado</param>
-        /// <returns>Retorna a uma localidade</returns>
+        /// <param name="id">ID do Aluno a ser buscado</param>
+        /// <returns>Retorna a localidade</returns>
         public List<AlunoIndexDto> GetAlunosByLocalidadeId(int id)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
@@ -138,10 +138,10 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
-        /// Busca Todos Nome de Aluno
+        /// Busca todos os nomes de Alunos
         /// </summary>
-        /// <param name="id">Id da localidade a ser buscado</param>
-        /// <returns>Retorna a todos os Aluno</returns>
+        /// <param name="id">ID da localidade a ser buscada</param>
+        /// <returns>Retorna todos os Alunos</returns>
         public async Task<List<SelectListDto>> GetNomeAlunosByLocalidadeId(int id)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
@@ -150,10 +150,10 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
-        /// Busca Aluno por Filtro 
+        /// Busca o Aluno por filtro
         /// </summary>
-        /// <param name="searchFilter">filtro para pesquisas de Aluno</param>
-        /// <returns>retorna a lista de Alunos</returns>
+        /// <param name="searchFilter">Filtro para pesquisa de Aluno</param>
+        /// <returns>Retorna a lista de Alunos</returns>
         public Task<AlunosFilterDto?> GetAlunosByFilter(AlunosFilterDto searchFilter)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
@@ -162,10 +162,10 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
-        /// Busca Todos Nome de Aluno
+        /// Busca todos os nomes de Alunos
         /// </summary>
-        /// <param name="id">Id do Profissional</param>
-        /// <returns>Retorna lista dos alunos</returns>
+        /// <param name="id">ID dos Aluno</param>
+        /// <returns>Retorna lista dos Alunos</returns>
         public List<SelectListDto> GetNomeAlunosByProfissionalId(int id)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
@@ -174,10 +174,10 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
-        /// Busca Carteirinha pelo Id do Fomento
+        /// Busca o Modelo de Carteirinha Pelo ID do Fomento
         /// </summary>
         /// <param name="fomentoId">Id do Fomento</param>
-        /// <returns>Retorna modelo da carteirinha</returns>
+        /// <returns>Retorna Modelo de Carteirinha</returns>
         public async Task<ModeloCarteirinhaDto> GetModeloCarteirinhaByFomentoId(int fomentoId)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,

@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using WebApp.Dto;
+﻿using WebApp.Dto;
 using WebApp.Models;
 
 namespace WebApp.ApiClient
@@ -16,8 +15,8 @@ namespace WebApp.ApiClient
         /// <summary>
         /// Inclusão de Atividade
         /// </summary>
-        /// <param name="command">Objeto para inclusão de Atividade</param>
-        /// <returns>Id de Atividade inserido</returns>
+        /// <param name="command">Objeto para a inclusão de Atividade</param>
+        /// <returns>ID da Atividade inserido</returns>
         public Task<long> CreateAtividade (AtividadeModel.CreateUpdateAtividadeCommand command)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
@@ -28,8 +27,8 @@ namespace WebApp.ApiClient
         /// <summary>
         /// Alteração de Atividade
         /// </summary>
-        /// <param name="id">Id de alteração de Atividade</param>
-        /// <param name="command">Objeto de alteração de Atividade</param>
+        /// <param name="id">ID da alteração de Atividade</param>
+        /// <param name="command">Objeto para alteração de Atividade</param>
         /// <returns>Retorna true ou false</returns>
         public Task<bool> UpdateAtividade (int id, AtividadeModel.CreateUpdateAtividadeCommand command)
         {
@@ -41,7 +40,7 @@ namespace WebApp.ApiClient
         /// <summary>
         ///  Exclusão de Atividade
         /// </summary>
-        /// <param name="id">Id de exclusão de Atividade</param>
+        /// <param name="id">Id da exclusão de atividade</param>
         /// <returns>Retorna true ou false</returns>
         public Task<bool> DeleteAtividade (int id)
         {
@@ -53,8 +52,8 @@ namespace WebApp.ApiClient
         /// <summary>
         /// Inclusão de Atividade e Alunos
         /// </summary>
-        /// <param name="command">Objeto para inclusão de AtividadeAlunos</param>
-        /// <returns>Id de Atividade</returns>
+        /// <param name="command">Objeto para inclusão de Atividade de Alunos</param>
+        /// <returns>Retorna o Id da Atividade</returns>
         public Task<long> CreateAtividadeAluno(AtividadeModel.CreateUpdateAtividadeAlunosCommand command)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
@@ -63,10 +62,10 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
-        /// Alteração de Atividade e Alunos
+        ///Alteração de Atividade de Alunos
         /// </summary>
-        /// <param name="id">Id de alteração de Atividade</param>
-        /// <param name="command">Objeto de alteração de AtividadeAlunos</param>
+        /// <param name="id">Id da alteração de atividade</param>
+        /// <param name="command">Objeto para alteração de Atividade de alunos</param>
         /// <returns>Retorna true ou false</returns>
         public Task<bool> UpdateAtividadeAluno(int id, AtividadeModel.CreateUpdateAtividadeAlunosCommand command)
         {
@@ -80,10 +79,10 @@ namespace WebApp.ApiClient
         #region Methods
 
         /// <summary>
-        /// Busca uma única Atividade
+        /// Busca por uma única Atividade
         /// </summary>
-        /// <param name="id">Id de Atividade a ser buscado</param>
-        /// <returns>Retorna o objeto de Atividade</returns>
+        /// <param name="id">Id da atividade a ser buscado</param>
+        /// <returns>Retorna o objeto da atividade</returns>
         public AtividadeDto GetAtividadeById(int id)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
@@ -92,9 +91,9 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
-        /// Busca todas as Atividade cadastradas
+        /// Busca todas as Atividades Cadastradas
         /// </summary>
-        /// <returns>Retorna a lista de Atividade</returns>
+        /// <returns>Retorna a lista de atividades</returns>
         public List<AtividadeDto> GetAtividadesAll()
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
@@ -103,11 +102,11 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
-        /// Busca lista de turmas pelo id da modalidade e id do profissional 
+        /// Busca a lista de turmas pelo Id da modalidade e ID do profissional
         /// </summary>
-        /// <param name="modalidadeId">Id da modalidade</param>
-        /// <param name="profissionalId">Id do profissional</param>
-        /// <returns>Retorna a Lista de turmas</returns>
+        /// <param name="modalidadeId">ID da modalidade</param>
+        /// <param name="profissionalId">ID do profissional</param>
+        /// <returns>Retorna a lista de turmas</returns>
         public List<AtividadeDto> GetTurmasByModalidadeIdProfissionalId(int modalidadeId, int profissionalId)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
@@ -116,10 +115,10 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
-        /// Busca Alunos por Id da atividade
+        /// Busca o alunos pelo ID da atividade
         /// </summary>
-        /// <param name="id">Id da atividade</param>
-        /// <returns>Retorna a Lista de Alunos </returns>
+        /// <param name="id">ID da atividade</param>
+        /// <returns>Retorna a lista de alunos</returns>
         public List<AtividadeAlunosDto> GetAtividadeAlunosByAtividadeId(int id)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
@@ -128,7 +127,7 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
-        /// Busca atividades por id da localidade
+        /// Busca a atividades pelo ID da localidade
         /// </summary>
         /// <param name="id">Id da localidade</param>
         /// <returns>Retorna a lista de atividades</returns>

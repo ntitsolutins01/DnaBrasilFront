@@ -13,9 +13,9 @@ namespace WebApp.ApiClient
         #region Main Methods
 
         /// <summary>
-        /// Inclusão da Linha de açao
+        /// Inclusão da Linha de Ação
         /// </summary>
-        /// <param name="command">Objeto de inclusão da Linha de açao</param>
+        /// <param name="command">Objeto de inclusão da Linha de Ação</param>
         /// <returns>Id de Linha de Açao inserido</returns>
         public Task<long> CreateLinhaAcao(LinhaAcaoModel.CreateUpdateLinhaAcaoCommand command)
         {
@@ -25,10 +25,10 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
-        /// Alteração da Linha de açao
+        /// Alteração da Linha de Ação
         /// </summary>
-        /// <param name="id">Id de alteração da linha de açao</param>
-        /// <param name="command">Objeto de alteração da Linha de açao</param>
+        /// <param name="id">Id de alteração da linha de Ação</param>
+        /// <param name="command">Objeto de alteração da Linha de Ação</param>
         /// <returns>Retorna true ou false</returns>
         public Task<bool> UpdateLinhaAcao(int id, LinhaAcaoModel.CreateUpdateLinhaAcaoCommand command)
         {
@@ -38,9 +38,9 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
-        /// Exclusão da linha de açao
+        /// Exclusão da linha de Ação
         /// </summary>
-        /// <param name="id">Id de exclusao da linha de açao</param>
+        /// <param name="id">Id de exclusão da linha de Ação</param>
         /// <returns>Retorna true ou false</returns>
         public Task<bool> DeleteLinhaAcao(int id)
         {
@@ -54,9 +54,9 @@ namespace WebApp.ApiClient
         #region Methods
 
         /// <summary>
-        /// Busca uma única Linha de açao
+        /// Busca uma única Linha de Ação
         /// </summary>
-        /// <param name="id">Id da Linha de açao a ser buscada</param>
+        /// <param name="id">Id da Linha de Ação a ser buscada</param>
         /// <returns>Retorna o objeto da Linha de Açao</returns>
         public LinhaAcaoDto GetLinhaAcaoById(int id)
         {
@@ -66,9 +66,9 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
-        /// busca todas as Linhas de Açoes cadastradas
+        /// Busca todas as Linhas de Ação cadastradas
         /// </summary>
-        /// <returns>Retorna a lista de Linha de Açao</returns>
+        /// <returns>Retorna a lista de Linha de Ação</returns>
         public List<LinhaAcaoDto> GetLinhasAcoesAll()
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,

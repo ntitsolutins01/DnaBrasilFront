@@ -66,7 +66,7 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
-        /// Busca todas as Dependencia cadastrados
+        /// Busca todas as Dependencias cadastrados
         /// </summary>
         /// <returns>Retorna a lista de Dependencia</returns>
         public List<DependenciaDto> GetDependenciasAll()

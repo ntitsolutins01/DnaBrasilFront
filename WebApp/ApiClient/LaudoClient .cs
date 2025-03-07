@@ -38,7 +38,7 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
-        /// Exclusao de laudo
+        /// Exclusão de laudo
         /// </summary>
         /// <param name="id">Id de exclusão de Laudo</param>
         /// <returns>Retorna true ou false</returns>
@@ -66,10 +66,10 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
-        /// busca todos os Laudo por Aluno
+        /// Busca todos os Laudo por Aluno
         /// </summary>
-        /// <param name="id">id que busca laudo por Aluno</param>
-        /// <returns>retorna a lista de Laudo por Aluno</returns>
+        /// <param name="id">Id que busca Laudo por Aluno</param>
+        /// <returns>Retorna a lista de Laudo por Aluno</returns>
         public LaudoDto GetLaudoByAluno(int id)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
@@ -93,8 +93,8 @@ namespace WebApp.ApiClient
         /// <summary>
         /// Busca Encaminhamento de Saúde por Id
         /// </summary>
-        /// <param name="id">id que busca Ecaminhamento de Saúde por id</param>
-        /// <returns>retorna a lista de Encaminhamento de Saúde por id</returns>
+        /// <param name="id">Id que busca Ecaminhamento de Saúde por id</param>
+        /// <returns>Retorna a lista de Encaminhamento de Saúde por id</returns>
         public EncaminhamentoDto GetEncaminhamentoBySaudeId(int id)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
@@ -117,7 +117,7 @@ namespace WebApp.ApiClient
         /// <summary>
         /// Busca Encaminhamento por Vocacional
         /// </summary>
-        /// <returns>retorna a lista de Encaminhamento Vocacional</returns>
+        /// <returns>Retorna a lista de Encaminhamento Vocacional</returns>
         public List<EncaminhamentoDto> GetEncaminhamentoByVocacional()
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
@@ -128,8 +128,8 @@ namespace WebApp.ApiClient
         /// <summary>
         /// Busca Desempenho por Aluno
         /// </summary>
-        /// <param name="id">id que busca Desempenho por Aluno</param>
-        /// <returns>retorna lista de Desempenho por Aluno</returns>
+        /// <param name="id">Id que busca Desempenho por Aluno</param>
+        /// <returns>Retorna lista de Desempenho por Aluno</returns>
         public DesempenhoDto GetDesempenhoByAluno(int id)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,

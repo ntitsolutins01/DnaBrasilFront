@@ -16,7 +16,6 @@ using Microsoft.AspNetCore.Authorization;
 using WebApp.Identity;
 using WebApp.Authorization;
 using Claim = WebApp.Identity.Claim;
-using WebApp.Authorization;
 
 namespace WebApp.Controllers
 {
@@ -44,8 +43,15 @@ namespace WebApp.Controllers
         }
         #endregion
 
-        #region Crud Methods
+        #region Main Methods
 
+        /// <summary>
+        /// Açao Responsavel por recuperar a lista de parceiro 
+        /// </summary>
+        /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+        /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+        /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
+        /// <returns></returns>
         [ClaimsAuthorize(ClaimType.SistemaSocioeconomico, Claim.Consultar)]
         public IActionResult Parceiro(int? crud, int? notify, string message = null)
         {
@@ -69,6 +75,13 @@ namespace WebApp.Controllers
 
         }
 
+        /// <summary>
+        /// Açao Responsavel por exibir a pagina de criacao de Parceiro 
+        /// </summary>
+        /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+        /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+        /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
+        /// <returns></returns>
         [ClaimsAuthorize(ClaimType.SistemaSocioeconomico, Claim.Incluir)]
         public ActionResult CreateParceiro(int? crud, int? notify, string message = null)
         {
@@ -94,6 +107,11 @@ namespace WebApp.Controllers
             }
         }
 
+        /// <summary>
+        /// Açao responsavel por processar a criaçao de um novo parceiro 
+        /// </summary>
+        /// <param name="collection">Coleção de dados do formulário enviados na requisição.</param>
+        /// <returns>Retorna para a página de parceiros após a criação</returns>
         [HttpPost]
         [ClaimsAuthorize(ClaimType.SistemaSocioeconomico, Claim.Incluir)]
         public async Task<ActionResult> Create(IFormCollection collection)
@@ -137,6 +155,11 @@ namespace WebApp.Controllers
             }
         }
 
+        /// <summary>
+        /// Método para editar as informações de um parceiro
+        /// </summary>
+        /// <param name="id">ID do parceiro que será editado</param>
+        /// <returns>Retorna a View com o modelo preenchido ou redireciona em caso de erro</returns>
         [ClaimsAuthorize(ClaimType.SistemaSocioeconomico, Claim.Alterar)]
         public async Task<ActionResult> EditParceiro(int id)
         {
@@ -160,6 +183,12 @@ namespace WebApp.Controllers
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="collection"></param>
+        /// <returns></returns>
         [HttpPost]
         [ClaimsAuthorize(ClaimType.SistemaSocioeconomico, Claim.Alterar)]
         public async Task<ActionResult> EditParceiro(int id, IFormCollection collection)
@@ -222,6 +251,11 @@ namespace WebApp.Controllers
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [ClaimsAuthorize(ClaimType.SistemaSocioeconomico, Claim.Excluir)]
         public ActionResult DeleteParceiro(int id)
         {
@@ -236,6 +270,11 @@ namespace WebApp.Controllers
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="collection"></param>
+        /// <returns></returns>
         [HttpPost]
         [ClaimsAuthorize(ClaimType.SistemaSocioeconomico, Claim.Habilitar)]
         public async Task<ActionResult> Habilitar(IFormCollection collection)
@@ -397,6 +436,7 @@ namespace WebApp.Controllers
 
             return View();
         }
+
         public async Task<IActionResult> SolicitacaoContato()
         {
             try
@@ -417,6 +457,7 @@ namespace WebApp.Controllers
 
             }
         }
+
         public IActionResult Details()
         {
             return View();

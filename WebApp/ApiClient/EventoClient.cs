@@ -80,10 +80,10 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
-        /// Busca todos as Fotos por Evento Id
+        /// Busca todos as Fotos por Id do Evento
         /// </summary>
         /// <param name="eventoId">Evento por id </param>
-        /// <returns>>Retorna o objeto de Fotos por Evento Id</returns>
+        /// <returns>>Retorna o objeto de Fotos por Id do Evento</returns>
         public List<FotoEventoDto> GetFotosAllByEventoId(int eventoId)
         {
 			var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,

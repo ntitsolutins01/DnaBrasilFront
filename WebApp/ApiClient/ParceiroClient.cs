@@ -29,7 +29,7 @@ namespace WebApp.ApiClient
         /// Alteração de Parceiro
         /// </summary>
         /// <param name="id">Id de alteração de Parceiro</param>
-        /// <param name="command">Objeto de alteração de Parceiro</param>
+        /// <param name="command">Objeto de alteração do Parceiro</param>
         /// <returns>Retorna true ou false</returns>
         public Task<bool> UpdateParceiro(int id, ParceiroModel.CreateUpdateParceiroCommand command)
         {
@@ -58,7 +58,7 @@ namespace WebApp.ApiClient
         /// Busca um único Parceiro
         /// </summary>
         /// <param name="id">Id de Parceiro a ser buscado</param>
-        /// <returns>Retorna o objeto de Parceiro</returns>
+        /// <returns>Retorna o objeto do Parceiro</returns>
         public async Task<ParceiroDto> GetParceiroById(int id)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
@@ -69,7 +69,7 @@ namespace WebApp.ApiClient
         /// <summary>
         /// Busca todos os Parceiros cadastrados
         /// </summary>
-        /// <returns>Retorna a lista de Parceiros</returns>
+        /// <returns>Retorna a lista de Parceiro</returns>
         public List<ParceiroDto> GetParceiroAll()
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
@@ -80,8 +80,8 @@ namespace WebApp.ApiClient
         /// <summary>
         /// Busca Parceiro por id de Usuário 
         /// </summary>
-        /// <param name="aspNetUserId">aspNetUserId</param>
-        /// <returns>retorna id de usuario</returns>
+        /// <param name="aspNetUserId">AspNetUserId</param>
+        /// <returns>Retorna id de usuario</returns>
         public ParceiroDto GetParceiroByAspNetUserId(string aspNetUserId)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,

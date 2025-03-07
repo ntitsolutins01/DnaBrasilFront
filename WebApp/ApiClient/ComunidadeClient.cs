@@ -56,7 +56,7 @@ namespace WebApp.ApiClient
         /// <summary>
         /// Busca uma única Comunidade
         /// </summary>
-        /// <param name="id">Id de comunidade a ser buscado</param>
+        /// <param name="id">Id de Comunidade a ser buscado</param>
         /// <returns>Retorna o objeto de Comunidade</returns>
         public ComunidadeDto GetComunidadeById(int id)
         {
@@ -66,7 +66,7 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
-        /// Busca todos as Comunidades cadastradas
+        /// Busca todas as Comunidades cadastradas
         /// </summary>
         /// <returns>Retorna a lista de Comunidade</returns>
         public List<ComunidadeDto> GetComunidadesAll()

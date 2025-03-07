@@ -55,7 +55,7 @@ namespace WebApp.ApiClient
         #region Methods
 
         /// <summary>
-        /// busca uma única Saúde
+        /// Busca uma única Saúde
         /// </summary>
         /// <param name="id">Id de Saúde a ser buscada</param>
         /// <returns>Retorna o objeto de Saúde</returns>

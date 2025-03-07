@@ -56,7 +56,7 @@ namespace WebApp.ApiClient
         /// <summary>
         ///  Busca Talento Esportivo de Aluno por Consulta
         /// </summary>
-        /// <param name="id">id de aluno por Consulta </param>
+        /// <param name="id">Id de aluno por Consulta </param>
         /// <returns>Retorna uma lista de Talento Esportivo</returns>
         public TalentoEsportivoDto GetTalentoEsportivoByAluno(int id)
         {

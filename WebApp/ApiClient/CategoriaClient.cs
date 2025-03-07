@@ -54,9 +54,9 @@ namespace WebApp.ApiClient
         #region Methods
 
         /// <summary>
-        /// Busca uma única Categoria
+        /// Buscar uma única Categoria
         /// </summary>
-        /// <param name="id">Id de Categoria a ser Buscado</param>
+        /// <param name="id">Id de Categoria a ser buscado</param>
         /// <returns>Retorna o objeto de Categoria</returns>
         public CategoriaDto GetCategoriaById(int id)
         {

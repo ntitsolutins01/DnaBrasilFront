@@ -13,10 +13,10 @@ namespace WebApp.ApiClient
         #region Main Methods
 
         /// <summary>
-        /// Inclusão de Tipo de Parceria
+        /// Inclusão do Tipo de Parceria
         /// </summary>
-        /// <param name="command">Objeto para inclusão de Tipo de Parceria</param>
-        /// <returns>Id de Tipo de Parceria inserido</returns>
+        /// <param name="command">Objeto para inclusão do Tipo de Parceria</param>
+        /// <returns>Id do Tipo de Parceria inserido</returns>
         public Task<long> CreateTipoParceria(TipoParceriaModel.CreateUpdateTipoParceriaCommand command)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
@@ -25,10 +25,10 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
-        ///  Alteração de Tipo de Parceria
+        ///  Alteração do Tipo de Parceria
         /// </summary>
-        /// <param name="id">Id de alteração de Tipo de Parceria</param>
-        /// <param name="command">Objeto de alteração de Tipo de Parceria</param>
+        /// <param name="id">Id de alteração do Tipo de Parceria</param>
+        /// <param name="command">Objeto de alteração do Tipo de Parceria</param>
         /// <returns>Retorna true ou false</returns>
         public Task<bool> UpdateTipoParceria(int id, TipoParceriaModel.CreateUpdateTipoParceriaCommand command)
         {
@@ -38,9 +38,9 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
-        /// Exclusão de Tipo de Parceria
+        /// Exclusão do Tipo de Parceria
         /// </summary>
-        /// <param name="id">Id de exclusão de Tipo de Parceria</param>
+        /// <param name="id">Id de exclusão do Tipo de Parceria</param>
         /// <returns>Retorna true ou false</returns>
         public Task<bool> DeleteTipoParceria(int id)
         {
@@ -56,8 +56,8 @@ namespace WebApp.ApiClient
         /// <summary>
         ///  Busca um único Tipo de Parceria
         /// </summary>
-        /// <param name="id">Id de Tipo de Parceria a ser buscado</param>
-        /// <returns>Retorna o objeto de Tipo de Parceria</returns>
+        /// <param name="id">Id do Tipo de Parceria a ser buscado</param>
+        /// <returns>Retorna o objeto do Tipo de Parceria</returns>
         public TipoParceriaDto GetTipoParceriaById(int id)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
@@ -66,9 +66,9 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
-        /// Busca todos os Tipo dfe Parceria cadastrados
+        /// Busca todos os Tipos de Parcerias cadastradas
         /// </summary>
-        /// <returns>Retorna a lista de Tipo de Parceria</returns>
+        /// <returns>Retorna a lista do Tipo de Parceria</returns>
         public List<TipoParceriaDto> GetTipoParceriaAll()
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,

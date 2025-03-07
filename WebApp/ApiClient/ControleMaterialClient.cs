@@ -13,10 +13,10 @@ namespace WebApp.ApiClient
         #region Main Methods
 
         /// <summary>
-        /// Inclusão Controle de Material
+        /// Inclusão do Controle de Material
         /// </summary>
-        /// <param name="command">Objeto de inclusão Controle de Material</param>
-        /// <returns>Id de Controle de Material inserido</returns>
+        /// <param name="command">Objeto de inclusão do Controle de Material</param>
+        /// <returns>Id do Controle de Material inserido</returns>
         public Task<long> CreateControleMaterial(ControleMaterialModel.CreateUpdateControleMaterialCommand command)
 		{
 			var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
@@ -25,11 +25,11 @@ namespace WebApp.ApiClient
 		}
 
         /// <summary>
-        /// Alteração Controle de Material
+        /// Alteração do Controle de Material
         /// </summary>
-        /// <param name="id">Id de alteração de Controle de Material</param>
-        /// <param name="command">Objeto de alteração Controle de Material</param>
-        /// <returns></returns>
+        /// <param name="id">Id de alteração do Controle de Material</param>
+        /// <param name="command">Objeto de alteração do Controle de Material</param>
+        /// <returns>Retorna  true false</returns>
         public Task<bool> UpdateControleMaterial(int id, ControleMaterialModel.CreateUpdateControleMaterialCommand command)
 		{
 			var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
@@ -38,9 +38,9 @@ namespace WebApp.ApiClient
 		}
 
         /// <summary>
-        /// Exclusão  Controle de Material
+        /// Exclusão do Controle de Material
         /// </summary>
-        /// <param name="id">Id de exclusao Controle de Material</param>
+        /// <param name="id">Id de exclusao do Controle de Material</param>
         /// <returns>Retorna true ou false</returns>
         public Task<bool> DeleteControleMaterial(int id)
 		{
@@ -56,8 +56,8 @@ namespace WebApp.ApiClient
         /// <summary>
         /// Busca um único Controle de Material
         /// </summary>
-        /// <param name="id">Id  Controle de Material a ser buscada</param>
-        /// <returns>Retorna o objeto de Controle de Material</returns>
+        /// <param name="id">Id do Controle de Material a ser buscada</param>
+        /// <returns>Retorna o objeto do Controle de Material</returns>
         public ControleMaterialDto GetControleMaterialById(int id)
 		{
 			var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
@@ -68,7 +68,7 @@ namespace WebApp.ApiClient
         /// <summary>
         /// Busca todos os Controles de Materiais cadastradas
         /// </summary>
-        /// <returns>Retorna a lista de Controle de Material</returns>
+        /// <returns>Retorna a lista do Controle de Material</returns>
         public List<ControleMaterialDto> GetControlesMateriaisAll()
 		{
 			var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,

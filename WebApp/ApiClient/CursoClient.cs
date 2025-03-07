@@ -15,7 +15,7 @@ namespace WebApp.ApiClient
         /// Inclusão de Curso
         /// </summary>
         /// <param name="command">Objeto para inclusão do Curso</param>
-        /// <returns>Id do curso inserido</returns>
+        /// <returns>Id do Curso inserido</returns>
         public Task<long> CreateCurso (CursoModel.CreateUpdateCursoCommand command)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
@@ -55,7 +55,7 @@ namespace WebApp.ApiClient
         /// <summary>
         /// Busca um único Curso
         /// </summary>
-        /// <param name="id">Id de Curso a ser buscado</param>
+        /// <param name="id">Id do Curso a ser buscado</param>
         /// <returns>Retorna o objeto de Curso</returns>
         public CursoDto GetCursoById(int id)
         {

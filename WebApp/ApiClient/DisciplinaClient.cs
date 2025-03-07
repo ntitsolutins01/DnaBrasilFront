@@ -39,7 +39,7 @@ namespace WebApp.ApiClient
         /// <summary>
         /// Exclusão de Disciplina
         /// </summary>
-        /// <param name="id">Id de exclusao da Disciplina</param>
+        /// <param name="id">Id de exclusão da Disciplina</param>
         /// <returns>Retorna true ou false</returns>
         public Task<bool> DeleteDisciplina(int id)
         {

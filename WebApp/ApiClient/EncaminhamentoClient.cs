@@ -40,7 +40,7 @@ namespace WebApp.ApiClient
         /// <summary>
         /// Exclusão de Encaminhamento
         /// </summary>
-        /// <param name="id">Id de exclusao da Encaminhamento</param>
+        /// <param name="id">Id de exclusão da Encaminhamento</param>
         /// <returns>Retorna true ou false</returns>
         public Task<bool> DeleteEncaminhamento(int id)
 		{

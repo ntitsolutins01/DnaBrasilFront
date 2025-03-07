@@ -12,7 +12,7 @@ namespace WebApp.ApiClient
         #region Main Methods
 
         /// <summary>
-        /// inclusão de Resposta
+        /// Inclusão de Resposta
         /// </summary>
         /// <param name="command">Objeto de inclusão de Resposta</param>
         /// <returns>Retorna o objeto de Resposta</returns>
@@ -37,7 +37,7 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
-        /// exclusão de Resposta
+        /// Exclusão de Resposta
         /// </summary>
         /// <param name="id">Id de exclusao de Resposta</param>
         /// <returns>Retorna true ou false</returns>

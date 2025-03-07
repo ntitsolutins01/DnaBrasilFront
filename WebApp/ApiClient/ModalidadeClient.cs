@@ -14,7 +14,7 @@ namespace WebApp.ApiClient
         #region Main Methods
 
         /// <summary>
-        /// Inclusão de Modalidade
+        /// Inclusão da Modalidade
         /// </summary>
         /// <param name="command">Objeto de inclusão da Modalidad</param>
         /// <returns>Id de Modalidade inserido</returns>
@@ -26,7 +26,7 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
-        /// Alteração de Modalidade
+        /// Alteração da Modalidade
         /// </summary>
         /// <param name="id">Id de alteração da Modalidade</param>
         /// <param name="command">Objeto de alteração da Modalidade</param>
@@ -39,9 +39,9 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
-        /// Exclusão de Modalidade
+        /// Exclusão da Modalidade
         /// </summary>
-        /// <param name="id">Id de exclusao da Modalidade</param>
+        /// <param name="id">Id de exclusão da Modalidade</param>
         /// <returns>Retorna true ou false</returns>
         public Task<bool> DeleteModalidade(int id)
         {
@@ -78,7 +78,7 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
-        /// Busca todas as modalidades por linha de ação
+        /// Busca todas as Modalidades por Linha de Ação
         /// </summary>
         /// <param name="id">Id da linha de ação a ser buscada</param>
         /// <returns>Retorna a Lista de Modalidades</returns>
@@ -91,7 +91,7 @@ namespace WebApp.ApiClient
 
 
         /// <summary>
-        /// busca uma lista de modalidades por ProfissionalId
+        /// Busca Modalidades pelo Id do Profissional
         /// </summary>
         /// <param name="id">Id do profissional a ser buscado</param>
         /// <returns>Retorna a lista de Modalidades</returns>
