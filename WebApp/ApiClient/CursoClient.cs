@@ -86,6 +86,18 @@ namespace WebApp.ApiClient
                 $"{ResourceCurso}/TipoCurso/{tipoCursoId}"));
             return Get<List<CursoDto>>(requestUrl);
         }
+        
+        /// <summary>
+        /// Busca todos os Cursos por AlunoId 
+        /// </summary>
+        /// <param name="tipoCursoId">Id do  curso</param>
+        /// <returns>Retorna a lista por Curso</returns>
+        public List<CursoDto> GetCursosByAlunoId(int alunoId)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceCurso}/Aluno/{alunoId}"));
+            return Get<List<CursoDto>>(requestUrl);
+        }
 
         #endregion
     }

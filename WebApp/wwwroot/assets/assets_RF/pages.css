@@ -1,0 +1,245 @@
+.newContainer {
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    background: white;
+    overflow: hidden;
+}
+
+/* Header do relatório */
+.report-header {
+    width: 100%;
+    height: 100px;
+    background: linear-gradient(107deg, #455e9f 0%, #3ea7b4 100%);
+    padding: 10px 40px;
+    position: relative;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+/* Logo */
+.report-logo {
+    width: 130px;
+    height: 81px;
+    background: url('/assets/images/logo2.png') no-repeat center center;
+    background-size: cover;
+    position: absolute;
+    top: 10px;
+    left: 40px;
+}
+
+/* Título do relatório */
+.report-title {
+    position: absolute;
+    top: 16px;
+    right: 120px;
+    text-align: right;
+    color: white;
+}
+
+.report-title-small {
+    display: block;
+    font-size: 18px;
+    font-weight: normal;
+    margin-bottom: 5px;
+}
+
+.report-title-large {
+    display: block;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+/* Ícone do relatório */
+.report-icon {
+    width: 70px;
+    height: 70px;
+    background: url('/assets/images/relatorio.png') no-repeat center center;
+    background-size: cover;
+    position: absolute;
+    top: 15px;
+    right: 40px;
+}
+
+/* Seção de informações */
+.info-section {
+    width: 100%;
+    min-height: 180px;
+    background: #f4f4f4;
+    position: relative;
+    padding: 15px;
+    display: flex;
+    gap: 20px;
+}
+
+/* Container principal de informações */
+.info-main {
+    display: flex;
+    gap: 30px;
+    flex: 1;
+}
+
+/* Container do perfil */
+.profile-side {
+    width: 120px;
+    display: flex;
+    align-items: center;
+}
+
+.avatar-image {
+    width: 120px;
+    height: 150px;
+    object-fit: cover;
+    border: 1px solid #adadad;
+}
+
+/* Informações do aluno */
+.student-info {
+    flex: 1;
+    max-width: 600px;
+}
+
+.info-row {
+    display: flex;
+    padding: 8px 0;
+    border-bottom: 1px solid #adadad;
+}
+
+.info-label {
+    width: 180px;
+    color: #666;
+    font-size: 15px;
+    text-transform: uppercase;
+}
+
+.info-value {
+    color: #333;
+    font-size: 15px;
+    font-weight: 400;
+}
+
+/* Container direito (tabela e info da turma) */
+.right-container {
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Tabela de Status */
+.status-table {
+    width: 100%;
+    border: 1px solid #adadad;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.status-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.status-table th {
+    background: #e7e6e6;
+    padding: 10px 10px;
+    text-align: left;
+    font-weight: bold;
+    color: #333;
+    border-bottom: 1px solid #adadad;
+    font-size: 15px;
+}
+
+.status-table td {
+    padding: 8px 10px;
+    border-bottom: 1px solid #adadad;
+    color: #444;
+    font-size: 15px;
+}
+
+.status-table tr:last-child td {
+    border-bottom: none;
+}
+
+.status-table th:not(:last-child),
+.status-table td:not(:last-child) {
+    border-right: 1px solid #adadad;
+}
+
+/* Container da série/turma */
+.class-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 5px;
+    margin-top: auto;
+}
+
+.serie-info,
+.turma-info {
+    font-size: 15px;
+    color: #333;
+}
+
+.serie-label,
+.turma-label {
+    font-weight: bold;
+}
+
+/* Seção da tabela de frequência */
+.frequency-section {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.frequency-table {
+    width: 100%;
+    border: 1px solid #adadad;
+    border-radius: 4px;
+    overflow: hidden;
+    background: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.frequency-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.frequency-table th {
+    background: #eeeded;
+    padding: 12px 15px;
+    text-align: left;
+    font-weight: bold;
+    color: #333;
+    border-bottom: 1px solid #adadad;
+    font-size: 15px;
+    white-space: nowrap;
+}
+
+.frequency-table td {
+    padding: 10px 15px;
+    border-bottom: 1px solid #adadad;
+    color: #444;
+    font-size: 15px;
+}
+
+.frequency-table tr:last-child td {
+    border-bottom: none;
+}
+
+.frequency-table tr:hover {
+    background-color: #f8f8f8;
+}
+
+.frequency-table th:not(:last-child),
+.frequency-table td:not(:last-child) {
+    border-right: 1px solid #adadad;
+}
+
+/* Ajuste responsivo para garantir que a tabela não quebre em telas menores */
+@media print {
+    .frequency-table {
+        page-break-inside: avoid;
+        box-shadow: none;
+    }
+}

@@ -51,6 +51,39 @@ var vm = new Vue({
                 }
 
                 //clique de escolha do select
+                $("#ddlFomento").change(function () {
+
+                    self.ShowLoad(true, "pFiltro");
+
+                    var url = "../../Localidade/GetLocalidadeByMunicipio";
+
+                    var ddlSource = "#ddlFomento";
+
+                    $.getJSON(url,
+                        { id: $(ddlSource).val() },
+                        function (data) {
+                            if (data.length > 0) {
+                                var items = '<option value="">Selecionar Localidade</option>';
+                                $("#ddlLocalidade").empty;
+                                $.each(data,
+                                    function (i, row) {
+                                        items += "<option value='" + row.value + "'>" + row.text + "</option>";
+                                    });
+                                $("#ddlLocalidade").html(items);
+                            }
+                            else {
+                                new PNotify({
+                                    title: 'Usuario',
+                                    text: data,
+                                    type: 'warning'
+                                });
+                            }
+                        });
+
+                    self.ShowLoad(false, "pFiltro");
+                });
+
+                //clique de escolha do select
                 $("#ddlEstado").change(function () {
 
                     self.ShowLoad(true, "pFiltro");
@@ -120,6 +153,7 @@ var vm = new Vue({
                     self.ShowLoad(false, "pFiltro");
                 });
 
+                //clique de escolha do select
                 $("#ddlLocalidade").change(function () {
                     var id = $("#ddlLocalidade").val();
 

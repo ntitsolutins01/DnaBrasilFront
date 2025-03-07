@@ -11,14 +11,12 @@ namespace WebApp.Models
         }
         public CertificadoDto Certificado { get; set; }
         public List<CertificadoDto> Certificados { get; set; }
-        public string TipoCursosId { get; set; }
-        public SelectList ListTipoCursos { get; set; }
-        public string CursoId { get; set; }
-        public SelectList ListCursos { get; set; }
+        public string FomentoId { get; set; }
+        public SelectList ListFomentos { get; set; }
         public class CreateUpdateCertificadoCommand
         {
             public int Id { get; set; }
-            public int CursoId { get; set; }
+            public int FomentoId { get; set; }
             public string ImagemFrente { get; set; }
             public string? ImagemVerso { get; set; }
             public string NomeImagemFrente { get; set; }

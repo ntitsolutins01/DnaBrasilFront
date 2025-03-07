@@ -70,11 +70,11 @@ namespace WebApp.ApiClient
         /// </summary>
         /// <param name="alunoId">Id do Aluno</param>
         /// <returns>Retorna a lista de Controle de Presença</returns>
-        public List<ControlePresencaDto> GetControlePresencaByAlunoId(int alunoId)
+        public List<ControlePresencaAlunoDto> GetControlePresencaByAlunoId(int alunoId)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
                 $"{ResourceControlesPresencas}/Aluno/{alunoId}"));
-            return Get<List<ControlePresencaDto>>(requestUrl);
+            return Get<List<ControlePresencaAlunoDto>>(requestUrl);
         }
 
         /// <summary>

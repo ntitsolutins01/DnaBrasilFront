@@ -108,6 +108,46 @@
         window.open(`/Aluno/ImprimirCarteirinhasLote?${queryString}`, '_blank');
     }
 
+    function handleA4Print(e) {
+        if (e) {
+            e.preventDefault();
+        }
+
+        const selectedIds = getSelectedIds();
+        const hasFilters = hasSelectedFilters();
+        const fomentoId = $('#ddlFomento').val();
+
+        if (!fomentoId) {
+            new PNotify({
+                title: 'Atenção',
+                text: 'Por favor, selecione o Fomento antes de realizar a impressão em formato A4.',
+                type: 'warning'
+            });
+            return;
+        }
+
+        if (!hasFilters && selectedIds.length === 0) {
+            new PNotify({
+                title: 'Atenção',
+                text: 'Por favor, selecione alguns alunos ou aplique filtros para impressão em formato A4.',
+                type: 'warning'
+            });
+            return;
+        }
+
+        const filters = getSelectedFilters();
+        let queryString = Object.entries(filters)
+            .filter(([_, value]) => value !== '')
+            .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
+            .join('&');
+
+        if (selectedIds.length > 0) {
+            queryString += (queryString ? '&' : '') + 'ids=' + selectedIds.join(',');
+        }
+
+        window.open(`/Aluno/ImprimirCarteirinhasA4?${queryString}`, '_blank');
+    }
+
     $(function () {
         datatableInit();
 
@@ -117,11 +157,17 @@
             e.preventDefault();
             handleBatchPrint(e);
         });
+
+        $('#btnImprimirA4').on('click', function (e) {
+            e.preventDefault();
+            handleA4Print(e);
+        });
     });
 
     window.tableUtils = {
         getSelectedIds: getSelectedIds,
-        handleBatchPrint: handleBatchPrint
+        handleBatchPrint: handleBatchPrint,
+        handleA4Print: handleA4Print
     };
         function getUrlParameters() {
         const queryString = window.location.search;

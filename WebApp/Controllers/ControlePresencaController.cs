@@ -72,6 +72,7 @@ namespace WebApp.Controllers
 
                 _logger.Info($"Busca Usuario por AspNetUserId: {userId}");
 
+                var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentosAll(), "Id", "Nome");
                 if (userId == null)
                 {
                     _logger.Warn($"AspNetUserId não encontrado para o email: {User.Identity.Name}");
@@ -250,7 +251,7 @@ namespace WebApp.Controllers
 				};
 
                 var possuiPrecensa = ApiClientFactory.Instance.GetControlePresencaByAlunoId(Convert.ToInt32(command.AlunoId))
-                    .Where(x=>x.Data == DateTime.Now.ToString("dd/MM/yyyy") && x.EventoId == null);
+                    .Where(x=>x.ControlesPresencas.FirstOrDefault().Data == DateTime.Now.ToString("dd/MM/yyyy") && x.ControlesPresencas.FirstOrDefault().EventoId == null);
 
                 if (possuiPrecensa.Any())
                 {
@@ -352,5 +353,40 @@ namespace WebApp.Controllers
 
         #endregion
 
+    
+
+        /// <summary>
+        /// Tela para impressao de relatório de frequência individual
+        /// </summary>
+        /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
+        /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
+        /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+        [ClaimsAuthorize(ClaimType.ControlePresenca, Claim.Incluir)]
+        public ActionResult ImprimirFrequencia(int id, int mes)
+        {
+            var result = ApiClientFactory.Instance.GetControlePresencaById(id);
+
+            var model = new ControlePresencaModel()
+            {
+                ControlePresenca = new ControlePresencaDto
+                {
+                    Id = result.Id,
+                    AlunoId = result.AlunoId,
+                    EventoId = result.EventoId,
+                    NomeAluno = result.NomeAluno,
+                    Controle = result.Controle,
+                    Justificativa = result.Justificativa,
+                    MunicipioEstado = result.MunicipioEstado,
+                    NomeLocalidade = result.NomeLocalidade,
+                    Data = result.Data,
+                    LocalidadeId = result.LocalidadeId,
+                    MunicipioId = result.MunicipioId,
+                    Status = result.Status,
+                    Mes = mes,
+                }
+            };
+
+            return View("ImprimirFrequencia", model);
+        }
     }
 }

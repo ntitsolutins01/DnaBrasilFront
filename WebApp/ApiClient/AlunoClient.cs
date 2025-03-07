@@ -25,6 +25,30 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
+        /// Inclusão de AlunoCurso
+        /// </summary>
+        /// <param name="command">Objeto para inclusão de AlunoCurso</param>
+        /// <returns>Id de AlunoCurso inserido</returns>
+        public Task<long> CreateAlunoCursos(AlunoModel.CreateUpdateAlunoCursoCommand command)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceAlunos}/Cursos"));
+            return Post(requestUrl, command);
+        }
+
+        /// <summary>
+        /// Inclusão de AlunoCertificado
+        /// </summary>
+        /// <param name="command">Objeto para inclusão de AlunoCertificado</param>
+        /// <returns>Id de AlunoCertificado inserido</returns>
+        public Task<long> CreateAlunoCertificados(AlunoModel.CreateUpdateAlunoCertificadoCommand command)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceAlunos}/Certificados"));
+            return Post(requestUrl, command);
+        }
+
+        /// <summary>
         /// Alteração do Aluno
         /// </summary>
         /// <param name="id">ID da alteração do Aluno</param>
