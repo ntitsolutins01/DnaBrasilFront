@@ -166,7 +166,7 @@
 
                 var id = $("#ddlLocalidade").val();
 
-                var url = "../../Aluno/GetAlunosByLocalidade?id=" + id;
+                var url = "../../Aluno/GetAlunosByLocalidadeId?id=" + id;
 
                 var ddlSource = "#ddlAluno";
 

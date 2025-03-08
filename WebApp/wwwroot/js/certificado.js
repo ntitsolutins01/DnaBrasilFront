@@ -130,8 +130,12 @@ var vm = new Vue({
                 self.editDto.HtmlVerso= result.data.htmlVerso;
                 self.editDto.Status = result.data.status;
 
-                self.editDto.NomeImagemFrente = result.data.nomeImagemFrente;
-                self.editDto.NomeImagemVerso = result.data.nomeImagemVerso;
+                self.editDto.ImagemFrente = "\\Certificados\\" + result.data.imagemFrente;
+                if (result.data.imagemVerso && result.data.imagemVerso.includes("\Certificados")) {
+                    self.editDto.ImagemVerso = "\\Certificados\\" + result.data.imagemVerso;
+                } else {
+                    self.editDto.ImagemVerso = null;
+                }
 
 
             }).catch(error => {
@@ -150,11 +154,11 @@ var vm = new Vue({
                 self.editDto.HtmlVerso = result.data.htmlVerso;
                 self.editDto.Status = result.data.status;
 
-                self.editDto.NomeImagemFrente = "\Certificados" + result.data.nomeImagemFrente.split("\Certificados")[1];
-                if (result.data.nomeImagemVerso && result.data.nomeImagemVerso.includes("\Certificados")) {
-                    self.editDto.NomeImagemVerso = "\Certificados" + result.data.nomeImagemVerso.split("\Certificados")[1];
+                self.editDto.ImagemFrente = "\\Certificados\\" + result.data.imagemFrente;
+                if (result.data.imagemVerso && result.data.imagemVerso.includes("\Certificados")) {
+                    self.editDto.ImagemVerso = "\\Certificados\\" + result.data.imagemVerso;
                 } else {
-                    self.editDto.NomeImagemVerso = null;
+                    self.editDto.ImagemVerso = null;
                 }
 
 

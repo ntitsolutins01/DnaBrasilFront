@@ -1,4 +1,5 @@
 @using System.Globalization
+@using Microsoft.IdentityModel.Tokens
 @model LaudoModel
 @{
     ViewData["Title"] = "Laudo Detalhado";
@@ -238,7 +239,16 @@
                                                         <tbody>
                                                             <tr class="d-flex">
                                                                 <th class="text col-md-3 col-6" style="font-weight: bold;">Modalidade</th>
-                                                                <td class="text-center">@Model.Modalidade.Nome</td>
+                                                                <td class="text-center">
+                                                                    @if (Model.Modalidade == null)
+                                                                    {
+                                                                        <text>Não Definido</text>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <text>@Model.Modalidade.Nome</text>
+                                                                    }
+                                                                </td>
                                                             </tr>
                                                         </tbody>
                                                     </table>

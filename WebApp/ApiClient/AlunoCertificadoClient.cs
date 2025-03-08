@@ -13,17 +13,7 @@ namespace WebApp.ApiClient
 
         #region Main Methods
 
-        /// <summary>
-        /// Inclusão de AlunoCertificado
-        /// </summary>
-        /// <param name="command">Objeto para inclusão de AlunoCertificado</param>
-        /// <returns>Id de AlunoCertificado inserido</returns>
-        public Task<long> CreateAlunoCertificado (AlunoCursoCertificadoModel.CreateUpdateAlunoCertificadoCommand command)
-        {
-            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceAlunoCertificado }"));
-            return Post(requestUrl, command);
-        }
+        
 
         /// <summary>
         /// Alteração de AlunoCertificado
