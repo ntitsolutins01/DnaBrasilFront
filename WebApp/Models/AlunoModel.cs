@@ -32,7 +32,19 @@ namespace WebApp.Models
         public string SexoId { get; set; }
         public string? NomePerfil { get; set; }
         public AlunosFilterDto SearchFilter { get; set; }
-        public ModeloCarteirinhaDto ModeloCarteirinha { get; set; } 
+        public ModeloCarteirinhaDto ModeloCarteirinha { get; set; }
+        public AtividadeDto Atividade { get; set; }
+        public List<AtividadeDto> Atividades { get; set; }
+        public int EstruturaId { get; set; }
+        public SelectList ListEstruturas { get; set; }
+        public int LinhaAcaoId { get; set; }
+        public SelectList ListLinhasAcoes { get; set; }
+        public int AtividadeModalidadeId { get; set; }
+        public SelectList ListAtividadesModalidades { get; set; }
+        public int CategoriaId { get; set; }
+        public SelectList ListCategorias { get; set; }
+        public int ProfessorProfissionalId { get; set; }
+        public SelectList ListProfessoresProfissionais { get; set; }
 
         public class CreateUpdateDadosAlunoCommand
         {
@@ -71,6 +83,17 @@ namespace WebApp.Models
             public bool? CopiaDocAlunoResponsavel { get; set; } = false;
             public int? FomentoId { get; set; }
             public bool? Convidado { get; set; } = false;
+        }
+        public class CreateUpdateAlunoCursoCommand
+        {
+            public required int AlunoId { get; set; }
+            public required string CursosId { get; set; }
+        }
+
+        public class CreateUpdateAlunoCertificadoCommand
+        {
+            public required int AlunoId { get; set; }
+            public required string CertificadosId { get; set; }
         }
     }
 
