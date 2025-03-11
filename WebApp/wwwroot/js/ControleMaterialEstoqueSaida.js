@@ -79,12 +79,15 @@
 
                 //Açao de seleçao de valor na combo primaria para preencher a combo secundára
                 $("#ddlTipoMaterial").change(function () {
-                    var tipoMaterialId = $("#ddlTipoMaterial").val();
 
-                    var url = "../Material/GetMateriaisByTipoMaterialId";
+                    self.ShowLoad(true, "pFiltro");
+
+                    var url = "../../Material/GetMateriaisByTipoMaterialId";
+
+                    var ddlSource = "#ddlTipoMaterial";
 
                     $.getJSON(url,
-                        { id: tipoMaterialId },
+                        { id: $(ddlSource).val() },
                         function (data) {
                             if (data.length > 0) {
                                 var items = '<option value="">Selecionar Material</option>';
@@ -98,11 +101,13 @@
                             else {
                                 new PNotify({
                                     title: 'Material',
-                                    text: 'Materiais não encontrados.',
+                                    text: data,
                                     type: 'warning'
                                 });
                             }
                         });
+
+                    self.ShowLoad(false, "pFiltro");
                 });
 
                 $("#formControleMaterialEstoqueSaida").validate({

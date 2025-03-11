@@ -220,7 +220,7 @@ public class MaterialController : BaseController
     {
         try
         {
-            if (string.IsNullOrEmpty(id)) throw new Exception("Material não informado.");
+            if (string.IsNullOrEmpty(id)) throw new Exception("Tipo de Material não informado.");
             var resultLocal = ApiClientFactory.Instance.GetMateriaisByTipoMaterialId(Convert.ToInt32(id));
 
             return Task.FromResult(Json(new SelectList(resultLocal, "Id", "Descricao")));
