@@ -4,8 +4,12 @@
     ViewData["Title"] = "Log out";
 }
 
+
+
 <header>
-    <h1>@ViewData["Title"]</h1>
+    <link rel="stylesheet" href="~/assets/logout/logout.css" />
+
+    
     @{
         if (User.Identity?.IsAuthenticated ?? false)
         {
@@ -15,7 +19,22 @@
         }
         else
         {
-            <p>You have successfully logged out of the application.</p>
+            <div id="conteiner">
+                <img src="~/assets/logout/dna.svg" id="logo" alt="logo da empresa" />
+            </div>
+            <div id="icone-conteiner">
+                <img src="~/assets/logout/logout.svg" id="icone" alt="Ícone de logout" />
+                <div>
+                    <h1 id="texto-menusuperior">Sessão encerrada</h1>
+                    <p id="texto-menuinferior">
+                        Sua sessão foi encerrada com sucesso. Obrigado por usar nossos
+                        serviços!
+                    </p>
+                </div>
+                <div id="area-botao">
+                    <button id="botao">Voltar à Página Inicial</button>
+                </div>
+            </div>
         }
     }
 </header>
