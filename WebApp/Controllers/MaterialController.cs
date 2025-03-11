@@ -48,16 +48,10 @@ public class MaterialController : BaseController
         SetNotifyMessage(notify, message);
         SetCrudMessage(crud);
 
-        var searchFilter = new MateriaisFilterDto
-        {
-            Id = collection["material"].ToString(),
-            NomeMaterial = collection["nomeMaterial"].ToString(),
-            TipoMaterialId = collection["ddlTipoMaterial"].ToString(),
-        };
-        var result = await ApiClientFactory.Instance.GetMateriaisByFilter(searchFilter);
-
-        var tiposMateriais = new SelectList(ApiClientFactory.Instance.GetTiposMateriaisAll(), "Id", "Nome");
-
+        var localidades = new SelectList(ApiClientFactory.Instance.GetLocalidadeAll(), "Id", "Nome");
+        var gruposMateriais = new SelectList(ApiClientFactory.Instance.GetGruposMateriaisAll(), "Id", "Nome");
+        //var tiposMateriais = new SelectList(ApiClientFactory.Instance.GetTiposMateriaisAll(), "Id", "Nome");
+        
         List<SelectListDto> list = new List<SelectListDto>
         {
             new() { IdNome = "CAIXA", Nome = "CAIXA" },
@@ -72,9 +66,20 @@ public class MaterialController : BaseController
 
         var undMedidas = new SelectList(list, "IdNome", "Nome");
 
+        var searchFilter = new MateriaisFilterDto
+        {
+            Id = collection["material"].ToString(),
+            LocalidadeId = collection["ddlLocalidade"].ToString(),
+            NomeMaterial = collection["nomeMaterial"].ToString(),
+            GrupoMaterialId = collection["ddlGrupoMaterial"].ToString(),
+            TipoMaterialId = collection["ddlTipoMaterial"].ToString(),
+        };
+        var result = await ApiClientFactory.Instance.GetMateriaisByFilter(searchFilter);
+
         var model = new MaterialModel
         {
-            ListTiposMateriais = tiposMateriais,
+            ListLocalidades = localidades,
+            ListGruposMateriais = gruposMateriais,
             ListUnidadesMedidas = undMedidas,
             Materiais = result.Materiais,
             SearchFilter = searchFilter
@@ -97,7 +102,7 @@ public class MaterialController : BaseController
             SetNotifyMessage(notify, message);
             SetCrudMessage(crud);
             var localidades = new SelectList(ApiClientFactory.Instance.GetLocalidadeAll(), "Id", "Nome");
-            var tipoMateriais = new SelectList(ApiClientFactory.Instance.GetTiposMateriaisAll(), "Id", "Nome");
+            var gruposMateriais = new SelectList(ApiClientFactory.Instance.GetGruposMateriaisAll(), "Id", "Nome");
 
             List<SelectListDto> list = new List<SelectListDto>
             {
@@ -116,7 +121,7 @@ public class MaterialController : BaseController
             return View(new MaterialModel()
             {
                 ListLocalidades = localidades,
-                ListTiposMateriais = tipoMateriais,
+                ListGruposMateriais = gruposMateriais,
                 ListUnidadesMedidas = undMedidas
             });
         }

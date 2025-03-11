@@ -2,7 +2,7 @@
     el: "#vMaterial",
     data: {
         loading: false,
-        editDto: { Id: "", Descricao: "", UnidadeMedida: "", QtdAdquirida: "" }
+        editDto: { Id: "", GrupoMaterialId: "", TipoMaterialId: "", LocalidadeId: "", Descricao: "", UnidadeMedida: "", QtdAdquirida: "" }
     },
     mounted: function () {
         var self = this;
@@ -45,7 +45,7 @@
                 });
             }
 
-            if (formid === "formMaterial") {
+            if (formid === "formMaterial" || formid === "formPesquisarMaterial") {
 
                 //skin select
                 var $select = $(".select2").select2({
@@ -70,6 +70,38 @@
 
                 $select.on('change', function () {
                     $(this).trigger('blur');
+                });
+
+                $("#ddlGrupoMaterial").change(function () {
+
+                    self.ShowLoad(true, "pFiltro");
+
+                    var url = "../../TipoMaterial/GetTiposMateriaisByGrupoMaterialId";
+
+                    var ddlSource = "#ddlGrupoMaterial";
+
+                    $.getJSON(url,
+                        { id: $(ddlSource).val() },
+                        function (data) {
+                            if (data.length > 0) {
+                                var items = '<option value="">Selecionar Tipo Material</option>';
+                                $("#ddlTipoMaterial").empty;
+                                $.each(data,
+                                    function (i, row) {
+                                        items += "<option value='" + row.value + "'>" + row.text + "</option>";
+                                    });
+                                $("#ddlTipoMaterial").html(items);
+                            }
+                            else {
+                                new PNotify({
+                                    title: 'Tipo de Material',
+                                    text: data,
+                                    type: 'warning'
+                                });
+                            }
+                        });
+
+                    self.ShowLoad(false, "pFiltro");
                 });
 
                 $("#formMaterial").validate({
