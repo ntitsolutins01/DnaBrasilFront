@@ -96,6 +96,7 @@ public class MaterialController : BaseController
         {
             SetNotifyMessage(notify, message);
             SetCrudMessage(crud);
+            var localidades = new SelectList(ApiClientFactory.Instance.GetLocalidadeAll(), "Id", "Nome");
             var tipoMateriais = new SelectList(ApiClientFactory.Instance.GetTiposMateriaisAll(), "Id", "Nome");
 
             List<SelectListDto> list = new List<SelectListDto>
@@ -114,6 +115,7 @@ public class MaterialController : BaseController
 
             return View(new MaterialModel()
             {
+                ListLocalidades = localidades,
                 ListTiposMateriais = tipoMateriais,
                 ListUnidadesMedidas = undMedidas
             });
@@ -139,6 +141,7 @@ public class MaterialController : BaseController
         {
             var command = new MaterialModel.CreateUpdateMaterialCommand
             {
+                LocalidadeId = Convert.ToInt32(collection["ddlLocalidade"].ToString()),
                 TipoMaterialId = Convert.ToInt32(collection["ddlTipoMaterial"].ToString()),
                 UnidadeMedida = collection["ddlUnidadeMedida"].ToString(),
                 QtdAdquirida = 0,

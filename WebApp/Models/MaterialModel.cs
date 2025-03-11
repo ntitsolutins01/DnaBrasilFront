@@ -14,6 +14,9 @@ namespace WebApp.Models
         public List<TipoMaterialDto> TiposMateriais { get; set; }
         public SelectList ListTiposMateriais { get; set; }
         public int TipoMaterialId { get; set; }
+        public List<LocalidadeDto> Localidades { get; set; }
+        public SelectList ListLocalidades { get; set; }
+        public int LocalidadeId { get; set; }
         public SelectList ListUnidadesMedidas { get; set; }
         public int UnidadeId { get; set; }
         public MateriaisFilterDto SearchFilter { get; set; }
@@ -21,6 +24,7 @@ namespace WebApp.Models
         public class CreateUpdateMaterialCommand
         {
             public int Id { get; set; }
+            public int LocalidadeId { get; set; }
             public int TipoMaterialId { get; set; }
             public string UnidadeMedida { get; set; }
             public string Descricao { get; set; }
