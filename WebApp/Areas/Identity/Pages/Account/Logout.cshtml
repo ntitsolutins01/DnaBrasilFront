@@ -26,7 +26,7 @@
                 </div>
                 <div id="area-botao">
                     <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
-                        <button type="submit" id="botao" class="nav-link btn btn-link text-dark">Click here to Logout</button>
+                        <button type="submit" id="botao" class="nav-link btn btn-link text-dark">Sair da Conta</button>
                     </form>
                 </div>
             </div>
@@ -46,7 +46,7 @@
                     </p>
                 </div>
                 <div id="area-botao">
-                    <button id="botao">Voltar à Página Inicial</button>
+                    <button onclick="window.location.href='/'" id="botao">Voltar à Página Inicial</button>
                 </div>
             </div>
         }
