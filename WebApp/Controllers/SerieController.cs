@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using log4net;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
 using WebApp.Configuration;
 using WebApp.Dto;
@@ -18,6 +20,7 @@ namespace WebApp.Controllers
         #region Parametros
 
         private readonly IOptions<UrlSettings> _appSettings;
+        private readonly ILog _logger;
 
         #endregion
 
@@ -27,9 +30,11 @@ namespace WebApp.Controllers
         /// Construtor da página
         /// </summary>
         /// <param name="appSettings">configurações de urls do sistema</param>
-        public SerieController(IOptions<UrlSettings> appSettings)
+        public SerieController(IOptions<UrlSettings> appSettings,
+            ILog logger)
         {
             _appSettings = appSettings;
+            _logger = logger;
             ApplicationSettings.WebApiUrl = _appSettings.Value.WebApiBaseUrl;
         }
 
@@ -63,10 +68,29 @@ namespace WebApp.Controllers
         //[ClaimsAuthorize("ConfiguracaoSistema", "Incluir")]
         public ActionResult Create(int? crud, int? notify, string message = null)
         {
-            SetNotifyMessage(notify, message);
-            SetCrudMessage(crud);
+            try
+            {
+                _logger.Info($"SerieController - Create");
 
-            return View();
+                SetNotifyMessage(notify, message);
+                SetCrudMessage(crud);
+
+                var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome");
+                var etapas = new SelectList(ApiClientFactory.Instance.GetEtapasEnsinoAll(), "Id", "Nome");
+
+                var model = new SerieModel()
+                {
+                    ListEstados = estados,
+                    ListEtapas = etapas
+                };
+
+                return View(model);
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e.StackTrace);
+                return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = e.Message });
+            }
         }
 
         /// <summary>
@@ -160,7 +184,4 @@ namespace WebApp.Controllers
     }
 
     #endregion
-
-
-
 }

@@ -401,10 +401,10 @@ namespace WebApp.Controllers
         {
             try
             {
-                var municipioId = ApiClientFactory.Instance.GetParceiroByAspNetUserId(User.FindFirstValue(ClaimTypes.NameIdentifier)).MunicipioId;
+                
 
                 var alunos = await ApiClientFactory.Instance.GetAlunosByFilter(new AlunosFilterDto()
-                    { MunicipioId = municipioId.ToString() });
+                    { MunicipioId = "5570" });
 
                 var model = new ParceiroModel() { Alunos = alunos!.Alunos! };
 

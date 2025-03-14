@@ -66,13 +66,12 @@ namespace WebApp.Controllers
 
                 SetNotifyMessage(notify, message);
                 SetCrudMessage(crud);
-                
+
                 //Busca usuario por AspNetUserId
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
                 _logger.Info($"Busca Usuario por AspNetUserId: {userId}");
 
-                var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentosAll(), "Id", "Nome");
                 if (userId == null)
                 {
                     _logger.Warn($"AspNetUserId não encontrado para o email: {User.Identity.Name}");
@@ -81,7 +80,7 @@ namespace WebApp.Controllers
 
                 var usu = await ApiClientFactory.Instance.GetUsuarioByAspNetUserId(userId);
 
-                //var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentoAll(), "Id", "Nome");
+                var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentosAll(), "Id", "Nome");
                 var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome", usu.Uf);
 
                 SelectList municipios = null;
@@ -95,12 +94,14 @@ namespace WebApp.Controllers
 
                 if (usu.MunicipioId != null)
                 {
-                    var resultLocalidades = ApiClientFactory.Instance.GetLocalidadeByMunicipio(usu.MunicipioId.ToString());
+                    var resultLocalidades = ApiClientFactory.Instance.GetLocalidadeByMunicipioId(usu.MunicipioId.ToString());
 
                     localidades = new SelectList(resultLocalidades, "Id", "Nome", usu.LocalidadeId);
                 }
 
                 SelectList alunos = null;
+
+                SelectList modalidades = null;
 
                 SelectList profissionais = null;
 
@@ -108,9 +109,13 @@ namespace WebApp.Controllers
                 {
                     var resultAlunos = ApiClientFactory.Instance.GetAlunosByLocalidadeId(Convert.ToInt32(usu.LocalidadeId));
 
-                    alunos =  new SelectList(resultAlunos, "Id", "Nome");
+                    alunos = new SelectList(resultAlunos, "Id", "Nome");
 
                     var listAtividades = await ApiClientFactory.Instance.GetAtividadeByLocalidadeId(Convert.ToInt32(usu.LocalidadeId));
+
+                    modalidades = new SelectList(listAtividades.Select(s => new { Id = s.ModalidadeId, Nome = s.NomeModalidade }).ToList(), "Id", "Nome");
+
+                    //var profissional = await ApiClientFactory.Instance.GetPro
 
                     profissionais = new SelectList(ApiClientFactory.Instance.GetProfissionaisByLocalidade(Convert.ToInt32(usu.LocalidadeId)), "Id", "Nome");
                 }
@@ -139,12 +144,13 @@ namespace WebApp.Controllers
 
                 var model = new ControlePresencaModel()
                 {
-                    //ListFomentos = fomentos,
+                    ListFomentos = fomentos,
                     ListEstados = estados,
                     ListMunicipios = municipios!,
                     ListLocalidades = localidades!,
                     ListAlunos = alunos,
                     ControlesPresencas = response.ControlesPresencas,
+                    ListAtividadesModalidades = modalidades,
                     ListProfissionais = profissionais!
 
                 };
@@ -194,7 +200,7 @@ namespace WebApp.Controllers
 
                 if (usu.MunicipioId != null)
                 {
-                    var resultLocalidades = ApiClientFactory.Instance.GetLocalidadeByMunicipio(usu.MunicipioId.ToString());
+                    var resultLocalidades = ApiClientFactory.Instance.GetLocalidadeByMunicipioId(usu.MunicipioId.ToString());
 
                     localidades = new SelectList(resultLocalidades, "Id", "Nome", usu.LocalidadeId);
                 }
@@ -251,7 +257,7 @@ namespace WebApp.Controllers
 				};
 
                 var possuiPrecensa = ApiClientFactory.Instance.GetControlePresencaByAlunoId(Convert.ToInt32(command.AlunoId))
-                    .Where(x=>x.ControlesPresencas.FirstOrDefault().Data == DateTime.Now.ToString("dd/MM/yyyy") && x.ControlesPresencas.FirstOrDefault().EventoId == null);
+                    .Where(x=>x.ControlesPresencas.FirstOrDefault().Data == DateTime.Now.ToString("dd/MM/yyyy") && x.ControlesPresencas.FirstOrDefault()?.EventoId == null);
 
                 if (possuiPrecensa.Any())
                 {

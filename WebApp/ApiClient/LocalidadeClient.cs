@@ -80,7 +80,7 @@ namespace WebApp.ApiClient
         /// </summary>
         /// <param name="id">Id de Localidade por Municipio</param>
         /// <returns>retorna uma lista de Localidade</returns>
-        public List<LocalidadeDto> GetLocalidadeByMunicipio(string id)
+        public List<LocalidadeDto> GetLocalidadeByMunicipioId(string id)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
                 $"{ResourceLocalidade}/Municipio/{id}"));

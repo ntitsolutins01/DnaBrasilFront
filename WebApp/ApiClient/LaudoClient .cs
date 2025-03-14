@@ -126,6 +126,30 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
+        /// Busca Encaminhamento de Consumo Alimentar por id
+        /// </summary>
+        /// <param name="id">Id que busca Encaminhamento de Consumo Alimentar por id</param>
+        /// <returns>retorna a lista de Encaminhamento de Consumo Alimentar por id</returns>
+        public EncaminhamentoDto GetEncaminhamentoByConsumoAlimentarId(int id)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceLaudo}/Encaminhamento/ConsumoAlimentar/{id}"));
+            return Get<EncaminhamentoDto>(requestUrl);
+        }
+
+        /// <summary>
+        /// Busca Encaminhamento de Saude Bucal por id
+        /// </summary>
+        /// <param name="id">Id que busca Encaminhamento de Saude Bucal por id</param>
+        /// <returns>retorna a lista de Encaminhamento de Saude Bucal por id</returns>
+        public EncaminhamentoDto GetEncaminhamentoBySaudeBucalId(int id)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceLaudo}/Encaminhamento/SaudeBucal/{id}"));
+            return Get<EncaminhamentoDto>(requestUrl);
+        }
+
+        /// <summary>
         /// Busca Desempenho por Aluno
         /// </summary>
         /// <param name="id">id que busca Desempenho por Aluno</param>

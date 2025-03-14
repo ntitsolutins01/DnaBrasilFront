@@ -163,7 +163,7 @@ namespace WebApp.Controllers
             try
             {
                 if (string.IsNullOrEmpty(id)) throw new Exception("Município não informado.");
-                var resultLocal = ApiClientFactory.Instance.GetLocalidadeByMunicipio(id);
+                var resultLocal = ApiClientFactory.Instance.GetLocalidadeByMunicipioId(id);
 
                 return Task.FromResult(Json(new SelectList(resultLocal, "Id", "Nome")));
 

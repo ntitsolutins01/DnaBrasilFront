@@ -369,7 +369,7 @@ public class EventoController : BaseController
 
             if (collection["alunoConvidadoEvento"] == "A")
             {
-                var possuiPrecensa = ApiClientFactory.Instance.GetControlePresencaByAlunoId(Convert.ToInt32(command.AlunoId)).Where(x => x.ControlesPresencas.FirstOrDefault().Data == DateTime.Now.ToString("dd/MM/yyyy"));
+                var possuiPrecensa = ApiClientFactory.Instance.GetControlePresencaByAlunoId(Convert.ToInt32(command.AlunoId)).Where(x => x.ControlesPresencas.FirstOrDefault()?.Data == DateTime.Now.ToString("dd/MM/yyyy"));
 
                 if (possuiPrecensa.Any())
                 {
