@@ -63,6 +63,7 @@
     height: 95px;
     object-fit: contain;
     display: block;
+    margin-left: 1rem;
 }
 
 /* Info Section */
