@@ -61,7 +61,7 @@ namespace WebApp.Controllers
 
             if (!string.IsNullOrEmpty(dashboardEad.LocalidadeId))
             {
-                localidades = new SelectList(ApiClientFactory.Instance.GetLocalidadeByMunicipio(dashboardEad.MunicipioId), "Id", "Nome", dashboardEad.LocalidadeId);
+                localidades = new SelectList(ApiClientFactory.Instance.GetLocalidadeByMunicipioId(dashboardEad.MunicipioId), "Id", "Nome", dashboardEad.LocalidadeId);
             }
 
             var model = new DashboardEadModel

@@ -74,6 +74,8 @@ namespace WebApp.Controllers
                 _logger.Info($"GetUsuarioByEmail");
                 var usu = await ApiClientFactory.Instance.GetUsuarioByEmail(usuario);
 
+                var possuiFoto = collection["possuiFoto"].ToString();
+
                 var searchFilter = new AlunosFilterDto
                 {
                     FomentoId = collection["ddlFomento"].ToString(),
@@ -85,7 +87,8 @@ namespace WebApp.Controllers
                     Etnia = collection["ddlEtnia"].ToString(),
                     Sexo = collection["ddlSexo"].ToString(),
                     Nome = collection["nome"].ToString(),
-                    Matricula = collection["matricula"].ToString()
+                    Matricula = collection["matricula"].ToString(),
+                    PossuiFoto = possuiFoto != "",
                 };
 
                 _logger.Info($"GetAlunosByFilter");
@@ -172,7 +175,7 @@ namespace WebApp.Controllers
 
                 if (usu.MunicipioId != null)
                 {
-                    var resultLocalidades = ApiClientFactory.Instance.GetLocalidadeByMunicipio(usu.MunicipioId.ToString());
+                    var resultLocalidades = ApiClientFactory.Instance.GetLocalidadeByMunicipioId(usu.MunicipioId.ToString());
 
                     if (resultLocalidades != null)
                         localidades = new SelectList(resultLocalidades, "Id", "Nome", usu.LocalidadeId);
@@ -261,7 +264,7 @@ namespace WebApp.Controllers
                 var aluno = await ApiClientFactory.Instance.GetAlunoById(id);
                 var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome", aluno.Estado);
                 var municipios = new SelectList(ApiClientFactory.Instance.GetMunicipiosByUf(aluno.Estado!), "Id", "Nome", aluno.MunicipioId);
-                var localidades = new SelectList(ApiClientFactory.Instance.GetLocalidadeByMunicipio(aluno.MunicipioId.ToString()), "Id", "Nome", aluno.LocalidadeId);
+                var localidades = new SelectList(ApiClientFactory.Instance.GetLocalidadeByMunicipioId(aluno.MunicipioId.ToString()), "Id", "Nome", aluno.LocalidadeId);
                 var profissionais = new SelectList(ApiClientFactory.Instance.GetProfissionaisByLocalidade(Convert.ToInt32(aluno.LocalidadeId)), "Id", "Nome", aluno.ProfissionalId);
                 var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentosAll(), "Id", "Nome", aluno.FomentoId);
                 var deficiencias = new SelectList(ApiClientFactory.Instance.GetDeficienciaAll(), "Id", "Nome", aluno.DeficienciaId); 
@@ -877,7 +880,7 @@ namespace WebApp.Controllers
                 var aluno = await ApiClientFactory.Instance.GetAlunoById(id);
                 var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome", aluno.Estado);
                 var municipios = new SelectList(ApiClientFactory.Instance.GetMunicipiosByUf(aluno.Estado!), "Id", "Nome", aluno.MunicipioId);
-                var localidades = new SelectList(ApiClientFactory.Instance.GetLocalidadeByMunicipio(aluno.MunicipioId.ToString()), "Id", "Nome", aluno.LocalidadeId);
+                var localidades = new SelectList(ApiClientFactory.Instance.GetLocalidadeByMunicipioId(aluno.MunicipioId.ToString()), "Id", "Nome", aluno.LocalidadeId);
                 var profissionais = new SelectList(ApiClientFactory.Instance.GetProfissionaisByLocalidade(Convert.ToInt32(aluno.LocalidadeId)), "Id", "Nome", aluno.ProfissionalId);
                 var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentosAll(), "Id", "Nome", aluno.FomentoId);
                 var deficiencias = new SelectList(ApiClientFactory.Instance.GetDeficienciaAll(), "Id", "Nome", aluno.DeficienciaId);
@@ -1022,7 +1025,7 @@ namespace WebApp.Controllers
                 _logger.Info($"Busca de alunos por localidade GetAlunosByLocalidadeId: {id}");
 
                 if (string.IsNullOrEmpty(id)) throw new Exception("Localidade não informada.");
-                var resultLocal = ApiClientFactory.Instance.GetAlunosByLocalidadeId(Convert.ToInt32(id));
+                var resultLocal = await ApiClientFactory.Instance.GetNomeAlunosByLocalidadeId(Convert.ToInt32(id));
 
                 return new JsonResult(new SelectList(resultLocal, "Id", "Nome"));
 

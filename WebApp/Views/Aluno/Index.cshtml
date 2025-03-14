@@ -46,10 +46,11 @@
                                 <option value="">Selecionar Localidade</option>
                             </select>
                         </div>
+                        
                         <label class="col-sm-2 control-label">Profissional:</label>
                         <div class="col-md-4 form-group">
                             <select class="form-control populate select2" name="ddlProfissional" id="ddlProfissional"
-                                    title="Por favor informe o profissional." required style="width:100%"
+                                    title="Por favor informe o profissional." style="width:100%"
                                     asp-for="ProfissionalId" asp-items="Model.ListProfissionais">
                                 <option value="">Selecionar Profissional</option>
                             </select>
@@ -88,6 +89,12 @@
                             <input type="text" name="matricula" id="matricula" class="form-control" placeholder="Insira Matricula"
                                    maxlength="60"
                                    title="Por favor informe a matricula." />
+                        </div>
+                        <label class="col-sm-2 control-label text-sm-right pt-2">Possui Foto: </label>
+                        <div class="col-md-1">
+                            <div class="switch switch-sm switch-primary">
+                                <input type="checkbox" id="possuiFoto" name="possuiFoto" data-plugin-ios-switch />
+                            </div>
                         </div>
                     </div>
                     <footer class="panel-footer">
