@@ -1121,8 +1121,8 @@
                             <div class="container-2-saude">
                                 <div class="container-icon-saude">
                                     <div class="circle-saude" style="background-color: #68D061"></div>
-                                    <div class="icon-saude"
-                                         style="background-image: url('/assets/assets_Laudo/laudo-vocacao-1.png'); background-size: cover;">
+                                    <div class="icon-vocacao"
+                                         style="background-image: url('/assets/assets_Laudo/img-vida/laudo-vida-4.png'); background-size: cover;">
                                     </div>
                                 </div>
                                 <div class="container-3-saude">
@@ -1224,32 +1224,12 @@
                                     var base64 = Convert.ToBase64String(Model.EncaminhamentoSaudeBucal.ByteImage);
                                     var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
 
-                                    <img src="@imgSrc" style="width:100%;" />
-                                    @* <div class="icon-saude"
-                                         style="background-image: url('/assets/assets_Laudo/laudo-vocacao-1.png'); background-size: cover;"> *@
+                                    <img src="@imgSrc" class="icon-bucal" />
                                 }
                                 else
                                 {
-                                    <div class="icon-saude"
-                                         style="background-image: url('/assets/assets_Laudo/laudo-vocacao-1.png'); background-size: cover;">
-                                    </div>
+                                    <img src="~/assets/assets_Laudo/img-saude-bucal/warning-5-64.png" class="icon-bucal" />
                                 }
-                            </div>
-                            <div class="label-vida-container-1"
-                                 style="background-color: #5B5C9C;">
-                                <div class="label-vida-icon" style="background-size: cover;">
-                                    @if (Model.EncaminhamentoSaudeBucal.ByteImage != null)
-                                    {
-                                        var base64 = Convert.ToBase64String(Model.EncaminhamentoSaudeBucal.ByteImage);
-                                        var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
-
-                                        <img src="@imgSrc" style="width:100%;" />
-                                    }
-                                    else
-                                    {
-                                        <img src="~/assets/assets_Laudo/img-vocacao/laudo-vocacao-1.png" style="width:100%;" />
-                                    }
-                                </div>
                             </div>
                             <div class="container-3-saude">
                                 <span>
