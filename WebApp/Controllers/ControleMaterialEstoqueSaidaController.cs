@@ -107,24 +107,22 @@ public class ControleMaterialEstoqueSaidaController : BaseController
             {
                 MunicipioId = Convert.ToInt32(collection["ddlMunicipio"].ToString()),
                 LocalidadeId = Convert.ToInt32(collection["ddlLocalidade"].ToString()),
-                MaterialId = Convert.ToInt32(collection["ddlMaterial"].ToString()),
+                InventarioId = Convert.ToInt32(collection["ddlInventario"].ToString()),
                 Quantidade = quantidade,
                 Solicitante = collection["solicitante"].ToString()
             };
 
-            var material = 
-                ApiClientFactory.Instance.GetMaterialById(Convert.ToInt32(collection["ddlMaterial"].ToString()));
+            var inventario = 
+                ApiClientFactory.Instance.GetInventarioById(Convert.ToInt32(collection["ddlInventario"].ToString()));
 
-            var command1 = new MaterialModel.CreateUpdateMaterialCommand
+            var command1 = new InventarioModel.CreateUpdateInventarioCommand
             {
-                Id = material.Id,
-                UnidadeMedida = material.UnidadeMedida,
-                Descricao = material.Descricao,
-                QtdAdquirida = material.QtdAdquirida + quantidade
+                Id = inventario.Id,
+                Quantidade = inventario.Quantidade + quantidade
             };
 
             await ApiClientFactory.Instance.CreateControleMaterialEstoqueSaida(command0);
-            await ApiClientFactory.Instance.UpdateMaterial(material.Id ,command1);
+            await ApiClientFactory.Instance.UpdateInventario(inventario.Id ,command1);
 
             return RedirectToAction(nameof(Index), new { crud = (int)EnumCrud.Created });
         }
@@ -176,24 +174,22 @@ public class ControleMaterialEstoqueSaidaController : BaseController
             var controleSaida =
                 ApiClientFactory.Instance.GetControleMaterialEstoqueSaidaById(id);
 
-            var material =
-                ApiClientFactory.Instance.GetMaterialById(controleSaida.MaterialId);
+            var inventario =
+                ApiClientFactory.Instance.GetInventarioById(controleSaida.InventarioId);
 
-            var command = new MaterialModel.CreateUpdateMaterialCommand
+            var command = new InventarioModel.CreateUpdateInventarioCommand
             {
-                Id = material.Id,
-                UnidadeMedida = material.UnidadeMedida,
-                Descricao = material.Descricao,
-                QtdAdquirida = material.QtdAdquirida - controleSaida.Quantidade
+                Id = inventario.Id,
+                Quantidade = inventario.Quantidade - controleSaida.Quantidade
             };
 
-            ApiClientFactory.Instance.UpdateMaterial(material.Id, command);
+            ApiClientFactory.Instance.UpdateInventario(inventario.Id, command);
             ApiClientFactory.Instance.DeleteControleMaterialEstoqueSaida(id);
             return RedirectToAction(nameof(Index), new { crud = (int)EnumCrud.Deleted });
         }
         catch (Exception e)
         {
-            return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = "Este grupo de material não pode ser excluído pois possui aulas vinculadas a ele." });
+            return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = "Este grupo de inventario não pode ser excluído pois possui aulas vinculadas a ele." });
         }
     }
 

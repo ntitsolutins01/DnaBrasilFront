@@ -48,7 +48,6 @@ public class MaterialController : BaseController
         SetNotifyMessage(notify, message);
         SetCrudMessage(crud);
 
-        var localidades = new SelectList(ApiClientFactory.Instance.GetLocalidadeAll(), "Id", "Nome");
         var gruposMateriais = new SelectList(ApiClientFactory.Instance.GetGruposMateriaisAll(), "Id", "Nome");
         //var tiposMateriais = new SelectList(ApiClientFactory.Instance.GetTiposMateriaisAll(), "Id", "Nome");
         
@@ -69,7 +68,6 @@ public class MaterialController : BaseController
         var searchFilter = new MateriaisFilterDto
         {
             Id = collection["material"].ToString(),
-            LocalidadeId = collection["ddlLocalidade"].ToString(),
             NomeMaterial = collection["nomeMaterial"].ToString(),
             GrupoMaterialId = collection["ddlGrupoMaterial"].ToString(),
             TipoMaterialId = collection["ddlTipoMaterial"].ToString(),
@@ -78,7 +76,6 @@ public class MaterialController : BaseController
 
         var model = new MaterialModel
         {
-            ListLocalidades = localidades,
             ListGruposMateriais = gruposMateriais,
             ListUnidadesMedidas = undMedidas,
             Materiais = result.Materiais,
@@ -101,7 +98,6 @@ public class MaterialController : BaseController
         {
             SetNotifyMessage(notify, message);
             SetCrudMessage(crud);
-            var localidades = new SelectList(ApiClientFactory.Instance.GetLocalidadeAll(), "Id", "Nome");
             var gruposMateriais = new SelectList(ApiClientFactory.Instance.GetGruposMateriaisAll(), "Id", "Nome");
 
             List<SelectListDto> list = new List<SelectListDto>
@@ -120,7 +116,6 @@ public class MaterialController : BaseController
 
             return View(new MaterialModel()
             {
-                ListLocalidades = localidades,
                 ListGruposMateriais = gruposMateriais,
                 ListUnidadesMedidas = undMedidas
             });
@@ -146,10 +141,8 @@ public class MaterialController : BaseController
         {
             var command = new MaterialModel.CreateUpdateMaterialCommand
             {
-                LocalidadeId = Convert.ToInt32(collection["ddlLocalidade"].ToString()),
                 TipoMaterialId = Convert.ToInt32(collection["ddlTipoMaterial"].ToString()),
                 UnidadeMedida = collection["ddlUnidadeMedida"].ToString(),
-                QtdAdquirida = 0,
                 Descricao = collection["descricao"].ToString()
             };
 
@@ -182,8 +175,7 @@ public class MaterialController : BaseController
             {
                 Id = Convert.ToInt32(collection["editMaterialId"]),
                 UnidadeMedida = collection["ddlUnidadeMedida"].ToString(),
-                Descricao = collection["descricao"].ToString(),
-                QtdAdquirida = material.QtdAdquirida
+                Descricao = collection["descricao"].ToString()
             };
 
             await ApiClientFactory.Instance.UpdateMaterial(command.Id, command);

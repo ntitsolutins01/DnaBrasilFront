@@ -2,7 +2,7 @@
     el: "#vMaterial",
     data: {
         loading: false,
-        editDto: { Id: "", GrupoMaterialId: "", TipoMaterialId: "", LocalidadeId: "", Descricao: "", UnidadeMedida: "", QtdAdquirida: "" }
+        editDto: { Id: "", GrupoMaterialId: "", TipoMaterialId: "", Descricao: "", UnidadeMedida: "", QtdAdquirida: "" }
     },
     mounted: function () {
         var self = this;

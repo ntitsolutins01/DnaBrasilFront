@@ -5,27 +5,27 @@ namespace WebApp.ApiClient
 {
     public partial class DnaApiClient
     {
-        private const string ResourceMaterial = "Materiais";
+        private const string ResourceInventario = "Inventarios";
 
         #region Main Methods
 
-        public Task<long> CreateMaterial(MaterialModel.CreateUpdateMaterialCommand command)
+        public Task<long> CreateInventario(InventarioModel.CreateUpdateInventarioCommand command)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceMaterial}"));
+                $"{ResourceInventario}"));
             return Post(requestUrl, command);
         }
-        public Task<bool> UpdateMaterial(int id, MaterialModel.CreateUpdateMaterialCommand command)
+        public Task<bool> UpdateInventario(int id, InventarioModel.CreateUpdateInventarioCommand command)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceMaterial}/{id}"));
+                $"{ResourceInventario}/{id}"));
             return Put(requestUrl, command);
         }
 
-        public Task<bool> DeleteMaterial(int id)
+        public Task<bool> DeleteInventario(int id)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceMaterial}/{id}"));
+                $"{ResourceInventario}/{id}"));
             return Delete<bool>(requestUrl);
         }
 
@@ -33,28 +33,28 @@ namespace WebApp.ApiClient
 
         #region Methods
 
-        public MaterialDto GetMaterialById(int id)
+        public InventarioDto GetInventarioById(int id)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceMaterial}/{id}"));
-            return Get<MaterialDto>(requestUrl);
+                $"{ResourceInventario}/{id}"));
+            return Get<InventarioDto>(requestUrl);
         }
-        public List<MaterialDto> GetMateriaisAll()
+        public List<InventarioDto> GetInventariosAll()
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceMaterial}"));
-            return Get<List<MaterialDto>>(requestUrl);
+                $"{ResourceInventario}"));
+            return Get<List<InventarioDto>>(requestUrl);
         }
-        public List<MaterialDto> GetMateriaisByTipoMaterialId(int tipoMaterialId)
+        public List<InventarioDto> GetInventariosByMaterialId(int materialId)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceMaterial}/TipoMaterial/{tipoMaterialId}"));
-            return Get<List<MaterialDto>>(requestUrl);
+                $"{ResourceInventario}/Material/{materialId}"));
+            return Get<List<InventarioDto>>(requestUrl);
         }
-        public Task<MateriaisFilterDto?> GetMateriaisByFilter(MateriaisFilterDto searchFilter)
+        public Task<InventariosFilterDto?> GetInventariosByFilter(InventariosFilterDto searchFilter)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceMaterial}/Filter"));
+                $"{ResourceInventario}/Filter"));
             return GetFiltro(requestUrl, searchFilter);
         }
         #endregion
