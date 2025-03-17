@@ -1,13 +1,13 @@
-﻿@model MaterialModel
+﻿@model InventarioModel
 @{
-    ViewData["Title"] = "Inclusão de Material";
+    ViewData["Title"] = "Inclusão de Inventario";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div id="vMaterial">
+<div id="vInventario">
     <div class="row">
         <div class="col-md-12">
-            @using (@Html.BeginForm("Create", "Material", FormMethod.Post, new { id = "formMaterial", @class = "form-horizontal" }))
+            @using (@Html.BeginForm("Create", "Inventario", FormMethod.Post, new { id = "formInventario", @class = "form-horizontal" }))
 
             {
                 <section class="panel">
@@ -16,49 +16,54 @@
                             <a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
                         </div>
 
-                        <h2 class="panel-title">Cadastro de Material</h2>
+                        <h2 class="panel-title">Cadastro de Inventario</h2>
                     </header>
                     <div class="panel-body">
                         <div class="form-group row">
-                            <label class="col-sm-3 control-label text-sm-right pt-2">Grupo de Material <span class="required">*</span></label>
+                            <label class="col-sm-3 control-label text-sm-right pt-2">Localidade <span class="required">*</span></label>
                             <div class="col-sm-4">
+                                <select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade" style="width:100%"
+                                        required title="Por favor selecione a localidade. "
+                                        asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
+                                    <option value="">Selecionar Localidade</option>
+                                </select>
+                            </div>
+                            <label class="col-sm-1 control-label text-sm-right pt-2">Quantidade </label>
+                            <div class="col-sm-4">
+                                <input type="text" id="quantidade" name="quantidade" class="form-control" maxlength="10"/>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 control-label text-sm-right pt-2">Grupo de Material <span class="required">*</span></label>
+                            <div class="col-sm-2">
                                 <select class="form-control populate select2" name="ddlGrupoMaterial" id="ddlGrupoMaterial" style="width:100%"
                                         required title="Por favor selecione o grupo de material. "
                                         asp-for="GrupoMaterialId" asp-items="Model.ListGruposMateriais">
                                     <option value="">Selecionar Grupo de Material</option>
                                 </select>
                             </div>
-                            <label class="col-sm-1 control-label text-sm-right pt-2">Tipo de Material <span class="required">*</span></label>
-                            <div class="col-sm-4">
+                            <label class="col-sm-2 control-label text-sm-right pt-2">Tipo de Material <span class="required">*</span></label>
+                            <div class="col-sm-2">
                                 <select class="form-control populate select2" name="ddlTipoMaterial" id="ddlTipoMaterial" style="width:100%"
                                         required title="Por favor selecione o tipo de material. "
                                         asp-for="TipoMaterialId" asp-items="Model.ListTiposMateriais">
                                     <option value="">Selecionar Tipo de Material</option>
                                 </select>
                             </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-1 control-label text-sm-right pt-2">Unidade de Medida <span class="required">*</span></label>
-                            <div class="col-sm-4">
-                                <select class="form-control populate select2" name="ddlUnidadeMedida" id="ddlUnidadeMedida" style="width:100%"
-                                        required title="Por favor selecione a unidade de medida. "
-                                        asp-for="UnidadeId" asp-items="Model.ListUnidadesMedidas">
-                                    <option value="">Selecionar Unidade de Medida</option>
+                            <label class="col-sm-2 control-label text-sm-right pt-2">Material <span class="required">*</span></label>
+                            <div class="col-sm-2">
+                                <select class="form-control populate select2" name="ddlMaterial" id="ddlMaterial" style="width:100%"
+                                        required title="Por favor selecione o material. "
+                                        asp-for="MaterialId" asp-items="Model.ListMateriais">
+                                    <option value="">Selecionar Material</option>
                                 </select>
                             </div>
                         </div>
-	                    <div class="form-group">
-                            <label class="col-sm-3 control-label text-sm-right pt-2">Descrição <span class="required">*</span></label>
-		                    <div class="col-sm-9">
-                                <input type="text" id="descricao" name="descricao" class="form-control" maxlength="150"
-                                       title="Por favor informe a descrição." required />
-		                    </div>
-	                    </div>
                     </div>
                     <footer class="panel-footer">
                         <div class="row">
                             <div class="col-md-9 col-md-offset-3">
-                                <a href="@Url.Action("Index", "Material")" class="btn btn-dark pull-right" style="margin-left: 5px;margin-right: 5px;"><i class="fa fa-reply"></i> &nbsp;&nbsp;Voltar</a>
+                                <a href="@Url.Action("Index", "Inventario")" class="btn btn-dark pull-right" style="margin-left: 5px;margin-right: 5px;"><i class="fa fa-reply"></i> &nbsp;&nbsp;Voltar</a>
                                 <button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;"><i class="fa fa-remove"></i> &nbsp;&nbsp;Cancelar</button>
                                 <button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
                             </div>
@@ -77,7 +82,7 @@
     <script src="~/assets/vendor/select2/js/select2.js"></script>
     <script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
     <script src="~/assets/vendor/jquery-mask/jquery.mask.js"></script>
-    <script src="~/js/Material.js"></script>
+    <script src="~/js/Inventario.js"></script>
     <script>
 
         (function ($) {
@@ -87,19 +92,19 @@
 
             if (crud === 1) {
                 new PNotify({
-                    title: 'Material',
+                    title: 'Inventario',
                     text: 'Cadastro realizado com sucesso!',
                     type: 'success'
                 });
             } else if (crud === 2) {
                 new PNotify({
-                    title: 'Material',
+                    title: 'Inventario',
                     text: 'Dados alterados com sucesso.',
                     type: 'warning'
                 });
             } else if (crud === 3) {
                 new PNotify({
-                    title: 'Material',
+                    title: 'Inventario',
                     text: 'Registro excluído com sucesso.',
                     type: 'error'
                 });
@@ -110,19 +115,19 @@
 
             if (notify === 0) {
                 new PNotify({
-                    title: 'Material',
+                    title: 'Inventario',
                     text: messagem,
                     type: 'success'
                 });
             } else if (notify === 1) {
                 new PNotify({
-                    title: 'Material',
+                    title: 'Inventario',
                     text: messagem,
                     type: 'warning'
                 });
             } else if (notify === 2) {
                 new PNotify({
-                    title: 'Material',
+                    title: 'Inventario',
                     text: messagem,
                     type: 'error'
                 });

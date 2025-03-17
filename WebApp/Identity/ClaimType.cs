@@ -32,6 +32,6 @@ namespace WebApp.Identity
         public const string TipoMaterial = "TipoMaterial";
         public const string Material = "Material";
         public const string ControleMaterialEstoqueSaida = "ControleMaterialEstoqueSaida";
-        public const string ControleMensalEstoque = "ControleMensalEstoque";
+        public const string Inventario = "Inventario";
     }
 }

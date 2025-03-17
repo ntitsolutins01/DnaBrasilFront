@@ -7,6 +7,5 @@
         public required string TituloTipoMaterial { get; set; }
         public required string UnidadeMedida { get; set; }
         public required string Descricao { get; set; }
-        public int? QtdAdquirida { get; set; }
     }
 }

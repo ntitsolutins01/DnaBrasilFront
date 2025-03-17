@@ -14,10 +14,10 @@ namespace WebApp.Models
         public List<TipoMaterialDto> TiposMateriais { get; set; }
         public SelectList ListTiposMateriais { get; set; }
         public int TipoMaterialId { get; set; }
-        public MaterialDto Material { get; set; }
-        public List<MaterialDto> Materiais { get; set; }
-        public SelectList ListMateriais { get; set; }
-        public int MaterialId { get; set; }
+        public InventarioDto Inventario { get; set; }
+        public List<InventarioDto> Inventarios { get; set; }
+        public SelectList ListInventarios { get; set; }
+        public int InventarioId { get; set; }
         public string EstadoId { get; set; }
         public SelectList ListEstados { get; set; }
         public SelectList ListMunicipios { get; set; }
@@ -32,7 +32,7 @@ namespace WebApp.Models
             public int Id { get; set; }
             public int MunicipioId { get; set; }
             public int LocalidadeId { get; set; }
-            public int MaterialId { get; set; }
+            public int InventarioId { get; set; }
             public  int Quantidade { get; set; }
             public string? Solicitante { get; set; }
         }
