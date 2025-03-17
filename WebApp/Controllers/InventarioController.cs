@@ -243,23 +243,7 @@ public class InventarioController : BaseController
         }
         catch (Exception e)
         {
-            return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = "Erro ao excluir registro." });
-        }
-    }
-
-    public Task<JsonResult> GetInventariosByMaterialId(string id)
-    {
-        try
-        {
-            if (string.IsNullOrEmpty(id)) throw new Exception("Tipo de Inventario não informado.");
-            var resultLocal = ApiClientFactory.Instance.GetInventariosByMaterialId(Convert.ToInt32(id));
-
-            return Task.FromResult(Json(new SelectList(resultLocal, "Id", "Descricao")));
-
-        }
-        catch (Exception ex)
-        {
-            return Task.FromResult(Json(ex.Message));
+            return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = "Esse registro não pode ser excluido pois possui arquivos." });
         }
     }
 
@@ -301,6 +285,38 @@ public class InventarioController : BaseController
         var result = ApiClientFactory.Instance.GetInventarioById(id);
 
         return Task.FromResult(result);
+    }
+
+    public Task<JsonResult> GetInventariosByMaterialId(string id)
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(id)) throw new Exception("Material não informado.");
+            var resultLocal = ApiClientFactory.Instance.GetInventariosByMaterialId(Convert.ToInt32(id));
+
+            return Task.FromResult(Json(new SelectList(resultLocal, "Id", "Descricao")));
+
+        }
+        catch (Exception ex)
+        {
+            return Task.FromResult(Json(ex.Message));
+        }
+    }
+
+    public Task<JsonResult> GetInventariosByLocalidadeId(string id)
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(id)) throw new Exception("Localidade não informada.");
+            var resultLocal = ApiClientFactory.Instance.GetInventariosByLocalidadeId(Convert.ToInt32(id));
+
+            return Task.FromResult(Json(new SelectList(resultLocal, "Id", "NomeMaterial")));
+
+        }
+        catch (Exception ex)
+        {
+            return Task.FromResult(Json(ex.Message));
+        }
     }
     #endregion
 }

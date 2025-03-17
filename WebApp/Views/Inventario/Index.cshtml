@@ -9,7 +9,7 @@
         <div class="col-md-12">
             @using (@Html.BeginForm("Index", "Inventario", FormMethod.Post, new { id = "formPesquisarInventario", @class = "form-horizontal" }))
             {
-                <section class="panel">
+                @* <section class="panel">
                     <header class="panel-heading">
                         <div class="panel-actions">
                             <a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
@@ -53,7 +53,7 @@
                             </div>
                         </div>
                     </footer>
-                </section>
+                </section> *@
             }
         </div>
     </div>
@@ -266,8 +266,18 @@
                                            style="color: #4CAF50">
                                             <i class="fa fa-download"></i>
                                         </a> *@
-                                        <a data-toggle="tooltip" data-placement="top" title="Excluir"
+                                        @* <a data-toggle="tooltip" data-placement="top" title="Excluir"
                                            href="javascript:crud.DeleteArquivosModal(arquivo.id)"
+                                           class="on-default remove-row" style="cursor: pointer; color: #F44336">
+                                            <i class="fa fa-trash"></i>
+                                        </a> *@
+                                        <a data-toggle="tooltip" data-placement="top" title="Download"
+                                           href=""
+                                           class="on-default remove-row" style="cursor: pointer; color: #4CAF50">
+                                            <i class="fa fa-download"></i>
+                                        </a>
+                                        <a data-toggle="tooltip" data-placement="top" title="Excluir"
+                                           href=""
                                            class="on-default remove-row" style="cursor: pointer; color: #F44336">
                                             <i class="fa fa-trash"></i>
                                         </a>

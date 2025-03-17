@@ -24,8 +24,9 @@
                         <thead>
                             <tr>
                                 <th class="text-center">Id</th>
-                                <th class="text-center">Material</th>
                                 <th class="text-center">Profissional</th>
+                                <th class="text-center">Localidade</th>
+                                <th class="text-center">Material</th>
                                 <th class="text-center">Quantidade</th>
                                 <th class="text-center">Data de Criação</th>
                                 <th class="text-center">Ações</th>
@@ -36,8 +37,9 @@
                             {
                                 <tr>
                                     <td class="text-center" style="width:20px;">@Html.DisplayFor(modelItem => item.Id)</td>
-                                    <td class="text-center">@Html.DisplayFor(modelItem => item.TituloMaterial)</td>
                                     <td class="text-center">@Html.DisplayFor(modelItem => item.Solicitante)</td>
+                                    <td class="text-center">@Html.DisplayFor(modelItem => item.NomeLocalidade)</td>
+                                    <td class="text-center">@Html.DisplayFor(modelItem => item.TituloMaterial)</td>
                                     <td class="text-center">@Html.DisplayFor(modelItem => item.Quantidade)</td>
                                     <td class="text-center">@Html.DisplayFor(modelItem => item.Created)</td>
 

@@ -69,11 +69,9 @@ public class ControleMaterialEstoqueSaidaController : BaseController
             SetNotifyMessage(notify, message);
             SetCrudMessage(crud);
             var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome");
-            var tipoMateriais = new SelectList(ApiClientFactory.Instance.GetTiposMateriaisAll(), "Id", "Nome");
 
             return View(new ControleMaterialEstoqueSaidaModel()
             {
-                ListTiposMateriais = tipoMateriais,
                 ListEstados = estados
             });
         }
@@ -112,17 +110,17 @@ public class ControleMaterialEstoqueSaidaController : BaseController
                 Solicitante = collection["solicitante"].ToString()
             };
 
-            var inventario = 
-                ApiClientFactory.Instance.GetInventarioById(Convert.ToInt32(collection["ddlInventario"].ToString()));
+            //var inventario = 
+            //    ApiClientFactory.Instance.GetInventarioById(Convert.ToInt32(collection["ddlInventario"].ToString()));
 
-            var command1 = new InventarioModel.CreateUpdateInventarioCommand
-            {
-                Id = inventario.Id,
-                Quantidade = inventario.Quantidade + quantidade
-            };
+            //var command1 = new InventarioModel.CreateUpdateInventarioCommand
+            //{
+            //    Id = inventario.Id,
+            //    Quantidade = inventario.Quantidade + quantidade
+            //};
 
             await ApiClientFactory.Instance.CreateControleMaterialEstoqueSaida(command0);
-            await ApiClientFactory.Instance.UpdateInventario(inventario.Id ,command1);
+            //await ApiClientFactory.Instance.UpdateInventario(inventario.Id ,command1);
 
             return RedirectToAction(nameof(Index), new { crud = (int)EnumCrud.Created });
         }
@@ -174,16 +172,16 @@ public class ControleMaterialEstoqueSaidaController : BaseController
             var controleSaida =
                 ApiClientFactory.Instance.GetControleMaterialEstoqueSaidaById(id);
 
-            var inventario =
-                ApiClientFactory.Instance.GetInventarioById(controleSaida.InventarioId);
+            //var inventario =
+            //    ApiClientFactory.Instance.GetInventarioById(controleSaida.InventarioId);
 
-            var command = new InventarioModel.CreateUpdateInventarioCommand
-            {
-                Id = inventario.Id,
-                Quantidade = inventario.Quantidade - controleSaida.Quantidade
-            };
+            //var command = new InventarioModel.CreateUpdateInventarioCommand
+            //{
+            //    Id = inventario.Id,
+            //    Quantidade = inventario.Quantidade - controleSaida.Quantidade
+            //};
 
-            ApiClientFactory.Instance.UpdateInventario(inventario.Id, command);
+            //ApiClientFactory.Instance.UpdateInventario(inventario.Id, command);
             ApiClientFactory.Instance.DeleteControleMaterialEstoqueSaida(id);
             return RedirectToAction(nameof(Index), new { crud = (int)EnumCrud.Deleted });
         }

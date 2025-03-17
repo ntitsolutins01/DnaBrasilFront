@@ -196,6 +196,30 @@
 
                     self.ShowLoad(false, "pFiltro");
                 });
+
+                $("#ddlLocalidade").change(function () {
+                    self.ShowLoad(true, "pFiltro");
+                    var url = "../../Inventario/GetInventariosByLocalidadeId";
+                    var ddlSource = "#ddlLocalidade";
+                    $.getJSON(url, { id: $(ddlSource).val() }, function (data) {
+                        if (data.length > 0) {
+                            var items = '<option value="">Selecionar Material</option>';
+                            $("#ddlInventario").empty;
+                            $.each(data, function (i, row) {
+                                items += "<option value='" + row.value + "'>" + row.text + "</option>";
+                            });
+                            $("#ddlInventario").html(items);
+                        }
+                        else {
+                            new PNotify({
+                                title: 'Inventario',
+                                text: data,
+                                type: 'warning'
+                            });
+                        }
+                    });
+                    self.ShowLoad(false, "pFiltro");
+                });
             }
         }).apply(this, [jQuery]);
     },
