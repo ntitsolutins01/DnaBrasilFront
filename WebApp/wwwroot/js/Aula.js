@@ -205,7 +205,9 @@ var vm = new Vue({
                         CargaHoraria: result.data.cargaHoraria,
                         Status: result.data.status,
                         Video: result.data.video,
-                        Material: "\Aulas" + result.data.material.split("\Aulas")[1],
+                        Material: result.data.material && result.data.material.includes("\\Aulas")
+                            ? "\\Aulas" + result.data.imagem.split("\\Aulas")[1]
+                            : null,
                         NomeMaterial: result.data.nomeMaterial
                     };
 
