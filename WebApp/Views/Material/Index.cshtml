@@ -17,17 +17,23 @@
                         <h2 class="panel-title">Filtro de pesquisa</h2>
                     </header>
                     <div class="panel-body" id="pFiltro">
-                        <label class="col-sm-2 control-label text-sm-right pt-2">Id:</label>
-                        <div class="col-sm-4 form-group">
-                            <input type="text" name="material" id="material" class="form-control" placeholder="Insira Material"
-                                   maxlength="60"
-                                   title="Por favor informe o material." />
+                        <label class="col-sm-2 control-label">Id:</label>
+                        <div class="col-md-4 form-group">
+                            <input type="number" name="material" id="material" maxlength="10" class="form-control" />
                         </div>
                         <label class="col-sm-2 control-label text-sm-right pt-2">Descrição:</label>
                         <div class="col-sm-4 form-group">
-                            <input type="text" name="nomeMaterial" id="nomeMaterial" class="form-control" placeholder="Insira Descrição"
+                            <input type="text" name="nomeMaterial" id="nomeMaterial" class="form-control" placeholder="Insira a Descrição"
                                    maxlength="60"
                                    title="Por favor informe o material." />
+                        </div>
+                        <label class="col-sm-2 control-label">Grupo Material:</label>
+                        <div class="col-sm-4 form-group">
+                            <select class="form-control populate select2" name="ddlGrupoMaterial" id="ddlGrupoMaterial" style="width:100%"
+                                    title="Por favor selecione um grupo de material."
+                                    asp-for="GrupoMaterialId" asp-items="Model.ListGruposMateriais">
+                                <option value="">Selecionar Grupo de Material</option>
+                            </select>
                         </div>
                         <label class="col-sm-2 control-label">Tipo Material:</label>
                         <div class="col-sm-4 form-group">
@@ -74,7 +80,6 @@
                                 <th class="text-center">Tipo de Material</th>
                                 <th class="text-center">Descrição</th>
                                 <th class="text-center">Unidade de Medida</th>
-                                <th class="text-center">Quantidade</th>
                                 <th class="text-center">Ações</th>
                             </tr>
                         </thead>
@@ -86,7 +91,6 @@
                                     <td class="text-center">@Html.DisplayFor(modelItem => item.TituloTipoMaterial)</td>
                                     <td class="text-center">@Html.DisplayFor(modelItem => item.Descricao)</td>
                                     <td class="text-center">@Html.DisplayFor(modelItem => item.UnidadeMedida)</td>
-                                    <td class="text-center">@Html.DisplayFor(modelItem => item.QtdAdquirida)</td>
 
                                     <td class="actions text-center">
                                         <a data-toggle="tooltip" data-placement="top" title="Editar"

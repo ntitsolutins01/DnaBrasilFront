@@ -191,7 +191,7 @@ public class TipoMaterialController : BaseController
     /// </summary>
     /// <param name="id">Identificador de Tipo de Materias por Id</param>
     /// <returns>Retorna a Tipos de Materias por Id</returns>
-    public Task<JsonResult> GetTiposMateriaisAllByGrupoMaterialId(string id)
+    public Task<JsonResult> GetTiposMateriaisByGrupoMaterialId(string id)
     {
         try
         {
