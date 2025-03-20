@@ -113,6 +113,7 @@
     <link rel="stylesheet" href="~/assets/vendor/select2/css/select2.css" />
     <link rel="stylesheet" href="~/assets/vendor/select2-bootstrap-theme/select2-bootstrap.min.css" />
     <link rel="stylesheet" href="~/assets/vendor/summernote/summernote.css" />
+    <link rel="stylesheet" href="~/assets/vendor/jquery-ui/jquery-ui.min.css" />
 
     <style>
         /* Estilos do Editor */
@@ -298,12 +299,45 @@
     <script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
     <script src="~/assets/vendor/jquery-mask/jquery.mask.js"></script>
     <script src="~/assets/vendor/ios7-switch/ios7-switch.js"></script>
+    <script src="~/assets/vendor/jquery-ui/jquery-ui.min.js"></script>
+
 
     <!-- Summernote -->
     <script src="~/assets/vendor/summernote/summernote.js"></script>
     <script src="~/assets/vendor/summernote/lang/summernote-pt-BR.js"></script>
 
     <script src="~/assets/javascripts/theme.init.js"></script>
+
+    <script>
+        // Plugin DraggableTextbox para Summernote
+        $.extend($.summernote.plugins, {
+            'draggableTextbox': function (context) {
+                var ui = $.summernote.ui;
+                // Cria e retorna o botão do plugin
+                context.memo('button.draggableTextbox', function () {
+                    var button = ui.button({
+                        contents: '<i class="fa fa-arrows-alt"></i> Textbox',
+                        tooltip: 'Inserir Textbox Móvel',
+                        click: function () {
+                            // Cria o elemento da "textbox"
+                            var textbox = $('<div class="draggable-text" contenteditable="true" ' +
+                                             'style="position: absolute; left: 50px; top: 50px; ' +
+                                             'border: 1px solid #ccc; padding: 5px; background-color: #fff;">' +
+                                             'Texto movível</div>');
+                            // Insere o elemento na área editável do Summernote
+                            context.layoutInfo.editable.append(textbox);
+                            // Torna o elemento arrastável (draggable) com limite ao contêiner pai
+                            textbox.draggable({
+                                containment: context.layoutInfo.editable[0]
+                            });
+                        }
+                    });
+                    return button.render();
+                });
+            }
+        });
+    </script>
+
 
     <script>
         // Plugin personalizado do Summernote
@@ -458,7 +492,7 @@
             }
         });
 
-        function initializeSummernote(elementId, bgInputId, bgButtonId, removeButtonId) {
+                function initializeSummernote(elementId, bgInputId, bgButtonId, removeButtonId) {
             $(`#${elementId}`).summernote({
                 lang: 'pt-BR',
                 height: 813,
@@ -471,11 +505,13 @@
                     ['color', ['color']],
                     ['para', ['ul', 'ol', 'paragraph']],
                     ['table', ['table']],
-                    ['insert', ['link', 'picture']],
-                    ['customHelp', ['customHelp']], // Nosso botão personalizado
+                    // Na seção de "insert" incluímos o nosso botão personalizado
+                    ['insert', ['link', 'picture', 'draggableTextbox']],
+                    ['customHelp', ['customHelp']], // botão de ajuda customizado, se existir
                     ['view', ['fullscreen', 'codeview']]
                 ],
-                plugins: ['customHelp'],
+                // Inclua os plugins customizados (se necessário)
+                plugins: ['customHelp', 'draggableTextbox'],
                 fontSizes: ['8', '9', '10', '11', '12', '14', '18', '24', '36'],
                 callbacks: {
                     onInit: function() {
@@ -490,14 +526,12 @@
                             'background-color': 'white',
                             'margin': '20px auto'
                         });
-
                         setTimeout(() => {
                             const windowHeight = window.innerHeight;
                             const editorHeight = 813;
                             const toolbarHeight = $editor.find('.note-toolbar').outerHeight();
                             const statusbarHeight = $editor.find('.note-statusbar').outerHeight();
                             const topMargin = Math.max(20, (windowHeight - editorHeight - toolbarHeight - statusbarHeight) / 2);
-
                             $editor.find('.note-editing-area').css({
                                 'margin-top': `${topMargin}px`
                             });
@@ -512,12 +546,10 @@
                 }
             });
 
-            // Adicionar imagem
+            // Código para manipulação de imagens de fundo (já existente)
             $(`#${bgButtonId}`).click(function() {
                 $(`#${bgInputId}`).click();
             });
-
-            // Remover imagem
             $(`#${removeButtonId}`).click(function() {
                 var $editor = $(`#${elementId}`).siblings('.note-editor').find('.note-editing-area');
                 $editor.find('.background-overlay').remove();
@@ -525,17 +557,13 @@
                 $(this).hide();
                 $(`#${bgButtonId}`).show();
             });
-
-            // Manipular mudança de imagem
             $(`#${bgInputId}`).change(function(e) {
                 if (this.files && this.files[0]) {
                     var reader = new FileReader();
                     reader.onload = function(e) {
                         var $editor = $(`#${elementId}`).siblings('.note-editor').find('.note-editing-area');
                         var $editable = $editor.find('.note-editable');
-
                         $editor.find('.background-overlay').remove();
-
                         var $bgContainer = $('<div>').addClass('background-overlay').css({
                             'position': 'absolute',
                             'top': '0',
@@ -552,16 +580,13 @@
                             'pointer-events': 'none',
                             'z-index': '0'
                         });
-
                         $editor.css('position', 'relative');
                         $editable.css({
                             'position': 'relative',
                             'background': 'transparent',
                             'z-index': '1'
                         });
-
                         $editor.prepend($bgContainer);
-
                         $(`#${removeButtonId}`).show();
                         $(`#${bgButtonId}`).hide();
                     }
@@ -569,6 +594,7 @@
                 }
             });
         }
+
 
         $(document).ready(function () {
             // Select2 com Tipo de Fomento

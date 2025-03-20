@@ -14,192 +14,242 @@
     <meta name="print-color-adjust" content="exact">
     <title>Carteirinha @Model.Aluno.Nome</title>
     <link rel="stylesheet" href="~/assets/styles_Carteirinha/impressao-carteirinha.css" />
-    <link rel="stylesheet" href="~/assets/vendor/font-awesome/css/font-awesome.css"/>
+    <link rel="stylesheet" href="~/assets/vendor/font-awesome/css/font-awesome.css" />
 </head>
 <body>
-<div class="print-controls">
-    <button class="btn btn-primary" onclick="printFull()">
-        <i class="fa fa-print"></i> Imprimir Carteirinha Completa
-    </button>
-    <button class="btn btn-primary" onclick="printVerso()">
-        <i class="fa fa-print"></i> Imprimir Apenas Verso
-    </button>
-    <button class="btn btn-secondary" onclick="window.close()">
-        <i class="fa fa-times"></i> Fechar
-    </button>
-</div>
+    <div class="print-controls">
+        <button class="btn btn-primary" onclick="printFull()">
+            <i class="fa fa-print"></i> Imprimir Carteirinha Completa
+        </button>
+        <button class="btn btn-primary" onclick="printVerso()">
+            <i class="fa fa-print"></i> Imprimir Apenas Verso
+        </button>
+        <button class="btn btn-secondary" onclick="window.close()">
+            <i class="fa fa-times"></i> Fechar
+        </button>
+    </div>
 
-<div class="preview-wrapper">
-    <div class="preview-container">
-        <!-- Frente da carteirinha -->
+    <!-- Adicionado o id "printContainer" para que o html2pdf encontre o elemento -->
+    <div class="preview-wrapper" id="printContainer">
+        <div class="preview-container">
+            <!-- Frente da carteirinha -->
             <div class="page frente-page" style="background-image: url(/assets/styles_Carteirinha/modelos/carteirinha-frente.png);">
-            <div class="student-info">
-                <div class="info-row">
-                    <label>NOME DO ESTUDANTE:</label>
-                    <span>@Model.Aluno.Nome</span>
-                </div>
-                <div class="info-row">
-                    <label>DATA DE NASCIMENTO:</label>
-                    <span>@Model.Aluno.DtNascimento</span>
-                </div>
-                <div class="info-row">
-                    <label>TELEFONE:</label>
-                    <span>@Model.Aluno.Celular</span>
-                </div>
-                <div class="info-row">
-                    <label>CPF:</label>
-                    <span>@Model.Aluno.Cpf</span>
-                </div>
-                <div class="info-row">
-                    <label>MATRÍCULA:</label>
-                    <span>@Model.Aluno.Id</span>
-                </div>
-                <div class="activity-info">
+                <div class="student-info">
+                    <div class="info-row">
+                        <label>NOME DO ESTUDANTE:</label>
+                        <span>@Model.Aluno.Nome</span>
+                    </div>
+                    <div class="info-row">
+                        <label>DATA DE NASCIMENTO:</label>
+                        <span>@Model.Aluno.DtNascimento</span>
+                    </div>
+                    <div class="info-row">
+                        <label>TELEFONE:</label>
+                        <span>@Model.Aluno.Celular</span>
+                    </div>
+                    <div class="info-row">
+                        <label>CPF:</label>
+                        <span>@Model.Aluno.Cpf</span>
+                    </div>
+                    <div class="info-row">
+                        <label>MATRÍCULA:</label>
+                        <span>@Model.Aluno.Id</span>
+                    </div>
+                    <div class="activity-info">
                         @Model.Aluno.Modalidades
+                    </div>
                 </div>
-            </div>
-            <div class="photo-container">
-                @if (Model.Aluno.ByteImage != null)
-                {
+                <div class="photo-container">
+                    @if (Model.Aluno.ByteImage != null)
                     {
-                        var base64 = Convert.ToBase64String(Model.Aluno.ByteImage);
-                        var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
-                        <img src="@imgSrc" alt="Foto do estudante" class="student-photo">
+                        {
+                            var base64 = Convert.ToBase64String(Model.Aluno.ByteImage);
+                            var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+                            <img src="@imgSrc" alt="Foto do estudante" class="student-photo">
+                        }
                     }
-                }
-                else
-                {
-                    <img src="@(Model.Aluno.Sexo == "Feminino" ? "/assets/images/menina.png" : "/assets/images/menino.png")"
+                    else
+                    {
+                        <img src="@(Model.Aluno.Sexo == "Feminino" ? "/assets/images/menina.png" : "/assets/images/menino.png")"
                              alt="Foto do estudante" class="student-photo" style="object-fit: inherit!important;">
-                }
-            </div>
-            <div class="qr-code-container">
-                @if (Model.Aluno.QrCode != null)
-                {
-                    {
-                        var base64QrCode = Convert.ToBase64String(Model.Aluno.QrCode);
-                        var imgSrcQrCode = String.Format("data:image/gif;base64,{0}", base64QrCode);
-                        <img src="@imgSrcQrCode" alt="QR Code" class="qr-code">
                     }
-                }
-            </div>
-        </div>
-
-        <!-- Verso da carteirinha -->
-            <div class="page verso-page" style="background-image: url(/assets/styles_Carteirinha/modelos/@Model.ModeloCarteirinha.NomeImagem);">
-            <div class="main-content-verso">
-                <div class="info-row-verso">
-                    <label>MUNICÍPIO/ESTADO:</label>
-                    <span>@Model.Aluno.MunicipioEstado</span>
                 </div>
-                <div class="info-row-verso">
-                    <label>UNIDADE ESCOLAR:</label>
-                    <span>@Model.Aluno.NomeLocalidade</span>
+                <div class="qr-code-container">
+                    @if (Model.Aluno.QrCode != null)
+                    {
+                        {
+                            var base64QrCode = Convert.ToBase64String(Model.Aluno.QrCode);
+                            var imgSrcQrCode = String.Format("data:image/gif;base64,{0}", base64QrCode);
+                            <img src="@imgSrcQrCode" alt="QR Code" class="qr-code">
+                        }
+                    }
+                </div>
+            </div>
+
+            <!-- Verso da carteirinha -->
+            <div class="page verso-page" style="background-image: url(/assets/styles_Carteirinha/modelos/@Model.ModeloCarteirinha.NomeImagem);">
+                <div class="main-content-verso">
+                    <div class="info-row-verso">
+                        <label>MUNICÍPIO/ESTADO:</label>
+                        <span>@Model.Aluno.MunicipioEstado</span>
+                    </div>
+                    <div class="info-row-verso">
+                        <label>UNIDADE ESCOLAR:</label>
+                        <span>@Model.Aluno.NomeLocalidade</span>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <script>
-        // Função auxiliar para configurar a impressão
+        // Configuração global do jsPDF
+        const { jsPDF } = window.jspdf;
+
+        async function capturePrintContent(selector) {
+            const container = document.createElement('div');
+            container.style.position = 'fixed';
+            container.style.left = '-9999px';
+            document.body.appendChild(container);
+
+            try {
+                // Clonar elementos
+                document.querySelectorAll(selector).forEach(element => {
+                    const clone = element.cloneNode(true);
+                    container.appendChild(clone);
+                });
+
+                // Renderizar para canvas
+                const canvas = await html2canvas(container, {
+                    scale: 3,
+                    useCORS: true,
+                    logging: false,
+                    backgroundColor: '#FFFFFF'
+                });
+
+                // Criar PDF
+                const pdf = new jsPDF('l', 'mm', 'a4');
+                const imgData = canvas.toDataURL('image/png', 1.0);
+
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = pdf.internal.pageSize.getHeight();
+                const ratio = Math.min(pdfWidth / canvas.width, pdfHeight / canvas.height);
+
+                pdf.addImage(imgData, 'PNG', 0, 0, canvas.width * ratio, canvas.height * ratio);
+
+                return pdf.output('blob');
+            } finally {
+                document.body.removeChild(container);
+            }
+        }
+
+        // Funções de impressão
+        async function printFull() {
+            try {
+                const loadingIndicator = showLoading();
+                const pdfBlob = await capturePrintContent('.frente-page, .verso-page');
+                await convertAndDownload(pdfBlob);
+            } catch (error) {
+                showError('Falha na geração do PDF:', error);
+            } finally {
+                hideLoading();
+            }
+        }
+
+        async function printVerso() {
+            try {
+                const loadingIndicator = showLoading();
+                const pdfBlob = await capturePrintContent('.verso-page');
+                await convertAndDownload(pdfBlob);
+            } catch (error) {
+                showError('Falha na geração do PDF:', error);
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Função de conversão e download
+        async function convertAndDownload(blob) {
+            try {
+                const formData = new FormData();
+                formData.append('file', blob, 'documento_original.pdf');
+
+                const response = await fetch('http://localhost:5500/convert', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`Erro na conversão: ${response.status} - ${errorText}`);
+                }
+
+                const convertedBlob = await response.blob();
+                triggerDownload(convertedBlob, 'documento_cmyk.pdf');
+
+            } catch (error) {
+                console.error('Erro na conversão:', error);
+                throw new Error(`Falha na conversão para CMYK: ${error.message}`);
+            }
+        }
+
+        // Utilitários
+        function triggerDownload(blob, filename) {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+        }
+
+        function showLoading() {
+            const loader = document.createElement('div');
+            loader.style.position = 'fixed';
+            loader.style.top = '0';
+            loader.style.background = 'rgba(0,0,0,0.7)';
+            loader.style.color = 'white';
+            loader.style.padding = '20px';
+            loader.style.zIndex = '1000';
+            loader.textContent = 'Convertendo para CMYK...';
+            document.body.appendChild(loader);
+            return loader;
+        }
+
+        function hideLoading() {
+            const loader = document.querySelector('div[style*="rgba(0,0,0,0.7)"]');
+            if (loader) loader.remove();
+        }
+
+        function showError(message, error) {
+            console.error(error);
+            alert(`${message}\n${error.message}`);
+        }
+
+        // Configurações de impressão
         function setupPrintConfig() {
-            // Forçar melhor qualidade de impressão
             if (window.matchMedia) {
-                const mediaQueryList = window.matchMedia('print');
-                mediaQueryList.addListener(function(mql) {
+                window.matchMedia('print').addListener(mql => {
                     if (mql.matches) {
-                        // Configurações de impressão
-                        document.body.style.webkitPrintColorAdjust = 'exact';
-                        document.body.style.printColorAdjust = 'exact';
+                        Object.entries(printConfig.styles).forEach(([prop, value]) => {
+                            document.body.style[prop] = value;
+                        });
                     }
                 });
             }
         }
 
-        function printFull() {
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', () => {
             setupPrintConfig();
-
-            document
-                .querySelectorAll('.frente-page')
-                .forEach(function(page) {
-                    page.classList.remove('no-print');
-                    // Garantir que as imagens estejam completamente carregadas
-                    const images = page.getElementsByTagName('img');
-                    Array.from(images).forEach(img => {
-                        if (!img.complete) {
-                            img.onload = function() {
-                                window.print();
-                            };
-                            return;
-                        }
-                    });
-                });
-
-            document
-                .querySelectorAll('.verso-page')
-                .forEach(function(page) {
-                    page.classList.remove('no-print');
-                    // Garantir que as imagens estejam completamente carregadas
-                    const images = page.getElementsByTagName('img');
-                    Array.from(images).forEach(img => {
-                        if (!img.complete) {
-                            img.onload = function() {
-                                window.print();
-                            };
-                            return;
-                        }
-                    });
-                });
-
-            // Print com pequeno delay para garantir renderização
-            setTimeout(() => {
-                window.print();
-            }, 100);
-        }
-
-        function printVerso() {
-            setupPrintConfig();
-
-            // Add/remove no-print class
-            document
-                .querySelectorAll('.frente-page')
-                .forEach(function(page) {
-                    page.classList.add('no-print');
-                });
-
-            document
-                .querySelectorAll('.verso-page')
-                .forEach(function(page) {
-                    page.classList.remove('no-print');
-                    // Garantir que as imagens estejam completamente carregadas
-                    const images = page.getElementsByTagName('img');
-                    Array.from(images).forEach(img => {
-                        if (!img.complete) {
-                            img.onload = function() {
-                                window.print();
-                            };
-                            return;
-                        }
-                    });
-                });
-
-            // Print com pequeno delay para garantir renderização
-            setTimeout(() => {
-                window.print();
-            }, 100);
-        }
-
-        // Configurar listener para evento de beforeprint
-        if (window.matchMedia) {
-            window.matchMedia('print').addListener(function(mql) {
-                if (mql.matches) {
-                    // Configurações adicionais antes da impressão
-                    document.body.style.webkitPrintColorAdjust = 'exact';
-                    document.body.style.printColorAdjust = 'exact';
-                }
-            });
-        }
+            // Adicione event listeners para seus botões aqui
+            // Exemplo: document.getElementById('printBtn').addEventListener('click', printFull);
+        });
     </script>
 </body>
 </html>
