@@ -265,7 +265,7 @@ namespace WebApp.Controllers
                 var profissional = ApiClientFactory.Instance.GetProfissionalById(id);
                 var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome", profissional.Uf);
                 var municipios = new SelectList(ApiClientFactory.Instance.GetMunicipiosByUf(profissional.Uf!), "Id", "Nome", profissional.MunicipioId);
-                var localidades = new SelectList(ApiClientFactory.Instance.GetLocalidadeByMunicipio(profissional.MunicipioId.ToString()), "Id", "Nome", profissional.LocalidadeId);
+                var localidades = new SelectList(ApiClientFactory.Instance.GetLocalidadeByMunicipioId(profissional.MunicipioId.ToString()), "Id", "Nome", profissional.LocalidadeId);
                 var listModalidades = new SelectList(ApiClientFactory.Instance.GetModalidadeAll(), "Id", "Nome", profissional.ModalidadesIds);
 
                 List<SelectListDto> list = new List<SelectListDto>
@@ -469,17 +469,17 @@ namespace WebApp.Controllers
             {
                 var profissionalId = collection["habilitarProfissionalId"].ToString();
 
-                var result = ApiClientFactory.Instance.GetProfissionalById(Convert.ToInt32(profissionalId));
+                //var result = ApiClientFactory.Instance.GetProfissionalById(Convert.ToInt32(profissionalId));
 
-                if (result.Email != null && result.Email.Equals(collection["email"].ToString().Trim()))
-                {
-                    return RedirectToAction(nameof(Index),
-                        new
-                        {
-                            notify = (int)EnumNotify.Error,
-                            message = "Já existe um profissional cadastrado com esse email."
-                        });
-                }
+                //if (result.Email != null && result.Email.Equals(collection["email"].ToString().Trim()))
+                //{
+                //    return RedirectToAction(nameof(Index),
+                //        new
+                //        {
+                //            notify = (int)EnumNotify.Error,
+                //            message = "Já existe um profissional cadastrado com esse email."
+                //        });
+                //}
 
                 var result2 = await ApiClientFactory.Instance.GetUsuarioByEmail(collection["email"].ToString().Trim());
 
@@ -823,7 +823,4 @@ namespace WebApp.Controllers
     }
 
     #endregion
-
-
-
 }

@@ -9,6 +9,25 @@ var vm = new Vue({
         (function ($) {
             'use strict';
 
+            // iosSwitcher
+            (function ($) {
+
+                'use strict';
+
+                if (typeof Switch !== 'undefined' && $.isFunction(Switch)) {
+
+                    $(function () {
+                        $('[data-plugin-ios-switch]').each(function () {
+                            var $this = $(this);
+
+                            $this.themePluginIOS7Switch();
+                        });
+                    });
+
+                }
+
+            }).apply(this, [jQuery]);
+
             var formid = $('form')[1].id;
 
             //triggered when modal is about to be shown
@@ -55,7 +74,7 @@ var vm = new Vue({
 
                     self.ShowLoad(true, "pFiltro");
 
-                    var url = "../../Localidade/GetLocalidadeByMunicipio";
+                    var url = "../../Aluno/GetLocalidadeById";
 
                     var ddlSource = "#ddlFomento";
 

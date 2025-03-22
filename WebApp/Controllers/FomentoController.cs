@@ -136,7 +136,7 @@ namespace WebApp.Controllers
 
             var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome", fomento.Sigla);
             var municipios = new SelectList(ApiClientFactory.Instance.GetMunicipiosByUf(fomento.Sigla), "Id", "Nome", fomento.MunicipioId);
-            var localidades = new SelectList(ApiClientFactory.Instance.GetLocalidadeByMunicipio(fomento.MunicipioId.ToString()), "Id", "Nome", fomento.LocalidadeId);
+            var localidades = new SelectList(ApiClientFactory.Instance.GetLocalidadeByMunicipioId(fomento.MunicipioId.ToString()), "Id", "Nome", fomento.LocalidadeId);
             var linhasAcoes = new SelectList(ApiClientFactory.Instance.GetLinhasAcoesAll(), "Id", "Nome", fomento.LinhasAcoesIds);
 
             var model = new FomentoModel

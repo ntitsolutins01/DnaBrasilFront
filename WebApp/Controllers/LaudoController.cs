@@ -63,7 +63,7 @@ namespace WebApp.Controllers
 
                 if (usu.MunicipioId != null)
                 {
-                    var resultLocalidades = ApiClientFactory.Instance.GetLocalidadeByMunicipio(usu.MunicipioId.ToString());
+                    var resultLocalidades = ApiClientFactory.Instance.GetLocalidadeByMunicipioId(usu.MunicipioId.ToString());
 
                     if (resultLocalidades != null)
                         localidades = new SelectList(resultLocalidades, "Id", "Nome", usu.LocalidadeId);
@@ -235,7 +235,7 @@ namespace WebApp.Controllers
 
                 if (usu.MunicipioId != null)
                 {
-                    var resultLocalidades = ApiClientFactory.Instance.GetLocalidadeByMunicipio(usu.MunicipioId.ToString());
+                    var resultLocalidades = ApiClientFactory.Instance.GetLocalidadeByMunicipioId(usu.MunicipioId.ToString());
 
                     localidades = new SelectList(resultLocalidades, "Id", "Nome", usu.LocalidadeId);
                 }
@@ -764,7 +764,7 @@ namespace WebApp.Controllers
 
                 var municipios = new SelectList(ApiClientFactory.Instance.GetMunicipiosByUf(aluno.Estado!), "Id", "Nome", aluno.MunicipioId);
 
-                var localidades = new SelectList(ApiClientFactory.Instance.GetLocalidadeByMunicipio(aluno.MunicipioId.ToString()), "Id", "Nome", aluno.LocalidadeId);
+                var localidades = new SelectList(ApiClientFactory.Instance.GetLocalidadeByMunicipioId(aluno.MunicipioId.ToString()), "Id", "Nome", aluno.LocalidadeId);
 
                 var profissionais = new SelectList(ApiClientFactory.Instance.GetProfissionaisByLocalidade(Convert.ToInt32(aluno.LocalidadeId)), "Id", "Nome", aluno.ProfissionalId);
 
@@ -871,7 +871,7 @@ namespace WebApp.Controllers
                     Finalizado = finalizadoValue,
                     PageNumber = 1,
 #if DEBUG
-                    PageSize = 10
+                    PageSize = 2000
 #else
             PageSize = 1000
 #endif
@@ -893,9 +893,9 @@ namespace WebApp.Controllers
                     var vocacional = laudo.VocacionalId == null ? null :
                         ApiClientFactory.Instance.GetEncaminhamentoByVocacional();
                     var encaminhamentoConsumoAlimentar = laudo.ConsumoAlimentarId == null ? null :
-                        ApiClientFactory.Instance.GetEncaminhamentoById((int)laudo.ConsumoAlimentarId);
+                        ApiClientFactory.Instance.GetEncaminhamentoByConsumoAlimentarId((int)laudo.ConsumoAlimentarId);
                     var encaminhamentoSaudeBucal = laudo.SaudeBucalId == null ? null :
-                        ApiClientFactory.Instance.GetEncaminhamentoById((int)laudo.SaudeBucalId);
+                        ApiClientFactory.Instance.GetEncaminhamentoBySaudeBucalId((int)laudo.SaudeBucalId);
                     var desempenho = ApiClientFactory.Instance.GetDesempenhoByAluno(Convert.ToInt32(laudo.AlunoId));
                     var modalidade = ApiClientFactory.Instance.GetModalidadeById(Convert.ToInt32(laudo.ModalidadeId));
 

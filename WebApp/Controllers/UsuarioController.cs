@@ -121,7 +121,7 @@ namespace WebApp.Controllers
             {
                 var cpf = collection["cpf"].ToString();
 
-                var result = ApiClientFactory.Instance.GetUsuarioByCpf(cpf); //Regex.Replace(cpf, "[^0-9a-zA-Z]+", "")
+                var result = await ApiClientFactory.Instance.GetUsuarioByCpf(cpf); //Regex.Replace(cpf, "[^0-9a-zA-Z]+", "")
 
                 if (result != null)
                 {
@@ -133,7 +133,7 @@ namespace WebApp.Controllers
                         });
                 }
 
-                var result2 = ApiClientFactory.Instance.GetUsuarioByEmail(collection["email"].ToString().Trim());
+                var result2 = await ApiClientFactory.Instance.GetUsuarioByEmail(collection["email"].ToString().Trim());
 
                 if (result2 != null)
                 {
@@ -222,7 +222,7 @@ namespace WebApp.Controllers
 
                 var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome", obj.Uf);
                 var municipios = new SelectList(ApiClientFactory.Instance.GetMunicipiosByUf(obj.Uf!), "Id", "Nome", obj.MunicipioId);
-                var localidades = new SelectList(ApiClientFactory.Instance.GetLocalidadeByMunicipio(obj.MunicipioId.ToString()), "Id", "Nome", obj.LocalidadeId);
+                var localidades = new SelectList(ApiClientFactory.Instance.GetLocalidadeByMunicipioId(obj.MunicipioId.ToString()), "Id", "Nome", obj.LocalidadeId);
 
                 model = new UsuarioModel
                 {

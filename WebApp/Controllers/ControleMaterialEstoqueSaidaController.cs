@@ -253,7 +253,7 @@ public class ControleMaterialEstoqueSaidaController : BaseController
         try
         {
             if (string.IsNullOrEmpty(id)) throw new Exception("Municipio não informado.");
-            var resultLocal = ApiClientFactory.Instance.GetLocalidadeByMunicipio(id);
+            var resultLocal = ApiClientFactory.Instance.GetLocalidadeByMunicipioId(id);
 
             return Task.FromResult(Json(new SelectList(resultLocal, "Id", "Nome")));
 
