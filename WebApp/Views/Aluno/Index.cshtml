@@ -319,14 +319,6 @@
                        target="_blank">
                         <i class="fa fa-file-pdf-o"></i> &nbsp;&nbsp;PDF CMYK
                     </a>
-                    <a data-toggle="tooltip"
-                       data-placement="top"
-                       title="Imprimir"
-                       :href="'/Aluno/ImprimirCarteirinha/' + editDto.Id + '?fomentoId=' + editDto.FomentoId"
-                       class="on-default edit-row btn btn-info pull-right"
-                       target="_blank">
-                        <i class="fa fa-print"></i> &nbsp;&nbsp;Imprimir
-                    </a>
                 </div>
             </div>
         </div>
@@ -426,13 +418,6 @@
     <script src="~/js/alunos.js"></script>
 
     <script>
-        // Função existente para impressão
-        function imprimirCarteirinha() {
-            const alunoId = $('#carteirinhaAlunoId').val();
-            const fomentoId = $('#fomentoId').val();
-            window.open(`/Aluno/ImprimirCarteirinha/${alunoId}?fomentoId=${fomentoId}`, '_blank');
-        }
-
         // Nova função para gerar PDF CMYK
         function gerarPdfCmykCarteirinha() {
             const alunoId = $('#carteirinhaAlunoId').val();

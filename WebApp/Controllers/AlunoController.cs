@@ -594,28 +594,6 @@ namespace WebApp.Controllers
         }
 
         /// <summary>
-        /// Tela para Impressao de Carteirinha
-        /// </summary>
-        /// <param name="id">Id do Aluno</param>
-        /// <param name="fomentoId">Id do Fomento</param>
-        /// <returns>Retorna o objeto AlunoModel</returns>
-        [ClaimsAuthorize(ClaimType.Aluno, Claim.Incluir)]
-        public async Task<ActionResult> ImprimirCarteirinha(int id, int fomentoId)
-        {
-            _logger.Info($"Tela para impressao de carteirinha - Aluno.ImprimirCarteirinha");
-
-            var aluno = await ApiClientFactory.Instance.GetAlunoById(id);
-            var modeloCarteirinha = await ApiClientFactory.Instance.GetModeloCarteirinhaByFomentoId(fomentoId);
-
-            return View(new AlunoModel()
-            {
-                Aluno = aluno,
-                ModeloCarteirinha = modeloCarteirinha
-            });
-        }
-
-
-        /// <summary>
         /// Acao de Imprimir Carteirinha por Lote
         /// </summary>
         /// <param name="ids">ids</param>
