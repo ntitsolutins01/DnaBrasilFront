@@ -111,11 +111,13 @@
                     <div class="left-details">
                         <div><span class="info-label">Idade:</span> @laudo.Laudo.Idade</div>
                         <div><span class="info-label">Etnia:</span> @laudo.Laudo.Etnia</div>
-                        <div><span class="info-label">Deficiência:</span> Nâo definido</div>
+                        @if (@laudo.Laudo.NomeDeficiencia != "NÃO POSSUI")
+                        {
+                        <div><span class="info-label">Deficiência:</span> @laudo.Laudo.NomeDeficiencia</div>
+                        }
                     </div>
                     <div class="right-details">
                         <div><span class="info-label">Série:</span> Não definida</div>
-                        <div><span class="info-label">Turma:</span> Não definida</div>
                     </div>
                 </div>
             </div>
