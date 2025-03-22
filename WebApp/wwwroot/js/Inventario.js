@@ -171,10 +171,8 @@
             var self = this;
             axios.get("Inventario/GetInventarioById/?id=" + id)
                 .then(function (result) {
-                    self.editDto.Id = result.data.id;
-                    self.editDto.Descricao = result.data.descricao;
-                    self.editDto.UnidadeMedida = result.data.unidadeMedida;
-                    self.editDto.QtdAdquirida = result.data.qtdAdquirida;
+                    self.editDto.Id = result.data.id;                  
+                    self.editDto.Quantidade = result.data.quantidade;
                 })
                 .catch(function (error) {
                     Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);

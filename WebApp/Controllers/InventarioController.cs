@@ -165,6 +165,7 @@ public class InventarioController : BaseController
             var command = new InventarioModel.CreateUpdateInventarioCommand
             {
                 Id = Convert.ToInt32(collection["editInventarioId"]),
+                Quantidade = Convert.ToInt32(collection["quantidade"].ToString())
             };
 
             await ApiClientFactory.Instance.UpdateInventario(command.Id, command);
