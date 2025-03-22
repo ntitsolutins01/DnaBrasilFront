@@ -4,6 +4,7 @@ using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Xobject;
 using iText.Layout;
 using iText.Layout.Borders;
 using iText.Layout.Element;
@@ -1240,12 +1241,20 @@ namespace WebApp.Controllers
                 float larguraComSangria = larguraOriginal + (2 * sangriaEmPontos);
                 float alturaComSangria = alturaOriginal + (2 * sangriaEmPontos);
 
-                // Criar documento PDF com suporte a CMYK e dimensões aumentadas para incluir sangria
+                // Configuração das cores CMYK para todo o documento
+                // Cores básicas em CMYK para uso em todo o documento - usando "rich black" para evitar conversão para GRAY
+                DeviceCmyk corPreto = new DeviceCmyk(0.75f, 0.68f, 0.67f, 0.9f); // "Rich black" CMYK
+                DeviceCmyk corAzul = new DeviceCmyk(0.75f, 0.68f, 0, 0.2f);
+                DeviceCmyk corBranca = new DeviceCmyk(0, 0, 0, 0); // Branco em CMYK
+
+                // Criar documento PDF com suporte a CMYK
                 PdfWriter writer = new PdfWriter(ms);
                 PdfDocument pdf = new PdfDocument(writer);
 
-                // Configurações de compatibilidade de cores CMYK
-                DeviceCmyk corAzul = new DeviceCmyk(0.75f, 0.68f, 0, 0.2f); // Aproximação de azul escuro em CMYK
+                // Configurar Output Intent para CMYK - isso já deve forçar o uso de cores CMYK
+                PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "",
+                    "http://www.color.org", "FOGRA39", null);
+                pdf.AddOutputIntent(outputIntent);
 
                 // Configurações para o documento com tamanho ajustado para incluir sangria
                 Document document = new Document(pdf, new PageSize(larguraComSangria, alturaComSangria));
@@ -1261,8 +1270,8 @@ namespace WebApp.Controllers
                 backgroundFrente.SetHeight(alturaOriginal);
                 document.Add(backgroundFrente);
 
-                // Desenhar as marcas de corte nos cantos
-                DesenharMarcasDeCorte(pdf, 1, sangriaEmPontos, larguraComSangria, alturaComSangria);
+                // Desenhar as marcas de corte nos cantos - agora usando cor CMYK para preto
+                DesenharMarcasDeCorte(pdf, 1, sangriaEmPontos, larguraComSangria, alturaComSangria, corPreto);
 
                 // Adicionar informações do aluno - agora com a margem de sangria incluída nas posições
                 float leftMargin = 0.5f * 28.35f + sangriaEmPontos; // 0.5cm do original + sangria
@@ -1322,6 +1331,17 @@ namespace WebApp.Controllers
                     float fotoInternalWidth = fotoWidth;
                     float fotoInternalHeight = fotoHeight;
 
+                    // Antes de adicionar a imagem, desenhar um fundo branco com cantos arredondados
+                    // (isso garante que a imagem tenha um fundo definido para clipar)
+                    PdfCanvas canvasFundoFoto = new PdfCanvas(pdf.GetPage(1));
+                    canvasFundoFoto.SaveState();
+
+                    // Definir um fundo branco em CMYK
+                    canvasFundoFoto.SetFillColor(corBranca);
+                    canvasFundoFoto.RoundRectangle(fotoInternalX, fotoInternalY, fotoInternalWidth, fotoInternalHeight, radioBorda);
+                    canvasFundoFoto.Fill();
+                    canvasFundoFoto.RestoreState();
+
                     ImageData imgDataFoto = ImageDataFactory.Create(aluno.ByteImage);
                     iText.Layout.Element.Image foto = new iText.Layout.Element.Image(imgDataFoto);
                     foto.SetFixedPosition(fotoInternalX, fotoInternalY);
@@ -1332,9 +1352,14 @@ namespace WebApp.Controllers
                     foto.ScaleToFit(fotoInternalWidth, fotoInternalHeight);
 
                     // Aplicar o recorte em formato arredondado na imagem
-                    // Isso exige uma abordagem especial com transformações
                     PdfCanvas clipCanvas = new PdfCanvas(pdf.GetPage(1));
                     clipCanvas.SaveState();
+
+                    // Forçar uso de CMYK para o clipping path
+                    clipCanvas.SetFillColor(corPreto);
+                    clipCanvas.SetStrokeColor(corPreto);
+
+                    // Aplicar clipping
                     clipCanvas.RoundRectangle(fotoInternalX, fotoInternalY, fotoInternalWidth, fotoInternalHeight, radioBorda);
                     clipCanvas.Clip().EndPath();
 
@@ -1355,6 +1380,16 @@ namespace WebApp.Controllers
                     float fotoInternalWidth = fotoWidth;
                     float fotoInternalHeight = fotoHeight;
 
+                    // Antes de adicionar a imagem, desenhar um fundo branco com cantos arredondados
+                    PdfCanvas canvasFundoFotoDefault = new PdfCanvas(pdf.GetPage(1));
+                    canvasFundoFotoDefault.SaveState();
+
+                    // Definir um fundo branco em CMYK
+                    canvasFundoFotoDefault.SetFillColor(corBranca);
+                    canvasFundoFotoDefault.RoundRectangle(fotoInternalX, fotoInternalY, fotoInternalWidth, fotoInternalHeight, radioBorda);
+                    canvasFundoFotoDefault.Fill();
+                    canvasFundoFotoDefault.RestoreState();
+
                     ImageData imgDataDefault = ImageDataFactory.Create(fotoDefaultPath);
                     iText.Layout.Element.Image fotoDefault = new iText.Layout.Element.Image(imgDataDefault);
                     fotoDefault.SetFixedPosition(fotoInternalX, fotoInternalY);
@@ -1364,9 +1399,14 @@ namespace WebApp.Controllers
                     fotoDefault.SetWidth(fotoInternalWidth);
                     fotoDefault.ScaleToFit(fotoInternalWidth, fotoInternalHeight);
 
-                    // Aplicar o recorte em formato arredondado na imagem padrão
+                    // Aplicar o recorte em formato arredondado na imagem padrão com cores CMYK
                     PdfCanvas clipCanvasDefault = new PdfCanvas(pdf.GetPage(1));
                     clipCanvasDefault.SaveState();
+
+                    // Forçar uso de CMYK para o clipping path
+                    clipCanvasDefault.SetFillColor(corPreto);
+                    clipCanvasDefault.SetStrokeColor(corPreto);
+
                     clipCanvasDefault.RoundRectangle(fotoInternalX, fotoInternalY, fotoInternalWidth, fotoInternalHeight, radioBorda);
                     clipCanvasDefault.Clip().EndPath();
 
@@ -1414,8 +1454,8 @@ namespace WebApp.Controllers
                 backgroundVerso.SetHeight(alturaOriginal);
                 document.Add(backgroundVerso);
 
-                // Desenhar as marcas de corte nos cantos
-                DesenharMarcasDeCorte(pdf, 2, sangriaEmPontos, larguraComSangria, alturaComSangria);
+                // Desenhar as marcas de corte nos cantos - usando cor CMYK para preto
+                DesenharMarcasDeCorte(pdf, 2, sangriaEmPontos, larguraComSangria, alturaComSangria, corPreto);
 
                 // Adicionar informações do verso - ajustado para incluir sangria
                 float versoLeftMargin = 0.6f * 28.35f + sangriaEmPontos;
@@ -1447,13 +1487,16 @@ namespace WebApp.Controllers
 
 
         // Método auxiliar para desenhar as marcas de corte
-        private void DesenharMarcasDeCorte(PdfDocument pdf, int numeroPagina, float sangria, float largura, float altura)
+        private void DesenharMarcasDeCorte(PdfDocument pdf, int numeroPagina, float sangria, float largura, float altura, DeviceCmyk corCmyk)
         {
             // Usando a classe PdfCanvas para desenhar diretamente na página
             PdfCanvas canvas = new PdfCanvas(pdf.GetPage(numeroPagina));
 
-            // Definir a cor para preto
-            canvas.SetStrokeColor(ColorConstants.BLACK);
+            // Salvar o estado antes de fazer alterações
+            canvas.SaveState();
+
+            // Usar explicitamente a cor CMYK passada como parâmetro
+            canvas.SetStrokeColor(corCmyk);
             canvas.SetLineWidth(0.25f);
 
             // Comprimento das linhas de marca de corte (5mm)
@@ -1485,43 +1528,9 @@ namespace WebApp.Controllers
 
             // Desenhar as linhas
             canvas.Stroke();
-        }
 
-        // Método auxiliar para desenhar as marcas de corte
-        private void DrawCropMarks(PdfDocument pdf, int pageNumber, float sangria, float largura, float altura)
-        {
-            PdfCanvas canvas = new PdfCanvas(pdf.GetPage(pageNumber));
-            canvas.SetStrokeColor(ColorConstants.BLACK);
-            canvas.SetLineWidth(0.25f);
-
-            // Comprimento das linhas de marca de corte (5mm)
-            float tamanhoMarca = 5f / 10f * 28.35f;
-
-            // Superior esquerdo
-            canvas.MoveTo(0, sangria);
-            canvas.LineTo(tamanhoMarca, sangria);
-            canvas.MoveTo(sangria, 0);
-            canvas.LineTo(sangria, tamanhoMarca);
-
-            // Superior direito
-            canvas.MoveTo(largura, sangria);
-            canvas.LineTo(largura - tamanhoMarca, sangria);
-            canvas.MoveTo(largura - sangria, 0);
-            canvas.LineTo(largura - sangria, tamanhoMarca);
-
-            // Inferior esquerdo
-            canvas.MoveTo(0, altura - sangria);
-            canvas.LineTo(tamanhoMarca, altura - sangria);
-            canvas.MoveTo(sangria, altura);
-            canvas.LineTo(sangria, altura - tamanhoMarca);
-
-            // Inferior direito
-            canvas.MoveTo(largura, altura - sangria);
-            canvas.LineTo(largura - tamanhoMarca, altura - sangria);
-            canvas.MoveTo(largura - sangria, altura);
-            canvas.LineTo(largura - sangria, altura - tamanhoMarca);
-
-            canvas.Stroke();
+            // Restaurar o estado
+            canvas.RestoreState();
         }
 
         /// <summary>
