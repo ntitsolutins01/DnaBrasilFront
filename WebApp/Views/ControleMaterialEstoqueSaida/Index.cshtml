@@ -1,6 +1,6 @@
 ﻿@model ControleMaterialEstoqueSaidaModel
 @{
-    ViewData["Title"] = "Listagem de Registros de Entrada/Saida";
+    ViewData["Title"] = "Listagem de Registros de Entradas/Saídas";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -12,7 +12,7 @@
                     <div class="panel-actions">
                         <a href="#" class="card-action card-action-toggle" data-card-toggle></a>
                     </div>
-                    <h2 class="panel-title">Listagem de Registros de Entrada/Saida</h2>
+                    <h2 class="panel-title">Listagem de Registros de Entradas/Saídas</h2>
                 </header>
                 <div class="panel-body">
                     <div class="form-group row">
@@ -66,7 +66,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="mdDeleteControleMaterialEstoqueSaidaLabel">
-                        <i class="fa fa-trash"></i> &nbsp;&nbsp;<strong>Exclusão de Registro de Entrada/Saida</strong>
+                        <i class="fa fa-trash"></i> &nbsp;&nbsp;<strong>Exclusão de Registro de Entrada/Saída</strong>
                     </h5>
                 </div>
                 <div class="modal-body">
@@ -93,7 +93,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="mdEditControleMaterialEstoqueSaidaLabel">
-                        <i class="fa fa-pencil"></i> &nbsp;&nbsp;<strong>Alterar Registro de Entrada/Saida</strong>
+                        <i class="fa fa-pencil"></i> &nbsp;&nbsp;<strong>Alterar Registro de Entrada/Saída</strong>
                     </h5>
                 </div>
                 @using (@Html.BeginForm("Edit", "ControleMaterialEstoqueSaida", FormMethod.Post, new { id = "formEditControleMaterialEstoqueSaida", @class = "form-horizontal" }))
@@ -145,14 +145,14 @@
 
             if (crub === 1) {
                 new PNotify({
-                    title: 'Registro de Entrada/Saida',
+                    title: 'Registro de Entrada/Saída',
                     text: 'Cadastro realizado com sucesso!',
                     type: 'success'
                 });
                 crub = 0;
             } else if (crub === 2) {
                 new PNotify({
-                    title: 'Registro de Entrada/Saida',
+                    title: 'Registro de Entrada/Saída',
                     text: 'Dados alterados com sucesso.',
                     type: 'warning',
                     icon: 'fa fa-pencil'
@@ -160,7 +160,7 @@
                 crub = 0;
             } else if (crub === 3) {
                 new PNotify({
-                    title: 'Registro de Entrada/Saida',
+                    title: 'Registro de Entrada/Saída',
                     text: 'Registro excluído com sucesso.',
                     type: 'error',
                     icon: 'fa fa-trash-o'
@@ -174,21 +174,21 @@
 
             if (notify === 0) {
                 new PNotify({
-                    title: 'Registro de Entrada/Saida',
+                    title: 'Registro de Entrada/Saída',
                     text: messagem,
                     type: 'success'
                 });
                 crub = 0;
             } else if (notify === 1) {
                 new PNotify({
-                    title: 'Registro de Entrada/Saida',
+                    title: 'Registro de Entrada/Saída',
                     text: messagem,
                     type: 'warning'
                 });
                 crub = 0;
             } else if (notify === 2) {
                 new PNotify({
-                    title: 'Registro de Entrada/Saida',
+                    title: 'Registro de Entrada/Saída',
                     text: messagem,
                     type: 'error'
                 });

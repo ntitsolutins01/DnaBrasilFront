@@ -221,7 +221,7 @@ public class InventarioController : BaseController
 
             await ApiClientFactory.Instance.CreateArquivosInventario(command);
 
-            return RedirectToAction(nameof(Index), new { crud = (int)EnumCrud.Updated });
+            return RedirectToAction(nameof(Index), new { crud = (int)EnumCrud.Created });
         }
         catch (Exception e)
         {

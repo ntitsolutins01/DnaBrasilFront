@@ -1,6 +1,6 @@
 ﻿@model InventarioModel
 @{
-    ViewData["Title"] = "Listagem de Inventarios";
+    ViewData["Title"] = "Listagem de Inventários";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -65,7 +65,7 @@
                     <div class="panel-actions">
                         <a href="#" class="card-action card-action-toggle" data-card-toggle></a>
                     </div>
-                    <h2 class="panel-title">Listagem de Inventarios</h2>
+                    <h2 class="panel-title">Listagem de Inventários</h2>
                 </header>
                 <div class="panel-body">
                     <div class="form-group row">
@@ -240,21 +240,9 @@
                                 <tr v-for="arquivo in arquivosInventarios" :key="arquivo.id">
                                     <td class="text-center">{{ arquivo.text }}</td>
                                     <td class="actions text-center">
-                                        @* <a :href="`../../ArquivosInventario/Download/${arquivo.id}`" 
-                                           data-toggle="tooltip" 
-                                           data-placement="top" 
-                                           title="Baixar PDF"
-                                           class="on-default download-row" 
-                                           style="color: #4CAF50">
-                                            <i class="fa fa-download"></i>
-                                        </a> *@
-                                        @* <a data-toggle="tooltip" data-placement="top" title="Excluir"
-                                           href="javascript:crud.DeleteArquivosModal(arquivo.id)"
-                                           class="on-default remove-row" style="cursor: pointer; color: #F44336">
-                                            <i class="fa fa-trash"></i>
-                                        </a> *@
                                         <a data-toggle="tooltip" data-placement="top" title="Download"
-                                           href=""
+                                           href="#"
+                                           v-on:click.prevent="downloadFile(arquivo.value)"
                                            class="on-default remove-row" style="cursor: pointer; color: #4CAF50">
                                             <i class="fa fa-download"></i>
                                         </a>

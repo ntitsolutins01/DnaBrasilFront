@@ -174,12 +174,16 @@ var vm = new Vue({
                 params: { id: id }
             })
                 .then(response => {
-                    console.log("Dados recebidos:", response.data); // 👈 Verifique os IDs aqui
+                    console.log("Dados recebidos:", response.data);
                     this.arquivosInventarios = response.data;
                 })
                 .catch(error => {
                     console.error("Erro:", error);
                 });
+        },
+        downloadFile: function (value) {
+            var downloadUrl = "../../ArquivosInventario/Download/" + value;
+            window.location.href = downloadUrl;
         },
         DeleteInventario: function (id) {
             var url = "Inventario/Delete/" + id;
@@ -200,7 +204,8 @@ var vm = new Vue({
                     Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
                 });
         },
-        FilesModal: function (id) {       
+        FilesModal: function (id) { 
+            this.editDto.Id = id;
             this.loadArquivosInventario(id);
             $('#mdFilesInventario').modal('show');
         }
