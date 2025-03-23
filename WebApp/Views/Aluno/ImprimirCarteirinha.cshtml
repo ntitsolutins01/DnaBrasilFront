@@ -1,0 +1,205 @@
+@using System.Globalization
+@model WebApp.Models.AlunoModel
+@{
+    ViewData["Title"] = "Impressão de Carteirinhas";
+    Layout = "";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta name="color-scheme" content="normal">
+    <meta name="color-profile" content="CMYK">
+    <meta name="print-color-adjust" content="exact">
+    <title>Carteirinha @Model.Aluno.Nome</title>
+    <link rel="stylesheet" href="~/assets/styles_Carteirinha/impressao-carteirinha.css" />
+    <link rel="stylesheet" href="~/assets/vendor/font-awesome/css/font-awesome.css"/>
+</head>
+<body>
+<div class="print-controls">
+    <button class="btn btn-primary" onclick="printFull()">
+        <i class="fa fa-print"></i> Imprimir Carteirinha Completa
+    </button>
+    <button class="btn btn-primary" onclick="printVerso()">
+        <i class="fa fa-print"></i> Imprimir Apenas Verso
+    </button>
+    <button class="btn btn-secondary" onclick="window.close()">
+        <i class="fa fa-times"></i> Fechar
+    </button>
+</div>
+
+<div class="preview-wrapper">
+    <div class="preview-container">
+        <!-- Frente da carteirinha -->
+            <div class="page frente-page" style="background-image: url(/assets/styles_Carteirinha/modelos/carteirinha-frente.png);">
+            <div class="student-info">
+                <div class="info-row">
+                    <label>NOME DO ESTUDANTE:</label>
+                    <span>@Model.Aluno.Nome</span>
+                </div>
+                <div class="info-row">
+                    <label>DATA DE NASCIMENTO:</label>
+                    <span>@Model.Aluno.DtNascimento</span>
+                </div>
+                <div class="info-row">
+                    <label>TELEFONE:</label>
+                    <span>@Model.Aluno.Celular</span>
+                </div>
+                <div class="info-row">
+                    <label>CPF:</label>
+                    <span>@Model.Aluno.Cpf</span>
+                </div>
+                <div class="info-row">
+                    <label>MATRÍCULA:</label>
+                    <span>@Model.Aluno.Id</span>
+                </div>
+                <div class="activity-info">
+                        @Model.Aluno.Modalidades
+                </div>
+            </div>
+            <div class="photo-container">
+                @if (Model.Aluno.ByteImage != null)
+                {
+                    {
+                        var base64 = Convert.ToBase64String(Model.Aluno.ByteImage);
+                        var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+                        <img src="@imgSrc" alt="Foto do estudante" class="student-photo">
+                    }
+                }
+                else
+                {
+                    <img src="@(Model.Aluno.Sexo == "Feminino" ? "/assets/images/menina.png" : "/assets/images/menino.png")"
+                             alt="Foto do estudante" class="student-photo" style="object-fit: inherit!important;">
+                }
+            </div>
+            <div class="qr-code-container">
+                @if (Model.Aluno.QrCode != null)
+                {
+                    {
+                        var base64QrCode = Convert.ToBase64String(Model.Aluno.QrCode);
+                        var imgSrcQrCode = String.Format("data:image/gif;base64,{0}", base64QrCode);
+                        <img src="@imgSrcQrCode" alt="QR Code" class="qr-code">
+                    }
+                }
+            </div>
+        </div>
+
+        <!-- Verso da carteirinha -->
+            <div class="page verso-page" style="background-image: url(/assets/styles_Carteirinha/modelos/@Model.ModeloCarteirinha.NomeImagem);">
+            <div class="main-content-verso">
+                <div class="info-row-verso">
+                    <label>MUNICÍPIO/ESTADO:</label>
+                    <span>@Model.Aluno.MunicipioEstado</span>
+                </div>
+                <div class="info-row-verso">
+                    <label>UNIDADE ESCOLAR:</label>
+                    <span>@Model.Aluno.NomeLocalidade</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <script>
+        // Função auxiliar para configurar a impressão
+        function setupPrintConfig() {
+            // Forçar melhor qualidade de impressão
+            if (window.matchMedia) {
+                const mediaQueryList = window.matchMedia('print');
+                mediaQueryList.addListener(function(mql) {
+                    if (mql.matches) {
+                        // Configurações de impressão
+                        document.body.style.webkitPrintColorAdjust = 'exact';
+                        document.body.style.printColorAdjust = 'exact';
+                    }
+                });
+            }
+        }
+
+        function printFull() {
+            setupPrintConfig();
+
+            document
+                .querySelectorAll('.frente-page')
+                .forEach(function(page) {
+                    page.classList.remove('no-print');
+                    // Garantir que as imagens estejam completamente carregadas
+                    const images = page.getElementsByTagName('img');
+                    Array.from(images).forEach(img => {
+                        if (!img.complete) {
+                            img.onload = function() {
+                                window.print();
+                            };
+                            return;
+                        }
+                    });
+                });
+
+            document
+                .querySelectorAll('.verso-page')
+                .forEach(function(page) {
+                    page.classList.remove('no-print');
+                    // Garantir que as imagens estejam completamente carregadas
+                    const images = page.getElementsByTagName('img');
+                    Array.from(images).forEach(img => {
+                        if (!img.complete) {
+                            img.onload = function() {
+                                window.print();
+                            };
+                            return;
+                        }
+                    });
+                });
+
+            // Print com pequeno delay para garantir renderização
+            setTimeout(() => {
+                window.print();
+            }, 100);
+        }
+
+        function printVerso() {
+            setupPrintConfig();
+
+            // Add/remove no-print class
+            document
+                .querySelectorAll('.frente-page')
+                .forEach(function(page) {
+                    page.classList.add('no-print');
+                });
+
+            document
+                .querySelectorAll('.verso-page')
+                .forEach(function(page) {
+                    page.classList.remove('no-print');
+                    // Garantir que as imagens estejam completamente carregadas
+                    const images = page.getElementsByTagName('img');
+                    Array.from(images).forEach(img => {
+                        if (!img.complete) {
+                            img.onload = function() {
+                                window.print();
+                            };
+                            return;
+                        }
+                    });
+                });
+
+            // Print com pequeno delay para garantir renderização
+            setTimeout(() => {
+                window.print();
+            }, 100);
+        }
+
+        // Configurar listener para evento de beforeprint
+        if (window.matchMedia) {
+            window.matchMedia('print').addListener(function(mql) {
+                if (mql.matches) {
+                    // Configurações adicionais antes da impressão
+                    document.body.style.webkitPrintColorAdjust = 'exact';
+                    document.body.style.printColorAdjust = 'exact';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

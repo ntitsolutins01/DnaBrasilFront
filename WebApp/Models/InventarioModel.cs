@@ -38,7 +38,6 @@ namespace WebApp.Models
             public int MaterialId { get; set; }
             public int LocalidadeId { get; set; }
             public int? Quantidade { get; set; }
-            public string Motivo { get; set; }
         }
     }
 

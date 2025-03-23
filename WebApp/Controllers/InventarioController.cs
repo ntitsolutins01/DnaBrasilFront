@@ -135,8 +135,7 @@ public class InventarioController : BaseController
             {
                 LocalidadeId = Convert.ToInt32(collection["ddlLocalidade"].ToString()),
                 MaterialId = Convert.ToInt32(collection["ddlMaterial"].ToString()),
-                Quantidade = Convert.ToInt32(collection["quantidade"].ToString()),
-                Motivo = collection["motivo"].ToString()
+                Quantidade = Convert.ToInt32(collection["quantidade"].ToString())
             };
 
             await ApiClientFactory.Instance.CreateInventario(command);
@@ -166,7 +165,6 @@ public class InventarioController : BaseController
             var command = new InventarioModel.CreateUpdateInventarioCommand
             {
                 Id = Convert.ToInt32(collection["editInventarioId"]),
-                Quantidade = Convert.ToInt32(collection["quantidade"].ToString())
             };
 
             await ApiClientFactory.Instance.UpdateInventario(command.Id, command);
@@ -221,7 +219,7 @@ public class InventarioController : BaseController
 
             await ApiClientFactory.Instance.CreateArquivosInventario(command);
 
-            return RedirectToAction(nameof(Index), new { crud = (int)EnumCrud.Created });
+            return RedirectToAction(nameof(Index), new { crud = (int)EnumCrud.Updated });
         }
         catch (Exception e)
         {

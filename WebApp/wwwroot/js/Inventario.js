@@ -1,26 +1,4 @@
-﻿var crud = {
-    DeleteModal: function (id) {
-        $('input[name="deleteInventarioId"]').attr('value', id);
-        $('#mdDeleteInventario').modal('show');
-        vm.DeleteInventario(id);
-    },
-    DeleteArquivosModal: function (value) {
-        $('input[name="deleteArquivosInventarioId"]').attr('value', value);
-        $('#mdDeleteArquivosInventario').modal('show'); // Abre o modal
-        vm.DeleteArquivosInventario(value);
-    },
-    EditModal: function (id) {
-        $('input[name="editInventarioId"]').attr('value', id);
-        $('#mdEditInventario').modal('show');
-        vm.EditInventario(id);
-    },
-    FilesModal: function (id) {
-        $('input[name="editInventarioId"]').attr('value', id);
-        vm.FilesModal(id);
-    }
-};
-
-var vm = new Vue({
+﻿var vm = new Vue({
     el: "#vInventario",
     data: {
         loading: false,
@@ -32,8 +10,7 @@ var vm = new Vue({
             LocalidadeId: "",
             Quantidade: ""
         },
-        arquivosInventarios: [],
-        crud: window.crud
+        arquivosInventarios: []
     },
     mounted: function () {
         var self = this;
@@ -170,45 +147,65 @@ var vm = new Vue({
             }
         },
         loadArquivosInventario: function (id) {
+            var self = this;
+            self.editDto.Id = id;
             axios.get("../../ArquivosInventario/GetArquivosInventariosByInventarioId", {
                 params: { id: id }
             })
-                .then(response => {
-                    console.log("Dados recebidos:", response.data);
-                    this.arquivosInventarios = response.data;
+                .then(function (response) {
+                    self.arquivosInventarios = response.data;
                 })
-                .catch(error => {
-                    console.error("Erro:", error);
+                .catch(function (error) {
+                    console.error("Error fetching ArquivosInventario:", error);
                 });
-        },
-        downloadFile: function (value) {
-            var downloadUrl = "../../ArquivosInventario/Download/" + value;
-            window.location.href = downloadUrl;
         },
         DeleteInventario: function (id) {
             var url = "Inventario/Delete/" + id;
             $("#deleteInventarioHref").prop("href", url);
         },
-        DeleteArquivosInventario: function (value) {
-            var url = "ArquivosInventario/Delete/" + value;
-            $("#deleteArquivosInventarioHref").prop("href", url);
+        DeleteArquivosInventario: function (id) {
+            var url = "ArquivosInventario/Delete/" + id;
+            $("#deleteInventarioHref").prop("href", url);
         },
         EditInventario: function (id) {
             var self = this;
             axios.get("Inventario/GetInventarioById/?id=" + id)
                 .then(function (result) {
-                    self.editDto.Id = result.data.id;                  
-                    self.editDto.Quantidade = result.data.quantidade;
+                    self.editDto.Id = result.data.id;
+                    self.editDto.Descricao = result.data.descricao;
+                    self.editDto.UnidadeMedida = result.data.unidadeMedida;
+                    self.editDto.QtdAdquirida = result.data.qtdAdquirida;
                 })
                 .catch(function (error) {
                     Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
                 });
         },
-        FilesModal: function (id) { 
-            this.editDto.Id = id;
+        FilesModal: function (id) {       
             this.loadArquivosInventario(id);
             $('#mdFilesInventario').modal('show');
         }
     }
 });
 
+// Update the crud object to call the Vue instance method if needed
+var crud = {
+    DeleteModal: function (id) {
+        $('input[name="deleteInventarioId"]').attr('value', id);
+        $('#mdDeleteInventario').modal('show');
+        vm.DeleteInventario(id);
+    },
+    DeleteArquivosModal: function (id) {
+        $('input[name="deleteArquivosInventarioId"]').attr('value', id);
+        $('#mdDeleteArquivosInventario').modal('show');
+        vm.DeleteArquivosInventario(id);
+    },
+    EditModal: function (id) {
+        $('input[name="editInventarioId"]').attr('value', id);
+        $('#mdEditInventario').modal('show');
+        vm.EditInventario(id);
+    },
+    FilesModal: function (id) {
+        $('input[name="editInventarioId"]').attr('value', id);
+        vm.FilesModal(id);
+    }
+};
