@@ -37,7 +37,7 @@
                             {
                                 <tr>
                                     <td class="text-center" style="width:20px;">@Html.DisplayFor(modelItem => item.Id)</td>
-                                    <td class="text-center">@Html.DisplayFor(modelItem => item.Solicitante)</td>
+                                    <td class="text-center">@Html.DisplayFor(modelItem => item.NomeProfissional)</td>
                                     <td class="text-center">@Html.DisplayFor(modelItem => item.NomeLocalidade)</td>
                                     <td class="text-center">@Html.DisplayFor(modelItem => item.TituloMaterial)</td>
                                     <td class="text-center">@Html.DisplayFor(modelItem => item.Quantidade)</td>
@@ -101,11 +101,13 @@
                     <div class="modal-body">
                         <input type="hidden" name="editControleMaterialEstoqueSaidaId" :value="editDto.Id" />
                         <div class="form-group row">
-                            <label class="col-sm-3 control-label text-sm-right pt-2">Solicitante </label>
+                            <label class="col-sm-3 control-label text-sm-right pt-2">Profissional </label>
                             <div class="col-sm-9">
-                                <input type="text" name="solicitante" id="solicitante" class="form-control"
-                                       maxlength="150" :value="editDto.Solicitante"
-                                       title="Por favor informe o solicitante." />
+                                <select class="form-control populate select2" name="ddlProfissional" id="ddlProfissional" style="width:100%"
+                                        required title="Por favor selecione o profissional"
+                                        asp-for="ProfissionalId" asp-items="Model.ListProfissionais">
+                                    <option value="">Selecionar Profissional</option>
+                                </select>
                             </div>
                         </div>
                     </div>

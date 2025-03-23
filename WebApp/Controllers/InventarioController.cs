@@ -135,7 +135,8 @@ public class InventarioController : BaseController
             {
                 LocalidadeId = Convert.ToInt32(collection["ddlLocalidade"].ToString()),
                 MaterialId = Convert.ToInt32(collection["ddlMaterial"].ToString()),
-                Quantidade = Convert.ToInt32(collection["quantidade"].ToString())
+                Quantidade = Convert.ToInt32(collection["quantidade"].ToString()),
+                Motivo = collection["motivo"].ToString()
             };
 
             await ApiClientFactory.Instance.CreateInventario(command);

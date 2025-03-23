@@ -58,7 +58,11 @@
                         <div class="form-group row">
                             <label class="col-sm-3 control-label text-sm-right pt-2">Profissional </label>
                             <div class="col-sm-5">
-                                <input type="text" id="solicitante" name="solicitante" class="form-control" maxlength="150"/>
+                                <select class="form-control populate select2" name="ddlProfissional" id="ddlProfissional" style="width:100%"
+                                        required title="Por favor selecione o profissional"
+                                        asp-for="ProfissionalId" asp-items="Model.ListProfissionais">
+                                    <option value="">Selecionar Profissional</option>
+                                </select>
                             </div>
                             <label class="col-sm-2 control-label text-sm-right pt-2">Quantidade <span class="required">*</span></label>
                             <div class="col-sm-2">
