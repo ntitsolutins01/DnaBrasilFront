@@ -26,6 +26,10 @@ namespace WebApp.Models
         public List<LocalidadeDto> Localidades { get; set; }
         public SelectList ListLocalidades { get; set; }
         public string LocalidadeId { get; set; }
+        public ProfissionalDto Profissional { get; set; }
+        public List<ProfissionalDto> Profissionais { get; set; }
+        public SelectList ListProfissionais { get; set; }
+        public int ProfissionalId { get; set; }
 
         public class CreateUpdateControleMaterialEstoqueSaidaCommand
         {
@@ -34,7 +38,7 @@ namespace WebApp.Models
             public int LocalidadeId { get; set; }
             public int InventarioId { get; set; }
             public  int Quantidade { get; set; }
-            public string? Solicitante { get; set; }
+            public int ProfissionalId { get; set; }
         }
     }
 
