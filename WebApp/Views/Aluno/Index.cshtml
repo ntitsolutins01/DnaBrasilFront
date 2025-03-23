@@ -312,12 +312,11 @@
                     <button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-remove"></i> &nbsp;&nbsp;Fechar</button>
                     <a data-toggle="tooltip"
                        data-placement="top"
-                       title="Exportar PDF CMYK"
-                       :href="'/Aluno/GerarPdfCarteirinha/' + editDto.Id + '?fomentoId=' + editDto.FomentoId"
-                       class="on-default edit-row btn btn-success pull-right"
-                       style="margin-left: 5px;"
+                       title="Imprimir"
+                       :href="'/Aluno/ImprimirCarteirinha/' + editDto.Id + '?fomentoId=' + editDto.FomentoId"
+                       class="on-default edit-row btn btn-info pull-right"
                        target="_blank">
-                        <i class="fa fa-file-pdf-o"></i> &nbsp;&nbsp;PDF CMYK
+                        <i class="fa fa-print"></i> &nbsp;&nbsp;Imprimir
                     </a>
                 </div>
             </div>
@@ -418,11 +417,10 @@
     <script src="~/js/alunos.js"></script>
 
     <script>
-        // Nova função para gerar PDF CMYK
-        function gerarPdfCmykCarteirinha() {
+        function imprimirCarteirinha() {
             const alunoId = $('#carteirinhaAlunoId').val();
             const fomentoId = $('#fomentoId').val();
-            window.open(`/Aluno/GerarPdfCarteirinha/${alunoId}?fomentoId=${fomentoId}`, '_blank');
+            window.open(`/Aluno/ImprimirCarteirinha/${alunoId}?fomentoId=${fomentoId}`, '_blank');
         }
 
         (function ($) {

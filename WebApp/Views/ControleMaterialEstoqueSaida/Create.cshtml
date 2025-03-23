@@ -1,6 +1,6 @@
 ﻿@model ControleMaterialEstoqueSaidaModel
 @{
-    ViewData["Title"] = "Inclusão de Registro de Entrada/Saída";
+    ViewData["Title"] = "Inclusão de Registro de Entrada/Saida";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -16,7 +16,7 @@
                             <a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
                         </div>
 
-                        <h2 class="panel-title">Cadastro de Registro de Entrada/Saída</h2>
+                        <h2 class="panel-title">Cadastro de Registro de Entrada/Saida</h2>
                     </header>
                     <div class="panel-body">
                         <div class="form-group">
@@ -58,11 +58,7 @@
                         <div class="form-group row">
                             <label class="col-sm-3 control-label text-sm-right pt-2">Profissional </label>
                             <div class="col-sm-5">
-                                <select class="form-control populate select2" name="ddlProfissional" id="ddlProfissional" style="width:100%"
-                                        required title="Por favor selecione o profissional"
-                                        asp-for="ProfissionalId" asp-items="Model.ListProfissionais">
-                                    <option value="">Selecionar Profissional</option>
-                                </select>
+                                <input type="text" id="solicitante" name="solicitante" class="form-control" maxlength="150"/>
                             </div>
                             <label class="col-sm-2 control-label text-sm-right pt-2">Quantidade <span class="required">*</span></label>
                             <div class="col-sm-2">

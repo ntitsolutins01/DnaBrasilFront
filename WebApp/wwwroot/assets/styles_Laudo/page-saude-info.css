@@ -52,28 +52,7 @@
     left: 10px;
     overflow: hidden;
 }
-
-.icon-vocacao {
-    width: 50px;
-    height: 40px;
-    opacity: 1;
-    position: absolute;
-    top: 10px;
-    left: 5px;
-    overflow: hidden;
-}
-
-.icon-bucal {
-    width: 40px;
-    height: 40px;
-    opacity: 1;
-    position: absolute;
-    top: 8px;
-    left: 10px;
-    overflow: hidden;
-}
-
-    .container-3-saude {
+.container-3-saude {
     width: 207px;
     height: 60px;
     padding: 10px 0px;
