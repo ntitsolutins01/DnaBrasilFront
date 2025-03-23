@@ -1,6 +1,6 @@
 ﻿@model InventarioModel
 @{
-    ViewData["Title"] = "Listagem de Inventarios";
+    ViewData["Title"] = "Listagem de Inventários";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -65,7 +65,7 @@
                     <div class="panel-actions">
                         <a href="#" class="card-action card-action-toggle" data-card-toggle></a>
                     </div>
-                    <h2 class="panel-title">Listagem de Inventarios</h2>
+                    <h2 class="panel-title">Listagem de Inventários</h2>
                 </header>
                 <div class="panel-body">
                     <div class="form-group row">
@@ -100,6 +100,7 @@
                                 <th class="text-center">Material</th>
                                 <th class="text-center">Unidade de Medida</th>
                                 <th class="text-center">Quantidade</th>
+                                <th class="text-center">Motivo</th>
                                 <th class="text-center">Ações</th>
                             </tr>
                         </thead>
@@ -112,13 +113,9 @@
                                     <td class="text-center">@Html.DisplayFor(modelItem => item.NomeMaterial)</td>
                                     <td class="text-center">@Html.DisplayFor(modelItem => item.NomeUndMedida)</td>
                                     <td class="text-center">@Html.DisplayFor(modelItem => item.Quantidade)</td>
+                                    <td class="text-center">@Html.DisplayFor(modelItem => item.Motivo)</td>
 
                                     <td class="actions text-center">
-                                        <a data-toggle="tooltip" data-placement="top" title="Editar"
-                                           href='javascript:(crud.EditModal(@item.Id))'
-                                           class="on-default edit-row" style='color: #FF9800'>
-                                            <i class="fa fa-pencil"></i>
-                                        </a>
                                         <a data-toggle="tooltip" data-placement="top" title="Arquivos"
                                            href="javascript:vm.FilesModal(@item.Id)"
                                            class="on-default edit-row" style="color: #47a447">
@@ -162,7 +159,7 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="mdDeleteArquivosInventario" tabindex="-1" role="dialog" aria-labelledby="mdDeleteArquivosInventarioLabel" aria-hidden="true">
+    <div class="modal fade" id="mdDeleteArquivosInventario" tabindex="-1" role="dialog" aria-labelledby="mdDeleteArquivosInventarioLabel" aria-hidden="true" style="z-index: 10000 !important;">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -183,7 +180,9 @@
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-thumbs-o-down"></i> &nbsp;&nbsp;Não</button>
-                    <a id="deleteArquivosInventarioHref" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-thumbs-o-up"></i> &nbsp;&nbsp;Sim</a>
+                    <a id="deleteArquivosInventarioHref" class="btn btn-success pull-right" style="margin-left: 5px;">
+                        <i class="fa fa-thumbs-o-up"></i> &nbsp;&nbsp;Sim
+                    </a>
                 </div>
             </div>
         </div>
@@ -202,28 +201,11 @@
                     <div class="modal-body">
                         <input type="hidden" name="editInventarioId" :value="editDto.Id" />
                         <div class="form-group row">
-                            <label class="col-sm-3 control-label text-sm-right pt-2">Descrição </label>
-                            <div class="col-sm-9">
-                                <input type="text" name="descricao" id="descricao" class="form-control"
-                                       maxlength="150" :value="editDto.Descricao"
-                                       title="Por favor informe a descrição." required />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label text-sm-right pt-2">Unidade de Medida <span class="required">*</span></label>
-                            <div class="col-sm-9">
-                                <select class="form-control populate select2" name="ddlUnidadeMedida" id="ddlUnidadeMedida" style="width:100%"
-                                        required title="Por favor selecione a unidade. " :value="editDto.UnidadeMedida"
-                                        asp-for="UnidadeId" asp-items="Model.ListUnidadesMedidas">
-                                    <option value="">Selecionar a Unidade</option>
-                                </select>
-                            </div>
-                            @* <label class="col-sm-2 control-label text-sm-right pt-2">Quantidade </label>
+                            <label class="col-sm-3 control-label text-sm-right pt-2">Quantidade </label>
                             <div class="col-sm-2">
-                                <input type="text" name="qtdAdquirida" id="qtdAdquirida" class="form-control"
-                                       maxlength="10" :value="editDto.QtdAdquirida"
-                                       title="Por favor informe a quantidade." required />
-                            </div> *@
+                                <input type="text" name="quantidade" id="quantidade" class="form-control"
+                                       maxlength="150" :value="editDto.Quantidade"/>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -258,27 +240,15 @@
                                 <tr v-for="arquivo in arquivosInventarios" :key="arquivo.id">
                                     <td class="text-center">{{ arquivo.text }}</td>
                                     <td class="actions text-center">
-                                        @* <a :href="`../../ArquivosInventario/Download/${arquivo.id}`" 
-                                           data-toggle="tooltip" 
-                                           data-placement="top" 
-                                           title="Baixar PDF"
-                                           class="on-default download-row" 
-                                           style="color: #4CAF50">
-                                            <i class="fa fa-download"></i>
-                                        </a> *@
-                                        @* <a data-toggle="tooltip" data-placement="top" title="Excluir"
-                                           href="javascript:crud.DeleteArquivosModal(arquivo.id)"
-                                           class="on-default remove-row" style="cursor: pointer; color: #F44336">
-                                            <i class="fa fa-trash"></i>
-                                        </a> *@
                                         <a data-toggle="tooltip" data-placement="top" title="Download"
-                                           href=""
+                                           href="#"
+                                           v-on:click.prevent="downloadFile(arquivo.value)"
                                            class="on-default remove-row" style="cursor: pointer; color: #4CAF50">
                                             <i class="fa fa-download"></i>
                                         </a>
                                         <a data-toggle="tooltip" data-placement="top" title="Excluir"
-                                           href=""
-                                           class="on-default remove-row" style="cursor: pointer; color: #F44336">
+                                           v-on:click.prevent="crud.DeleteArquivosModal(arquivo.value)"
+                                           class="on-default remove-row" style="cursor: pointer; color: #F44336; z-index: 9999">
                                             <i class="fa fa-trash"></i>
                                         </a>
                                     </td>

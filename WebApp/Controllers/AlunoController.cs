@@ -1,8 +1,24 @@
-using System.Drawing;
+using DocumentFormat.OpenXml.Office2010.Excel;
+using iText.IO.Image;
+using iText.Kernel.Colors;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Xobject;
+using iText.Layout;
+using iText.Layout.Borders;
+using iText.Layout.Element;
+using iText.Layout.Properties;
+using log4net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
+using QRCoder;
+using System;
+using System.Drawing;
+using System.IO;
+using System.Threading.Tasks;
 using WebApp.Authorization;
 using WebApp.Configuration;
 using WebApp.Dto;
@@ -11,10 +27,7 @@ using WebApp.Factory;
 using WebApp.Identity;
 using WebApp.Models;
 using WebApp.Utility;
-using QRCoder;
 using Claim = WebApp.Identity.Claim;
-using log4net;
-using DocumentFormat.OpenXml.Office2010.Excel;
 
 namespace WebApp.Controllers
 {
@@ -267,7 +280,7 @@ namespace WebApp.Controllers
                 var localidades = new SelectList(ApiClientFactory.Instance.GetLocalidadeByMunicipioId(aluno.MunicipioId.ToString()), "Id", "Nome", aluno.LocalidadeId);
                 var profissionais = new SelectList(ApiClientFactory.Instance.GetProfissionaisByLocalidade(Convert.ToInt32(aluno.LocalidadeId)), "Id", "Nome", aluno.ProfissionalId);
                 var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentosAll(), "Id", "Nome", aluno.FomentoId);
-                var deficiencias = new SelectList(ApiClientFactory.Instance.GetDeficienciaAll(), "Id", "Nome", aluno.DeficienciaId); 
+                var deficiencias = new SelectList(ApiClientFactory.Instance.GetDeficienciaAll(), "Id", "Nome", aluno.DeficienciaId);
                 var listModalidades = new SelectList(ApiClientFactory.Instance.GetModalidadeAll(), "Id", "Nome", aluno.ModalidadesIds);
 
                 List<SelectListDto> list = new List<SelectListDto>
@@ -280,7 +293,7 @@ namespace WebApp.Controllers
                 };
 
                 var etnias = new SelectList(list, "IdNome", "Nome", aluno.Etnia);
-                
+
 
                 return View(new AlunoModel()
                 {
@@ -362,7 +375,7 @@ namespace WebApp.Controllers
                 {
                     if (file.Length <= 0) continue;
 
-                    command.NomeFoto = Path.GetFileName(collection.Files[0].FileName);
+                    command.NomeFoto = System.IO.Path.GetFileName(collection.Files[0].FileName);
 
                     using (var ms = new MemoryStream())
                     {
@@ -443,7 +456,7 @@ namespace WebApp.Controllers
                 {
                     if (file.Length <= 0) continue;
 
-                    command.NomeFoto = Path.GetFileName(collection.Files[0].FileName);
+                    command.NomeFoto = System.IO.Path.GetFileName(collection.Files[0].FileName);
 
                     using (var ms = new MemoryStream())
                     {
@@ -488,7 +501,7 @@ namespace WebApp.Controllers
                 {
                     if (file.Length <= 0) continue;
 
-                    command.NomeFoto = Path.GetFileName(collection.Files[0].FileName);
+                    command.NomeFoto = System.IO.Path.GetFileName(collection.Files[0].FileName);
 
                     using var ms = new MemoryStream();
                     await file.CopyToAsync(ms);
@@ -522,34 +535,64 @@ namespace WebApp.Controllers
                 ApiClientFactory.Instance.DeleteDados(id);
                 return RedirectToAction(nameof(Index), new { crud = (int)EnumCrud.Deleted });
             }
-			catch (Exception e)
-			{
+            catch (Exception e)
+            {
                 _logger.Error($"Ação de exclusão do aluno - Aluno.Delete: {e.StackTrace}");
                 return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = $"ATENÇÃO. {e.Message}" });
-			}
-		}
+            }
+        }
 
         /// <summary>
-        /// Tela para Impressao de Carteirinha
+        /// Gera um PDF da carteirinha do aluno em formato CMYK
         /// </summary>
         /// <param name="id">Id do Aluno</param>
         /// <param name="fomentoId">Id do Fomento</param>
-        /// <returns>Retorna o objeto AlunoModel</returns>
+        /// <returns>Arquivo PDF da carteirinha</returns>
         [ClaimsAuthorize(ClaimType.Aluno, Claim.Incluir)]
-        public async Task<ActionResult> ImprimirCarteirinha(int id, int fomentoId)
+        public async Task<IActionResult> GerarPdfCarteirinha(int id, int fomentoId)
         {
-            _logger.Info($"Tela para impressao de carteirinha - Aluno.ImprimirCarteirinha");
-
-            var aluno = await ApiClientFactory.Instance.GetAlunoById(id);
-            var modeloCarteirinha = await ApiClientFactory.Instance.GetModeloCarteirinhaByFomentoId(fomentoId);
-
-            return View(new AlunoModel()
+            try
             {
-                Aluno = aluno,
-                ModeloCarteirinha = modeloCarteirinha
-            });
-        }
+                _logger.Info($"Gerando PDF CMYK da carteirinha - Aluno.GerarPdfCarteirinha - AlunoId: {id}");
 
+                // Verificar o ambiente
+                if (!VerificarAmbientePdfCmyk())
+                {
+                    return StatusCode(500, "Configurações necessárias para geração de PDF CMYK não encontradas");
+                }
+
+                // Obter os dados do aluno e do modelo de carteirinha
+                var aluno = await ApiClientFactory.Instance.GetAlunoById(id);
+                var modeloCarteirinha = await ApiClientFactory.Instance.GetModeloCarteirinhaByFomentoId(fomentoId);
+
+                if (aluno == null)
+                {
+                    _logger.Error($"Aluno não encontrado - ID: {id}");
+                    return NotFound("Aluno não encontrado");
+                }
+
+                if (modeloCarteirinha == null)
+                {
+                    _logger.Error($"Modelo de carteirinha não encontrado - FomentoId: {fomentoId}");
+                    return NotFound("Modelo de carteirinha não encontrado");
+                }
+
+                // Gerar o PDF
+                byte[] pdfBytes = await GerarPdfCmyk(aluno, modeloCarteirinha);
+
+                // Retornar o arquivo PDF
+                return File(
+                    pdfBytes,
+                    "application/pdf",
+                    $"Carteirinha_{aluno.Nome.Replace(" ", "_")}_{DateTime.Now:yyyyMMdd}.pdf"
+                );
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"Erro ao gerar PDF da carteirinha: {ex.Message}", ex);
+                return StatusCode(500, "Erro ao gerar o PDF da carteirinha: " + ex.Message);
+            }
+        }
 
         /// <summary>
         /// Acao de Imprimir Carteirinha por Lote
@@ -980,7 +1023,7 @@ namespace WebApp.Controllers
                 {
                     if (file.Length <= 0) continue;
 
-                    command.NomeFoto = Path.GetFileName(collection.Files[0].FileName);
+                    command.NomeFoto = System.IO.Path.GetFileName(collection.Files[0].FileName);
 
                     using (var ms = new MemoryStream())
                     {
@@ -1160,6 +1203,379 @@ namespace WebApp.Controllers
             }
 
             return bytes;
+        }
+        private async Task<byte[]> GerarPdfCmyk(AlunoDto aluno, ModeloCarteirinhaDto modeloCarteirinha)
+        {
+            // Caminho dos arquivos de background
+            string frenteCaminhoRelativo = "assets/styles_Carteirinha/modelos/carteirinha-frente.tif";
+            string versoCaminhoRelativo = $"assets/styles_Carteirinha/modelos/{modeloCarteirinha.NomeImagem}";
+
+            // Converter caminhos relativos para absolutos
+            string frenteCaminhoAbsoluto = System.IO.Path.Combine(_host.WebRootPath, frenteCaminhoRelativo.Replace("/", System.IO.Path.DirectorySeparatorChar.ToString()));
+            string versoCaminhoAbsoluto = System.IO.Path.Combine(_host.WebRootPath, versoCaminhoRelativo.Replace("/", System.IO.Path.DirectorySeparatorChar.ToString()));
+
+            // Verificar se os arquivos existem
+            if (!System.IO.File.Exists(frenteCaminhoAbsoluto))
+            {
+                _logger.Error($"Arquivo de fundo da frente não encontrado: {frenteCaminhoAbsoluto}");
+                throw new FileNotFoundException("Arquivo de fundo da frente não encontrado", frenteCaminhoAbsoluto);
+            }
+
+            if (!System.IO.File.Exists(versoCaminhoAbsoluto))
+            {
+                _logger.Error($"Arquivo de fundo do verso não encontrado: {versoCaminhoAbsoluto}");
+                throw new FileNotFoundException("Arquivo de fundo do verso não encontrado", versoCaminhoAbsoluto);
+            }
+
+            // Criar memorystream para armazenar o PDF
+            using (MemoryStream ms = new MemoryStream())
+            {
+                // Definição da sangria de 3mm (em pontos)
+                float sangriaEmPontos = 3f / 10f * 28.35f; // 3mm em pontos
+
+                // Dimensões originais do documento
+                float larguraOriginal = 8.5f * 28.35f;
+                float alturaOriginal = 5.4f * 28.35f;
+
+                // Dimensões com sangria
+                float larguraComSangria = larguraOriginal + (2 * sangriaEmPontos);
+                float alturaComSangria = alturaOriginal + (2 * sangriaEmPontos);
+
+                // Configuração das cores CMYK para todo o documento
+                // Cores básicas em CMYK para uso em todo o documento - usando "rich black" para evitar conversão para GRAY
+                DeviceCmyk corPreto = new DeviceCmyk(0.75f, 0.68f, 0.67f, 0.9f); // "Rich black" CMYK
+                DeviceCmyk corAzul = new DeviceCmyk(0.75f, 0.68f, 0, 0.2f);
+                DeviceCmyk corBranca = new DeviceCmyk(0, 0, 0, 0); // Branco em CMYK
+
+                // Criar documento PDF com suporte a CMYK
+                PdfWriter writer = new PdfWriter(ms);
+                PdfDocument pdf = new PdfDocument(writer);
+
+                // Configurar Output Intent para CMYK - isso já deve forçar o uso de cores CMYK
+                PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "",
+                    "http://www.color.org", "FOGRA39", null);
+                pdf.AddOutputIntent(outputIntent);
+
+                // Configurações para o documento com tamanho ajustado para incluir sangria
+                Document document = new Document(pdf, new PageSize(larguraComSangria, alturaComSangria));
+                document.SetMargins(0, 0, 0, 0);
+
+                // === FRENTE DA CARTEIRINHA ===
+
+                // Adicionar imagem de fundo da frente com posicionamento ajustado para mostrar a sangria
+                ImageData imgDataFrente = ImageDataFactory.Create(frenteCaminhoAbsoluto);
+                iText.Layout.Element.Image backgroundFrente = new iText.Layout.Element.Image(imgDataFrente);
+                backgroundFrente.SetFixedPosition(sangriaEmPontos, sangriaEmPontos);
+                backgroundFrente.SetWidth(larguraOriginal);
+                backgroundFrente.SetHeight(alturaOriginal);
+                document.Add(backgroundFrente);
+
+                // Desenhar as marcas de corte nos cantos - agora usando cor CMYK para preto
+                DesenharMarcasDeCorte(pdf, 1, sangriaEmPontos, larguraComSangria, alturaComSangria, corPreto);
+
+                // Adicionar informações do aluno - agora com a margem de sangria incluída nas posições
+                float leftMargin = 0.5f * 28.35f + sangriaEmPontos; // 0.5cm do original + sangria
+                float textWidth = 5.5f * 28.35f;
+                float labelWidth = 2.5f * 28.35f; // Largura da label
+                float valueWidth = 3.0f * 28.35f; // Largura do valor
+
+                // Ajustando a posição vertical incluindo a sangria
+                float startY = alturaComSangria - 2.3f * 28.35f - sangriaEmPontos; // Começando 2.3cm do topo + ajuste pela sangria
+
+                // Starting Y position com padding-top ajustado
+                float currentY = startY;
+
+                // Nome
+                AddInfoRow(document, "NOME DO ESTUDANTE:", aluno.Nome, leftMargin, currentY, labelWidth, valueWidth, corAzul);
+                currentY -= 12; // Mantendo o espaçamento original
+
+                // Data de nascimento
+                AddInfoRow(document, "DATA DE NASCIMENTO:", aluno.DtNascimento, leftMargin, currentY, labelWidth, valueWidth, corAzul);
+                currentY -= 12;
+
+                // Telefone
+                AddInfoRow(document, "TELEFONE:", aluno.Celular, leftMargin, currentY, labelWidth, valueWidth, corAzul);
+                currentY -= 12;
+
+                // CPF
+                AddInfoRow(document, "CPF:", aluno.Cpf, leftMargin, currentY, labelWidth, valueWidth, corAzul);
+                currentY -= 12;
+
+                // Matrícula
+                AddInfoRow(document, "MATRÍCULA:", aluno.Id.ToString(), leftMargin, currentY, labelWidth, valueWidth, corAzul);
+                currentY -= 12;
+
+                // Modalidades - alterei para "Conhecimento" conforme o modelo
+                AddInfoRow(document, "", "Conhecimento", leftMargin, currentY, labelWidth, valueWidth, corAzul);
+                currentY -= 12;
+
+                // Adicionar foto do aluno - ajustado para incluir sangria
+                float rightMargin = 1f * 28.35f + sangriaEmPontos;
+                float topMargin = 0.6f * 28.35f + sangriaEmPontos;
+                float fotoWidth = 38;
+                float fotoHeight = 54; // Altura reduzida para melhor proporção
+
+                // Calculando posição X a partir da direita (incluindo sangria)
+                float fotoX = larguraComSangria - rightMargin - fotoWidth;
+                // Calculando posição Y a partir do topo (incluindo sangria)
+                float fotoY = alturaComSangria - topMargin - fotoHeight;
+
+                // Definir o raio para as bordas arredondadas (equivalente a border-radius: 4px)
+                float radioBorda = 4; // 4 pontos (aproximadamente 1.4mm)
+
+                if (aluno.ByteImage != null && aluno.ByteImage.Length > 0)
+                {
+                    // Manter as dimensões originais já que não temos mais a borda visível
+                    float fotoInternalX = fotoX;
+                    float fotoInternalY = fotoY;
+                    float fotoInternalWidth = fotoWidth;
+                    float fotoInternalHeight = fotoHeight;
+
+                    // Antes de adicionar a imagem, desenhar um fundo branco com cantos arredondados
+                    // (isso garante que a imagem tenha um fundo definido para clipar)
+                    PdfCanvas canvasFundoFoto = new PdfCanvas(pdf.GetPage(1));
+                    canvasFundoFoto.SaveState();
+
+                    // Definir um fundo branco em CMYK
+                    canvasFundoFoto.SetFillColor(corBranca);
+                    canvasFundoFoto.RoundRectangle(fotoInternalX, fotoInternalY, fotoInternalWidth, fotoInternalHeight, radioBorda);
+                    canvasFundoFoto.Fill();
+                    canvasFundoFoto.RestoreState();
+
+                    ImageData imgDataFoto = ImageDataFactory.Create(aluno.ByteImage);
+                    iText.Layout.Element.Image foto = new iText.Layout.Element.Image(imgDataFoto);
+                    foto.SetFixedPosition(fotoInternalX, fotoInternalY);
+
+                    // Implementando comportamento similar ao object-fit: cover
+                    foto.SetHeight(fotoInternalHeight);
+                    foto.SetWidth(fotoInternalWidth);
+                    foto.ScaleToFit(fotoInternalWidth, fotoInternalHeight);
+
+                    // Aplicar o recorte em formato arredondado na imagem
+                    PdfCanvas clipCanvas = new PdfCanvas(pdf.GetPage(1));
+                    clipCanvas.SaveState();
+
+                    // Forçar uso de CMYK para o clipping path
+                    clipCanvas.SetFillColor(corPreto);
+                    clipCanvas.SetStrokeColor(corPreto);
+
+                    // Aplicar clipping
+                    clipCanvas.RoundRectangle(fotoInternalX, fotoInternalY, fotoInternalWidth, fotoInternalHeight, radioBorda);
+                    clipCanvas.Clip().EndPath();
+
+                    document.Add(foto);
+
+                    clipCanvas.RestoreState();
+                }
+                else
+                {
+                    // Se não tiver foto, usar imagem padrão com bordas arredondadas
+                    string fotoDefaultPath = aluno.Sexo == "Feminino"
+                        ? System.IO.Path.Combine(_host.WebRootPath, "assets", "images", "menina.png")
+                        : System.IO.Path.Combine(_host.WebRootPath, "assets", "images", "menino.png");
+
+                    // Manter as dimensões originais 
+                    float fotoInternalX = fotoX;
+                    float fotoInternalY = fotoY;
+                    float fotoInternalWidth = fotoWidth;
+                    float fotoInternalHeight = fotoHeight;
+
+                    // Antes de adicionar a imagem, desenhar um fundo branco com cantos arredondados
+                    PdfCanvas canvasFundoFotoDefault = new PdfCanvas(pdf.GetPage(1));
+                    canvasFundoFotoDefault.SaveState();
+
+                    // Definir um fundo branco em CMYK
+                    canvasFundoFotoDefault.SetFillColor(corBranca);
+                    canvasFundoFotoDefault.RoundRectangle(fotoInternalX, fotoInternalY, fotoInternalWidth, fotoInternalHeight, radioBorda);
+                    canvasFundoFotoDefault.Fill();
+                    canvasFundoFotoDefault.RestoreState();
+
+                    ImageData imgDataDefault = ImageDataFactory.Create(fotoDefaultPath);
+                    iText.Layout.Element.Image fotoDefault = new iText.Layout.Element.Image(imgDataDefault);
+                    fotoDefault.SetFixedPosition(fotoInternalX, fotoInternalY);
+
+                    // Implementando comportamento similar ao object-fit: contain para imagens padrão
+                    fotoDefault.SetHeight(fotoInternalHeight);
+                    fotoDefault.SetWidth(fotoInternalWidth);
+                    fotoDefault.ScaleToFit(fotoInternalWidth, fotoInternalHeight);
+
+                    // Aplicar o recorte em formato arredondado na imagem padrão com cores CMYK
+                    PdfCanvas clipCanvasDefault = new PdfCanvas(pdf.GetPage(1));
+                    clipCanvasDefault.SaveState();
+
+                    // Forçar uso de CMYK para o clipping path
+                    clipCanvasDefault.SetFillColor(corPreto);
+                    clipCanvasDefault.SetStrokeColor(corPreto);
+
+                    clipCanvasDefault.RoundRectangle(fotoInternalX, fotoInternalY, fotoInternalWidth, fotoInternalHeight, radioBorda);
+                    clipCanvasDefault.Clip().EndPath();
+
+                    document.Add(fotoDefault);
+
+                    clipCanvasDefault.RestoreState();
+                }
+
+                // Adicionar QR Code - ajustado para incluir sangria
+                if (aluno.QrCode != null && aluno.QrCode.Length > 0)
+                {
+                    // Cálculo correto baseado no CSS: right: 0.98cm, bottom: 0.8cm
+                    float qrRightMargin = 0.98f * 28.35f + sangriaEmPontos;
+                    float qrBottomMargin = 0.8f * 28.35f + sangriaEmPontos;
+                    float qrWidth = 40;
+                    float qrHeight = 40;
+
+                    // Calculando posição X a partir da direita (incluindo sangria)
+                    float qrX = larguraComSangria - qrRightMargin - qrWidth;
+                    // Calculando posição Y a partir do fundo (incluindo sangria)
+                    float qrY = qrBottomMargin;
+
+                    ImageData imgDataQr = ImageDataFactory.Create(aluno.QrCode);
+                    iText.Layout.Element.Image qrCode = new iText.Layout.Element.Image(imgDataQr);
+                    qrCode.SetFixedPosition(qrX, qrY);
+                    qrCode.SetHeight(qrHeight);
+                    qrCode.SetWidth(qrWidth);
+
+                    // Garantir que o QR Code mantenha sua proporção
+                    qrCode.ScaleToFit(qrWidth, qrHeight);
+
+                    document.Add(qrCode);
+                }
+
+                // Nova página para o verso
+                document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
+
+                // === VERSO DA CARTEIRINHA ===
+
+                // Adicionar imagem de fundo do verso com posicionamento ajustado para mostrar a sangria
+                ImageData imgDataVerso = ImageDataFactory.Create(versoCaminhoAbsoluto);
+                iText.Layout.Element.Image backgroundVerso = new iText.Layout.Element.Image(imgDataVerso);
+                backgroundVerso.SetFixedPosition(sangriaEmPontos, sangriaEmPontos);
+                backgroundVerso.SetWidth(larguraOriginal);
+                backgroundVerso.SetHeight(alturaOriginal);
+                document.Add(backgroundVerso);
+
+                // Desenhar as marcas de corte nos cantos - usando cor CMYK para preto
+                DesenharMarcasDeCorte(pdf, 2, sangriaEmPontos, larguraComSangria, alturaComSangria, corPreto);
+
+                // Adicionar informações do verso - ajustado para incluir sangria
+                float versoLeftMargin = 0.6f * 28.35f + sangriaEmPontos;
+                float versoTextWidth = 5.2f * 28.35f;
+
+                // Ajustando posição vertical do verso para centralizar com a sangria
+                // Calculando para 2 linhas de texto
+                float versoContentHeight = 2 * 12;
+                float versoCenterY = alturaComSangria / 2;
+                float versoStartY = versoCenterY + (versoContentHeight / 2);
+
+                // Movendo os textos para o centro vertical
+                float versoY = versoStartY;
+
+                // Município/Estado
+                AddInfoRow(document, "MUNICÍPIO/ESTADO:", aluno.MunicipioEstado, versoLeftMargin, versoY, labelWidth, valueWidth, corAzul);
+                versoY -= 12;
+
+                // Unidade Escolar
+                AddInfoRow(document, "UNIDADE ESCOLAR:", aluno.NomeLocalidade, versoLeftMargin, versoY, labelWidth, valueWidth, corAzul);
+
+                // Fechar documento
+                document.Close();
+
+                // Retornar os bytes do PDF
+                return ms.ToArray();
+            }
+        }
+
+
+        // Método auxiliar para desenhar as marcas de corte
+        private void DesenharMarcasDeCorte(PdfDocument pdf, int numeroPagina, float sangria, float largura, float altura, DeviceCmyk corCmyk)
+        {
+            // Usando a classe PdfCanvas para desenhar diretamente na página
+            PdfCanvas canvas = new PdfCanvas(pdf.GetPage(numeroPagina));
+
+            // Salvar o estado antes de fazer alterações
+            canvas.SaveState();
+
+            // Usar explicitamente a cor CMYK passada como parâmetro
+            canvas.SetStrokeColor(corCmyk);
+            canvas.SetLineWidth(0.25f);
+
+            // Comprimento das linhas de marca de corte (5mm)
+            float tamanhoMarca = 5f / 10f * 28.35f;
+
+            // Superior esquerdo
+            canvas.MoveTo(0, sangria);
+            canvas.LineTo(tamanhoMarca, sangria);
+            canvas.MoveTo(sangria, 0);
+            canvas.LineTo(sangria, tamanhoMarca);
+
+            // Superior direito
+            canvas.MoveTo(largura, sangria);
+            canvas.LineTo(largura - tamanhoMarca, sangria);
+            canvas.MoveTo(largura - sangria, 0);
+            canvas.LineTo(largura - sangria, tamanhoMarca);
+
+            // Inferior esquerdo
+            canvas.MoveTo(0, altura - sangria);
+            canvas.LineTo(tamanhoMarca, altura - sangria);
+            canvas.MoveTo(sangria, altura);
+            canvas.LineTo(sangria, altura - tamanhoMarca);
+
+            // Inferior direito
+            canvas.MoveTo(largura, altura - sangria);
+            canvas.LineTo(largura - tamanhoMarca, altura - sangria);
+            canvas.MoveTo(largura - sangria, altura);
+            canvas.LineTo(largura - sangria, altura - tamanhoMarca);
+
+            // Desenhar as linhas
+            canvas.Stroke();
+
+            // Restaurar o estado
+            canvas.RestoreState();
+        }
+
+        /// <summary>
+        /// Método auxiliar para adicionar uma linha de informação consistente
+        /// </summary>
+        private void AddInfoRow(Document document, string label, string value, float x, float y, float labelWidth, float valueWidth, DeviceCmyk color)
+        {
+            // Label
+            Paragraph labelParagraph = new Paragraph(label);
+            labelParagraph.SetFontSize(6); // Mantendo o tamanho da fonte em 6px
+            labelParagraph.SetBold();
+            labelParagraph.SetFontColor(color);
+            labelParagraph.SetFixedPosition(x, y, labelWidth);
+            document.Add(labelParagraph);
+
+            // Value - posicionado à direita da label
+            Paragraph valueParagraph = new Paragraph(value);
+            valueParagraph.SetFontSize(6);
+            valueParagraph.SetFontColor(color);
+            valueParagraph.SetFixedPosition(x + labelWidth, y, valueWidth);
+            document.Add(valueParagraph);
+        }
+
+        /// <summary>
+        /// Verifica se os recursos necessários para geração do PDF estão disponíveis
+        /// </summary>
+        private bool VerificarAmbientePdfCmyk()
+        {
+            try
+            {
+                // Verificar se os diretórios de templates existem
+                string templatesPath = System.IO.Path.Combine(_host.WebRootPath, "assets", "styles_Carteirinha", "modelos");
+                if (!System.IO.Directory.Exists(templatesPath))
+                {
+                    _logger.Error($"Diretório de modelos de carteirinha não encontrado: {templatesPath}");
+                    return false;
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"Erro ao verificar ambiente para geração de PDF CMYK: {ex.Message}", ex);
+                return false;
+            }
         }
         #endregion
     }

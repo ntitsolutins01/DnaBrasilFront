@@ -159,6 +159,7 @@ builder.Services.AddAuthorization(o =>
 
     o.AddPolicy(ModuloAccess.Aluno, policy =>
         policy.RequireAssertion(context =>
+            context.User.IsInRole(UserRoles.AdministradorEad) ||
             context.User.IsInRole(UserRoles.Coordenador) ||
             context.User.IsInRole(UserRoles.Gestor) ||
             context.User.IsInRole(UserRoles.Profissional) ||
@@ -183,6 +184,8 @@ builder.Services.AddAuthorization(o =>
     o.AddPolicy(ModuloAccess.ControleMaterial, policy =>
         policy.RequireAssertion(context =>
             context.User.IsInRole(UserRoles.Administrador)));
+
+
 
 
     #endregion
