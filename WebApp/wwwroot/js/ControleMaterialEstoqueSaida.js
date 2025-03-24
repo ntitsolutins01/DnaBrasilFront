@@ -2,7 +2,7 @@
     el: "#vControleMaterialEstoqueSaida",
     data: {
         loading: false,
-        editDto: { Id: "", Quantidade: "", Solicitante: "" }
+        editDto: { Id: "", Quantidade: "" }
     },
     mounted: function () {
         var self = this;
@@ -250,13 +250,40 @@
         EditControleMaterialEstoqueSaida: function (id) {
             var self = this;
 
+            self.editDto = { Id: "", Quantidade: "" };
+
             axios.get("ControleMaterialEstoqueSaida/GetControleMaterialEstoqueSaidaById/?id=" + id).then(result => {
 
-                self.editDto.Id = result.data.id;
-                self.editDto.Quantidade = result.data.quantidade;
-                self.editDto.Solicitante = result.data.solicitante;
+                self.$nextTick(() => {
+                    self.editDto = {
+                        Id: result.data.id,
+                        Quantidade: result.data.quantidade
+                    };
+                });
+
+                if (result.data.listProfissionais.length > 0) {
+                    var items = '<option value="">Selecionar o Profissional</option>';
+                    $("#ddlProfissional").empty;
+                    $.each(result.data.listProfissionais,
+                        function (i, row) {
+                            if (row.selected) {
+                                items += "<option selected value='" + row.value + "'>" + row.text + "</option>";
+                            } else {
+                                items += "<option value='" + row.value + "'>" + row.text + "</option>";
+                            }
+                        });
+                    $("#ddlProfissional").html(items);
+                }
+                else {
+                    new PNotify({
+                        title: 'Profissional',
+                        text: 'Profissionais não encontrados.',
+                        type: 'warning'
+                    });
+                }
 
             }).catch(error => {
+                console.error('Erro ao carregar dados:', error);
                 Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
             });
         }

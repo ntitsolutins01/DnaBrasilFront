@@ -50,6 +50,7 @@ public class ControleMaterialEstoqueSaidaController : BaseController
     {
         SetNotifyMessage(notify, message);
         SetCrudMessage(crud);
+
         var response = ApiClientFactory.Instance.GetControlesMateriaisEstoquesSaidasAll();
 
         return View(new ControleMaterialEstoqueSaidaModel() { ControlesMateriaisEstoquesSaidas = response });
@@ -68,11 +69,13 @@ public class ControleMaterialEstoqueSaidaController : BaseController
         {
             SetNotifyMessage(notify, message);
             SetCrudMessage(crud);
+            var profissionais = new SelectList(ApiClientFactory.Instance.GetUsuarioAll().Where(x => x.Perfil.Id == (int)EnumPerfil.Profissional), "Id", "Nome");
             var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome");
 
             return View(new ControleMaterialEstoqueSaidaModel()
             {
-                ListEstados = estados
+                ListEstados = estados,
+                ListProfissionais = profissionais
             });
         }
         catch (Exception e)
@@ -107,7 +110,7 @@ public class ControleMaterialEstoqueSaidaController : BaseController
                 LocalidadeId = Convert.ToInt32(collection["ddlLocalidade"].ToString()),
                 InventarioId = Convert.ToInt32(collection["ddlInventario"].ToString()),
                 Quantidade = quantidade,
-                Solicitante = collection["solicitante"].ToString()
+                ProfissionalId = Convert.ToInt32(collection["ddlProfissional"].ToString())
             };
 
             //var inventario = 
@@ -145,7 +148,7 @@ public class ControleMaterialEstoqueSaidaController : BaseController
             var command = new ControleMaterialEstoqueSaidaModel.CreateUpdateControleMaterialEstoqueSaidaCommand
             {
                 Id = Convert.ToInt32(collection["editControleMaterialEstoqueSaidaId"]),
-                Solicitante = collection["solicitante"].ToString()
+                ProfissionalId = Convert.ToInt32(collection["ddlProfissional"])
             };
 
             await ApiClientFactory.Instance.UpdateControleMaterialEstoqueSaida(command.Id, command);
@@ -218,6 +221,9 @@ public class ControleMaterialEstoqueSaidaController : BaseController
     public Task<ControleMaterialEstoqueSaidaDto> GetControleMaterialEstoqueSaidaById(int id)
     {
         var result = ApiClientFactory.Instance.GetControleMaterialEstoqueSaidaById(id);
+        var profissionais = new SelectList(ApiClientFactory.Instance.GetUsuarioAll().Where(x => x.Perfil.Id == (int)EnumPerfil.Profissional), "Id", "Nome", result.ProfissionalId);
+
+        result.ListProfissionais = profissionais;
 
         return Task.FromResult(result);
     }
