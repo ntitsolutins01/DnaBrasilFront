@@ -1306,14 +1306,14 @@ namespace WebApp.Controllers
                 currentY -= 12;
 
                 // Modalidades - alterei para "Conhecimento" conforme o modelo
-                AddInfoRow(document, "", "Conhecimento", leftMargin, currentY, labelWidth, valueWidth, corAzul);
+                AddFullWidthText(document, "Conhecimento", leftMargin, currentY, labelWidth + valueWidth, corAzul, false);
                 currentY -= 12;
 
                 // Adicionar foto do aluno - ajustado para incluir sangria
-                float rightMargin = 1f * 28.35f + sangriaEmPontos;
+                float rightMargin = 0.98f * 28.35f + sangriaEmPontos;
                 float topMargin = 0.6f * 28.35f + sangriaEmPontos;
-                float fotoWidth = 38;
-                float fotoHeight = 54; // Altura reduzida para melhor proporção
+                float fotoWidth = 40;
+                float fotoHeight = 58; // Altura reduzida para melhor proporção
 
                 // Calculando posição X a partir da direita (incluindo sangria)
                 float fotoX = larguraComSangria - rightMargin - fotoWidth;
@@ -1332,7 +1332,6 @@ namespace WebApp.Controllers
                     float fotoInternalHeight = fotoHeight;
 
                     // Antes de adicionar a imagem, desenhar um fundo branco com cantos arredondados
-                    // (isso garante que a imagem tenha um fundo definido para clipar)
                     PdfCanvas canvasFundoFoto = new PdfCanvas(pdf.GetPage(1));
                     canvasFundoFoto.SaveState();
 
@@ -1343,13 +1342,40 @@ namespace WebApp.Controllers
                     canvasFundoFoto.RestoreState();
 
                     ImageData imgDataFoto = ImageDataFactory.Create(aluno.ByteImage);
-                    iText.Layout.Element.Image foto = new iText.Layout.Element.Image(imgDataFoto);
-                    foto.SetFixedPosition(fotoInternalX, fotoInternalY);
 
-                    // Implementando comportamento similar ao object-fit: cover
-                    foto.SetHeight(fotoInternalHeight);
-                    foto.SetWidth(fotoInternalWidth);
-                    foto.ScaleToFit(fotoInternalWidth, fotoInternalHeight);
+                    // Obter as dimensões originais da imagem
+                    float imgOriginalWidth = imgDataFoto.GetWidth();
+                    float imgOriginalHeight = imgDataFoto.GetHeight();
+
+                    // Calcular razões de aspecto
+                    float imgRatio = imgOriginalWidth / imgOriginalHeight;
+                    float containerRatio = fotoInternalWidth / fotoInternalHeight;
+
+                    iText.Layout.Element.Image foto = new iText.Layout.Element.Image(imgDataFoto);
+
+                    // Implementando comportamento similar ao background-size: cover
+                    if (imgRatio > containerRatio)
+                    {
+                        // Ajustar pela altura e permitir que a largura transborde
+                        foto.SetHeight(fotoInternalHeight);
+                        // Calcular a nova largura mantendo a proporção
+                        float newWidth = fotoInternalHeight * imgRatio;
+                        foto.SetWidth(newWidth);
+                        // Centralizar horizontalmente
+                        float offsetX = (newWidth - fotoInternalWidth) / 2;
+                        foto.SetFixedPosition(fotoInternalX - offsetX, fotoInternalY);
+                    }
+                    else
+                    {
+                        // Ajustar pela largura e permitir que a altura transborde
+                        foto.SetWidth(fotoInternalWidth);
+                        // Calcular a nova altura mantendo a proporção
+                        float newHeight = fotoInternalWidth / imgRatio;
+                        foto.SetHeight(newHeight);
+                        // Centralizar verticalmente
+                        float offsetY = (newHeight - fotoInternalHeight) / 2;
+                        foto.SetFixedPosition(fotoInternalX, fotoInternalY - offsetY);
+                    }
 
                     // Aplicar o recorte em formato arredondado na imagem
                     PdfCanvas clipCanvas = new PdfCanvas(pdf.GetPage(1));
@@ -1391,13 +1417,40 @@ namespace WebApp.Controllers
                     canvasFundoFotoDefault.RestoreState();
 
                     ImageData imgDataDefault = ImageDataFactory.Create(fotoDefaultPath);
-                    iText.Layout.Element.Image fotoDefault = new iText.Layout.Element.Image(imgDataDefault);
-                    fotoDefault.SetFixedPosition(fotoInternalX, fotoInternalY);
 
-                    // Implementando comportamento similar ao object-fit: contain para imagens padrão
-                    fotoDefault.SetHeight(fotoInternalHeight);
-                    fotoDefault.SetWidth(fotoInternalWidth);
-                    fotoDefault.ScaleToFit(fotoInternalWidth, fotoInternalHeight);
+                    // Obter as dimensões originais da imagem
+                    float imgOriginalWidth = imgDataDefault.GetWidth();
+                    float imgOriginalHeight = imgDataDefault.GetHeight();
+
+                    // Calcular razões de aspecto
+                    float imgRatio = imgOriginalWidth / imgOriginalHeight;
+                    float containerRatio = fotoInternalWidth / fotoInternalHeight;
+
+                    iText.Layout.Element.Image fotoDefault = new iText.Layout.Element.Image(imgDataDefault);
+
+                    // Implementando comportamento similar ao background-size: cover para imagem padrão
+                    if (imgRatio > containerRatio)
+                    {
+                        // Ajustar pela altura e permitir que a largura transborde
+                        fotoDefault.SetHeight(fotoInternalHeight);
+                        // Calcular a nova largura mantendo a proporção
+                        float newWidth = fotoInternalHeight * imgRatio;
+                        fotoDefault.SetWidth(newWidth);
+                        // Centralizar horizontalmente
+                        float offsetX = (newWidth - fotoInternalWidth) / 2;
+                        fotoDefault.SetFixedPosition(fotoInternalX - offsetX, fotoInternalY);
+                    }
+                    else
+                    {
+                        // Ajustar pela largura e permitir que a altura transborde
+                        fotoDefault.SetWidth(fotoInternalWidth);
+                        // Calcular a nova altura mantendo a proporção
+                        float newHeight = fotoInternalWidth / imgRatio;
+                        fotoDefault.SetHeight(newHeight);
+                        // Centralizar verticalmente
+                        float offsetY = (newHeight - fotoInternalHeight) / 2;
+                        fotoDefault.SetFixedPosition(fotoInternalX, fotoInternalY - offsetY);
+                    }
 
                     // Aplicar o recorte em formato arredondado na imagem padrão com cores CMYK
                     PdfCanvas clipCanvasDefault = new PdfCanvas(pdf.GetPage(1));
@@ -1485,8 +1538,51 @@ namespace WebApp.Controllers
             }
         }
 
+        /// <summary>
+        /// Método auxiliar da carteirinha para adicionar uma linha de informação consistente
+        /// </summary>
+        private void AddInfoRow(Document document, string label, string value, float x, float y, float labelWidth, float valueWidth, DeviceCmyk color)
+        {
+            // Label
+            Paragraph labelParagraph = new Paragraph(label);
+            labelParagraph.SetFontSize(6); // Mantendo o tamanho da fonte em 6px
+            labelParagraph.SetBold();
+            labelParagraph.SetFontColor(color);
+            labelParagraph.SetFixedPosition(x, y, labelWidth);
+            document.Add(labelParagraph);
 
-        // Método auxiliar para desenhar as marcas de corte
+            // Value - posicionado à direita da label
+            Paragraph valueParagraph = new Paragraph(value);
+            valueParagraph.SetFontSize(6);
+            valueParagraph.SetFontColor(color);
+            valueParagraph.SetFixedPosition(x + labelWidth, y, valueWidth);
+            document.Add(valueParagraph);
+        }
+
+        /// <summary>
+        /// Método auxiliar da carteirinha para adicionar texto com largura total (ocupando espaço de label + value)
+        /// </summary>
+        private void AddFullWidthText(Document document, string text, float x, float y, float totalWidth, DeviceCmyk color, bool isBold = false)
+        {
+            Paragraph paragraph = new Paragraph(text);
+            paragraph.SetFontSize(6); // Mantendo o tamanho da fonte em 6px
+            if (isBold)
+            {
+                paragraph.SetBold();
+            }
+            paragraph.SetFontColor(color);
+            paragraph.SetFixedPosition(x, y, totalWidth);
+
+            // Permitir quebra de linha caso o texto seja muito longo
+            paragraph.SetMultipliedLeading(1.2f); // Espaçamento entre linhas
+            paragraph.SetTextAlignment(TextAlignment.LEFT);
+
+            document.Add(paragraph);
+        }
+
+        /// <summary>
+        /// Método auxiliar da carteirinha para desenhar as marcas de corte
+        /// </summary>
         private void DesenharMarcasDeCorte(PdfDocument pdf, int numeroPagina, float sangria, float largura, float altura, DeviceCmyk corCmyk)
         {
             // Usando a classe PdfCanvas para desenhar diretamente na página
@@ -1531,27 +1627,6 @@ namespace WebApp.Controllers
 
             // Restaurar o estado
             canvas.RestoreState();
-        }
-
-        /// <summary>
-        /// Método auxiliar para adicionar uma linha de informação consistente
-        /// </summary>
-        private void AddInfoRow(Document document, string label, string value, float x, float y, float labelWidth, float valueWidth, DeviceCmyk color)
-        {
-            // Label
-            Paragraph labelParagraph = new Paragraph(label);
-            labelParagraph.SetFontSize(6); // Mantendo o tamanho da fonte em 6px
-            labelParagraph.SetBold();
-            labelParagraph.SetFontColor(color);
-            labelParagraph.SetFixedPosition(x, y, labelWidth);
-            document.Add(labelParagraph);
-
-            // Value - posicionado à direita da label
-            Paragraph valueParagraph = new Paragraph(value);
-            valueParagraph.SetFontSize(6);
-            valueParagraph.SetFontColor(color);
-            valueParagraph.SetFixedPosition(x + labelWidth, y, valueWidth);
-            document.Add(valueParagraph);
         }
 
         /// <summary>

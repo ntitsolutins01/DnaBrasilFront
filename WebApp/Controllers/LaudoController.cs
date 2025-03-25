@@ -976,22 +976,24 @@ namespace WebApp.Controllers
                 ws.Cell(1, 11).Value = "Saúde Bucal";
                 ws.Cell(1, 12).Value = "Qualidade de Vida";
                 ws.Cell(1, 13).Value = "Vocacional";
+                ws.Cell(1, 14).Value = "Finalizado";
                 int row = 2;
                 foreach (var item in result.Laudos.Items.ToList())
                 {
                     ws.Cell("A" + row).Value = item.Id;
-                    ws.Cell("B" + row).Value = item.DtNascimento == null ? 0 : GetIdade((DateTime)item.DtNascimento, DateTime.Now);
+                    ws.Cell("B" + row).Value = item.Idade;
                     ws.Cell("C" + row).Value = item.NomeAluno;
                     ws.Cell("D" + row).Value = item.NomeLocalidade;
                     ws.Cell("E" + row).Value = item.Email;
                     ws.Cell("F" + row).Value = item.Telefone;
                     ws.Cell("G" + row).Value = item.Celular;
-                    ws.Cell("H" + row).Value = item.SaudeId != null ? "X" : "";
-                    ws.Cell("I" + row).Value = item.TalentoEsportivoId != null ? "X" : "";
-                    ws.Cell("J" + row).Value = item.ConsumoAlimentarId != null ? "X" : "";
-                    ws.Cell("K" + row).Value = item.SaudeBucalId != null ? "X" : "";
-                    ws.Cell("L" + row).Value = item.QualidadeDeVidaId != null ? "X" : "";
-                    ws.Cell("M" + row).Value = item.VocacionalId != null ? "X" : "";
+                    ws.Cell("H" + row).Value = item.SaudeId != null ? "X" : "" ;
+                    ws.Cell("I" + row).Value = item.TalentoEsportivoId != null ? "X" : "" ;
+                    ws.Cell("J" + row).Value = item.ConsumoAlimentarId != null ? "X" : "" ;
+                    ws.Cell("K" + row).Value = item.SaudeBucalId != null ? "X" : "" ;
+                    ws.Cell("L" + row).Value = item.QualidadeDeVidaId != null ? "X" : "" ;
+                    ws.Cell("M" + row).Value = item.VocacionalId != null ? "X" : "" ;
+                    ws.Cell("N" + row).Value = item.StatusLaudo;
                     row++;
                 }
 

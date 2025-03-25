@@ -448,6 +448,16 @@
                                         </a>
                                     </li>
                                 }
+@* 
+                                @if ((await AuthorizationService.AuthorizeAsync(User, ModuloAccess.ControleFrequenciaEscolar)).Succeeded)
+                                {
+                                    <li class="nav-parent nav-expanded">
+                                        <a href="@Url.Action("Index", "ControleFrequenciaEscolar")">
+                                            <i class="fa fa-user-plus" aria-hidden="true"></i>
+                                            <span>Controle Frequencia Escolar</span>
+                                        </a>
+                                    </li>
+                                } *@
 
                                 @if ((await AuthorizationService.AuthorizeAsync(User, ModuloAccess.ControleMaterial)).Succeeded)
                                 {
