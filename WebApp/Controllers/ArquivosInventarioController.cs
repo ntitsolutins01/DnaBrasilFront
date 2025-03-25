@@ -12,6 +12,8 @@ using WebApp.Models;
 using WebApp.Utility;
 using Microsoft.AspNetCore.Hosting;
 using log4net;
+using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.CodeAnalysis;
 
 namespace WebApp.Controllers;
 
@@ -52,13 +54,14 @@ public class ArquivosInventarioController : BaseController
         try
         {
             ApiClientFactory.Instance.DeleteArquivosInventario(id);
-            return Redirect("http://localhost:5166/Inventario");
+            return RedirectToAction("Index", "Inventario", new { crud = (int)EnumCrud.Deleted });
         }
         catch (Exception e)
         {
-            return Redirect("http://localhost:5166/Inventario");
+            return RedirectToAction("Index", "Inventario", new { notify = (int)EnumNotify.Error, message = "Erro ao executar esta ação. Favor entrar em contato com o administrador do sistema." });
         }
     }
+
 
     /// <summary>
     /// 
@@ -68,21 +71,49 @@ public class ArquivosInventarioController : BaseController
     [ClaimsAuthorize(ClaimType.Material, Claim.Alterar)]
     public ActionResult Download(int id)
     {
-        var file = ApiClientFactory.Instance.GetArquivosInventarioById(id);
-
-        var filePath = Path.Combine(_host.WebRootPath, $"ArquivosInventario/{file.NomeArquivo}");
-
-        if (!System.IO.File.Exists(filePath))
+        try
         {
-            return Redirect(nameof(InventarioController.Index));
+            var arquivo = ApiClientFactory.Instance.GetArquivosInventarioById(id);
+            if (arquivo == null)
+            {
+                return NotFound("Arquivo não encontrado.");
+            }
+
+            var index = arquivo.PathArquivo.IndexOf("wwwroot", StringComparison.OrdinalIgnoreCase);
+            if (index < 0)
+            {
+                return NotFound("Caminho do arquivo inválido.");
+            }
+
+            var relativePath = arquivo.PathArquivo.Substring(index + "wwwroot".Length)
+                .TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+
+            if (relativePath.StartsWith("wwwroot", StringComparison.OrdinalIgnoreCase))
+            {
+                relativePath = relativePath.Substring("wwwroot".Length)
+                    .TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+            }
+
+            var caminhoArquivo = Path.Combine(_host.WebRootPath, relativePath);
+
+            if (!System.IO.File.Exists(caminhoArquivo))
+            {
+                return NotFound("Arquivo não existe no servidor: " + caminhoArquivo);
+            }
+
+            var provider = new FileExtensionContentTypeProvider();
+            if (!provider.TryGetContentType(arquivo.NomeArquivo, out string contentType))
+            {
+                contentType = "application/octet-stream";
+            }
+
+            return PhysicalFile(caminhoArquivo, contentType, arquivo.NomeArquivo);
         }
-
-        var fileBytes = System.IO.File.ReadAllBytes(filePath);
-        var response = new FileContentResult(fileBytes, "application/octet-stream")
+        catch (Exception ex)
         {
-            FileDownloadName = file.NomeArquivo
-        };
-        return response;
+            Console.WriteLine($"Erro ao baixar arquivo: {ex.Message}");
+            return RedirectToAction("Index", "Inventario");
+        }
     }
 
     #endregion

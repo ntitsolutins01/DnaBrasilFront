@@ -18,5 +18,6 @@
         public const string ControleMaterial = "ControleMaterial";
         public const string Atividade = "Atividade";
         public const string AlunoCurso = "AlunoCurso";
+        public const string ControleFrequenciaEscolar = "ControleFrequenciaEscolar";
     }
 }
