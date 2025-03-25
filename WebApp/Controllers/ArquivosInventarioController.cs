@@ -84,8 +84,15 @@ public class ArquivosInventarioController : BaseController
             {
                 return NotFound("Caminho do arquivo inválido.");
             }
+
             var relativePath = arquivo.PathArquivo.Substring(index + "wwwroot".Length)
                 .TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+
+            if (relativePath.StartsWith("wwwroot", StringComparison.OrdinalIgnoreCase))
+            {
+                relativePath = relativePath.Substring("wwwroot".Length)
+                    .TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+            }
 
             var caminhoArquivo = Path.Combine(_host.WebRootPath, relativePath);
 
