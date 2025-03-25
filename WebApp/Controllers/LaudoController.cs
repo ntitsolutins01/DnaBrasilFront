@@ -924,12 +924,13 @@ namespace WebApp.Controllers
         }
 
         [ClaimsAuthorize(ClaimType.Laudo, Claim.Consultar)]
-        public async Task<IActionResult> ExportLaudo([FromQuery] string ddlFomento, [FromQuery] string ddlEstado,
-            [FromQuery] string ddlMunicipio, [FromQuery] string ddlLocalidade,
-            [FromQuery] string ddlAluno, [FromQuery] string ddlTipoLaudo,
-            [FromQuery] string ddlDeficiencia,
-            [FromQuery] string possuiFoto, [FromQuery] string finalizado,
-            int? crud = null, int? notify = null, string message = null)
+        public async Task<IActionResult> ExportLaudo(
+    [FromQuery] string ddlFomento, [FromQuery] string ddlEstado,
+    [FromQuery] string ddlMunicipio, [FromQuery] string ddlLocalidade,
+    [FromQuery] string ddlAluno, [FromQuery] string ddlTipoLaudo,
+    [FromQuery] string ddlDeficiencia,
+    [FromQuery] string possuiFoto, [FromQuery] string finalizado,
+    int? crud = null, int? notify = null, string message = null)
         {
             try
             {
@@ -985,16 +986,16 @@ namespace WebApp.Controllers
                     ws.Cell("E" + row).Value = item.Email;
                     ws.Cell("F" + row).Value = item.Telefone;
                     ws.Cell("G" + row).Value = item.Celular;
-                    ws.Cell("H" + row).Value = item.SaudeId != null ? "X" : "" ;
-                    ws.Cell("I" + row).Value = item.TalentoEsportivoId != null ? "X" : "" ;
-                    ws.Cell("J" + row).Value = item.ConsumoAlimentarId != null ? "X" : "" ;
-                    ws.Cell("K" + row).Value = item.SaudeBucalId != null ? "X" : "" ;
-                    ws.Cell("L" + row).Value = item.QualidadeDeVidaId != null ? "X" : "" ;
-                    ws.Cell("M" + row).Value = item.VocacionalId != null ? "X" : "" ;
+                    ws.Cell("H" + row).Value = item.SaudeId != null ? "X" : "";
+                    ws.Cell("I" + row).Value = item.TalentoEsportivoId != null ? "X" : "";
+                    ws.Cell("J" + row).Value = item.ConsumoAlimentarId != null ? "X" : "";
+                    ws.Cell("K" + row).Value = item.SaudeBucalId != null ? "X" : "";
+                    ws.Cell("L" + row).Value = item.QualidadeDeVidaId != null ? "X" : "";
+                    ws.Cell("M" + row).Value = item.VocacionalId != null ? "X" : "";
                     row++;
                 }
 
-                var exportPath = Path.Combine(_host.ContentRootPath, "Exportacao");
+                var exportPath = Path.Combine(_host.WebRootPath, "Exportacao");
                 var fileName = $"laudo_{DateTime.Now:yyyyMMddHHmmss}.xlsx";
                 var filePath = Path.Combine(exportPath, fileName);
 
