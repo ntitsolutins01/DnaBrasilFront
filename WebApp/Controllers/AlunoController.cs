@@ -1262,12 +1262,12 @@ namespace WebApp.Controllers
 
                 // === FRENTE DA CARTEIRINHA ===
 
-                // Adicionar imagem de fundo da frente com posicionamento ajustado para mostrar a sangria
+                // Adicionar imagem de fundo da frente cobrindo toda a área incluindo sangria
                 ImageData imgDataFrente = ImageDataFactory.Create(frenteCaminhoAbsoluto);
                 iText.Layout.Element.Image backgroundFrente = new iText.Layout.Element.Image(imgDataFrente);
-                backgroundFrente.SetFixedPosition(sangriaEmPontos, sangriaEmPontos);
-                backgroundFrente.SetWidth(larguraOriginal);
-                backgroundFrente.SetHeight(alturaOriginal);
+                backgroundFrente.SetFixedPosition(0, 0);
+                backgroundFrente.SetWidth(larguraComSangria);
+                backgroundFrente.SetHeight(alturaComSangria);
                 document.Add(backgroundFrente);
 
                 // Desenhar as marcas de corte nos cantos - agora usando cor CMYK para preto
@@ -1310,8 +1310,8 @@ namespace WebApp.Controllers
                 currentY -= 12;
 
                 // Adicionar foto do aluno - ajustado para incluir sangria
-                float rightMargin = 0.98f * 28.35f + sangriaEmPontos;
-                float topMargin = 0.6f * 28.35f + sangriaEmPontos;
+                float rightMargin = 0.98f * 28.35f + sangriaEmPontos / 3;
+                float topMargin = 0.59f * 28.35f + sangriaEmPontos / 3;
                 float fotoWidth = 40;
                 float fotoHeight = 58; // Altura reduzida para melhor proporção
 
@@ -1499,12 +1499,12 @@ namespace WebApp.Controllers
 
                 // === VERSO DA CARTEIRINHA ===
 
-                // Adicionar imagem de fundo do verso com posicionamento ajustado para mostrar a sangria
+                // Adicionar imagem de fundo do verso cobrindo toda a área incluindo sangria
                 ImageData imgDataVerso = ImageDataFactory.Create(versoCaminhoAbsoluto);
                 iText.Layout.Element.Image backgroundVerso = new iText.Layout.Element.Image(imgDataVerso);
-                backgroundVerso.SetFixedPosition(sangriaEmPontos, sangriaEmPontos);
-                backgroundVerso.SetWidth(larguraOriginal);
-                backgroundVerso.SetHeight(alturaOriginal);
+                backgroundVerso.SetFixedPosition(0, 0);
+                backgroundVerso.SetWidth(larguraComSangria);
+                backgroundVerso.SetHeight(alturaComSangria);
                 document.Add(backgroundVerso);
 
                 // Desenhar as marcas de corte nos cantos - usando cor CMYK para preto
