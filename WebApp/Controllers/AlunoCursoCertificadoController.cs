@@ -263,6 +263,27 @@ public class AlunoCursoCertificadoController : BaseController
             return RedirectToAction(nameof(Index));
         }
     }
+
+    /// <summary>
+    /// Exibe os detalhes de um curso específico com seus módulos e aulas
+    /// </summary>
+    /// <param name="id">ID do curso</param>
+    /// <param name="aulaId">ID opcional da aula a ser exibida inicialmente</param>
+    /// <returns>View com os detalhes do curso</returns>
+    [ClaimsAuthorize(ClaimType.Curso, Identity.Claim.Consultar)]
+    public IActionResult DetalhesCurso(int id, int? aulaId = null)
+    {
+        try
+        {
+            return View();
+        }
+        catch (Exception ex)
+        {
+            Console.Write(ex.StackTrace);
+            return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = "Erro ao abrir a página de detalhes do curso." });
+        }
+    }
+
     #endregion
 
     #region Get Methods
