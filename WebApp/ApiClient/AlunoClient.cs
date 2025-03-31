@@ -209,6 +209,17 @@ namespace WebApp.ApiClient
             return Get<ModeloCarteirinhaDto>(requestUrl);
         }
 
+        /// <summary>
+        /// Busca todos os alunos de um curso
+        /// </summary>
+        /// <param name="id">Id do curso</param>
+        /// <returns>Retorna lista dos alunoscursos</returns>
+        public List<AlunoCursoDto> GetAlunosCursosByCursoId(int cursoId)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceAlunos}/AlunoCurso/{cursoId}"));
+            return Get<List<AlunoCursoDto>>(requestUrl);
+        }
 
         #endregion
     }
