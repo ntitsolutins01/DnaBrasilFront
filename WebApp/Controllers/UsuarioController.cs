@@ -384,6 +384,11 @@ namespace WebApp.Controllers
                     _logger.Info($"Retorno de GetUsuarioByAspNetUserId");
                     _logger.Info(Newtonsoft.Json.JsonConvert.SerializeObject(usu));
 
+                    if (usu.Status == false)
+                    {
+                        return Redirect("/Identity/Account/Unauthorized");
+                    }
+
                     var model = new UsuarioModel
                     {
                         Usuario = usu
