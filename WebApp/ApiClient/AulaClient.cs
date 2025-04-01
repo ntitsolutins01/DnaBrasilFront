@@ -76,10 +76,16 @@ namespace WebApp.ApiClient
                 $"{ResourceAula}"));
             return Get<List<AulaDto>>(requestUrl);
         }
-        public List<AulaDto> GetAulasAllByModuloEadId(int id)
+        public List<AulaDto> GetAulasByModuloEadId(int id)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
                 $"{ResourceAula}/ModuloEad/{id}"));
+            return Get<List<AulaDto>>(requestUrl);
+        }
+        public List<AulaDto> GetAulasByCursoId(int id)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceAula}/Curso/{id}"));
             return Get<List<AulaDto>>(requestUrl);
         }
 

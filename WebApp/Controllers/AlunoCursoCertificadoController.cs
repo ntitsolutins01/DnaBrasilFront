@@ -216,12 +216,12 @@ public class AlunoCursoCertificadoController : BaseController
             var aluno = ApiClientFactory.Instance.GetAlunoByEmail(usuario);
             var curso = ApiClientFactory.Instance.GetCursoById(id);
 
-            var alunosCursos = ApiClientFactory.Instance.GetAlunosCursosByCursoId(curso.Id);
+            var alunosCursos = ApiClientFactory.Instance.GetAlunosCursosByCursoId(id);
             var alunoCurso = alunosCursos.FirstOrDefault(ac => Convert.ToInt32(ac.AlunoId) == aluno.Id);
 
-            var modulos = ApiClientFactory.Instance.GetModulosEadAllByCursoId(curso.Id);
+            var modulos = ApiClientFactory.Instance.GetModulosEadAllByCursoId(id);
 
-            var aulas = ApiClientFactory.Instance.GetAulasAll();
+            var aulas = ApiClientFactory.Instance.GetAulasByCursoId(id);
 
             var model = new AlunoCursoCertificadoModel()
             {
