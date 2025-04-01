@@ -228,6 +228,7 @@
                         Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
                     });
                 });
+                
             }
 
         }).apply(this, [jQuery]);
