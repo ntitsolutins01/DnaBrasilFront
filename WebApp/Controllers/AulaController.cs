@@ -109,28 +109,51 @@ public class AulaController : BaseController
 		        Video = collection["video"].ToString()
 	        };
 
-            string? filePath;
-            string? fileName;
-            string extension = ".jpg";
-            string newFileName = Path.ChangeExtension(
-	            Guid.NewGuid().ToString(),
-	            extension
-            );
+            string aulasPath = Path.Combine(_host.WebRootPath, "Aulas");
+            if (!Directory.Exists(aulasPath))
+            {
+                Directory.CreateDirectory(aulasPath);
+            }
 
-			foreach (var file in collection.Files)
+            string? filePathMaterial = null;
+            string? fileNameMaterial = null;
+            string? filePathVideo = null;
+            string? fileNameVideo = null;
+
+            foreach (var file in collection.Files)
             {
                 if (file.Length <= 0) continue;
-                fileName = Path.GetFileName(collection.Files[0].FileName);
-                filePath = Path.Combine(_host.WebRootPath, $"Aulas\\{newFileName}");
 
-                if (!Directory.Exists(Path.Combine(_host.WebRootPath, $"Aulas")))
-                    Directory.CreateDirectory(Path.Combine(_host.WebRootPath, $"Aulas"));
+                string extension = Path.GetExtension(file.FileName).ToLowerInvariant();
 
-				command.Material = filePath;
-				command.NomeMaterial = fileName;
+                if (extension == ".jpg" || extension == ".png")
+                {
+                    string newFileNameMaterial = Path.ChangeExtension(Guid.NewGuid().ToString(), extension);
+                    filePathMaterial = Path.Combine(aulasPath, newFileNameMaterial);
+                    fileNameMaterial = Path.GetFileName(file.FileName);
 
-                await using Stream fileStream = new FileStream(filePath, FileMode.Create);
-                await file.CopyToAsync(fileStream);
+                    command.Material = filePathMaterial;
+                    command.NomeMaterial = fileNameMaterial;
+
+                    using (var fileStream = new FileStream(filePathMaterial, FileMode.Create))
+                    {
+                        await file.CopyToAsync(fileStream);
+                    }
+                }
+                else if (extension == ".mp4" || extension == ".avi")
+                {
+                    string newFileNameVideo = Path.ChangeExtension(Guid.NewGuid().ToString(), extension);
+                    filePathVideo = Path.Combine(aulasPath, newFileNameVideo);
+                    fileNameVideo = Path.GetFileName(file.FileName);
+
+                    command.Video = filePathVideo;
+                    command.NomeVideo = fileNameVideo;
+
+                    using (var fileStream = new FileStream(filePathVideo, FileMode.Create))
+                    {
+                        await file.CopyToAsync(fileStream);
+                    }
+                }
             }
 
             await ApiClientFactory.Instance.CreateAula(command);
