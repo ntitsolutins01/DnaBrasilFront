@@ -246,7 +246,7 @@ namespace WebApp.Controllers
 
                 if (usu.LocalidadeId != null)
                 {
-                    var resultAlunos = ApiClientFactory.Instance.GetAlunosByLocalidadeId(Convert.ToInt32(usu.LocalidadeId)).Where(x => x.PossuiLaudo == false);
+                    var resultAlunos = ApiClientFactory.Instance.GetAlunosByLocalidadeId(Convert.ToInt32(usu.LocalidadeId));//.Where(x => x.PossuiLaudo == false);
 
                     alunos = new SelectList(resultAlunos, "Id", "Nome");
 
