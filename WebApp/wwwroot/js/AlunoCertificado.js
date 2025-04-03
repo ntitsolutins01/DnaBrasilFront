@@ -1,8 +1,11 @@
 ﻿var vm = new Vue({
-    el: "#vAlunoCertificado",
+    el: "#vCursoDetalhes",
     data: {
         loading: false,
-        editDto: { Id: "" }
+        selectedVideoUrl: "",
+        editDto: { Id: "" },
+        aula: null,
+        aulas: []
     },
     mounted: function () {
         var self = this;
@@ -228,6 +231,15 @@
                 self.ShowLoad(false, "pFiltro");
             });
 
+            var self = this;
+            axios.get("../../Aula/GetAulasAll")
+                .then(response => {
+                    self.aulas = response.data;
+                })
+                .catch(error => {
+                    console.error("Erro ao carregar aulas", error);
+                });
+
         }).apply(this, [jQuery]);
     },
     methods: {
@@ -276,6 +288,26 @@
                 Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
             });
         },
+        selectLesson: function (id) {
+            this.getAulaById(id);
+        },
+        getAulaById: function (id) {
+            var self = this;
+            axios.get("../../Aula/GetAulaById?id=" + id)
+                .then(response => {
+                    self.aula = response.data;
+                    self.selectedVideoUrl = response.data.video;
+                    $('#aulaAtualTitulo').text(response.data.titulo);
+
+                    var player = document.getElementById("videoPlayer");
+                    if (player) {
+                        player.load();
+                    }
+                })
+                .catch(error => {
+                    console.error("Erro ao buscar aula:", error);
+                });
+        }
     }
 });
 

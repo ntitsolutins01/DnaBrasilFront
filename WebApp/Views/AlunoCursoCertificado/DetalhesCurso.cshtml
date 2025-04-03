@@ -35,10 +35,11 @@
                             <!-- Player de vídeo -->
                             <div class="embed-responsive embed-responsive-16by9 mb-md">
                                 <video id="videoPlayer" class="embed-responsive-item" controls>
-                                    <source src="" type="video/mp4" id="videoSource">
+                                    <source :src="selectedVideoUrl" type="video/mp4" id="videoSource">
                                     Seu navegador não suporta a tag de vídeo.
                                 </video>
                             </div>
+
 
                             <!-- Título da Aula Atual -->
                             <div class="mb-md">
@@ -113,11 +114,12 @@
                                         {
                                             foreach (var modulo in Model.Modulos)
                                             {
-                                                // Filter the aulas that belong to the current module.
-                                                var moduloAulas = Model.Aulas?.Where(a => a.ModuloEadId == modulo.Id).ToList() ?? new List<AulaDto>();
+                                                // Filter lessons that belong to the current module
+                                                var moduloAulas = Model.Aulas?.Where(a => a.ModuloEadId == modulo.Id).ToList()
+                                                ?? new List<AulaDto>();
                                                 var collapseId = "collapseModulo" + modulo.Id;
+                                                // Expand the first module panel by default
                                                 var isExpanded = modulo.Equals(Model.Modulos.First()) ? "in" : "";
-
                                                 <div class="panel panel-accordion">
                                                     <div class="panel-heading">
                                                         <h4 class="panel-title">
@@ -134,13 +136,15 @@
                                                                     @foreach (var aula in moduloAulas)
                                                                     {
                                                                         <li class="mb-sm">
-                                                                        <a href="#" class="aula-link"
-                                                                           data-aula-id="@aula.Id"
-                                                                           data-video-url=""
-                                                                               data-materiais=''
+                                                                            <a href="#" class="aula-link"
+                                                                               v-on:click.prevent="selectLesson(@aula.Id)"
+                                                                               data-aula-id="@aula.Id"
+                                                                               data-video-url="@aula.Video"
                                                                                data-aula-titulo="@aula.Titulo">
                                                                                 <i class="fa fa-play-circle-o mr-xs"></i> @aula.Titulo
-                                                                                <span class="pull-right text-success"><i class="fa fa-check-circle"></i></span>
+                                                                                <span class="pull-right text-success">
+                                                                                    <i class="fa fa-check-circle"></i>
+                                                                                </span>
                                                                             </a>
                                                                         </li>
                                                                     }
@@ -160,8 +164,10 @@
                                             <p>Nenhum módulo encontrado.</p>
                                         }
                                     </div>
+
                                 </div>
                             </div>
+
 
                             <!-- Opções -->
                             <div class="panel panel-default">

@@ -106,7 +106,6 @@ public class AulaController : BaseController
 		        ModuloEadId = Convert.ToInt32(collection["ddlModuloEad"].ToString()),
 		        Titulo = collection["titulo"].ToString(),
 		        Descricao = collection["descricao"].ToString(),
-		        Video = collection["video"].ToString()
 	        };
 
             string aulasPath = Path.Combine(_host.WebRootPath, "Aulas");
@@ -181,7 +180,6 @@ public class AulaController : BaseController
                 Id = Convert.ToInt32(collection["editAulaId"]),
                 Titulo = collection["nome"].ToString(),
                 Descricao = collection["descricao"].ToString(),
-                Video = collection["video"].ToString(),
                 Status = collection["editStatus"].ToString() == "" ? false : true,
                 ProfessorId = Convert.ToInt32(collection["ddlProfessor"].ToString())
             };
