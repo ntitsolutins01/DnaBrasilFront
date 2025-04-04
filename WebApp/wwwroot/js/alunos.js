@@ -305,11 +305,18 @@ var vm = new Vue({
                     return axios.get("Aluno/GetModeloCarteirinhaByFomento?fomentoId=" + result.data.fomentoId);
                 })
                 .then(modeloResult => {
+                    // Atualizar o background da frente com o nome da imagem retornado
+                    if (modeloResult.data) {
+                        const frenteElement = document.querySelector('#frente');
+                        if (frenteElement) {
+                            frenteElement.style.backgroundImage = `url(/assets/styles_Carteirinha/modelos/${modeloResult.data.nomeImagemFrente}.png)`;
+                        }
+                    
                     // Atualizar o background do verso com o nome da imagem retornado
-                    if (modeloResult.data && modeloResult.data.nomeImagem) {
+                    
                         const versoElement = document.querySelector('#verso');
                         if (versoElement) {
-                            versoElement.style.backgroundImage = `url(/assets/styles_Carteirinha/modelos/${modeloResult.data.nomeImagem})`;
+                            versoElement.style.backgroundImage = `url(/assets/styles_Carteirinha/modelos/${modeloResult.data.nomeImagemVerso}.png)`;
                         }
                     }
                 })
