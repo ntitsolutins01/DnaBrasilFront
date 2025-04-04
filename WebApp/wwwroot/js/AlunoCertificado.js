@@ -231,15 +231,6 @@
                 self.ShowLoad(false, "pFiltro");
             });
 
-            var self = this;
-            axios.get("../../Aula/GetAulasAll")
-                .then(response => {
-                    self.aulas = response.data;
-                })
-                .catch(error => {
-                    console.error("Erro ao carregar aulas", error);
-                });
-
         }).apply(this, [jQuery]);
     },
     methods: {
