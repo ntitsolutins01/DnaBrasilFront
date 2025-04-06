@@ -20,12 +20,12 @@
 .student-info {
     position: absolute;
     left: 30px;
-    top: 120px;
+    top: 180px;
     width: 540px;
 }
 
 .info-row {
-    margin-bottom: 0.5cm;
+    margin-bottom: 0.3cm;
     display: flex;
     flex-wrap: wrap;
 }
@@ -63,11 +63,11 @@
 
 .photo-container {
     position: absolute;
-    right: 92.3px;
-    width: 140px;
+    right: 80px;
+    width: 155px;
     height: 210px;
     overflow: hidden;
-    top: 31px;
+    top: 40px;
 }
 
 .student-photo {
@@ -79,10 +79,10 @@
 
 .qr-code-container {
     position: absolute;
-    right: 92.3px;
+    right: 78.5px;
     bottom: 40px;
-    width: 140px;
-    height: 140px;
+    width: 155px;
+    height: 155px;
 }
 
 .qr-code {
@@ -153,6 +153,6 @@
     }
 
     .student-info {
-        top: 140px;
+        top: 200px;
     }
 }
