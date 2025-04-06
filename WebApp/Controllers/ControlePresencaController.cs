@@ -52,10 +52,128 @@ namespace WebApp.Controllers
         /// </summary>
         /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
         /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+        /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
+        /// <returns>Returs true false</returns>
+        [ClaimsAuthorize(ClaimType.ControlePresenca, Claim.Consultar)]
+        public async Task<ActionResult> Index(int? crud, int? notify, string message = null)
+        {
+            try
+            {
+                _logger.Info($"Usuario Logado em ControlePresenca.Index User.Identity.Name : {User.Identity.Name}");
+
+                var usuario = User.Identity.Name;
+
+                SetNotifyMessage(notify, message);
+                SetCrudMessage(crud);
+
+                //Busca usuario por AspNetUserId
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                _logger.Info($"Busca Usuario por AspNetUserId: {userId}");
+
+                if (userId == null)
+                {
+                    _logger.Warn($"AspNetUserId não encontrado para o email: {User.Identity.Name}");
+                    throw new Exception($"AspNetUserId não encontrado para o email: {User.Identity.Name}");
+                }
+
+                var usu = await ApiClientFactory.Instance.GetUsuarioByAspNetUserId(userId);
+
+                var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentosAll(), "Id", "Nome");
+                var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome", usu.Uf);
+
+                SelectList municipios = null;
+
+                if (!string.IsNullOrEmpty(usu.Uf))
+                {
+                    municipios = new SelectList(ApiClientFactory.Instance.GetMunicipiosByUf(usu.Uf), "Id", "Nome", usu.MunicipioId);
+                }
+
+                SelectList localidades = null;
+
+                if (usu.MunicipioId != null)
+                {
+                    var resultLocalidades = ApiClientFactory.Instance.GetLocalidadeByMunicipioId(usu.MunicipioId.ToString());
+
+                    localidades = new SelectList(resultLocalidades, "Id", "Nome", usu.LocalidadeId);
+                }
+
+                SelectList alunos = null;
+
+                SelectList modalidades = null;
+
+                SelectList profissionais = null;
+
+                if (usu.LocalidadeId != null)
+                {
+                    var resultAlunos = ApiClientFactory.Instance.GetAlunosByLocalidadeId(Convert.ToInt32(usu.LocalidadeId));
+
+                    alunos = new SelectList(resultAlunos, "Id", "Nome");
+
+                    //var listAtividades = await ApiClientFactory.Instance.GetAtividadeByLocalidadeId(Convert.ToInt32(usu.LocalidadeId));
+
+                   // modalidades = new SelectList(listAtividades.Select(s => new { Id = s.ModalidadeId, Nome = s.NomeModalidade }).ToList(), "Id", "Nome");
+
+                    //var profissional = await ApiClientFactory.Instance.GetPro
+
+                    profissionais = new SelectList(ApiClientFactory.Instance.GetProfissionaisByLocalidade(Convert.ToInt32(usu.LocalidadeId)), "Id", "Nome");
+                }
+
+                //var listModalidades = new SelectList(ApiClientFactory.Instance.GetModalidadeAll(), "Id", "Nome");
+                //var profissionais = 
+                //    ApiClientFactory.Instance.GetProfissionaisByLocalidade(Convert.ToInt32(usu.LocalidadeId));
+
+                var searchFilter = new ControlesPresencasFilterDto()
+                {
+                    UsuarioEmail = usuario,
+                    //FomentoId = collection["ddlFomento"].ToString(),
+                    //Estado = collection["ddlEstado"].ToString(),
+                    //MunicipioId = collection["ddlMunicipio"].ToString(),
+                    //LocalidadeId = collection["ddlLocalidade"].ToString() == "" ? usu.LocalidadeId : collection["ddlLocalidade"].ToString(),
+
+                    PageNumber = 1,
+#if DEBUG
+                    PageSize = 10
+#else
+                    PageSize = 1000
+#endif
+                };
+
+                var response = await ApiClientFactory.Instance.GetControlesPresencasByFilter(searchFilter);
+
+                var model = new ControlePresencaModel()
+                {
+                    ListFomentos = fomentos,
+                    ListEstados = estados,
+                    ListMunicipios = municipios!,
+                    ListLocalidades = localidades!,
+                    ListAlunos = alunos,
+                    ControlesPresencas = response.ControlesPresencas,
+                    //ListAtividadesModalidades = modalidades,
+                    ListProfissionais = profissionais!
+
+                };
+                return View(model);
+
+            }
+            catch (Exception e)
+            {
+                Console.Write(e.StackTrace);
+                return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = e.Message });
+
+            }
+        }
+
+        /// <summary>
+        /// Listagem de Controle de Presença 
+        /// </summary>
+        /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+        /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
         /// <param name="collection">Parametro que indica o tipo de notificação realizada</param>
         /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
         /// <returns>Returs true false</returns>
         [ClaimsAuthorize(ClaimType.ControlePresenca, Claim.Consultar)]
+        [HttpPost]
         public async Task<ActionResult> Index(int? crud, int? notify, IFormCollection collection, string message = null)
         {
             try
@@ -111,9 +229,9 @@ namespace WebApp.Controllers
 
                     alunos = new SelectList(resultAlunos, "Id", "Nome");
 
-                    var listAtividades = await ApiClientFactory.Instance.GetAtividadeByLocalidadeId(Convert.ToInt32(usu.LocalidadeId));
+                    //var listAtividades = await ApiClientFactory.Instance.GetAtividadeByLocalidadeId(Convert.ToInt32(usu.LocalidadeId));
 
-                    modalidades = new SelectList(listAtividades.Select(s => new { Id = s.ModalidadeId, Nome = s.NomeModalidade }).ToList(), "Id", "Nome");
+                    // modalidades = new SelectList(listAtividades.Select(s => new { Id = s.ModalidadeId, Nome = s.NomeModalidade }).ToList(), "Id", "Nome");
 
                     //var profissional = await ApiClientFactory.Instance.GetPro
 
@@ -150,8 +268,9 @@ namespace WebApp.Controllers
                     ListLocalidades = localidades!,
                     ListAlunos = alunos,
                     ControlesPresencas = response.ControlesPresencas,
-                    ListAtividadesModalidades = modalidades,
-                    ListProfissionais = profissionais!
+                    //ListAtividadesModalidades = modalidades,
+                    ListProfissionais = profissionais!,
+                    Estrutura = collection["data"].ToString(),
 
                 };
                 return View(model);

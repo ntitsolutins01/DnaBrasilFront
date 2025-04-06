@@ -10,7 +10,9 @@ var vm = new Vue({
             Status: true,
             Video: "",
             Material: "",
-            NomeMaterial: ""
+            NomeMaterial: "",
+            Video: "",
+            NomeVideo: ""
         }
     },
     watch: {
@@ -204,11 +206,14 @@ var vm = new Vue({
                         Descricao: result.data.descricao,
                         CargaHoraria: result.data.cargaHoraria,
                         Status: result.data.status,
-                        Video: result.data.video,
                         Material: result.data.material && result.data.material.includes("\\Aulas")
                             ? "\\Aulas" + result.data.imagem.split("\\Aulas")[1]
                             : null,
-                        NomeMaterial: result.data.nomeMaterial
+                        NomeMaterial: result.data.nomeMaterial,
+                        Video: result.data.video && result.data.video.includes("\\Aulas")
+                            ? "\\Aulas" + result.data.video.split("\\Aulas")[1]
+                            : null,
+                        NomeVideo: result.data.nomeVideo
                     };
 
                     self.$nextTick(() => {

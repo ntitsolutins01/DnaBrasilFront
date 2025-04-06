@@ -20,7 +20,6 @@ namespace WebApp.Models
         public class CreateUpdateModuloEadCommand
 		{
 			public int Id { get; set; }
-			public required int CargaHoraria { get; set; }
 			public int CursoId { get; set; }
 			public required string Titulo { get; set; }
 			public string? Descricao { get; set; }

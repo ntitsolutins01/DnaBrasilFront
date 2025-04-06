@@ -21,6 +21,7 @@ namespace WebApp.Models
         public SelectList ListAtividadesModalidades { get; set; }
         public SelectList ListProfissionais { get; set; }
         public string ProfissionalId { get; set; }
+        public string? Estrutura { get; set; }
 
         public class CreateUpdateControlePresencaCommand
         {

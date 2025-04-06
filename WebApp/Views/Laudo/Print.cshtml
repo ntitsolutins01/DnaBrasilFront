@@ -46,7 +46,7 @@
                 <div class="text-info">
                     <div class="talent-label">MEU TALENTO</div>
                     <div class="talent-name">
-                        @if (@laudo.Modalidade.Nome == null)
+                        @if (@laudo.Modalidade == null)
                         {
                             <text>Não Definido</text>
                         }
@@ -56,7 +56,7 @@
                         }
                     </div>
                 </div>
-                @if (@laudo.Modalidade.ByteImage != null)
+                @if (@laudo.Modalidade != null && laudo.Modalidade.Id != 0)
                 {
                     <div class="sport-icon"
                          style=" background-size: cover;">
@@ -295,7 +295,7 @@
                         {
                             foreach (var vocacional in laudo.ListVocacional)
                             {
-                                if (vocacional.Id == laudo.Laudo.VocacionalId)
+                                if (vocacional.Id == laudo.Laudo.EncaminhamentoVocacionalId)
                                 {
                                     await RenderMetricCardAsync("Vocação", 100, "#5b5c9c", "#d5d6e7",
                                     vocacional.Nome, vocacional.Descricao);
