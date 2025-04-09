@@ -19,6 +19,7 @@ using QRCoder;
 using System;
 using System.Drawing;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using WebApp.Authorization;
 using WebApp.Configuration;
@@ -1206,6 +1207,13 @@ namespace WebApp.Controllers
 
             return bytes;
         }
+
+        /// <summary>
+        /// Gera um PDF em formato CMYK contendo a carteirinha do aluno.
+        /// </summary>
+        /// <param name="aluno">Dados do aluno para preenchimento da carteirinha.</param>
+        /// <param name="modeloCarteirinha">Modelo de carteirinha utilizado para gerar o PDF.</param>
+        /// <returns>Retorna os bytes do arquivo PDF gerado.</returns>
         private async Task<byte[]> GerarPdfCmyk(AlunoDto aluno, ModeloCarteirinhaDto modeloCarteirinha)
         {
             // Caminho dos arquivos de background
@@ -1286,30 +1294,30 @@ namespace WebApp.Controllers
 
                 // Starting Y position com padding-top ajustado
                 float currentY = startY;
+                float alturaItem;
 
                 // Nome
-                AddInfoRow(document, "NOME DO ESTUDANTE:", aluno.Nome, leftMargin, currentY, labelWidth, valueWidth, corAzul);
-                currentY -= 12; // Mantendo o espaçamento original
+                alturaItem = AddInfoRow(document, "NOME DO ESTUDANTE:", aluno.Nome, leftMargin, currentY, labelWidth, valueWidth, corAzul);
+                currentY -= alturaItem;
 
                 // Data de nascimento
-                AddInfoRow(document, "DATA DE NASCIMENTO:", aluno.DtNascimento, leftMargin, currentY, labelWidth, valueWidth, corAzul);
-                currentY -= 12;
+                alturaItem = AddInfoRow(document, "DATA DE NASCIMENTO:", aluno.DtNascimento, leftMargin, currentY, labelWidth, valueWidth, corAzul);
+                currentY -= alturaItem;
 
                 // Telefone
-                AddInfoRow(document, "TELEFONE:", aluno.Celular, leftMargin, currentY, labelWidth, valueWidth, corAzul);
-                currentY -= 12;
+                alturaItem = AddInfoRow(document, "TELEFONE:", aluno.Celular, leftMargin, currentY, labelWidth, valueWidth, corAzul);
+                currentY -= alturaItem;
 
                 // CPF
-                AddInfoRow(document, "CPF:", aluno.Cpf, leftMargin, currentY, labelWidth, valueWidth, corAzul);
-                currentY -= 12;
+                alturaItem = AddInfoRow(document, "CPF:", aluno.Cpf, leftMargin, currentY, labelWidth, valueWidth, corAzul);
+                currentY -= alturaItem;
 
                 // Matrícula
-                AddInfoRow(document, "MATRÍCULA:", aluno.Id.ToString(), leftMargin, currentY, labelWidth, valueWidth, corAzul);
-                currentY -= 12;
+                alturaItem = AddInfoRow(document, "MATRÍCULA:", aluno.Id.ToString(), leftMargin, currentY, labelWidth, valueWidth, corAzul);
+                currentY -= alturaItem;
 
                 // Modalidades - alterei para "Conhecimento" conforme o modelo
-                AddFullWidthText(document, "Conhecimento", leftMargin, currentY, labelWidth + valueWidth, corAzul, false);
-                currentY -= 12;
+                AddFullWidthText(document, aluno.Modalidades, leftMargin, currentY, labelWidth + valueWidth, corAzul, false);
 
                 // Adicionar foto do aluno - ajustado para incluir sangria
                 float rightMargin = 0.91f * 28.35f;
@@ -1514,7 +1522,6 @@ namespace WebApp.Controllers
 
                 // Adicionar informações do verso - ajustado para incluir sangria
                 float versoLeftMargin = 0.6f * 28.35f + sangriaEmPontos;
-                float versoTextWidth = 5.2f * 28.35f;
 
                 // Usando a mesma lógica de posicionamento vertical da frente
                 float versoStartY = alturaComSangria - 2.3f * 28.35f - sangriaEmPontos - 10;
@@ -1523,11 +1530,12 @@ namespace WebApp.Controllers
                 float versoY = versoStartY;
 
                 // Município/Estado
-                AddInfoRow(document, "MUNICÍPIO/ESTADO:", aluno.MunicipioEstado, versoLeftMargin, versoY, labelWidth, valueWidth, corAzul);
-                versoY -= 12;
+                alturaItem = AddInfoRow(document, "MUNICÍPIO/ESTADO:", aluno.MunicipioEstado, versoLeftMargin, versoY, labelWidth, valueWidth, corAzul, 8f);
+                versoY -= alturaItem;
 
                 // Unidade Escolar
-                AddInfoRow(document, "UNIDADE ESCOLAR:", aluno.NomeLocalidade, versoLeftMargin, versoY, labelWidth, valueWidth, corAzul);
+                alturaItem = AddInfoRow(document, "UNIDADE ESCOLAR:", aluno.NomeLocalidade, versoLeftMargin, versoY, labelWidth, valueWidth, corAzul, 8f);
+                versoY -= alturaItem;
 
                 // Adicionar sangria
                 DefinirTrimBox(pdf, sangriaEmPontos, larguraComSangria, alturaComSangria);
@@ -1541,47 +1549,65 @@ namespace WebApp.Controllers
         }
 
         /// <summary>
-        /// Método auxiliar da carteirinha para adicionar uma linha de informação consistente
+        /// Método auxiliar da carteirinha para adicionar uma linha de informação com suporte adequado a textos longos
         /// </summary>
-        private void AddInfoRow(Document document, string label, string value, float x, float y, float labelWidth, float valueWidth, DeviceCmyk color)
+        /// <param name="document">O documento onde adicionar os elementos</param>
+        /// <param name="label">O texto da label</param>
+        /// <param name="value">O valor a ser exibido</param>
+        /// <param name="x">Posição X inicial</param>
+        /// <param name="y">Posição Y inicial</param>
+        /// <param name="labelWidth">Largura da label</param>
+        /// <param name="valueWidth">Largura máxima do valor</param>
+        /// <param name="color">Cor do texto</param>
+        /// <param name="spacing">Espaçamento vertical adicional (opcional)</param>
+        /// <returns>A altura total ocupada pelo elemento, incluindo espaçamento</returns>
+        private float AddInfoRow(Document document, string label, string value, float x, float y,
+                                 float labelWidth, float valueWidth, DeviceCmyk color, float spacing = 4f)
         {
-            // Label
-            Paragraph labelParagraph = new Paragraph(label);
-            labelParagraph.SetFontSize(6); // Mantendo o tamanho da fonte em 6px
-            labelParagraph.SetBold();
-            labelParagraph.SetFontColor(color);
+            // Adicionar a label
+            Paragraph labelParagraph = new Paragraph(label)
+                .SetFontSize(6)
+                .SetBold()
+                .SetFontColor(color);
             labelParagraph.SetFixedPosition(x, y, labelWidth);
             document.Add(labelParagraph);
 
-            // Value - posicionado à direita da label
-            Paragraph valueParagraph = new Paragraph(value);
-            valueParagraph.SetFontSize(6);
-            valueParagraph.SetFontColor(color);
+            // Adicionar o valor
+            Paragraph valueParagraph = new Paragraph(value)
+                .SetFontSize(6)
+                .SetFontColor(color);
 
-            // Verificar se o texto provavelmente precisará de quebra de linha
-            // Fazendo uma estimativa básica: um caractere em fonte 6pt ocupa aproximadamente 3 pontos
-            bool precisaQuebraLinha = value.Length * 3 > valueWidth;
+            // Estimar o número de linhas que o texto ocupará
+            float charsPerLine = valueWidth / 3.5f;
+            int linhasEstimadas = (int)Math.Ceiling(value.Length / charsPerLine);
+            float alturaLinha = 8f;
 
-            if (precisaQuebraLinha)
+            // Posicionar e adicionar o valor
+            if (linhasEstimadas > 1)
             {
-                // Configurações para permitir quebra de linha no texto longo
-                valueParagraph.SetTextAlignment(TextAlignment.LEFT);
-                valueParagraph.SetMultipliedLeading(1.2f); // Espaçamento entre linhas
-                valueParagraph.SetHyphenation(new HyphenationConfig("pt", "BR", 2, 2));
+                // Para texto multilinha, precisamos forçar quebra de linha
+                valueParagraph.SetWidth(valueWidth);
 
-                // Definir posição e permitir que o valor ocupe várias linhas
-                Rectangle valueRect = new Rectangle(x + labelWidth, y - 15, valueWidth, 30); // Altura aumentada para acomodar múltiplas linhas
+                // Criar um elemento Text que permite quebra de linha
+                Text textoValue = new Text(value);
+                valueParagraph = new Paragraph().Add(textoValue)
+                    .SetFontSize(6)
+                    .SetFontColor(color)
+                    .SetWidth(valueWidth);
 
-                // Usar Canvas para melhor controle do layout
-                Canvas canvas = new Canvas(new PdfCanvas(document.GetPdfDocument().GetPage(document.GetPdfDocument().GetNumberOfPages())), valueRect);
-                canvas.Add(valueParagraph);
-                canvas.Close();
+                // Posicionar o valor na mesma altura da label
+                valueParagraph.SetFixedPosition(x + labelWidth, y - (linhasEstimadas - 1) * alturaLinha, valueWidth);
+                document.Add(valueParagraph);
+
+                // Retornar a altura que este item ocupou (com espaçamento adicional)
+                return Math.Max(alturaLinha, linhasEstimadas * alturaLinha) + spacing - 1;
             }
             else
             {
-                // Para textos curtos, usar o posicionamento tradicional que alinha corretamente com a label
+                // Para texto de uma linha, posicionamento simples
                 valueParagraph.SetFixedPosition(x + labelWidth, y, valueWidth);
                 document.Add(valueParagraph);
+                return alturaLinha + spacing;
             }
         }
 
