@@ -32,7 +32,7 @@ namespace WebApp.ApiClient
         public Task<bool> UpdateModulo(int id, ConfiguracaoSistemaModel.CreateUpdateModuloCommand command)
         {
 	        var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-		        $"{ResourceConfiguracaoSistema}/{id}"));
+		        $"{ResourceConfiguracaoSistema}/Modulo/{id}"));
 	        return Put(requestUrl, command);
         }
 
@@ -44,7 +44,7 @@ namespace WebApp.ApiClient
         public Task<bool> DeleteModulo(int id)
         {
 	        var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-		        $"{ResourceConfiguracaoSistema}/{id}"));
+		        $"{ResourceConfiguracaoSistema}/Modulo/{id}"));
 	        return Delete<bool>(requestUrl);
         }
 
@@ -108,7 +108,7 @@ namespace WebApp.ApiClient
         public ModuloDto GetModuloById(int id)
         {
 	        var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-		        $"{ResourceConfiguracaoSistema}/{id}"));
+		        $"{ResourceConfiguracaoSistema}/Modulo/{id}"));
 	        return Get<ModuloDto>(requestUrl);
         }
 
@@ -135,6 +135,6 @@ namespace WebApp.ApiClient
             return Get<List<FuncionalidadeDto>>(requestUrl);
         }
 
-		#endregion
-	}
+        #endregion
+    }
 }

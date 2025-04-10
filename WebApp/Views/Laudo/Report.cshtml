@@ -396,7 +396,7 @@
                         <div class="circle-graph-external"></div>
                         <div class="circle-graph-principal"
                              style="background: conic-gradient(#df436c 0 80deg, #f7d1db 80deg 360deg);"></div>
-                        <span class="graph-text">Esporte</span>
+                        <span class="graph-text">Score</span>
                         <span class="graph-value"
                               style="color:#df436c">@Model.Desempenho.ScoreTalentoEsportivo</span>
                     </div>
@@ -668,7 +668,7 @@
                         <div class="circle-graph-external"></div>
                         <div class="circle-graph-principal"
                              style="background: conic-gradient(#EDAB55 0 80deg, #FFEFD9 80deg 360deg);"></div>
-                        <span class="graph-text">Esporte</span>
+                        <span class="graph-text">Score</span>
                         <span class="graph-value"
                               style="color:#EDAB55">@Model.Desempenho.ScoreSaude</span>
                     </div>
@@ -803,7 +803,7 @@
                         <div class="circle-graph-external"></div>
                         <div class="circle-graph-principal"
                              style="background: conic-gradient(#23bfff 0 80deg, #c9efff 80deg 360deg);"></div>
-                        <span class="graph-text">Esporte</span>
+                        <span class="graph-text">Score</span>
                         <span class="graph-value"
                               style="color:#23bfff">@Model.Desempenho.ScoreVida</span>
                     </div>
@@ -942,7 +942,7 @@
                         <div class="circle-graph-external"></div>
                         <div class="circle-graph-principal"
                              style="background: conic-gradient(#5B5C9C 0 80deg, #D6D7E7 80deg 360deg);"></div>
-                        <span class="graph-text">Esporte</span>
+                        <span class="graph-text">Score</span>
                         <span class="graph-value"
                               style="color:#5B5C9C">@Model.Desempenho.ScoreVocacional</span>
                     </div>
@@ -967,7 +967,7 @@
 
                             @foreach (var item in Model.ListVocacional)
                             {
-                                if (item.Id == Model.Laudo.VocacionalId)
+                                if (item.Id == Model.Laudo.EncaminhamentoVocacionalId)
                                 {
                                     <div class="row-vida">
                                         <div class="label-vida">
@@ -991,7 +991,7 @@
                                                 <span>@item.Nome</span>
                                             </div>
                                         </div>
-                                        <div class="value-vida">
+                                        <div class="value-vida" style="border: double;border-color: #5B5C9C;">
                                             <span>
                                                 @item.Descricao
                                             </span>
@@ -1100,7 +1100,7 @@
                         <div class="circle-graph-external"></div>
                         <div class="circle-graph-principal"
                              style="background: conic-gradient(#68D061 0 80deg, #DEFFDC 80deg 360deg);"></div>
-                        <span class="graph-text">Esporte</span>
+                        <span class="graph-text">Score</span>
                         <span class="graph-value"
                               style="color:#68D061">@Model.Desempenho.ScoreConsumoAlimentar</span>
                     </div>
@@ -1121,8 +1121,8 @@
                             <div class="container-2-saude">
                                 <div class="container-icon-saude">
                                     <div class="circle-saude" style="background-color: #68D061"></div>
-                                    <div class="icon-saude"
-                                         style="background-image: url('/assets/assets_Laudo/laudo-vocacao-1.png'); background-size: cover;">
+                                    <div class="icon-vocacao"
+                                         style="background-image: url('/assets/assets_Laudo/img-vida/laudo-vida-4.png'); background-size: cover;">
                                     </div>
                                 </div>
                                 <div class="container-3-saude">
@@ -1199,7 +1199,7 @@
                         <div class="circle-graph-external"></div>
                         <div class="circle-graph-principal"
                              style="background: conic-gradient(#E96D53 0 80deg, #FDE4DE 80deg 360deg);"></div>
-                        <span class="graph-text">Esporte</span>
+                        <span class="graph-text">Score</span>
                         <span class="graph-value"
                               style="color:#E96D53">@Model.Desempenho.ScoreSaudeBucal</span>
                     </div>
@@ -1219,9 +1219,17 @@
                         <div class="container-2-saude">
                             <div class="container-icon-saude">
                                 <div class="circle-saude" style="background-color: #E96D53"></div>
-                                <div class="icon-saude"
-                                     style="background-image: url('/assets/assets_Laudo/laudo-vocacao-1.png'); background-size: cover;">
-                                </div>
+                                @if (Model.EncaminhamentoSaudeBucal.ByteImage != null)
+                                {
+                                    var base64 = Convert.ToBase64String(Model.EncaminhamentoSaudeBucal.ByteImage);
+                                    var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+
+                                    <img src="@imgSrc" class="icon-bucal" />
+                                }
+                                else
+                                {
+                                    <img src="~/assets/assets_Laudo/img-saude-bucal/warning-5-64.png" class="icon-bucal" />
+                                }
                             </div>
                             <div class="container-3-saude">
                                 <span>
@@ -1289,7 +1297,7 @@
                         <div class="v102_935"></div>
                     </div>
                     <span class="v102_936">
-                        © Copyright 2020 - IDECACE -
+                        © Copyright 2023 - IDECACE -
                         DNA
                         do Brasil
                     </span>

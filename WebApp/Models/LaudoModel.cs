@@ -56,6 +56,7 @@ namespace WebApp.Models
             public int? SaudeBucalId { get; set; }
             public int? TalentoEsportivoId { get; set; }
             public string? StatusLaudo { get; set; }
+            public int? ModalidadeId { get; set; }
             
             
         }

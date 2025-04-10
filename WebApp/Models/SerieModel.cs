@@ -10,8 +10,16 @@ namespace WebApp.Models
 		public List<SerieDto> Series { get; set; }
 		public string SerieId { get; set; }
 		public SelectList ListSeries { get; set; }
+        public string EstadoId { get; set; }
+        public SelectList ListEstados { get; set; }
+        public string EtapaId { get; set; }
+        public SelectList ListEtapas { get; set; }
+        public string MunicipioId { get; set; }
+        public SelectList ListMunicipios { get; set; }
+        public string? LocalidadeId { get; set; }
+        public SelectList ListLocalidades { get; set; }
 
-		public class CreateUpdateSerieCommand
+        public class CreateUpdateSerieCommand
 		{
 			public int Id { get; set; }
 			public string Nome { get; set; }

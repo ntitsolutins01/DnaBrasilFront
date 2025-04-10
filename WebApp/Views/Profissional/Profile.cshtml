@@ -67,109 +67,109 @@
                     <div id="overview" class="tab-pane active">
                         @using (@Html.BeginForm("Profile", "Profissional", FormMethod.Post, new { id = "formProfile", @class = "form-horizontal" }))
                         {
-                                    <input hidden="ProfissionalId" value="@Model.Profissional.Id" id="profissionalId" name="profissionalId" />
-                                    <fieldset>
-                                        <div class="form-group">
-                                            <label class="col-sm-2 control-label">Nome <span class="required">*</span></label>
-                                            <div class="col-sm-5">
-                                                <input type="text" name="nome" id="nome" value="@Model.Profissional.Nome"
-                                                       maxlength="200" class="form-control" required title="Por favor informe o nome." />
-                                            </div>
-                                            <label class="col-sm-1 control-label">Email <span class="required">*</span></label>
-                                            <div class="col-sm-4">
-                                                <div class="input-group">
-                                                    <span class="input-group-addon">
-                                                        <i class="fa fa-envelope"></i>
-                                                    </span>
-                                                    <input type="text" name="email" id="email" maxlength="100" readonly
-                                                           class="form-control" value="@Model.Profissional.Email" />
-                                                </div>
-                                            </div>
+                            <input hidden="ProfissionalId" value="@Model.Profissional.Id" id="profissionalId" name="profissionalId" />
+                            <fieldset>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Nome <span class="required">*</span></label>
+                                    <div class="col-sm-5">
+                                        <input type="text" name="nome" id="nome" value="@Model.Profissional.Nome"
+                                               maxlength="200" class="form-control" required title="Por favor informe o nome." />
+                                    </div>
+                                    <label class="col-sm-1 control-label">Email <span class="required">*</span></label>
+                                    <div class="col-sm-4">
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-envelope"></i>
+                                            </span>
+                                            <input type="text" name="email" id="email" maxlength="100" readonly
+                                                   class="form-control" value="@Model.Profissional.Email" />
                                         </div>
-                                        <div class="form-group">
-                                            <label class="col-sm-2 control-label">Cpf <span class="required">*</span></label>
-                                            <div class="col-sm-2">
-                                                <input id="cpf" name="cpf"
-                                                       type="text" class="form-control" value="@Model.Profissional.CpfCnpj"
-                                                       maxlength="14" />
-                                            </div>
-                                            <label class="col-sm-2 control-label">Data Nascimento <span class="required">*</span> </label>
-                                            <div class="col-sm-3">
-                                                <div class="input-group">
-                                                    <span class="input-group-addon">
-                                                        <i class="fa fa-calendar"></i>
-                                                    </span>
-                                                    <input id="DtNascimento" name="DtNascimento" required
-                                                           title="Por favor informe a data de nascimento."
-                                                           style="z-index: auto;" value="@Model.Profissional.DtNascimento"
-                                                           data-plugin-datepicker data-date-format="dd/mm/yyyy" data-plugin-options='{"language": "pt-BR"}'
-                                                           placeholder="__/__/____" class="form-control startdate"
-                                                           class="form-control">
-                                                </div>
-                                            </div>
-                                            <label class="col-sm-1 control-label">Sexo <span class="required">*</span></label>
-                                            <div class="col-sm-2">
-                                                <select class="form-control populate select2" name="ddlSexo" id="ddlSexo" required
-                                                        title="Por favor selecione um sexo.">
-                                                    <option value="">Selecionar Sexo</option>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Cpf <span class="required">*</span></label>
+                                    <div class="col-sm-2">
+                                        <input id="cpf" name="cpf"
+                                               type="text" class="form-control" value="@Model.Profissional.CpfCnpj"
+                                               maxlength="14" />
+                                    </div>
+                                    <label class="col-sm-2 control-label">Data Nascimento <span class="required">*</span> </label>
+                                    <div class="col-sm-3">
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-calendar"></i>
+                                            </span>
+                                            <input id="DtNascimento" name="DtNascimento" required
+                                                   title="Por favor informe a data de nascimento."
+                                                   style="z-index: auto;" value="@Model.Profissional.DtNascimento"
+                                                   data-plugin-datepicker data-date-format="dd/mm/yyyy" data-plugin-options='{"language": "pt-BR"}'
+                                                   placeholder="__/__/____" class="form-control startdate"
+                                                   class="form-control">
+                                        </div>
+                                    </div>
+                                    <label class="col-sm-1 control-label">Sexo <span class="required">*</span></label>
+                                    <div class="col-sm-2">
+                                        <select class="form-control populate select2" name="ddlSexo" id="ddlSexo" required
+                                                title="Por favor selecione um sexo.">
+                                            <option value="">Selecionar Sexo</option>
                                             @if (Model.Profissional.Sexo == "M")
                                             {
 
-                                                                <option value="M" selected>MASCULINO</option>
-                                                                <option value="F">FEMININO</option>
+                                                <option value="M" selected>MASCULINO</option>
+                                                <option value="F">FEMININO</option>
                                             }
                                             else
                                             {
-                                                                <option value="M">MASCULINO</option>
-                                                                <option value="F" selected>FEMININO</option>
+                                                <option value="M">MASCULINO</option>
+                                                <option value="F" selected>FEMININO</option>
 
                                             }
-                                                </select>
-                                            </div>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Endereço</label>
+                                    <div class="col-sm-4">
+                                        <input type="text" id="endereco" name="endereco" maxlength="200" class="form-control" value="@Model.Profissional.Endereco" />
+                                    </div>
+                                    <label class="col-sm-1 control-label">Número</label>
+                                    <div class="col-sm-2">
+                                        <input type="number" id="numero" name="numero" maxlength="4" class="form-control" value="@Model.Profissional.Numero" />
+                                    </div>
+                                    <label class="col-sm-1 control-label">Cep</label>
+                                    <div class="col-sm-2">
+                                        <input type="text" id="cep" name="cep" maxlength="9" class="form-control" value="@Model.Profissional.Cep" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Bairro </label>
+                                    <div class="col-sm-2">
+                                        <input type="bairro" name="bairro" maxlength="50" class="form-control" value="@Model.Profissional.Bairro" />
+                                    </div>
+                                    <label class="col-lg-1 control-label text-lg-right pt-2">Telefone</label>
+                                    <div class="col-lg-3">
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-phone"></i>
+                                            </span>
+                                            <input id="numTelefone" name="numTelefone" class="form-control"
+                                                   maxlength="14" value="@Model.Profissional.Telefone"
+                                                   title="Por favor informe o telefone ">
                                         </div>
-                                        <div class="form-group">
-                                            <label class="col-sm-2 control-label">Endereço</label>
-                                            <div class="col-sm-4">
-                                                <input type="text" id="endereco" name="endereco" maxlength="200" class="form-control" value="@Model.Profissional.Endereco" />
-                                            </div>
-                                            <label class="col-sm-1 control-label">Número</label>
-                                            <div class="col-sm-2">
-                                                <input type="number" id="numero" name="numero" maxlength="4" class="form-control" value="@Model.Profissional.Numero" />
-                                            </div>
-                                            <label class="col-sm-1 control-label">Cep</label>
-                                            <div class="col-sm-2">
-                                                <input type="text" id="cep" name="cep" maxlength="9" class="form-control" value="@Model.Profissional.Cep" />
-                                            </div>
+                                    </div>
+                                    <label class="col-sm-1 control-label">Celular </label>
+                                    <div class="col-sm-3">
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-phone"></i>
+                                            </span>
+                                            <input id="numCelular" name="numCelular" class="form-control"
+                                                   maxlength="14" value="@Model.Profissional.Celular"
+                                                   title="Por favor informe o celular">
                                         </div>
-                                        <div class="form-group">
-                                            <label class="col-sm-2 control-label">Bairro </label>
-                                            <div class="col-sm-2">
-                                                <input type="bairro" name="bairro" maxlength="50" class="form-control" value="@Model.Profissional.Bairro" />
-                                            </div>
-                                            <label class="col-lg-1 control-label text-lg-right pt-2">Telefone</label>
-                                            <div class="col-lg-3">
-                                                <div class="input-group">
-                                                    <span class="input-group-addon">
-                                                        <i class="fa fa-phone"></i>
-                                                    </span>
-                                                    <input id="numTelefone" name="numTelefone" class="form-control"
-                                                           maxlength="14" value="@Model.Profissional.Telefone"
-                                                           title="Por favor informe o telefone ">
-                                                </div>
-                                            </div>
-                                            <label class="col-sm-1 control-label">Celular </label>
-                                            <div class="col-sm-3">
-                                                <div class="input-group">
-                                                    <span class="input-group-addon">
-                                                        <i class="fa fa-phone"></i>
-                                                    </span>
-                                                    <input id="numCelular" name="numCelular" class="form-control"
-                                                           maxlength="14" value="@Model.Profissional.Celular"
-                                                           title="Por favor informe o celular">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </fieldset>
+                                    </div>
+                                </div>
+                            </fieldset>
 
                             @* <hr class="dotted tall">
                             <h4 class="mb-xlg">Alterar Senha</h4>
@@ -190,110 +190,111 @@
                             <div class="panel-footer">
                                 <div class="row">
                                     <div class="col-md-9 col-md-offset-3">
-                                       @*  <button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;"><i class="fa fa-remove"></i> &nbsp;&nbsp;Cancelar</button>
+                                        @*  <button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;"><i class="fa fa-remove"></i> &nbsp;&nbsp;Cancelar</button>
                                          <button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button> *@
-                                            </div>
-                                        </div>
                                     </div>
+                                </div>
+                            </div>
                         }
                     </div>
                     <div id="minhasTurmas" class="tab-pane">
                         @using (@Html.BeginForm("MinhasTurmas", "Profissional", FormMethod.Post, new { id = "formMinhasTurmas", @class = "form-horizontal" }))
                         {
-                                    <input type="hidden" id="profissionalIdMinhasTurmas" name="profissionalIdMinhasTurmas" value="@Model.Profissional.Id" />
-                                    <fieldset>
-                                        <div class="form-group">
-                                            <label class="col-sm-2 control-label">Atividade / Modalidade <span class="required">*</span></label>
-                                            <div class="col-sm-4">
-                                                <select class="form-control populate select2" name="ddlModalidade" id="ddlModalidade"
-                                                        title="Por favor informe a Atividade / Modalidade." required style="width:100%"
-                                                        asp-for="AtividadeModalidadeId" asp-items="Model.ListAtividadesModalidades">
-                                                    <option value="">Selecionar Atividade / Modalidade</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-sm-2 control-label text-sm-right pt-2">Turma <span class="required">*</span></label>
-                                            <div class="col-md-4">
-                                                <select class="form-control populate select2" name="ddlTurma" id="ddlTurma"
-                                                        title="Por favor informe a turma." required style="width:100%">
-                                                    <option value="">Selecionar Turma</option>
-                                                </select>
-                                            </div>
+                            <input type="hidden" id="profissionalIdMinhasTurmas" name="profissionalIdMinhasTurmas" value="@Model.Profissional.Id" />
+                            <input type="hidden" id="update" name="update" :value="editDto.Update" />
+                            <fieldset>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Atividade / Modalidade <span class="required">*</span></label>
+                                    <div class="col-sm-4">
+                                        <select class="form-control populate select2" name="ddlModalidade" id="ddlModalidade"
+                                                title="Por favor informe a Atividade / Modalidade." required style="width:100%"
+                                                asp-for="AtividadeModalidadeId" asp-items="Model.ListAtividadesModalidades">
+                                            <option value="">Selecionar Atividade / Modalidade</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label text-sm-right pt-2">Turma <span class="required">*</span></label>
+                                    <div class="col-md-4">
+                                        <select class="form-control populate select2" name="ddlTurma" id="ddlTurma"
+                                                title="Por favor informe a turma." required style="width:100%">
+                                            <option value="">Selecionar Turma</option>
+                                        </select>
+                                    </div>
 
-                                            <label class="col-sm-1 control-label">Estrutura </label>
-                                            <div class="col-sm-4">
-                                                <input id="estrutura" name="estrutura" disabled
-                                                       type="text" class="form-control" :value="editDto.Estrutura"
-                                                       maxlength="14" />
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-sm-2 control-label">Dias da Semana </label>
-                                            <div class="col-sm-3">
-                                                <input id="diaSemana" name="diaSemana" disabled
-                                                       type="text" class="form-control" :value="editDto.DiasSemana"
-                                                       maxlength="14" />
-                                            </div>
-                                            <label class="col-sm-1 control-label">Categoria </label>
-                                            <div class="col-sm-3">
-                                                <input id="categoria" name="categoria" :value="editDto.Categoria"
-                                                       type="text" class="form-control" disabled
-                                                       maxlength="14" />
-                                            </div>
-                                        </div>
+                                    <label class="col-sm-1 control-label">Estrutura </label>
+                                    <div class="col-sm-4">
+                                        <input id="estrutura" name="estrutura" disabled
+                                               type="text" class="form-control" :value="editDto.Estrutura"
+                                               maxlength="14" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Dias da Semana </label>
+                                    <div class="col-sm-4">
+                                        <input id="diaSemana" name="diaSemana" disabled
+                                               type="text" class="form-control" :value="editDto.DiasSemana"
+                                               maxlength="14" />
+                                    </div>
+                                    <label class="col-sm-1 control-label">Categoria </label>
+                                    <div class="col-sm-4">
+                                        <input id="categoria" name="categoria" :value="editDto.Categoria"
+                                               type="text" class="form-control" disabled
+                                               maxlength="14" />
+                                    </div>
+                                </div>
 
-                                        <div id="divAlunos" name="divAlunos">
-                                            <div class="form-group">
-                                                <label class="col-sm-1 control-label">&nbsp;&nbsp; </label>
-                                                <div class="col-sm-12">
-                                                    <blockquote class="info">
-                                                        <strong>Listagem de Alunos</strong>
-                                                    </blockquote>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-sm-2 control-label">Aluno</label>
-                                                <div class="col-sm-4">
-                                            <select class="form-control populate select2" name="ddlAluno" id="ddlAluno"
-                                                            style="width: 100%" title="Por favor selecione o aluno."
-                                                            asp-for="AlunoId" asp-items="Model.ListAlunos">
-                                                        <option value="0">Selecionar Aluno</option>
-                                                    </select>
-                                                </div>
-                                                <div class="col-sm-1">
-                                                    <a type="button" class="ml-xs btn btn-success" href='javascript:(crud.AddAluno())'>
-                                                        <i class="fa fa-plus"></i>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <input type="hidden" name="arrAlunos" />
-                                                <label class="col-sm-2 control-label">Adicionados</label>
-                                                <div class="col-sm-10">
-                                                    <table class="adicionados table table-bordered table-striped mb-0" id="alunoDataTable" name="alunoDataTable">
-                                                        <thead>
-                                                        <tr>
-                                                            <th>Id</th>
-                                                            <th>Nome Aluno</th>
-                                                            <th>Ação</th>
-                                                        </tr>
-                                                        </thead>
-                                                    </table>
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </fieldset>
-
-                                    <div class="panel-footer">
-                                        <div class="row">
-                                    <div class="col-md-9 col-md-offset-3">
-                                                @* *@<button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;"><i class="fa fa-remove"></i> &nbsp;&nbsp;Cancelar</button>
-                                         <button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
-                                            </div>
+                                <div id="divAlunos" name="divAlunos">
+                                    <div class="form-group">
+                                        <label class="col-sm-1 control-label">&nbsp;&nbsp; </label>
+                                        <div class="col-sm-12">
+                                            <blockquote class="info">
+                                                <strong>Listagem de Alunos</strong>
+                                            </blockquote>
                                         </div>
                                     </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">Aluno</label>
+                                        <div class="col-sm-5">
+                                            <select class="form-control populate select2" name="ddlAluno" id="ddlAluno"
+                                                    style="width: 100%" title="Por favor selecione o aluno."
+                                                    asp-for="AlunoId" asp-items="Model.ListAlunos">
+                                                <option value="0">Selecionar Aluno</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-1">
+                                            <a type="button" class="ml-xs btn btn-success" href='javascript:(crud.AddAluno())'>
+                                                <i class="fa fa-plus"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="hidden" name="arrAlunos" />
+                                        <label class="col-sm-2 control-label">Adicionados</label>
+                                        <div class="col-sm-10">
+                                            <table class="adicionados table table-bordered table-striped mb-0" id="alunoDataTable" name="alunoDataTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Id</th>
+                                                        <th>Nome Aluno</th>
+                                                        <th>Ação</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                            <div class="panel-footer">
+                                <div class="row">
+                                    <div class="col-md-9 col-md-offset-3">
+                                        @* *@<button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;"><i class="fa fa-remove"></i> &nbsp;&nbsp;Cancelar</button>
+                                        <button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
+                                    </div>
+                                </div>
+                            </div>
                         }
                     </div>
                 </div>
@@ -303,96 +304,96 @@
     </div>
 </div>
 @section CssSpecificVendor {
-            <link rel="stylesheet" href="~/assets/vendor/select2/css/select2.css" />
-            <link rel="stylesheet" href="~/assets/vendor/select2-bootstrap-theme/select2-bootstrap.min.css" />
-            <link rel="stylesheet" href="~/assets/vendor/bootstrap-multiselect/bootstrap-multiselect.css" />
-            <link href="~/assets/vendor/bootstrap-datepicker/css/bootstrap-datepicker3.css" rel="stylesheet" />
-            <link rel="stylesheet" href="~/assets/vendor/datatables/media/css/dataTables.bootstrap4.css" />
+    <link rel="stylesheet" href="~/assets/vendor/select2/css/select2.css" />
+    <link rel="stylesheet" href="~/assets/vendor/select2-bootstrap-theme/select2-bootstrap.min.css" />
+    <link rel="stylesheet" href="~/assets/vendor/bootstrap-multiselect/bootstrap-multiselect.css" />
+    <link href="~/assets/vendor/bootstrap-datepicker/css/bootstrap-datepicker3.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/assets/vendor/datatables/media/css/dataTables.bootstrap4.css" />
 }
 @section Scripts {
-            <script src="~/assets/vendor/ios7-switch/ios7-switch.js"></script>
-            <script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
-            <script src="~/assets/vendor/select2/js/select2.js"></script>
-            <script src="~/assets/vendor/jquery-mask/jquery.mask.js"></script>
-            <script src="~/assets/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
-            <script src="~/assets/vendor/bootstrap-datepicker/locales/bootstrap-datepicker.pt-BR.min.js"></script>
-            <script src="~/assets/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
-            <script src="~/assets/vendor/datatables/media/js/dataTables.bootstrap4.min.js"></script>
-            <script src="~/js/profissional.js"></script>
-            <script>
+    <script src="~/assets/vendor/ios7-switch/ios7-switch.js"></script>
+    <script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
+    <script src="~/assets/vendor/select2/js/select2.js"></script>
+    <script src="~/assets/vendor/jquery-mask/jquery.mask.js"></script>
+    <script src="~/assets/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+    <script src="~/assets/vendor/bootstrap-datepicker/locales/bootstrap-datepicker.pt-BR.min.js"></script>
+    <script src="~/assets/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
+    <script src="~/assets/vendor/datatables/media/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/js/profissional.js"></script>
+    <script>
 
-                (function ($) {
+        (function ($) {
 
-                    'use strict';
+            'use strict';
 
-                    // Set the value
-                    var data = "@Model.Profissional.ModalidadesIds";
+            // Set the value
+            var data = "@Model.Profissional.ModalidadesIds";
 
-                    //Make an array
-                    var dataarray = data.split(",");
+            //Make an array
+            var dataarray = data.split(",");
 
-                    // Set the value
-                    $("#ddlModalidades").val(dataarray);
+            // Set the value
+            $("#ddlModalidades").val(dataarray);
 
-                    //set filter
-                    $("#ddlModalidades").multiselect({
-                        enableFiltering: true,
-                            enableCaseInsensitiveFiltering: true,
-                            maxHeight: 200,
-                            dropUp: true
-                    });
+            //set filter
+            $("#ddlModalidades").multiselect({
+                enableFiltering: true,
+                    enableCaseInsensitiveFiltering: true,
+                    maxHeight: 200,
+                    dropUp: true
+            });
 
-                    // Then refresh
-                    $("#ddlModalidades").multiselect("refresh");
+            // Then refresh
+            $("#ddlModalidades").multiselect("refresh");
 
-                    //========================================================
+            //========================================================
 
-                    var crud = @ViewBag.CrudMessage;
+            var crud = @ViewBag.CrudMessage;
 
-                    if (crud === 1) {
-                        new PNotify({
-                            title: 'Profissional',
-                            text: 'Cadastro realizado com sucesso!',
-                            type: 'success'
-                        });
-                    } else if (crud === 2) {
-                        new PNotify({
-                            title: 'Profissional',
-                            text: 'Dados alterados com sucesso.',
-                            type: 'warning'
-                        });
-                    } else if (crud === 3) {
-                        new PNotify({
-                            title: 'Profissional',
-                            text: 'Registro excluído com sucesso.',
-                            type: 'error'
-                        });
-                    }
+            if (crud === 1) {
+                new PNotify({
+                    title: 'Profissional',
+                    text: 'Cadastro realizado com sucesso!',
+                    type: 'success'
+                });
+            } else if (crud === 2) {
+                new PNotify({
+                    title: 'Profissional',
+                    text: 'Dados alterados com sucesso.',
+                    type: 'warning'
+                });
+            } else if (crud === 3) {
+                new PNotify({
+                    title: 'Profissional',
+                    text: 'Registro excluído com sucesso.',
+                    type: 'error'
+                });
+            }
 
-                    var notify = @ViewBag.NotifyMessage;
-                    var messagem = '@ViewBag.Notify';
+            var notify = @ViewBag.NotifyMessage;
+            var messagem = '@ViewBag.Notify';
 
-                    if (notify === 0) {
-                        new PNotify({
-                            title: 'Profissional',
-                            text: messagem,
-                            type: 'success'
-                        });
-                    } else if (notify === 1) {
-                        new PNotify({
-                            title: 'Profissional',
-                            text: messagem,
-                            type: 'warning'
-                        });
-                    } else if (notify === 2) {
-                        new PNotify({
-                            title: 'Profissional',
-                            text: messagem,
-                            type: 'error'
-                        });
-                    }
+            if (notify === 0) {
+                new PNotify({
+                    title: 'Profissional',
+                    text: messagem,
+                    type: 'success'
+                });
+            } else if (notify === 1) {
+                new PNotify({
+                    title: 'Profissional',
+                    text: messagem,
+                    type: 'warning'
+                });
+            } else if (notify === 2) {
+                new PNotify({
+                    title: 'Profissional',
+                    text: messagem,
+                    type: 'error'
+                });
+            }
 
-                }).apply(this, [jQuery]);
+        }).apply(this, [jQuery]);
 
-            </script>
+    </script>
 }

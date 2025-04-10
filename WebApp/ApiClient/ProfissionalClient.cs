@@ -94,7 +94,7 @@ namespace WebApp.ApiClient
         /// </summary>
         /// <param name="email">email</param>
         /// <returns>retorna um Profissional por Email</returns>
-        public ProfissionalDto GetProfissionalByEmail(string email)
+        public async Task<ProfissionalDto> GetProfissionalByEmail(string email)
         {
 	        var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
 		        $"{ResourceProfissional}/Email/{email}"));

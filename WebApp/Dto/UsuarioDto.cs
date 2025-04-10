@@ -16,5 +16,6 @@ namespace WebApp.Dto
         public string? LocalidadeId { get; set; }
         public string Localidade { get; set; }
         public string? MunicipioEstado { get; set; }
-	}
+        public bool? Status { get; set; }
+    }
 }

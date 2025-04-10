@@ -9,5 +9,6 @@
         public string? Descricao { get; set; }
         public bool Status { get; set; }
         public byte[]? ByteImage { get; set; }
+        public string? EncaminhamentoTexto { get; set; }
     }
 }

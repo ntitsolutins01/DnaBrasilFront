@@ -66,7 +66,6 @@ var vm = new Vue({
                                 }
                             }
                         });
-
                     };
 
                     $(function () {
@@ -163,7 +162,7 @@ var vm = new Vue({
                 $("#ddlLocalidade").change(function () {
                     var id = $("#ddlLocalidade").val();
 
-                    var url = "../../Aluno/GetAlunosByLocalidade?id=" + id;
+                    var url = "../../Aluno/GetAlunosByLocalidadeId?id=" + id;
 
                     var ddlSource = "#ddlAluno";
 
@@ -280,7 +279,7 @@ var vm = new Vue({
                 $("#ddlLocalidade").change(function () {
                     var id = $("#ddlLocalidade").val();
 
-                    var url = "../../Aluno/GetAlunosByLocalidade?id=" + id;
+                    var url = "../../Aluno/GetAlunosByLocalidadeId?id=" + id;
 
                     var ddlSource = "#ddlAluno";
 
@@ -503,7 +502,7 @@ var vm = new Vue({
                 $("#ddlLocalidade").change(function () {
                     var id = $("#ddlLocalidade").val();
 
-                    var url = "../../Aluno/GetAlunosByLocalidade?id=" + id;
+                    var url = "../../Aluno/GetAlunosByLocalidadeId?id=" + id;
 
                     var ddlSource = "#ddlAluno";
 

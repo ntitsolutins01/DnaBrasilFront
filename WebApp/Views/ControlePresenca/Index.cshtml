@@ -1,14 +1,14 @@
-﻿@model WebApp.Models.ControlePresencaModel
+@model WebApp.Models.ControlePresencaModel
 @{
     ViewData["Title"] = "Listagem de ControlePresencas";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div id="vControlePresenca">
-    <div class="row">
-        <div class="col-md-12">
-            @using (@Html.BeginForm("Index", "ControlePresenca", FormMethod.Post, new { id = "formPesquisarAluno", @class = "form-horizontal" }))
-            {
+    @using (@Html.BeginForm("Index", "ControlePresenca", FormMethod.Post, new { id = "formControlePresencas", @class = "form-horizontal" }))
+    {
+        <div class="row">
+            <div class="col-md-12">
                 <section class="panel">
                     <header class="panel-heading">
                         <div class="panel-actions">
@@ -17,13 +17,13 @@
                         <h2 class="panel-title">Filtro de pesquisa</h2>
                     </header>
                     <div class="panel-body">
-                        <label class="col-sm-2 control-label">Fomento:</label>
+                        @* <label class="col-sm-2 control-label">Fomento:</label>
                         <div class="col-md-4 form-group">
                             <select class="form-control populate select2" name="ddlFomento" id="ddlFomento" style="width:100%"
                                     asp-for="FomentoId" asp-items="Model.ListFomentos">
                                 <option value="">Selecionar Fomento</option>
                             </select>
-                        </div>
+                        </div> *@
                         <label class="col-sm-2 control-label">Estado:</label>
                         <div class="col-md-4 form-group">
                             <select class="form-control populate select2" name="ddlEstado" id="ddlEstado" style="width:100%"
@@ -45,53 +45,101 @@
                                 <option value="">Selecionar Localidade</option>
                             </select>
                         </div>
-                        <label class="col-sm-2 control-label">Aluno:</label>
+                        <label class="col-sm-2 control-label">Profissional:</label>
                         <div class="col-md-4 form-group">
-                            <select class="form-control populate select2" name="ddlAluno" id="ddlAluno" style="width:100%"
-                                    asp-for="AlunoId" asp-items="Model.ListAlunos">
-                                <option value="">Selecionar Aluno</option>
+                            <select class="form-control populate select2" name="ddlProfissional" id="ddlProfissional"
+                                    title="Por favor informe o profissional." required style="width:100%"
+                                    asp-for="ProfissionalId" asp-items="Model.ListProfissionais">
+                                <option value="">Selecionar Profissional</option>
                             </select>
+                        </div>
+                        <label class="col-sm-2 control-label">Atividade / Modalidade:</label>
+                        <div class="col-sm-4 form-group">
+                            <select class="form-control populate select2" name="ddlModalidade" id="ddlModalidade"
+                                    title="Por favor informe a Atividade / Modalidade." required style="width:100%"
+                                    asp-for="AtividadeModalidadeId" asp-items="Model.ListAtividadesModalidades">
+                                <option value="">Selecionar Atividade / Modalidade</option>
+                            </select>
+                        </div>
+                        <label class="col-sm-2 control-label text-sm-right pt-2">Turma:</label>
+                        <div class="col-md-4 form-group">
+                            <select class="form-control populate select2" name="ddlTurma" id="ddlTurma"
+                                    title="Por favor informe a turma." required style="width:100%">
+                                <option value="">Selecionar Turma</option>
+                            </select>
+                        </div>
+                        <label class="col-sm-2 control-label">Estrutura </label>
+                        <div class="col-sm-4 form-group">
+                            <input id="estrutura" name="estrutura" readonly="readonly"
+                                   type="text" class="form-control" value="@Model.Estrutura"
+                                   maxlength="14" />
+                        </div>
+                        <label class="col-sm-2 control-label">Dias da Semana </label>
+                        <div class="col-sm-4 form-group">
+                            <input id="diaSemana" name="diaSemana" disabled
+                                   type="text" class="form-control" :value="editDto.DiasSemana"
+                                   maxlength="14" />
+                        </div>
+                        <label class="col-sm-2 control-label">Categoria </label>
+                        <div class="col-sm-4 form-group">
+                            <input id="categoria" name="categoria" :value="editDto.Categoria"
+                                   type="text" class="form-control" disabled
+                                   maxlength="14" />
+                        </div>
+                        <label class="col-sm-2 control-label">Data: <span class="required">*</span></label>
+                        <div class="col-sm-4 form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                                <input id="data" name="data"
+                                       required
+                                       title="Por favor informe a data."
+                                       style="z-index: auto;"
+                                       data-plugin-datepicker data-date-format="dd/mm/yyyy" data-plugin-options='{"language": "pt-BR"}'
+                                       placeholder="__/__/____" class="form-control startdate"
+                                       class="form-control">
+                            </div>
                         </div>
                     </div>
                     <footer class="panel-footer">
-                        <div class="row">
-                            <div class="col-sm-2 pull-right">
-                                <button type="submit" class="btn btn-block btn-primary pull-right"><i class="fa fa-search"></i> &nbsp;&nbsp;Pesquisar</button>
+                        <div class="form-group row">
+                            <div class="col-sm-7 pull-left">
+                                <div class="alert alert-info" style="padding-bottom: 6px;padding-top: 6px; !important; margin-bottom: 0px; !important">
+                                    <strong>Info: </strong> Impressão de controle de frequência em lote selecione o filtro e clique em
+                                    <a href="" class="alert-link">Imprimir Controle Frequência</a>.
+                                </div>
+                            </div>
+                            <div class="col-sm-3 pull-right">
+                                <a href="#" id="btnImprimirLaudo" class="btn btn-block btn-dark pull-right" data-toggle="modal" data-target="#mdMesImpressao">
+                                    <i class="fa fa-print"></i> &nbsp;&nbsp;Imprimir Controle Frequência
+                                </a>
                             </div>
                         </div>
                     </footer>
                 </section>
-            }
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-12">
-            <section class="panel">
-                <header class="panel-heading">
-                    <div class="panel-actions">
-                        <a href="#" class="card-action card-action-toggle" data-card-toggle></a>
-                    </div>
-                    <h2 class="panel-title">Listagem de Controles de Presenças</h2>
-                </header>
-                <div class="panel-body">
-
-                    <div class="form-group row">
-                        <div class="col-sm-7 pull-left">
-                            <div class="alert alert-info" style="padding-bottom: 6px;padding-top: 6px; !important; margin-bottom: 0px; !important">
-                                <strong>Info: </strong> Impressão de controle de frequência em lote selecione o filtro e clique em
-                                <a href="" class="alert-link">Imprimir Controle Frequência</a>.
-                            </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <section class="panel">
+                    <header class="panel-heading">
+                        <div class="panel-actions">
+                            <a href="#" class="card-action card-action-toggle" data-card-toggle></a>
                         </div>
-                        <div class="col-sm-2 pull-right">
-                            <a href="@Url.Action("Create", "ControlePresenca")" id="addToTable" class="btn btn-block btn-primary pull-right"><i class="fa fa-plus"></i> &nbsp;&nbsp;Novo Controle</a>
-                        </div>
-                        <div class="col-sm-3 pull-right">
-                            <a href="#" id="btnImprimirLaudo" class="btn btn-block btn-dark pull-right" data-toggle="modal" data-target="#mdMesImpressao">
-                                <i class="fa fa-print"></i> &nbsp;&nbsp;Imprimir Controle Frequência
-                            </a>
-                        </div>
-                    </div>
-                    <table class="table table-bordered table-striped mb-0" id="datatable-default">
+                        <h2 class="panel-title">Listagem de Controles de Presenças</h2>
+                    </header>
+                    <div class="panel-body">
+                        <table class="adicionados table table-bordered table-striped mb-0" id="alunoDataTable" name="alunoDataTable">
+                            <thead>
+                                <tr>
+                                    <th>Falta</th>
+                                    <th>Nome Aluno</th>
+                                    <th>Justificativa</th>
+                                </tr>
+                            </thead>
+                        </table>
+                        @* <table class="table table-bordered table-striped mb-0" id="datatable-default">
                         <thead>
                             <tr>
                                 <th class="text-center">Id</th>
@@ -133,7 +181,7 @@
                                            title="Imprimir Frequência"
                                            class="on-default edit-row"
                                            href="javascript:void(0);"
-                                           onclick="crud.ImprimirFrequencia(@item.Id)" @*Trocar por alunoId depois*@
+                                           onclick="crud.ImprimirFrequencia(@item.Id)" @*Trocar por alunoId depois
                                            style="color: #212121; cursor: pointer;">
                                             <i class="fa fa-print"></i>
                                         </a>
@@ -143,11 +191,20 @@
                                 </tr>
                             }
                         </tbody>
-                    </table>
-                </div>
-            </section>
+                    </table> *@
+                    </div>
+                    <footer class="panel-footer">
+                        <div class="row">
+                            <div class="col-md-9 col-md-offset-3">
+                                <button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;"><i class="fa fa-remove"></i> &nbsp;&nbsp;Cancelar</button>
+                                <button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
+                            </div>
+                        </div>
+                    </footer>
+                </section>
+            </div>
         </div>
-    </div>
+    }
     <!-- Modal -->
     <div class="modal fade" id="mdDeleteControlePresenca" tabindex="-1" role="dialog" aria-labelledby="mdDeleteControlePresencaLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -308,13 +365,15 @@
     <link rel="stylesheet" href="~/assets/vendor/select2/css/select2.css" />
     <link rel="stylesheet" href="~/assets/vendor/select2-bootstrap-theme/select2-bootstrap.min.css" />
     <link rel="stylesheet" href="~/assets/vendor/datatables/media/css/dataTables.bootstrap4.css" />
+    <link href="~/assets/vendor/bootstrap-datepicker/css/bootstrap-datepicker3.css" rel="stylesheet" />
 }
 @section Scripts {
     <script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
     <script src="~/assets/vendor/select2/js/select2.js"></script>
     <script src="~/assets/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
-    <script src="~/js/formatTable.js"></script>
     <script src="~/assets/vendor/datatables/media/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/assets/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+    <script src="~/assets/vendor/bootstrap-datepicker/locales/bootstrap-datepicker.pt-BR.min.js"></script>
     <script src="~/js/ControlesPresencas.js"></script>
 
     <script>

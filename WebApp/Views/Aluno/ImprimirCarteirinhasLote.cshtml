@@ -31,7 +31,7 @@
         {
             <div class="preview-container">
                 <!-- Frente da carteirinha -->
-                <div class="page frente-page">
+                <div class="page frente-page" style="background-image: url(/assets/styles_Carteirinha/modelos/carteirinha-frente.png);">
                     <div class="student-info">
                         <div class="info-row">
                             <label>NOME DO ESTUDANTE:</label>
@@ -54,7 +54,7 @@
                             <span>@aluno.Id</span>
                         </div>
                         <div class="activity-info">
-                            @aluno.ModalidadeLinhaAcao
+                            @aluno.Modalidades
                         </div>
                     </div>
                     <div class="photo-container">
@@ -62,7 +62,7 @@
                         {
                             var base64 = Convert.ToBase64String(aluno.ByteImage);
                             var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
-                            <img src="@imgSrc" alt="Foto do estudante" class="student-photo" style="object-fit: inherit!important;">
+                            <img src="@imgSrc" alt="Foto do estudante" class="student-photo">
                         }
                         else
                         {
@@ -81,7 +81,7 @@
                 </div>
 
                 <!-- Verso da carteirinha -->
-                <div class="page verso-page">
+                <div class="page verso-page" style="background-image: url(/assets/styles_Carteirinha/modelos/@Model.ModeloCarteirinha?.NomeImagemVerso);">
                     <div class="main-content-verso">
                         <div class="info-row-verso">
                             <label>MUNICÍPIO/ESTADO:</label>
@@ -98,35 +98,93 @@
     </div>
 
     <script>
-        function printFull() {
-            document
-                .querySelectorAll('.frente-page')
-                .forEach(function(page) {
-                    page.classList.remove('no-print');
+        function setupPrintConfig() {
+            if (window.matchMedia) {
+                const mediaQueryList = window.matchMedia('print');
+                mediaQueryList.addListener(function(mql) {
+                    if (mql.matches) {
+                        document.body.style.webkitPrintColorAdjust = 'exact';
+                        document.body.style.printColorAdjust = 'exact';
+                    }
                 });
-            document
-                .querySelectorAll('.verso-page')
-                .forEach(function(page) {
-                    page.classList.remove('no-print');
-                });
+            }
+        }
 
-            window.print();
+        function waitForImages(callback) {
+            const images = document.getElementsByTagName('img');
+            let loadedImages = 0;
+            const totalImages = images.length;
+
+            function imageLoaded() {
+                loadedImages++;
+                if (loadedImages === totalImages) {
+                    callback();
+                }
+            }
+
+            Array.from(images).forEach(img => {
+                if (img.complete) {
+                    imageLoaded();
+                } else {
+                    img.addEventListener('load', imageLoaded);
+                    img.addEventListener('error', imageLoaded);
+                }
+            });
+
+            // Se não houver imagens, execute o callback imediatamente
+            if (totalImages === 0) {
+                callback();
+            }
+        }
+
+        function printFull() {
+            setupPrintConfig();
+
+            document.querySelectorAll('.frente-page').forEach(page => {
+                page.classList.remove('no-print');
+            });
+
+            document.querySelectorAll('.verso-page').forEach(page => {
+                page.classList.remove('no-print');
+            });
+
+            waitForImages(() => {
+                setTimeout(() => {
+                    window.print();
+                }, 100);
+            });
         }
 
         function printVerso() {
-            document
-                .querySelectorAll('.frente-page')
-                .forEach(function(page) {
-                    page.classList.add('no-print');
-                });
-            document
-                .querySelectorAll('.verso-page')
-                .forEach(function(page) {
-                    page.classList.remove('no-print');
-                });
+            setupPrintConfig();
 
-            window.print();
+            document.querySelectorAll('.frente-page').forEach(page => {
+                page.classList.add('no-print');
+            });
+
+            document.querySelectorAll('.verso-page').forEach(page => {
+                page.classList.remove('no-print');
+            });
+
+            waitForImages(() => {
+                setTimeout(() => {
+                    window.print();
+                }, 100);
+            });
         }
+
+        // Configurar listener para evento de beforeprint
+        if (window.matchMedia) {
+            window.matchMedia('print').addListener(function(mql) {
+                if (mql.matches) {
+                    document.body.style.webkitPrintColorAdjust = 'exact';
+                    document.body.style.printColorAdjust = 'exact';
+                }
+            });
+        }
+
+        // Garantir que as configurações sejam aplicadas quando a página carregar
+        document.addEventListener('DOMContentLoaded', setupPrintConfig);
     </script>
 </body>
 </html>

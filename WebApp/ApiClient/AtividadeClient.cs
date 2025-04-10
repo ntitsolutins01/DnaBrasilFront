@@ -50,6 +50,31 @@ namespace WebApp.ApiClient
             return Delete<bool>(requestUrl);
         }
 
+        /// <summary>
+        /// Inclusão de Atividade e Alunos
+        /// </summary>
+        /// <param name="command">Objeto para inclusão de AtividadeAlunos</param>
+        /// <returns>Id de Atividade</returns>
+        public Task<long> CreateAtividadeAluno(AtividadeModel.CreateUpdateAtividadeAlunosCommand command)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceAtividade}/Alunos"));
+            return Post(requestUrl, command);
+        }
+
+        /// <summary>
+        /// Alteração de Atividade e Alunos
+        /// </summary>
+        /// <param name="id">Id de alteração de Atividade</param>
+        /// <param name="command">Objeto de alteração de AtividadeAlunos</param>
+        /// <returns>Retorna true ou false</returns>
+        public Task<bool> UpdateAtividadeAluno(int id, AtividadeModel.CreateUpdateAtividadeAlunosCommand command)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceAtividade}/{id}/Alunos"));
+            return Put(requestUrl, command);
+        }
+
         #endregion
 
         #region Methods
@@ -90,6 +115,32 @@ namespace WebApp.ApiClient
             return Get<List<AtividadeDto>>(requestUrl);
         }
 
+        /// <summary>
+        /// Busca Alunos por Id da atividade
+        /// </summary>
+        /// <param name="id">Id da atividade</param>
+        /// <returns>Retorna a Lista de Alunos </returns>
+        public List<AtividadeAlunosDto> GetAtividadeAlunosByAtividadeId(int id)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceAtividade}/{id}/Alunos"));
+            return Get<List<AtividadeAlunosDto>>(requestUrl);
+        }
+
+        /// <summary>
+        /// Busca atividades por id da localidade
+        /// </summary>
+        /// <param name="id">Id da localidade</param>
+        /// <returns>Retorna a lista de atividades</returns>
+        public async Task<List<AtividadeDto>> GetAtividadeByLocalidadeId(int id)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceAtividade}/Localidade/{id}"));
+            return Get<List<AtividadeDto>>(requestUrl);
+        }
+
         #endregion
+
+
     }
 }

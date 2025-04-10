@@ -14,6 +14,9 @@ using WebApp.Utility;
 
 namespace WebApp.Controllers;
 
+/// <summary>
+/// Controle de Nota
+/// </summary>
 [Authorize(Policy = ModuloAccess.Nota)]
 public class NotaController : BaseController
 {
@@ -32,7 +35,7 @@ public class NotaController : BaseController
     }
     #endregion
 
-    #region Crud Methods
+    #region Mian Methods
     /// <summary>
     /// Listagem de Nota
     /// </summary>
@@ -51,7 +54,7 @@ public class NotaController : BaseController
     }
 
     /// <summary>
-    /// Tela para inclusão de Nota
+    /// Tela para Inclusão de Nota
     /// </summary>
     /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
     /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
@@ -83,7 +86,7 @@ public class NotaController : BaseController
     }
 
     /// <summary>
-    /// Ação de inclusão do Nota
+    /// Ação de Inclusão do Nota
     /// </summary>
     /// <param name="collection">coleção de dados para inclusao de Nota</param>
     /// <returns>retorna mensagem de inclusao através do parametro crud</returns>
@@ -121,7 +124,7 @@ public class NotaController : BaseController
     }
 
     /// <summary>
-    /// Ação de alteração do Nota
+    /// Ação de Alteração do Nota
     /// </summary>
     /// <param name="id">identificador do Nota</param>
     /// <param name="collection">coleção de dados para alteração de Nota</param>
@@ -152,7 +155,7 @@ public class NotaController : BaseController
     }
 
     /// <summary>
-    /// Ação de exclusão do Nota
+    /// Ação de Exclusão do Nota
     /// </summary>
     /// <param name="id">identificador do Nota</param>
     /// <param name="collection">coleção de dados para exclusão de Nota</param>
@@ -174,6 +177,11 @@ public class NotaController : BaseController
 
     #region Get Methods
 
+    /// <summary>
+    /// Busca Nota por Id
+    /// </summary>
+    /// <param name="id">Identificador de Nota</param>
+    /// <returns>Retorna a Nota</returns>
     public Task<NotaDto> GetNotaById(int id)
     {
         var result = ApiClientFactory.Instance.GetNotaById(id);

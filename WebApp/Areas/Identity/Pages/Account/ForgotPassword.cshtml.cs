@@ -56,7 +56,7 @@ namespace WebApp.Areas.Identity.Pages.Account
                 //|| !await _userManager.IsEmailConfirmedAsync(user))
                     // Don't reveal that the user does not exist or is not confirmed
                     //return RedirectToPage("./ForgotPasswordConfirmation");
-                var usuario = ApiClientFactory.Instance.GetUsuarioByEmail(Input.Email);
+                var usuario = await ApiClientFactory.Instance.GetUsuarioByEmail(Input.Email);
 
                 await SendForgotPasswordEmail(user, Input.Email, usuario.Nome);
 

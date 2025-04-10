@@ -13,7 +13,7 @@
         public decimal? Abdominal { get; set; }
         public decimal? Imc { get; set; }
         public decimal? ShuttleRun { get; set; }
-        public string? Encaminhamento { get; set; }
+        public EncaminhamentoDto? Encaminhamento { get; set; }
         public decimal? Altura { get; set; }
         public decimal? Peso { get; set; }
         public decimal? Envergadura { get; set; }

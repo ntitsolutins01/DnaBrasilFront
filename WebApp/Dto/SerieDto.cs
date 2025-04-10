@@ -2,12 +2,13 @@
 {
     public class SerieDto
     {
-        public string Id { get; set; }
-        public string Nome { get; set; }
-        public  bool Status { get; set; }
-        public string Descricao { get; set; }
-        public int IdadeInicial { get; set; }
-        public int IdadeFinal { get; set; }
-        public int ScoreTotal { get; set; }
+        public int Id { get; set; }
+        public required string Nome { get; set; }
+        public required string Turma { get; set; }
+        public required string NomeEtapaEnsino { get; set; }
+        public required int LocalidadeId { get; set; }
+        public required string NomeLocalidade { get; set; }
+        public string? MunicipioEstado { get; set; }
+        public bool Status { get; set; }
     }
 }

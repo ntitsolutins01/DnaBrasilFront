@@ -12,33 +12,41 @@ using WebApp.Utility;
 
 namespace WebApp.Controllers;
 
+/// <summary>
+/// Controle de Aula
+/// </summary>
 public class AulaController : BaseController
 {
-    #region Constructor
+
+    #region Parametros
+
     private readonly IOptions<UrlSettings> _appSettings;
     private readonly IWebHostEnvironment _host;
+
+    #endregion
+
+    #region Constructor
 
     /// <summary>
     /// Construtor da página
     /// </summary>
-    /// <param name="app">configurações de urls do sistema</param>
-    /// <param name="host">informações da aplicação em execução</param>
+    /// <param name="appSettings">Configurações de urls do sistema</param>
+    /// <param name="host">Informações da aplicação em execução</param>
     public AulaController(IOptions<UrlSettings> appSettings, IWebHostEnvironment host)
     {
         _appSettings = appSettings;
-        _host = host;
         ApplicationSettings.WebApiUrl = _appSettings.Value.WebApiBaseUrl;
+        _host = host;
     }
     #endregion
 
-    #region Crud Methods
+    #region Main Methods
     /// <summary>
     /// Listagem de Aula
     /// </summary>
-    /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
-    /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
-    /// <param name="collection">lista de filtros selecionados para pesquisa de alunos</param>
-    /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+    /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+    /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+    /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
     [ClaimsAuthorize(ClaimType.Aula, Identity.Claim.Consultar)]
     public IActionResult Index(int? crud, int? notify, string message = null)
     {
@@ -50,19 +58,22 @@ public class AulaController : BaseController
     }
 
     /// <summary>
-    /// Tela para inclusão de Aula
+    /// Tela para Inclusão de Aula
     /// </summary>
-    /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
-    /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
-    /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+    /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+    /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+    /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
     [ClaimsAuthorize(ClaimType.Aula, Identity.Claim.Incluir)]
-    public ActionResult Create(int? crud, int? notify, string message = null)
+    public async Task<ActionResult> Create(int? crud, int? notify, string message = null)
     {
         try
         {
             SetNotifyMessage(notify, message);
             SetCrudMessage(crud);
-            var professores = new SelectList(ApiClientFactory.Instance.GetUsuarioAll().Where(x => x.Perfil.Id == (int)EnumPerfil.Professor), "Id", "Nome");
+
+            //criar metodo que busca Usuarios por PerfilId
+            var usuario = ApiClientFactory.Instance.GetUsuarioAll().Where(x => x.Perfil.Id == (int)EnumPerfil.Professor);
+            var professores = new SelectList(usuario, "Id", "Nome");
             var tipoCurso = new SelectList(ApiClientFactory.Instance.GetTipoCursosAll(), "Id", "Nome");
 
             return View(new AulaModel()
@@ -79,10 +90,10 @@ public class AulaController : BaseController
     }
 
     /// <summary>
-    /// Ação de inclusão do Aula
+    /// Ação de Inclusão do Aula
     /// </summary>
-    /// <param name="collection">coleção de dados para inclusao de Aula</param>
-    /// <returns>retorna mensagem de inclusao através do parametro crud</returns>
+    /// <param name="collection">Coleção de dados para inclusao de Aula</param>
+    /// <returns>Retorna mensagem de inclusao através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.Aula, Identity.Claim.Incluir)]
     [HttpPost]
     public async Task<ActionResult> Create(IFormCollection collection)
@@ -91,36 +102,57 @@ public class AulaController : BaseController
         {
 	        var command = new AulaModel.CreateUpdateAulaCommand
 	        {
-		        CargaHoraria = Convert.ToInt32(collection["cargaHoraria"].ToString()),
 		        ProfessorId = Convert.ToInt32(collection["ddlProfessor"].ToString()),
 		        ModuloEadId = Convert.ToInt32(collection["ddlModuloEad"].ToString()),
 		        Titulo = collection["titulo"].ToString(),
 		        Descricao = collection["descricao"].ToString(),
-		        Video = collection["video"].ToString()
 	        };
 
-            string? filePath;
-            string? fileName;
-            string extension = ".jpg";
-            string newFileName = Path.ChangeExtension(
-	            Guid.NewGuid().ToString(),
-	            extension
-            );
+            string aulasPath = Path.Combine(_host.WebRootPath, "Aulas");
+            if (!Directory.Exists(aulasPath))
+            {
+                Directory.CreateDirectory(aulasPath);
+            }
 
-			foreach (var file in collection.Files)
+            string? filePathMaterial = null;
+            string? fileNameMaterial = null;
+            string? filePathVideo = null;
+            string? fileNameVideo = null;
+
+            foreach (var file in collection.Files)
             {
                 if (file.Length <= 0) continue;
-                fileName = Path.GetFileName(collection.Files[0].FileName);
-                filePath = Path.Combine(_host.WebRootPath, $"Aulas\\{newFileName}");
 
-                if (!Directory.Exists(Path.Combine(_host.WebRootPath, $"Aulas")))
-                    Directory.CreateDirectory(Path.Combine(_host.WebRootPath, $"Aulas"));
+                string extension = Path.GetExtension(file.FileName).ToLowerInvariant();
 
-				command.Material = filePath;
-				command.NomeMaterial = fileName;
+                if (extension == ".jpg" || extension == ".png")
+                {
+                    string newFileNameMaterial = Path.ChangeExtension(Guid.NewGuid().ToString(), extension);
+                    filePathMaterial = Path.Combine(aulasPath, newFileNameMaterial);
+                    fileNameMaterial = Path.GetFileName(file.FileName);
 
-				using Stream fileStream = new FileStream(filePath, FileMode.Create);
-                await file.CopyToAsync(fileStream);
+                    command.Material = filePathMaterial;
+                    command.NomeMaterial = fileNameMaterial;
+
+                    using (var fileStream = new FileStream(filePathMaterial, FileMode.Create))
+                    {
+                        await file.CopyToAsync(fileStream);
+                    }
+                }
+                else if (extension == ".mp4" || extension == ".avi")
+                {
+                    string newFileNameVideo = Path.ChangeExtension(Guid.NewGuid().ToString(), extension);
+                    filePathVideo = Path.Combine(aulasPath, newFileNameVideo);
+                    fileNameVideo = Path.GetFileName(file.FileName);
+
+                    command.Video = filePathVideo;
+                    command.NomeVideo = fileNameVideo;
+
+                    using (var fileStream = new FileStream(filePathVideo, FileMode.Create))
+                    {
+                        await file.CopyToAsync(fileStream);
+                    }
+                }
             }
 
             await ApiClientFactory.Instance.CreateAula(command);
@@ -134,11 +166,10 @@ public class AulaController : BaseController
     }
 
     /// <summary>
-    /// Ação de alteração do Aula
+    /// Ação de Alteração do Aula
     /// </summary>
-    /// <param name="id">identificador do Aula</param>
-    /// <param name="collection">coleção de dados para alteração de Aula</param>
-    /// <returns>retorna mensagem de alteração através do parametro crud</returns>
+    /// <param name="id">Identificador do Aula</param>
+    /// <returns>Retorna mensagem de alteração através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.Aula, Identity.Claim.Alterar)]
     public async Task<ActionResult> Edit(IFormCollection collection)
     {
@@ -147,10 +178,8 @@ public class AulaController : BaseController
             var command = new AulaModel.CreateUpdateAulaCommand
             {
                 Id = Convert.ToInt32(collection["editAulaId"]),
-                CargaHoraria = Convert.ToInt32(collection["cargaHoraria"].ToString()),
                 Titulo = collection["nome"].ToString(),
                 Descricao = collection["descricao"].ToString(),
-                Video = collection["video"].ToString(),
                 Status = collection["editStatus"].ToString() == "" ? false : true,
                 ProfessorId = Convert.ToInt32(collection["ddlProfessor"].ToString())
             };
@@ -199,12 +228,11 @@ public class AulaController : BaseController
     }
 
     /// <summary>
-    /// Ação de exclusão do Aula
+    /// Ação de Exclusão do Aula
     /// </summary>
-    /// <param name="id">identificador do Aula</param>
-    /// <param name="collection">coleção de dados para exclusão de Aula</param>
-    /// <returns>retorna mensagem de exclusão através do parametro crud</returns>
-    [ClaimsAuthorize(ClaimType.Aula, Identity.Claim.Excluir)]
+    /// <param name="id">Identificador do Aula</param>
+    /// <param name="collection">Coleção de dados para exclusão de Aula</param>
+    [ClaimsAuthorize(ClaimType.Aluno, Claim.Excluir)]
     public ActionResult Delete(int id)
     {
         try
@@ -226,6 +254,11 @@ public class AulaController : BaseController
 
     #region Get Methods
 
+    /// <summary>
+    /// Busca de Aula por Id
+    /// </summary>
+    /// <param name="id">Identificador de Aula</param>
+    /// <returns>Retorna a Aula</returns>
     public Task<AulaDto> GetAulaById(int id)
     {
         var result = ApiClientFactory.Instance.GetAulaById(id);
@@ -240,12 +273,12 @@ public class AulaController : BaseController
     /// </summary>
     /// <param name="id">Id do módulo ead</param>
     /// <returns>Retorna um json com todas as aulas</returns>
-    public Task<JsonResult> GetAulasAllByModuloEadId(string id)
+    public Task<JsonResult> GetAulasByModuloEadId(string id)
     {
         try
         {
             if (string.IsNullOrEmpty(id)) throw new Exception("Modulo não informado.");
-            var resultLocal = ApiClientFactory.Instance.GetAulasAllByModuloEadId(Convert.ToInt32(id));
+            var resultLocal = ApiClientFactory.Instance.GetAulasByModuloEadId(Convert.ToInt32(id));
 
             return Task.FromResult(Json(new SelectList(resultLocal, "Id", "Titulo")));
 

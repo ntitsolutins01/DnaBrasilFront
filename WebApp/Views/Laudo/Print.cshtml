@@ -46,7 +46,7 @@
                 <div class="text-info">
                     <div class="talent-label">MEU TALENTO</div>
                     <div class="talent-name">
-                        @if (@laudo.Modalidade.Nome == null)
+                        @if (@laudo.Modalidade == null)
                         {
                             <text>Não Definido</text>
                         }
@@ -56,9 +56,9 @@
                         }
                     </div>
                 </div>
-                @if (@laudo.Modalidade.ByteImage != null)
+                @if (@laudo.Modalidade != null && laudo.Modalidade.Id != 0)
                 {
-                    <div class="img-qrcode-info"
+                    <div class="sport-icon"
                          style=" background-size: cover;">
                         @{
                             var base64 = Convert.ToBase64String(@laudo.Modalidade.ByteImage);
@@ -100,15 +100,26 @@
                         <img src="/assets/images/user.png" style="width:100%;" />
                     }
                 </div>
-                <div class="class-info">
-                    <div>Série: Não definida</div>
-                    <div>Turma: Não definida</div>
+                <div class="student-basic-info">
+                    <div class="student-name">@laudo.Laudo.NomeAluno</div>
+                    <div class="student-school">@laudo.Laudo.NomeLocalidade</div>
+                    <div class="student-email">@laudo.Laudo.Email</div>
                 </div>
             </div>
             <div class="student-details">
-                <div class="student-name">@laudo.Laudo.NomeAluno</div>
-                <div class="student-email">@laudo.Laudo.Email</div>
-                <div class="student-school">@laudo.Laudo.NomeLocalidade</div>
+                <div class="student-extra-grid">
+                    <div class="left-details">
+                        <div><span class="info-label">Idade:</span> @laudo.Laudo.Idade</div>
+                        <div><span class="info-label">Etnia:</span> @laudo.Laudo.Etnia</div>
+                        @if (@laudo.Laudo.NomeDeficiencia != "NÃO POSSUI")
+                        {
+                        <div><span class="info-label">Deficiência:</span> @laudo.Laudo.NomeDeficiencia</div>
+                        }
+                    </div>
+                    <div class="right-details">
+                        <div><span class="info-label">Série:</span> Não definida</div>
+                    </div>
+                </div>
             </div>
         </div>
     }
@@ -284,7 +295,7 @@
                         {
                             foreach (var vocacional in laudo.ListVocacional)
                             {
-                                if (vocacional.Id == laudo.Laudo.VocacionalId)
+                                if (vocacional.Id == laudo.Laudo.EncaminhamentoVocacionalId)
                                 {
                                     await RenderMetricCardAsync("Vocação", 100, "#5b5c9c", "#d5d6e7",
                                     vocacional.Nome, vocacional.Descricao);

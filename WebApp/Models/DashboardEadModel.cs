@@ -17,7 +17,7 @@ namespace WebApp.Models
         public SelectList ListCursos { get; set; }
         public string TipoCursosId { get; set; }
         public SelectList ListTipoCursos { get; set; }
-        public DashboardEadDto Dashboard { get; set; }
+        public DashboardEadDto DashboardEad { get; set; }
     }
 
 

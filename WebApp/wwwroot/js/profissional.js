@@ -3,13 +3,12 @@
     data: {
         params: {
             cpf: "",
-            ambientes: [],
             alunos: [],
             visible: false
         },
         loading: false,
         editDto: {
-            Categoria: "", Estrutura: "", DiasSemana: "", Horario: ""
+            Categoria: "", Estrutura: "", DiasSemana: "", Horario: "", Update: true
         }
     },
     mounted: function () {
@@ -601,17 +600,18 @@
                         });
                 });
 
-
                 //clique de escolha do select
                 $("#ddlTurma").change(function () {
 
                     var id = $("#ddlTurma").val();
 
-                    if (id ==="") {
+                    if (id === "") {
                         Site.Notification("Profissional", "Por favor selecione uma turma", "warning");
                     }
 
                     var url = "../Atividade/GetAtividadeById";
+
+                    var urlDataTable = "../Atividade/GetAtividadeAlunosByAtividadeId";
 
                     axios.get(url, {
                         params: {
@@ -623,6 +623,44 @@
                         self.editDto.Estrutura = result.data.nomeEstrutura;
                         self.editDto.DiasSemana = result.data.diasSemana;
                         self.editDto.Horario = result.data.hrInicial + " - " + result.data.hrFinal;
+
+                        axios.get(urlDataTable, {
+                            params: {
+                                id: id
+                            }
+                        }).then(result => {
+                            if (result.data.length > 0) {
+
+                                self.editDto.Update = true;
+
+                                $.each(result.data,
+                                    function (i, item) {
+
+                                        $('#alunoDataTable').DataTable().destroy();
+
+                                        var table = $('#alunoDataTable').DataTable({
+                                            columnDefs: [
+                                                { "className": "text-center", "targets": "_all" }
+                                            ]
+                                        });
+
+                                        table.row.add([item.alunoId.toString(), item.alunoId + " - " + item.nome,
+                                        "<a style='color:#F44336' href='javascript:(crud.DeleteAluno(\"" + item.alunoId + "\"))'><i class='fa fa-trash'></i></a>"])
+                                            .draw();
+
+                                        self.params.alunos.push(item.alunoId.toString());
+
+                                    });
+
+                                $('input[name="arrAlunos"]').attr('value', self.params.alunos);
+                            } else {
+
+                                self.editDto.Update = false;
+                            }
+                        }).catch(error => {
+                            Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
+                        });
+
                     }).catch(error => {
                         Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
                     });
@@ -691,7 +729,7 @@
 
                 }, "Informe um CPF válido");
 
-                
+
                 $("#formMinhasTurmas").validate({
                     rules: {
                         cpf: { cpf: true, required: true }
@@ -751,95 +789,7 @@
                     }
                 });
             }
-            //MinhasTurmas
-            if (formid === "formMinhasTurmas") { 
 
-                //skin select
-                var $select = $(".select2").select2({
-                    allowClear: true
-                });
-
-                $(".select2").each(function () {
-                    var $this = $(this),
-                        opts = {};
-
-                    var pluginOptions = $this.data('plugin-options');
-                    if (pluginOptions)
-                        opts = pluginOptions;
-
-                    $this.themePluginSelect2(opts);
-                });
-
-                /*
-                 * When you change the value the select via select2, it triggers
-                 * a 'change' event, but the jquery validation plugin
-                 * only re-validates on 'blur'*/
-
-                $select.on('change', function () {
-                    $(this).trigger('blur');
-                });
-
-                
-
-                $("#formMinhasTurmas").validate({
-                    highlight: function (label) {
-                        $(label).closest('.form-group').removeClass('has-success').addClass('has-error');
-                    },
-                    success: function (label) {
-                        $(label).closest('.form-group').removeClass('has-error');
-                        label.remove();
-                    },
-                    errorPlacement: function (error, element) {
-                        var placement = element.closest('.input-group');
-                        if (!placement.get(0)) {
-                            placement = element;
-                        }
-                        if (error.text() !== '') {
-                            placement.after(error);
-                        }
-                    }
-                });
-            }
-
-            var datatableInit = function () {
-
-                $('.adicionados').dataTable({
-                    columnDefs: [
-                        { "className": "text-center", "targets": "_all" }
-                    ],
-                    dom: '<"row"<"col-lg-6"l><"col-lg-6"f>><"table-responsive"t>p',
-                    "language": {
-                        "sEmptyTable": "Nenhum registro encontrado",
-                        "sInfo": "Mostrando de _START_ até _END_ de _TOTAL_ registros",
-                        "sInfoEmpty": "Mostrando 0 até 0 de 0 registros",
-                        "sInfoFiltered": "(Filtrados de _MAX_ registros)",
-                        "sInfoPostFix": "",
-                        "sInfoThousands": ".",
-                        "sLengthMenu": "_MENU_ resultados por página",
-                        "sLoadingRecords": "Carregando...",
-                        "sProcessing": "Processando...",
-                        "sZeroRecords": "Nenhum registro encontrado",
-                        "sSearch": "Pesquisar: ",
-                        "oPaginate": {
-                            "sNext": "Próximo →" +
-                                "" +
-                                "",
-                            "sPrevious": "← Anterior",
-                            "sFirst": "Primeiro",
-                            "sLast": "Último"
-                        },
-                        "oAria": {
-                            "sSortAscending": ": Ordenar colunas de forma ascendente",
-                            "sSortDescending": ": Ordenar colunas de forma descendente"
-                        }
-                    }
-                });
-
-            };
-
-            $(function () {
-                datatableInit();
-            });
         }).apply(this, [jQuery]);
     },
     methods: {
@@ -1008,8 +958,8 @@
             table.rows(function (idx, data, node) {
                 return data[0] === id;
             })
-            .remove()
-            .draw();
+                .remove()
+                .draw();
 
             const alunos = self.params.alunos;
 
@@ -1033,7 +983,7 @@ var crud = {
         vm.AddAluno()
     },
     DeleteAluno: function (index) {
-        vm.DeleteAluno(index)
+        vm.DeleteAluno(index.toString())
     },
     DeleteModal: function (id) {
         $('input[name="deleteProfissionalId"]').attr('value', id);

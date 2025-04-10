@@ -159,6 +159,7 @@ builder.Services.AddAuthorization(o =>
 
     o.AddPolicy(ModuloAccess.Aluno, policy =>
         policy.RequireAssertion(context =>
+            context.User.IsInRole(UserRoles.AdministradorEad) ||
             context.User.IsInRole(UserRoles.Coordenador) ||
             context.User.IsInRole(UserRoles.Gestor) ||
             context.User.IsInRole(UserRoles.Profissional) ||
@@ -170,7 +171,6 @@ builder.Services.AddAuthorization(o =>
             context.User.IsInRole(UserRoles.Gestor) ||
             context.User.IsInRole(UserRoles.Profissional) ||
             context.User.IsInRole(UserRoles.Parceiro) ||
-            context.User.IsInRole(UserRoles.AdministradorEad) ||
             context.User.IsInRole(UserRoles.Administrador)));
 
     o.AddPolicy(ModuloAccess.Evento, policy =>
@@ -185,10 +185,11 @@ builder.Services.AddAuthorization(o =>
             context.User.IsInRole(UserRoles.Administrador)));
 
 
+
+
     #endregion
 
     #region Sistema EAD
-
 
     o.AddPolicy(ModuloAccess.DashboardEad, policy =>
         policy.RequireAssertion(context =>
@@ -200,8 +201,14 @@ builder.Services.AddAuthorization(o =>
     o.AddPolicy(ModuloAccess.ConfiguracaoSistemaEad, policy =>
         policy.RequireAssertion(context =>
             context.User.IsInRole(UserRoles.AdministradorEad) ||
-            context.User.IsInRole(UserRoles.ProfessorEad) ||
             context.User.IsInRole(UserRoles.CoordenadorEad) ||
+            context.User.IsInRole(UserRoles.Administrador)));
+
+    o.AddPolicy(ModuloAccess.MeusCursos, policy =>
+        policy.RequireAssertion(context =>
+            context.User.IsInRole(UserRoles.AdministradorEad) ||
+            context.User.IsInRole(UserRoles.CoordenadorEad) ||
+            context.User.IsInRole(UserRoles.Aluno) ||
             context.User.IsInRole(UserRoles.Administrador)));
 
     #endregion

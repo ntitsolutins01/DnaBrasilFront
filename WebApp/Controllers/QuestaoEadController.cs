@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using WebApp.Authorization;
@@ -15,6 +14,9 @@ using WebApp.Utility;
 
 namespace WebApp.Controllers;
 
+/// <summary>
+/// Controle DE Questionario Ead
+/// </summary>
 [Authorize(Policy = ModuloAccess.ConfiguracaoSistemaEad)]
 public class QuestaoEadController : BaseController
 {
@@ -39,9 +41,9 @@ public class QuestaoEadController : BaseController
     }
     #endregion
 
-    #region Crud Methods
+    #region Mian Methods
     /// <summary>
-    /// Listagem de QuestaoEad
+    /// Listagem de Questao Ead
     /// </summary>
     /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
     /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
@@ -58,7 +60,7 @@ public class QuestaoEadController : BaseController
     }
 
     /// <summary>
-    /// Tela para inclusão de Questao Ead
+    /// Tela para Inclusão de Questao Ead
     /// </summary>
     /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
     /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
@@ -87,9 +89,9 @@ public class QuestaoEadController : BaseController
     }
 
     /// <summary>
-    /// Ação de inclusão do QuestaoEad
+    /// Ação de Inclusão de Questao Ead
     /// </summary>
-    /// <param name="collection">coleção de dados para inclusao de QuestaoEad</param>
+    /// <param name="collection">coleção de dados para inclusao de Questao Ead</param>
     /// <returns>retorna mensagem de inclusao através do parametro crud</returns>
     //[ClaimsAuthorize(ClaimType.QuestaoEad, Identity.Claim.Incluir)]
     [HttpPost]
@@ -158,10 +160,10 @@ public class QuestaoEadController : BaseController
 
 
     /// <summary>
-    /// Ação de alteração do QuestaoEad
+    /// Ação de Alteração de Questao Ead
     /// </summary>
-    /// <param name="id">identificador do QuestaoEad</param>
-    /// <param name="collection">coleção de dados para alteração de QuestaoEad</param>
+    /// <param name="id">identificador do Questao Ead</param>
+    /// <param name="collection">coleção de dados para alteração de Questao Ead</param>
     /// <returns>retorna mensagem de alteração através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.QuestaoEad, Identity.Claim.Alterar)]
     public async Task<ActionResult> Edit(IFormCollection collection)
@@ -190,10 +192,10 @@ public class QuestaoEadController : BaseController
     }
 
     /// <summary>
-    /// Ação de exclusão do QuestaoEad
+    /// Ação de Exclusão de Questao Ead
     /// </summary>
-    /// <param name="id">identificador do QuestaoEad</param>
-    /// <param name="collection">coleção de dados para exclusão de QuestaoEad</param>
+    /// <param name="id">identificador do Questao Ead</param>
+    /// <param name="collection">coleção de dados para exclusão de Questao Ead</param>
     /// <returns>retorna mensagem de exclusão através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.QuestaoEad, Identity.Claim.Excluir)]
     public ActionResult Delete(int id)
@@ -213,9 +215,9 @@ public class QuestaoEadController : BaseController
     #region Get Methods
 
     /// <summary>
-    /// Método de busca de Questão por id
+    ///  Busca de Questão por id
     /// </summary>
-    /// <param name="id">id da questao</param>
+    /// <param name="id">id da Questao</param>
     /// <returns>Retorna o objeto Questao</returns>
     public Task<QuestaoEadDto> GetQuestaoEadById(int id)
     {

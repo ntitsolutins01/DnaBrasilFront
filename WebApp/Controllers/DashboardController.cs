@@ -16,7 +16,7 @@ namespace WebApp.Controllers
     {
         private readonly ILogger<DashboardController> _logger;
         private readonly IOptions<UrlSettings> _appSettings;
-
+         
 
         public DashboardController(ILogger<DashboardController> logger, IOptions<UrlSettings> appSettings)
         {
@@ -43,7 +43,7 @@ namespace WebApp.Controllers
 
             var dashboard = new DashboardDto();
 
-            var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentoAll(), "Id", "Nome", dashboard.FomentoId);
+            var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentosAll(), "Id", "Nome", dashboard.FomentoId);
             var deficiencias = new SelectList(ApiClientFactory.Instance.GetDeficienciaAll().Where(x=>x.Status), "Id", "Nome", dashboard.DeficienciaId);
             var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome", dashboard.Estado);
 
@@ -67,7 +67,7 @@ namespace WebApp.Controllers
 
             if (!string.IsNullOrEmpty(dashboard.LocalidadeId))
             {
-                localidades = new SelectList(ApiClientFactory.Instance.GetLocalidadeByMunicipio(dashboard.MunicipioId), "Id", "Nome", dashboard.LocalidadeId);
+                localidades = new SelectList(ApiClientFactory.Instance.GetLocalidadeByMunicipioId(dashboard.MunicipioId), "Id", "Nome", dashboard.LocalidadeId);
             }
 
             var model = new DashboardModel

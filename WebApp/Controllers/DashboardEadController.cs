@@ -47,7 +47,7 @@ namespace WebApp.Controllers
 
             var dashboardEad = new DashboardEadDto();
 
-            var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentoAll(), "Id", "Nome", dashboardEad.FomentoId);
+            var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentosAll(), "Id", "Nome", dashboardEad.FomentoId);
             var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome", dashboardEad.Estado);
             var tipoCurso = new SelectList(ApiClientFactory.Instance.GetTipoCursosAll(), "Id", "Nome");
 
@@ -61,14 +61,14 @@ namespace WebApp.Controllers
 
             if (!string.IsNullOrEmpty(dashboardEad.LocalidadeId))
             {
-                localidades = new SelectList(ApiClientFactory.Instance.GetLocalidadeByMunicipio(dashboardEad.MunicipioId), "Id", "Nome", dashboardEad.LocalidadeId);
+                localidades = new SelectList(ApiClientFactory.Instance.GetLocalidadeByMunicipioId(dashboardEad.MunicipioId), "Id", "Nome", dashboardEad.LocalidadeId);
             }
 
             var model = new DashboardEadModel
             {
                 ListFomentos = fomentos,
                 ListEstados = estados,
-                Dashboard = dashboardEad,
+                DashboardEad = dashboardEad,
                 ListMunicipios = municipios!,
                 ListTipoCursos = tipoCurso,
                 ListLocalidades = localidades!

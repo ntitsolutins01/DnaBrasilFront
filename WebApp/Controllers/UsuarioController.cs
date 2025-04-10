@@ -24,13 +24,18 @@ namespace WebApp.Controllers
     //[Authorize(Policy = ModuloAccess.ControleAcesso)]
     public class UsuarioController : BaseController
     {
-        #region Constructor
+
+        #region Parametros
 
         private readonly IEmailSender _emailSender;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IWebHostEnvironment _host;
         private readonly ILog _logger;
+
+        #endregion
+
+        #region Constructor
 
         /// <summary>
         /// Construtor da página
@@ -58,10 +63,10 @@ namespace WebApp.Controllers
 
         #endregion
 
-        #region Crud Methods
+        #region Main Methods
 
         /// <summary>
-        /// Listagem de usuário
+        /// Listagem de Usuário
         /// </summary>
         /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
         /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
@@ -82,7 +87,7 @@ namespace WebApp.Controllers
         }
 
         /// <summary>
-        /// Tela para inclusão de Usuario
+        /// Tela para Inclusão de Usuario
         /// </summary>
         /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
         /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
@@ -104,7 +109,7 @@ namespace WebApp.Controllers
         }
 
         /// <summary>
-        /// Ação de inclusão do Usuario
+        /// Ação de Inclusão do Usuario
         /// </summary>
         /// <param name="collection">coleção de dados para inclusao de Usuario</param>
         /// <returns>retorna mensagem de inclusao através do parametro crud</returns>
@@ -116,7 +121,7 @@ namespace WebApp.Controllers
             {
                 var cpf = collection["cpf"].ToString();
 
-                var result = ApiClientFactory.Instance.GetUsuarioByCpf(cpf); //Regex.Replace(cpf, "[^0-9a-zA-Z]+", "")
+                var result = await ApiClientFactory.Instance.GetUsuarioByCpf(cpf); //Regex.Replace(cpf, "[^0-9a-zA-Z]+", "")
 
                 if (result != null)
                 {
@@ -128,7 +133,7 @@ namespace WebApp.Controllers
                         });
                 }
 
-                var result2 = ApiClientFactory.Instance.GetUsuarioByEmail(collection["email"].ToString().Trim());
+                var result2 = await ApiClientFactory.Instance.GetUsuarioByEmail(collection["email"].ToString().Trim());
 
                 if (result2 != null)
                 {
@@ -197,12 +202,12 @@ namespace WebApp.Controllers
         }
 
         /// <summary>
-        /// Tela de alteração de Usuario
+        /// Tela de Alteração de Usuario
         /// </summary>
-        /// <param name="id">id do usuario</param>
+        /// <param name="id">id do Usuario</param>
         /// <exception cref="ArgumentNullException">Mensagem de erro ao alterar o tentar acessar tela de alteração do Usuario</exception>
         [ClaimsAuthorize(ClaimType.Usuario, Identity.Claim.Alterar)]
-        public ActionResult Edit(string id, int? crud, int? notify, string message = null)
+        public async Task<ActionResult> Edit(string id, int? crud, int? notify, string message = null)
         {
             try
             {
@@ -211,13 +216,13 @@ namespace WebApp.Controllers
 
                 UsuarioModel model = new UsuarioModel();
 
-                var obj = ApiClientFactory.Instance.GetUsuarioById(id) ?? throw new ArgumentNullException("Usuário não encontrado.");
+                var obj = await ApiClientFactory.Instance.GetUsuarioById(id) ?? throw new ArgumentNullException("Usuário não encontrado.");
 
                 var resultPerfil = ApiClientFactory.Instance.GetPerfilAll();
 
                 var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome", obj.Uf);
                 var municipios = new SelectList(ApiClientFactory.Instance.GetMunicipiosByUf(obj.Uf!), "Id", "Nome", obj.MunicipioId);
-                var localidades = new SelectList(ApiClientFactory.Instance.GetLocalidadeByMunicipio(obj.MunicipioId.ToString()), "Id", "Nome", obj.LocalidadeId);
+                var localidades = new SelectList(ApiClientFactory.Instance.GetLocalidadeByMunicipioId(obj.MunicipioId.ToString()), "Id", "Nome", obj.LocalidadeId);
 
                 model = new UsuarioModel
                 {
@@ -242,7 +247,7 @@ namespace WebApp.Controllers
         }
 
         /// <summary>
-        /// Ação de alteração do Usuario
+        /// Ação de Alteração do Usuario
         /// </summary>
         /// <param name="id">identificador do Usuario</param>
         /// <param name="collection">coleção de dados para alteração de Usuario</param>
@@ -255,7 +260,7 @@ namespace WebApp.Controllers
             {
                 //var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-                var usuario = ApiClientFactory.Instance.GetUsuarioById(id.ToString());
+                var usuario = await ApiClientFactory.Instance.GetUsuarioById(id.ToString());
 
                 var perfil = ApiClientFactory.Instance.GetPerfilById(Convert.ToInt32(collection["ddlPerfis"].ToString()));
 
@@ -297,7 +302,7 @@ namespace WebApp.Controllers
         }
 
         /// <summary>
-        /// Ação de exclusão do Usuario
+        /// Ação de Exclusão do Usuario
         /// </summary>
         /// <param name="id">identificador do Usuario</param>
         /// <param name="collection">coleção de dados para exclusão de Usuario</param>
@@ -307,7 +312,7 @@ namespace WebApp.Controllers
         {
             try
             {
-                var usuario = ApiClientFactory.Instance.GetUsuarioById(id.ToString()) ?? throw new ArgumentNullException("Usuário não encontrado.");
+                var usuario = await ApiClientFactory.Instance.GetUsuarioById(id.ToString()) ?? throw new ArgumentNullException("Usuário não encontrado.");
 
                 var user = _userManager.Users.FirstOrDefault(x => x.Email == usuario.Email);
 
@@ -354,7 +359,7 @@ namespace WebApp.Controllers
         /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
         /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
         /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
-        public ActionResult Profile(int? crud, int? notify, string message = null)
+        public async Task<ActionResult> Profile(int? crud, int? notify, string message = null)
         {
             try
             {
@@ -374,10 +379,15 @@ namespace WebApp.Controllers
                 _logger.Info($"Busca Usuario por AspNetUserId: {userId}");
                 if (userId != null)
                 {
-                    var usu = ApiClientFactory.Instance.GetUsuarioByAspNetUserId(userId);
+                    var usu = await ApiClientFactory.Instance.GetUsuarioByAspNetUserId(userId);
 
                     _logger.Info($"Retorno de GetUsuarioByAspNetUserId");
                     _logger.Info(Newtonsoft.Json.JsonConvert.SerializeObject(usu));
+
+                    if (usu.Status == false)
+                    {
+                        return Redirect("/Identity/Account/Unauthorized");
+                    }
 
                     var model = new UsuarioModel
                     {
