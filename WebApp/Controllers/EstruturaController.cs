@@ -180,7 +180,7 @@ public class EstruturaController : BaseController
         //var usu = ApiClientFactory.Instance.GetUsuarioByEmail(usuario);
 
         var result = ApiClientFactory.Instance.GetEstruturaById(id);
-        var localidades = new SelectList(ApiClientFactory.Instance.GetLocalidadeByMunicipio(result.Localidade.MunicipioId.ToString()), "Id", "Nome", result.Localidade.Id);
+        var localidades = new SelectList(ApiClientFactory.Instance.GetLocalidadeByMunicipioId(result.Localidade.MunicipioId.ToString()), "Id", "Nome", result.Localidade.Id);
         result.ListLocalidades = localidades;
 
         return Task.FromResult(result);

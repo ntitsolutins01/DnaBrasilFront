@@ -1,0 +1,441 @@
+﻿@using System.Globalization
+@using WebApp.Dto
+@model AlunoCursoCertificadoModel
+@{
+    ViewData["Title"] = "Detalhes do Curso";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="vCursoDetalhes">
+    <div class="row mb-lg">
+        <div class="col-lg-12">
+            <h2 class="mt-none mb-sm text-dark">@Model.Curso.Titulo</h2>
+            <p class="mb-lg">
+                @if (Model.Curso.Descricao != null)
+                {
+                    @Model.Curso.Descricao
+                }
+            </p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <section class="panel">
+                <header class="panel-heading">
+                    <div class="panel-actions">
+                        <a href="#" class="card-action card-action-toggle" data-card-toggle></a>
+                    </div>
+                    <h2 class="panel-title">Conteúdo do Curso</h2>
+                </header>
+
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <!-- Player de vídeo -->
+                            <div class="embed-responsive embed-responsive-16by9 mb-md">
+                                <video id="videoPlayer" class="embed-responsive-item" controls>
+                                    <source :src="selectedVideoUrl" type="video/mp4" id="videoSource">
+                                    Seu navegador não suporta a tag de vídeo.
+                                </video>
+                            </div>
+
+
+                            <!-- Título da Aula Atual -->
+                            <div class="mb-md">
+                                <h3 id="aulaAtualTitulo" class="text-weight-semibold text-dark">Selecione uma aula para começar</h3>
+                            </div>
+
+                            <!-- Informações do Professor -->
+                            <div class="widget-summary mb-md">
+                                <div class="widget-summary-col widget-summary-col-icon">
+                                    <div class="summary-icon bg-primary">
+                                        <i class="fa fa-user-circle-o"></i>
+                                    </div>
+                                </div>
+                                <div class="widget-summary-col">
+                                    <div class="summary">
+                                        <h4 class="title">Professor</h4>
+                                        <div class="info">
+                                            <strong class="amount">@Model.Curso.NomeCoordenador</strong>
+                                            <p class="text-muted">Desenvolvedora Full Stack</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Materiais da Aula -->
+                            <div class="mt-lg">
+                                <h4 class="mb-sm"><i class="fa fa-book mr-xs"></i> Materiais da Aula</h4>
+                                <div id="materiais-aula" class="panel panel-default">
+                                    <div class="panel-body">
+                                        <ul class="list-group" id="lista-materiais">
+                                            <li class="list-group-item text-center">
+                                                <i class="fa fa-info-circle mr-xs"></i> Selecione uma aula para ver os materiais disponíveis
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <!-- Progresso do Curso -->
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title"><i class="fa fa-graduation-cap mr-xs"></i> Seu Progresso</h4>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="progress light mb-md">
+                                        <div class="progress-bar progress-bar-primary" role="progressbar"
+                                             aria-valuenow="@Model.AlunoCurso.Progresso" aria-valuemin="0"
+                                             aria-valuemax="100" style="width: @Model.AlunoCurso.Progresso%;">
+                                            @Model.AlunoCurso.Progresso%
+                                        </div>
+                                    </div>
+
+                                    <div class="text-center mb-md">
+                                        <button class="btn btn-default btn-block" disabled>
+                                            <i class="fa fa-certificate"></i> Ver Certificado
+                                            <small>(Conclua o curso para desbloquear)</small>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Módulos e Aulas -->
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title"><i class="fa fa-list-alt mr-xs"></i> Conteúdo do Curso</h4>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="panel-group" id="accordion">
+                                        @if (Model.Modulos != null && Model.Modulos.Any())
+                                        {
+                                            foreach (var modulo in Model.Modulos)
+                                            {
+                                                // Filter lessons that belong to the current module
+                                                var moduloAulas = Model.Aulas?.Where(a => a.ModuloEadId == modulo.Id).ToList()
+                                                ?? new List<AulaDto>();
+                                                var collapseId = "collapseModulo" + modulo.Id;
+                                                // Expand the first module panel by default
+                                                var isExpanded = modulo.Equals(Model.Modulos.First()) ? "in" : "";
+                                                <div class="panel panel-accordion">
+                                                    <div class="panel-heading">
+                                                        <h4 class="panel-title">
+                                                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#@collapseId">
+                                                                <i class="fa fa-folder-o mr-xs"></i> @modulo.Titulo
+                                                            </a>
+                                                        </h4>
+                                                    </div>
+                                                    <div id="@collapseId" class="accordion-body collapse @isExpanded">
+                                                        <div class="panel-body">
+                                                            @if (moduloAulas.Any())
+                                                            {
+                                                                <ul class="nav nav-list">
+                                                                    @foreach (var aula in moduloAulas)
+                                                                    {
+                                                                        string video = "";
+                                                                        if (!string.IsNullOrEmpty(aula.Video) && aula.Video.Contains("\\Aulas"))
+                                                                        {
+                                                                            video = "/Aulas" + aula.Video.Split(new string[] { "\\Aulas" }, StringSplitOptions.None)[1].Replace("\\", "/");
+                                                                        }
+                                                                        <li class="mb-sm">
+                                                                            <a href="#" class="aula-link"
+                                                                               v-on:click.prevent="selectLesson(@aula.Id)"
+                                                                               data-aula-id="@aula.Id"
+                                                                               data-video-url="@video"
+                                                                               data-aula-titulo="@aula.Titulo">
+                                                                                <i class="fa fa-play-circle-o mr-xs"></i> @aula.Titulo
+                                                                                <span class="pull-right text-success">
+                                                                                    <i class="fa fa-check-circle"></i>
+                                                                                </span>
+                                                                            </a>
+                                                                        </li>
+                                                                    }
+                                                                </ul>
+                                                            }
+                                                            else
+                                                            {
+                                                                <p>Nenhuma aula disponível para este módulo.</p>
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <p>Nenhum módulo encontrado.</p>
+                                        }
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+                            <!-- Opções -->
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title"><i class="fa fa-cog mr-xs"></i> Opções</h4>
+                                </div>
+                                <div class="panel-body">
+                                    <a href="#" class="btn btn-default btn-block mb-xs">
+                                        <i class="fa fa-arrow-left"></i> Voltar para Meus Cursos
+                                    </a>
+
+                                    <button class="btn btn-primary btn-block mb-xs" id="btnMarcarConcluido">
+                                        <i class="fa fa-check"></i> Marcar Aula como Concluída
+                                    </button>
+
+                                    <button class="btn btn-success btn-block" id="btnProximaAula" disabled>
+                                        <i class="fa fa-forward"></i> Próxima Aula
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+@section CssSpecificVendor {
+    <link rel="stylesheet" href="~/assets/vendor/bootstrap-fileupload/bootstrap-fileupload.min.css" />
+    <link rel="stylesheet" href="~/assets/vendor/select2/css/select2.css" />
+    <link rel="stylesheet" href="~/assets/vendor/select2-bootstrap-theme/select2-bootstrap.min.css" />
+    <link rel="stylesheet" href="~/assets/vendor/datatables/media/css/dataTables.bootstrap4.css" />
+    <style>
+        /* Estilos específicos para a página de detalhes do curso */
+        .aula-link.active {
+            font-weight: bold;
+            color: #0088cc;
+        }
+
+        .summary-icon img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+        }
+
+        #videoPlayer {
+            background-color: #000;
+        }
+
+        .curso-controles {
+            margin-top: 15px;
+        }
+
+        .list-group-item i {
+            margin-right: 5px;
+        }
+
+        .panel-accordion .panel-heading {
+            padding: 10px;
+        }
+
+        .nav-list li a {
+            padding: 8px 10px;
+            display: block;
+            border-radius: 4px;
+        }
+
+            .nav-list li a:hover {
+                background-color: #f5f5f5;
+                text-decoration: none;
+            }
+
+            .nav-list li a.active {
+                background-color: #eaeaea;
+                font-weight: bold;
+            }
+    </style>
+}
+
+@section Scripts {
+    <script src="~/assets/vendor/bootstrap-fileupload/bootstrap-fileupload.min.js"></script>
+    <script src="~/assets/vendor/select2/js/select2.js"></script>
+    <script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
+    <script src="~/assets/vendor/jquery-mask/jquery.mask.js"></script>
+    <script src="~/assets/vendor/ios7-switch/ios7-switch.js"></script>
+    <script src="~/js/AlunoCertificado.js"></script>
+
+    <script>
+        (function ($) {
+            'use strict';
+
+            // Inicialização da página
+            $(document).ready(function() {
+                var aulaAtualId = null;
+
+                // Manipulação do clique nas aulas
+                $('.aula-link').on('click', function(e) {
+                    e.preventDefault();
+
+                    // Remover classe ativa de todas as aulas
+                    $('.aula-link').removeClass('active');
+
+                    // Adicionar classe ativa à aula clicada
+                    $(this).addClass('active');
+
+                    // Atualizar o player de vídeo
+                    var videoUrl = $(this).data('video-url');
+                    $('#videoSource').attr('src', videoUrl);
+                    $('#videoPlayer')[0].load();
+
+                    // Atualizar título da aula
+                    var aulaTitulo = $(this).data('aula-titulo');
+                    $('#aulaAtualTitulo').text(aulaTitulo);
+
+                    // Atualizar os materiais
+                    var materiaisJson = $(this).data('materiais');
+                    atualizarMateriais(materiaisJson);
+
+                    // Habilitar botão de próxima aula se não for a última
+                    var $proximaAula = $(this).closest('li').next('li').find('.aula-link');
+                    $('#btnProximaAula').prop('disabled', $proximaAula.length === 0);
+
+                    // Armazenar ID da aula atual
+                    aulaAtualId = $(this).data('aula-id');
+
+                    // Habilitar botão de marcar como concluído
+                    $('#btnMarcarConcluido').prop('disabled', false);
+                });
+
+                // Função para atualizar a lista de materiais
+                function atualizarMateriais(materiaisJson) {
+                    // Limpar a lista atual
+                    $('#lista-materiais').empty();
+
+                    if (materiaisJson && materiaisJson.length > 0) {
+                        try {
+                            var materiais = JSON.parse(materiaisJson);
+
+                            if (materiais.length > 0) {
+                                materiais.forEach(function(material) {
+                                    var icon = 'fa-file-o';
+                                    var colorClass = '';
+
+                                    // Definir ícone com base no tipo de arquivo
+                                    if (material.url.endsWith('.pdf')) {
+                                        icon = 'fa-file-pdf-o';
+                                        colorClass = 'text-danger';
+                                    } else if (material.url.endsWith('.pptx') || material.url.endsWith('.ppt')) {
+                                        icon = 'fa-file-powerpoint-o';
+                                        colorClass = 'text-warning';
+                                    } else if (material.url.endsWith('.xlsx') || material.url.endsWith('.xls')) {
+                                        icon = 'fa-file-excel-o';
+                                        colorClass = 'text-success';
+                                    } else if (material.url.endsWith('.docx') || material.url.endsWith('.doc')) {
+                                        icon = 'fa-file-word-o';
+                                        colorClass = 'text-primary';
+                                    } else if (material.url.endsWith('.zip') || material.url.endsWith('.rar')) {
+                                        icon = 'fa-file-archive-o';
+                                        colorClass = 'text-warning';
+                                    }
+
+                                    var materialHtml = '<li class="list-group-item">' +
+                                                       '<i class="fa ' + icon + ' ' + colorClass + ' mr-xs"></i>' +
+                                                       '<a href="' + material.url + '" target="_blank">' + material.nome + '</a>' +
+                                                       '</li>';
+
+                                    $('#lista-materiais').append(materialHtml);
+                                });
+                                return;
+                            }
+                        } catch (e) {
+                            console.error("Erro ao processar materiais JSON:", e);
+                        }
+                    }
+
+                    // Se não há materiais ou ocorreu um erro
+                    $('#lista-materiais').append('<li class="list-group-item text-center"><i class="fa fa-info-circle"></i> Nenhum material disponível para esta aula.</li>');
+                }
+
+                // Botão para marcar aula como concluída
+                $('#btnMarcarConcluido').on('click', function() {
+                    if (!aulaAtualId) return;
+
+                    // Simular uma chamada para o backend
+                    marcarAulaComoAssistida(aulaAtualId);
+                });
+
+                // Botão de próxima aula
+                $('#btnProximaAula').on('click', function() {
+                    var $aulaAtual = $('.aula-link.active');
+                    var $proximaAula = $aulaAtual.closest('li').next('li').find('.aula-link');
+
+                    if ($proximaAula.length) {
+                        $proximaAula.click();
+                    }
+                });
+
+                // Função para marcar aula como assistida
+                function marcarAulaComoAssistida(aulaId) {
+                    // Simular uma chamada para o backend
+                    console.log('Marcando aula ' + aulaId + ' como assistida');
+
+                    // Para fins de demonstração:
+                    atualizarAulaAssistida(aulaId);
+
+                    // Calcular novo progresso (simulação)
+                    var totalAulas = $('.aula-link').length;
+                    var aulasAssistidas = $('.aula-link').find('.fa-check-circle').length + 1;
+                    var novoProgresso = Math.round((aulasAssistidas / totalAulas) * 100);
+
+                    atualizarProgresso(novoProgresso);
+
+                    // Notificar o usuário
+                    new PNotify({
+                        title: 'Aula Concluída',
+                        text: 'Seu progresso foi atualizado!',
+                        type: 'success'
+                    });
+                }
+
+                // Função para atualizar a interface quando uma aula é marcada como assistida
+                function atualizarAulaAssistida(aulaId) {
+                    var $aula = $('.aula-link[data-aula-id="' + aulaId + '"]');
+                    if (!$aula.find('.fa-check-circle').length) {
+                        $aula.append('<span class="pull-right text-success"><i class="fa fa-check-circle"></i></span>');
+                    }
+                }
+
+                // Função para atualizar o progresso do curso
+                function atualizarProgresso(progresso) {
+                    $('.progress-bar').css('width', progresso + '%').attr('aria-valuenow', progresso).text(progresso + '%');
+
+                    // Verificar se o curso foi concluído
+                    if (progresso >= 100) {
+                        // Habilitar o botão de certificado
+                        var certificadoBtn = $('button.btn-default[disabled]').replaceWith(
+                            '<a href="#" class="btn btn-success btn-block">' +
+                            '<i class="fa fa-certificate"></i> Ver Certificado</a>'
+                        );
+
+                        // Notificar conclusão do curso
+                        new PNotify({
+                            title: 'Parabéns!',
+                            text: 'Você concluiu o curso com sucesso! Agora você pode acessar seu certificado.',
+                            type: 'success'
+                        });
+                    }
+                }
+
+                // Abrir o primeiro módulo por padrão
+                $('#collapse1').addClass('in');
+
+                // Tooltips
+                if ($.isFunction($.fn['tooltip'])) {
+                    $('[data-toggle=tooltip],[rel=tooltip]').tooltip({ container: 'body' });
+                }
+
+                $('.btn').tooltip({
+                    container: 'body',
+                    placement: 'top'
+                });
+            });
+        }).apply(this, [jQuery]);
+    </script>
+}

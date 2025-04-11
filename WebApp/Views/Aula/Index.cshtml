@@ -26,7 +26,6 @@
 								<th class="text-center">Id</th>
 								<th class="text-center">Professor</th>
 								<th class="text-center">Modulo</th>
-								<th class="text-center">Carga Horária</th>
 								<th class="text-center">Titulo</th>
 								<th class="text-center">Descrição</th>
 								<th class="text-center">Status</th>
@@ -40,7 +39,6 @@
 									<td class="text-center" style="width:20px;">@Html.DisplayFor(modelItem => item.Id)</td>
 									<td class="text-center">@Html.DisplayFor(modelItem => item.NomeProfessor)</td>
 									<td class="text-center">@Html.DisplayFor(modelItem => item.TituloModuloEad)</td>
-									<td class="text-center">@Html.DisplayFor(modelItem => item.CargaHoraria)</td>
 									<td class="text-center">@Html.DisplayFor(modelItem => item.Titulo)</td>
 									<td class="text-center">@Html.DisplayFor(modelItem => item.Descricao)</td>
 									@if (item.Status)
@@ -110,16 +108,11 @@
                         <input type="hidden" name="editAulaId" :value="editDto.Id"/>
                         <div class="form-group row">
                             <label class="col-sm-3 control-label text-sm-right pt-2">Professor <span class="required">*</span></label>
-                            <div class="col-sm-5">
+                            <div class="col-sm-9">
                                 <select class="form-control populate select2" name="ddlProfessor" id="ddlProfessor" style="width:100%"
                                         required title="Por favor selecione o professor">
                                     <option value="">Selecionar Professor</option>
                                 </select>
-                            </div>
-                            <label class="col-sm-2 control-label text-sm-right pt-2">Carga Horária <span class="required">*</span></label>
-                            <div class="col-sm-2">
-                                <input type="text" id="cargaHoraria" name="cargaHoraria" class="form-control" maxlength="6"
-                                       title="Por favor informe o valor final." required :value="editDto.CargaHoraria"/>
                             </div>
                         </div>
                             <div class="form-group row">
@@ -137,13 +130,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-3 control-label text-sm-right pt-2">Video </label>
-                                <div class="col-sm-9">
-                                    <textarea class="form-control" rows="7" maxlength="500" name="video" v-model="editDto.Video" id="video"></textarea>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">Material Didático</label>
+                                <label class="col-sm-3 control-label">Video</label>
                                 <div class="col-sm-9">
                                     <div class="fileupload fileupload-new" data-provides="fileupload">
                                         <div class="input-append">
@@ -154,12 +141,32 @@
                                             <span class="btn btn-default btn-file">
                                                 <span class="fileupload-exists">Alterar</span>
                                                 <span class="fileupload-new">Selecionar Arquivo</span>
-                                                <input type="file" id="arquivo" name="arquivo" />
+                                                <input type="file" id="video" name="video" />
                                             </span>
                                             <a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload">Remover</a>
                                         </div>
                                         <div v-if="editDto.NomeMaterial" class="mt-2">
-										<code>Material Didático atual: {{ editDto.NomeMaterial }}</code>
+                                            <code>Material Didático atual: {{ editDto.NomeMaterial }}</code>
+                                        </div>
+                                    </div>
+                                </div>
+                                <label class="col-sm-3 control-label">Material Didático</label>
+                                <div class="col-sm-9">
+                                    <div class="fileupload fileupload-new" data-provides="fileupload">
+                                        <div class="input-append">
+                                            <div class="uneditable-input">
+                                                <i class="fa fa-file fileupload-exists"></i>
+                                                <span class="fileupload-preview">{{ editDto.NomeVideo }}</span>
+                                            </div>
+                                            <span class="btn btn-default btn-file">
+                                                <span class="fileupload-exists">Alterar</span>
+                                                <span class="fileupload-new">Selecionar Arquivo</span>
+                                                <input type="file" id="arquivo" name="arquivo"/>
+                                            </span>
+                                            <a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload">Remover</a>
+                                        </div>
+                                        <div v-if="editDto.NomeMaterial" class="mt-2">
+                                            <code>Material Didático atual: {{ editDto.NomeMaterial }}</code>
                                         </div>
                                     </div>
                                 </div>

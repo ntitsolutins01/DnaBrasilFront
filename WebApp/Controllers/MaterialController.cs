@@ -48,16 +48,9 @@ public class MaterialController : BaseController
         SetNotifyMessage(notify, message);
         SetCrudMessage(crud);
 
-        var searchFilter = new MateriaisFilterDto
-        {
-            Id = collection["material"].ToString(),
-            NomeMaterial = collection["nomeMaterial"].ToString(),
-            TipoMaterialId = collection["ddlTipoMaterial"].ToString(),
-        };
-        var result = await ApiClientFactory.Instance.GetMateriaisByFilter(searchFilter);
-
-        var tiposMateriais = new SelectList(ApiClientFactory.Instance.GetTiposMateriaisAll(), "Id", "Nome");
-
+        var gruposMateriais = new SelectList(ApiClientFactory.Instance.GetGruposMateriaisAll(), "Id", "Nome");
+        //var tiposMateriais = new SelectList(ApiClientFactory.Instance.GetTiposMateriaisAll(), "Id", "Nome");
+        
         List<SelectListDto> list = new List<SelectListDto>
         {
             new() { IdNome = "CAIXA", Nome = "CAIXA" },
@@ -72,9 +65,18 @@ public class MaterialController : BaseController
 
         var undMedidas = new SelectList(list, "IdNome", "Nome");
 
+        var searchFilter = new MateriaisFilterDto
+        {
+            Id = collection["material"].ToString(),
+            NomeMaterial = collection["nomeMaterial"].ToString(),
+            GrupoMaterialId = collection["ddlGrupoMaterial"].ToString(),
+            TipoMaterialId = collection["ddlTipoMaterial"].ToString(),
+        };
+        var result = await ApiClientFactory.Instance.GetMateriaisByFilter(searchFilter);
+
         var model = new MaterialModel
         {
-            ListTiposMateriais = tiposMateriais,
+            ListGruposMateriais = gruposMateriais,
             ListUnidadesMedidas = undMedidas,
             Materiais = result.Materiais,
             SearchFilter = searchFilter
@@ -96,7 +98,7 @@ public class MaterialController : BaseController
         {
             SetNotifyMessage(notify, message);
             SetCrudMessage(crud);
-            var tipoMateriais = new SelectList(ApiClientFactory.Instance.GetTiposMateriaisAll(), "Id", "Nome");
+            var gruposMateriais = new SelectList(ApiClientFactory.Instance.GetGruposMateriaisAll(), "Id", "Nome");
 
             List<SelectListDto> list = new List<SelectListDto>
             {
@@ -114,7 +116,7 @@ public class MaterialController : BaseController
 
             return View(new MaterialModel()
             {
-                ListTiposMateriais = tipoMateriais,
+                ListGruposMateriais = gruposMateriais,
                 ListUnidadesMedidas = undMedidas
             });
         }
@@ -141,7 +143,6 @@ public class MaterialController : BaseController
             {
                 TipoMaterialId = Convert.ToInt32(collection["ddlTipoMaterial"].ToString()),
                 UnidadeMedida = collection["ddlUnidadeMedida"].ToString(),
-                QtdAdquirida = 0,
                 Descricao = collection["descricao"].ToString()
             };
 
@@ -174,8 +175,7 @@ public class MaterialController : BaseController
             {
                 Id = Convert.ToInt32(collection["editMaterialId"]),
                 UnidadeMedida = collection["ddlUnidadeMedida"].ToString(),
-                Descricao = collection["descricao"].ToString(),
-                QtdAdquirida = material.QtdAdquirida
+                Descricao = collection["descricao"].ToString()
             };
 
             await ApiClientFactory.Instance.UpdateMaterial(command.Id, command);
@@ -212,7 +212,7 @@ public class MaterialController : BaseController
     {
         try
         {
-            if (string.IsNullOrEmpty(id)) throw new Exception("Material não informado.");
+            if (string.IsNullOrEmpty(id)) throw new Exception("Tipo de Material não informado.");
             var resultLocal = ApiClientFactory.Instance.GetMateriaisByTipoMaterialId(Convert.ToInt32(id));
 
             return Task.FromResult(Json(new SelectList(resultLocal, "Id", "Descricao")));

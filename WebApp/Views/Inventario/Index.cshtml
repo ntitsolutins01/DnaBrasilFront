@@ -1,0 +1,375 @@
+﻿@model InventarioModel
+@{
+    ViewData["Title"] = "Listagem de Inventários";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="vInventario">
+    <div class="row">
+        <div class="col-md-12">
+            @using (@Html.BeginForm("Index", "Inventario", FormMethod.Post, new { id = "formPesquisarInventario", @class = "form-horizontal" }))
+            {
+                @* <section class="panel">
+                    <header class="panel-heading">
+                        <div class="panel-actions">
+                            <a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
+                        </div>
+                        <h2 class="panel-title">Filtro de pesquisa</h2>
+                    </header>
+                    <div class="panel-body" id="pFiltro">
+                        <label class="col-sm-2 control-label">Id:</label>
+                        <div class="col-md-4 form-group">
+                            <input type="number" name="material" id="material" maxlength="10" class="form-control" />
+                        </div>
+                        <label class="col-sm-2 control-label text-sm-right pt-2">Descrição:</label>
+                        <div class="col-sm-4 form-group">
+                            <input type="text" name="nomeMaterial" id="nomeMaterial" class="form-control" placeholder="Insira a Descrição"
+                                   maxlength="60"
+                                   title="Por favor informe o material." />
+                        </div>
+                        <label class="col-sm-2 control-label">Grupo Material:</label>
+                        <div class="col-sm-4 form-group">
+                            <select class="form-control populate select2" name="ddlGrupoMaterial" id="ddlGrupoMaterial" style="width:100%"
+                                    title="Por favor selecione um grupo de material."
+                                    asp-for="GrupoMaterialId" asp-items="Model.ListGruposMateriais">
+                                <option value="">Selecionar Grupo de Material</option>
+                            </select>
+                        </div>
+                        <label class="col-sm-2 control-label">Tipo Material:</label>
+                        <div class="col-sm-4 form-group">
+                            <select class="form-control populate select2" name="ddlTipoMaterial" id="ddlTipoMaterial" style="width:100%"
+                                    title="Por favor selecione um tipo de material."
+                                    asp-for="TipoMaterialId" asp-items="Model.ListTiposMateriais">
+                                <option value="">Selecionar Tipo de Material</option>
+                            </select>
+                        </div>
+                    </div>
+                    <footer class="panel-footer">
+                        <div class="row">
+                            <div class="col-sm-2 pull-right">
+                                <button type="submit" class="btn btn-block btn-info pull-right">
+                                    <i class="fa fa-search"></i> &nbsp;&nbsp;Pesquisar
+                                </button>
+                            </div>
+                        </div>
+                    </footer>
+                </section> *@
+            }
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <section class="panel">
+                <header class="panel-heading">
+                    <div class="panel-actions">
+                        <a href="#" class="card-action card-action-toggle" data-card-toggle></a>
+                    </div>
+                    <h2 class="panel-title">Listagem de Inventários</h2>
+                </header>
+                <div class="panel-body">
+                    <div class="form-group row">
+                        @using (Html.BeginForm("Index", "Inventario", FormMethod.Post, new { id = "formIndexInventario", @class = "form-horizontal" }))
+                        {
+                            <div class="col-sm-2 pull-left">
+                                <select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade" style="width:100%"
+                                        required title="Por favor selecione a localidade."
+                                        asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
+                                    <option value="">Selecionar Localidade</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-1 pull-left">
+                                <button type="submit" class="btn btn-block btn-info pull-right">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </div>
+
+                            <div class="col-sm-6 pull-right">
+                                <a href="@Url.Action("Create", "Inventario")" id="addToTable" class="btn btn-primary pull-right">
+                                    <i class="fa fa-plus"></i> Novo Inventário
+                                </a>
+                            </div>
+                        }
+                    </div>
+
+                    <table class="table table-bordered table-striped mb-0" id="datatable-default">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Id</th>
+                                <th class="text-center">Localidade</th>
+                                <th class="text-center">Material</th>
+                                <th class="text-center">Unidade de Medida</th>
+                                <th class="text-center">Quantidade</th>
+                                <th class="text-center">Motivo</th>
+                                <th class="text-center">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Inventarios)
+                            {
+                                <tr>
+                                    <td class="text-center" style="width:20px;">@Html.DisplayFor(modelItem => item.Id)</td>
+                                    <td class="text-center">@Html.DisplayFor(modelItem => item.NomeLocalidade)</td>
+                                    <td class="text-center">@Html.DisplayFor(modelItem => item.NomeMaterial)</td>
+                                    <td class="text-center">@Html.DisplayFor(modelItem => item.NomeUndMedida)</td>
+                                    <td class="text-center">@Html.DisplayFor(modelItem => item.Quantidade)</td>
+                                    <td class="text-center">@Html.DisplayFor(modelItem => item.Motivo)</td>
+
+                                    <td class="actions text-center">
+                                        <a data-toggle="tooltip" data-placement="top" title="Arquivos"
+                                           href="javascript:vm.FilesModal(@item.Id)"
+                                           class="on-default edit-row" style="color: #47a447">
+                                            <i class="fa fa-file-text"></i>
+                                        </a>
+                                        <a data-toggle="tooltip" data-placement="top" title="Excluir" href='javascript:(crud.DeleteModal(@item.Id))'
+                                           class="on-default remove-row" style="cursor: pointer;color: #F44336"><i class="fa fa-trash"></i></a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="mdDeleteInventario" tabindex="-1" role="dialog" aria-labelledby="mdDeleteInventarioLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="mdDeleteInventarioLabel">
+                        <i class="fa fa-trash"></i> &nbsp;&nbsp;<strong>Exclusão de Inventario</strong>
+                    </h5>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-icon">
+                        <i class="fa fa-question-circle"></i>
+                    </div>
+                    <div class="modal-text">
+                        <input type="hidden" id="deleteInventarioId" />
+                        <p class="mb-0">Tem certeza que deseja <b>excluir</b> esse registro?</p>
+                    </div>
+                    <div class="modal-wrapper">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-thumbs-o-down"></i> &nbsp;&nbsp;Não</button>
+                    <a id="deleteInventarioHref" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-thumbs-o-up"></i> &nbsp;&nbsp;Sim</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="mdDeleteArquivosInventario" tabindex="-1" role="dialog" aria-labelledby="mdDeleteArquivosInventarioLabel" aria-hidden="true" style="z-index: 10000 !important;">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="mdDeleteArquivosInventarioLabel">
+                        <i class="fa fa-trash"></i> &nbsp;&nbsp;<strong>Exclusão de ArquivosInventario</strong>
+                    </h5>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-icon">
+                        <i class="fa fa-question-circle"></i>
+                    </div>
+                    <div class="modal-text">
+                        <input type="hidden" id="deleteArquivosInventarioId" />
+                        <p class="mb-0">Tem certeza que deseja <b>excluir</b> esse registro?</p>
+                    </div>
+                    <div class="modal-wrapper">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-thumbs-o-down"></i> &nbsp;&nbsp;Não</button>
+                    <a id="deleteArquivosInventarioHref" class="btn btn-success pull-right" style="margin-left: 5px;">
+                        <i class="fa fa-thumbs-o-up"></i> &nbsp;&nbsp;Sim
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="mdEditInventario" tabindex="-1" role="dialog" aria-labelledby="mdEditInventarioLabel" aria-hidden="true">
+        <div class="modal-dialog modal-md" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="mdEditInventarioLabel">
+                        <i class="fa fa-pencil"></i> &nbsp;&nbsp;<strong>Alterar Inventario</strong>
+                    </h5>
+                </div>
+                @using (@Html.BeginForm("Edit", "Inventario", FormMethod.Post, new { id = "formEditInventario", @class = "form-horizontal" }))
+                {
+                    <div class="modal-body">
+                        <input type="hidden" name="editInventarioId" :value="editDto.Id" />
+                        <div class="form-group row">
+                            <label class="col-sm-3 control-label text-sm-right pt-2">Quantidade </label>
+                            <div class="col-sm-2">
+                                <input type="text" name="quantidade" id="quantidade" class="form-control"
+                                       maxlength="150" :value="editDto.Quantidade"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-remove"></i> &nbsp;&nbsp;Cancelar</button>
+                        <button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="mdFilesInventario" tabindex="-1" role="dialog" aria-labelledby="mdFilesInventarioLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="mdFilesInventarioLabel">
+                        <i class="fa fa-file-text"></i> &nbsp;&nbsp;<strong>Arquivos do Inventário</strong>
+                    </h5>
+                </div>
+                @using (Html.BeginForm("Files", "Inventario", FormMethod.Post, new { id = "formFilesInventario", @class = "form-horizontal", enctype = "multipart/form-data" }))
+                {
+                    <div class="modal-body">
+                        <input type="hidden" name="editInventarioId" :value="editDto.Id" />
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Nome do Arquivo</th>
+                                    <th class="text-center">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="arquivo in arquivosInventarios" :key="arquivo.id">
+                                    <td class="text-center">{{ arquivo.text }}</td>
+                                    <td class="actions text-center">
+                                        <a data-toggle="tooltip" data-placement="top" title="Download"
+                                           href="#"
+                                           v-on:click.prevent="downloadFile(arquivo.value)"
+                                           class="on-default remove-row" style="cursor: pointer; color: #4CAF50">
+                                            <i class="fa fa-download"></i>
+                                        </a>
+                                        <a data-toggle="tooltip" data-placement="top" title="Excluir"
+                                           v-on:click.prevent="crud.DeleteArquivosModal(arquivo.value)"
+                                           class="on-default remove-row" style="cursor: pointer; color: #F44336; z-index: 9999">
+                                            <i class="fa fa-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr v-if="arquivosInventarios.length === 0">
+                                    <td colspan="4" class="text-center">Nenhum arquivo encontrado.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="form-group row">
+                            <label class="col-sm-2 control-label">Novo Arquivo</label>
+                            <div class="col-sm-10">
+                                <div class="fileupload fileupload-new" data-provides="fileupload">
+                                    <div class="input-append">
+                                        <div class="uneditable-input">
+                                            <i class="fa fa-file fileupload-exists"></i>
+                                            <span class="fileupload-preview"></span>
+                                        </div>
+                                        <span class="btn btn-default btn-file">
+                                            <span class="fileupload-exists">Alterar</span>
+                                            <span class="fileupload-new">Selecionar Arquivo</span>
+                                            <input type="file" id="arquivo" name="arquivo" />
+                                        </span>
+                                        <a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload">Remover</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                        <button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;">
+                            <i class="fa fa-save"></i> &nbsp;&nbsp;Salvar Arquivo
+                        </button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section CssSpecificVendor {
+    <link rel="stylesheet" href="~/assets/vendor/bootstrap-fileupload/bootstrap-fileupload.min.css" />
+    <link rel="stylesheet" href="~/assets/vendor/select2/css/select2.css" />
+    <link rel="stylesheet" href="~/assets/vendor/select2-bootstrap-theme/select2-bootstrap.min.css" />
+    <link rel="stylesheet" href="~/assets/vendor/datatables/media/css/dataTables.bootstrap4.css" />
+}
+@section Scripts {
+    <script src="~/assets/vendor/bootstrap-fileupload/bootstrap-fileupload.min.js"></script>
+    <script src="~/assets/vendor/select2/js/select2.js"></script>
+    <script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
+    <script src="~/assets/vendor/jquery-mask/jquery.mask.js"></script>
+    <script src="~/assets/vendor/ios7-switch/ios7-switch.js"></script>
+    <script src="~/assets/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
+    <script src="~/assets/vendor/datatables/media/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/js/formatTable.js"></script>
+    <script src="~/js/Inventario.js"></script>
+
+    <script>
+
+        (function ($) {
+
+            'use strict';
+            var crub = @ViewBag.CrudMessage;
+
+            if (crub === 1) {
+                new PNotify({
+                    title: 'Inventario',
+                    text: 'Cadastro realizado com sucesso!',
+                    type: 'success'
+                });
+                crub = 0;
+            } else if (crub === 2) {
+                new PNotify({
+                    title: 'Inventario',
+                    text: 'Dados alterados com sucesso.',
+                    type: 'warning',
+                    icon: 'fa fa-pencil'
+                });
+                crub = 0;
+            } else if (crub === 3) {
+                new PNotify({
+                    title: 'Inventario',
+                    text: 'Registro excluído com sucesso.',
+                    type: 'error',
+                    icon: 'fa fa-trash-o'
+                });
+                crub = 0;
+            }
+
+
+            var notify = @ViewBag.NotifyMessage;
+            var messagem = '@ViewBag.Notify';
+
+            if (notify === 0) {
+                new PNotify({
+                    title: 'Inventario',
+                    text: messagem,
+                    type: 'success'
+                });
+                crub = 0;
+            } else if (notify === 1) {
+                new PNotify({
+                    title: 'Inventario',
+                    text: messagem,
+                    type: 'warning'
+                });
+                crub = 0;
+            } else if (notify === 2) {
+                new PNotify({
+                    title: 'Inventario',
+                    text: messagem,
+                    type: 'error'
+                });
+                crub = 0;
+            }
+
+            if ($.isFunction($.fn['tooltip'])) {
+                $('[data-toggle=tooltip],[rel=tooltip]').tooltip({ container: 'body' });
+            }
+
+        }).apply(this, [jQuery]);
+    </script>
+}

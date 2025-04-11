@@ -3,6 +3,7 @@
     public class MaterialIndexDto
     {
         public required int Id { get; set; }
+        public required string NomeLocalidade { get; set; }
         public required string TituloTipoMaterial { get; set; }
         public required string UnidadeMedida { get; set; }
         public required string Descricao { get; set; }

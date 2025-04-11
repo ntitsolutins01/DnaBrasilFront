@@ -1,8 +1,11 @@
 ﻿var vm = new Vue({
-    el: "#vAlunoCertificado",
+    el: "#vCursoDetalhes",
     data: {
         loading: false,
-        editDto: { Id: "" }
+        selectedVideoUrl: "",
+        editDto: { Id: "" },
+        aula: null,
+        aulas: []
     },
     mounted: function () {
         var self = this;
@@ -44,6 +47,40 @@
                     });
                 });
             }
+
+            $("#ddlEstado").change(function () {
+
+                self.ShowLoad(true, "pFiltro");
+
+                var sigla = $("#ddlEstado").val();
+
+                var url = "../../DivisaoAdministrativa/GetMunicipioByUf?uf=" + sigla;
+
+                var ddlSource = "#ddlMunicipio";
+
+                $.getJSON(url,
+                    { id: $(ddlSource).val() },
+                    function (data) {
+                        if (data.length > 0) {
+                            var items = '<option value="">Selecionar Municipio</option>';
+                            $("#ddlMunicipio").empty;
+                            $.each(data,
+                                function (i, row) {
+                                    items += "<option value='" + row.value + "'>" + row.text + "</option>";
+                                });
+                            $("#ddlMunicipio").html(items);
+                        }
+                        else {
+                            new PNotify({
+                                title: 'Usuario',
+                                text: data,
+                                type: 'warning'
+                            });
+                        }
+                    });
+
+                self.ShowLoad(false, "pFiltro");
+            });
 
             var formid = $('form')[0].id;
 
@@ -242,6 +279,26 @@
                 Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
             });
         },
+        selectLesson: function (id) {
+            this.getAulaById(id);
+        },
+        getAulaById: function (id) {
+            var self = this;
+            axios.get("../../Aula/GetAulaById?id=" + id)
+                .then(response => {
+                    self.aula = response.data;
+                    self.selectedVideoUrl = response.data.video;
+                    $('#aulaAtualTitulo').text(response.data.titulo);
+
+                    var player = document.getElementById("videoPlayer");
+                    if (player) {
+                        player.load();
+                    }
+                })
+                .catch(error => {
+                    console.error("Erro ao buscar aula:", error);
+                });
+        }
     }
 });
 

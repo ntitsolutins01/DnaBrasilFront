@@ -1,0 +1,362 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+    padding-top: 80px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* Controles de impressão */
+.print-controls {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    padding: 15px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Botões */
+.btn {
+    padding: 8px 16px;
+    margin: 5px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: background-color 0.3s, color 0.3s ease;
+}
+
+.btn-primary {
+    background-color: #5bc0de;
+    color: white;
+}
+
+    .btn-primary:hover {
+        background-color: #4a90e2;
+    }
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+    }
+
+/* Layout A4 */
+.a4-wrapper {
+    width: 100%;
+    max-width: 210mm;
+    margin: 20px auto;
+    background: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.a4-page {
+    width: 210mm;
+    height: 297mm;
+    position: relative;
+    background: white;
+    overflow: hidden;
+    page-break-after: always;
+    padding: 5mm;
+}
+
+/* Container para carteirinhas */
+.cards-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+/* Conjunto de carteirinhas (frente+verso) */
+.card-set {
+    position: absolute;
+    width: 90mm; /* Largura do conjunto */
+    height: 28mm; /* Altura um pouco reduzida para caber 8 linhas */
+}
+
+    /* Posicionamento específico para cada conjunto - ajustado para 8 linhas */
+    .card-set:nth-child(1) {
+        top: 2mm;
+        left: 5mm;
+    }
+
+    .card-set:nth-child(2) {
+        top: 2mm;
+        right: 5mm;
+    }
+
+    .card-set:nth-child(3) {
+        top: 36mm;
+        left: 5mm;
+    }
+
+    .card-set:nth-child(4) {
+        top: 36mm;
+        right: 5mm;
+    }
+
+    .card-set:nth-child(5) {
+        top: 70mm;
+        left: 5mm;
+    }
+
+    .card-set:nth-child(6) {
+        top: 70mm;
+        right: 5mm;
+    }
+
+    .card-set:nth-child(7) {
+        top: 104mm;
+        left: 5mm;
+    }
+
+    .card-set:nth-child(8) {
+        top: 104mm;
+        right: 5mm;
+    }
+
+    .card-set:nth-child(9) {
+        top: 138mm;
+        left: 5mm;
+    }
+
+    .card-set:nth-child(10) {
+        top: 138mm;
+        right: 5mm;
+    }
+
+    .card-set:nth-child(11) {
+        top: 172mm;
+        left: 5mm;
+    }
+
+    .card-set:nth-child(12) {
+        top: 172mm;
+        right: 5mm;
+    }
+
+    .card-set:nth-child(13) {
+        top: 206mm;
+        left: 5mm;
+    }
+
+    .card-set:nth-child(14) {
+        top: 206mm;
+        right: 5mm;
+    }
+
+    .card-set:nth-child(15) {
+        top: 240mm;
+        left: 5mm;
+    }
+
+    .card-set:nth-child(16) {
+        top: 240mm;
+        right: 5mm;
+    }
+
+/* Carteirinhas individuais */
+.card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.page {
+    position: absolute;
+    width: 45mm;
+    height: 28mm; /* Altura ajustada para caber 8 linhas */
+    overflow: hidden;
+    font-family: 'Montserrat', sans-serif;
+    color: #1a237e;
+    background: white;
+    border: 1px solid #eee;
+}
+
+.frente-page {
+    left: 0;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+}
+
+.verso-page {
+    right: 0;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+}
+
+/* Estilos para frente da carteirinha - ajustados para o novo tamanho */
+.student-info {
+    position: absolute;
+    left: 0.3cm;
+    width: 2.9cm;
+    padding-top: 0.85cm;
+}
+
+.info-row {
+    margin-bottom: 0.08cm;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+    .info-row label {
+        display: block;
+        font-weight: 700;
+        font-size: 4px;
+        min-width: 55px;
+        flex-shrink: 0;
+    }
+
+    .info-row span {
+        display: block;
+        font-size: 4px;
+        flex: 1;
+        word-wrap: break-word;
+        font-weight: 500;
+    }
+
+.activity-info {
+    font-size: 5px;
+    font-weight: 500;
+    line-height: 1.2;
+}
+
+.photo-container {
+    position: absolute;
+    right: 0.51cm;
+    top: 0.30cm;
+    width: 28px;
+    height: 42px;
+    overflow: hidden;
+}
+
+.student-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 2px;
+}
+
+.qr-code-container {
+    position: absolute;
+    right: 0.49cm;
+    bottom: 0.4cm;
+    width: 26px;
+    height: 26px;
+}
+
+.qr-code {
+    width: 100%;
+    height: 100%;
+}
+
+/* Estilos para verso da carteirinha */
+.main-content-verso {
+    position: absolute;
+    left: 0.33cm;
+    width: 2.8cm;
+    padding-top: 0.85cm;
+}
+
+.info-row-verso {
+    margin-bottom: 0.1cm;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+    .info-row-verso label {
+        display: block;
+        font-weight: 700;
+        font-size: 4px; 
+        min-width: 55px;
+        flex-shrink: 0;
+    }
+
+    .info-row-verso span {
+        display: block;
+        font-size: 4px; 
+        flex: 1;
+        word-wrap: break-word;
+        font-weight: 500;
+    }
+
+/* Paginação */
+.pagination-info {
+    position: fixed;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 10px;
+    font-size: 14px;
+    border-top: 1px solid #eee;
+}
+
+.page-number {
+    position: absolute;
+    bottom: 3mm;
+    right: 3mm;
+    font-size: 10px;
+    color: #999;
+}
+
+/* Configurações para impressão */
+@media print {
+    @page {
+        size: A4;
+        margin: 0;
+    }
+
+    body {
+        margin: 0;
+        padding: 0 !important;
+        background: white;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    .a4-wrapper {
+        max-width: none;
+        margin: 0;
+        box-shadow: none;
+    }
+
+    .a4-page {
+        box-shadow: none;
+        margin: 0;
+    }
+
+    .print-controls,
+    .pagination-info {
+        display: none !important;
+    }
+
+    .page-number {
+        display: none;
+    }
+}

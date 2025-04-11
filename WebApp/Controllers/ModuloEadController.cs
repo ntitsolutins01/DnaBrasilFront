@@ -99,8 +99,7 @@ public class ModuloEadController : BaseController
             {
 	            CursoId = Convert.ToInt32(collection["ddlCurso"].ToString()),
 	            Titulo = collection["nome"].ToString(),
-	            Descricao = collection["descricao"].ToString(),
-				CargaHoraria = Convert.ToInt32(collection["cargaHoraria"].ToString())
+	            Descricao = collection["descricao"].ToString()
 			};
 
             //foreach (var file in collection.Files)
@@ -144,7 +143,6 @@ public class ModuloEadController : BaseController
                 Id = Convert.ToInt32(collection["editModuloEadId"]),
                 Titulo = collection["nome"].ToString(),
                 Descricao = collection["descricao"].ToString(),
-                CargaHoraria = Convert.ToInt32(collection["cargaHoraria"].ToString()),
                 Status = collection["editStatus"].ToString() == "" ? false : true
             };
 

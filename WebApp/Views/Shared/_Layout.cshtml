@@ -302,7 +302,7 @@
                                             </li>
                                             <li>
                                                 <a href="@Url.Action("Index", "Fomento")">
-                                                    Fomento
+                                                    Fomento /Contrato
                                                 </a>
                                             </li>
                                             <li>
@@ -343,6 +343,11 @@
                                             <li>
                                                 <a href="@Url.Action("Index", "Resposta")">
                                                     Resposta
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="@Url.Action("Index", "Serie")">
+                                                    Série
                                                 </a>
                                             </li>
                                             <li>
@@ -424,7 +429,7 @@
                                     </li>
                                 }
                                 
-                                @if ((await AuthorizationService.AuthorizeAsync(User, ModuloAccess.Aluno)).Succeeded)
+                                @if ((await AuthorizationService.AuthorizeAsync(User, ModuloAccess.MeusCursos)).Succeeded)
                                 {
                                     <li class="nav-parent nav-expanded">
                                         <a href="@Url.Action("Index", "AlunoCursoCertificado")">
@@ -443,6 +448,16 @@
                                         </a>
                                     </li>
                                 }
+@* 
+                                @if ((await AuthorizationService.AuthorizeAsync(User, ModuloAccess.ControleFrequenciaEscolar)).Succeeded)
+                                {
+                                    <li class="nav-parent nav-expanded">
+                                        <a href="@Url.Action("Index", "ControleFrequenciaEscolar")">
+                                            <i class="fa fa-user-plus" aria-hidden="true"></i>
+                                            <span>Controle Frequencia Escolar</span>
+                                        </a>
+                                    </li>
+                                } *@
 
                                 @if ((await AuthorizationService.AuthorizeAsync(User, ModuloAccess.ControleMaterial)).Succeeded)
                                 {
@@ -468,8 +483,13 @@
                                                 </a>
                                             </li>
                                             <li>
+                                                <a href="@Url.Action("Index", "Inventario")">
+                                                    Inventários
+                                                </a>
+                                            </li>
+                                            <li>
                                                 <a href="@Url.Action("Index", "ControleMaterialEstoqueSaida")">
-                                                    Registro de Entrada/Saida
+                                                    Registro de Entrada/Saída
                                                 </a>
                                             </li>
                                         </ul>

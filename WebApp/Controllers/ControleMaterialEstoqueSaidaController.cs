@@ -50,6 +50,7 @@ public class ControleMaterialEstoqueSaidaController : BaseController
     {
         SetNotifyMessage(notify, message);
         SetCrudMessage(crud);
+
         var response = ApiClientFactory.Instance.GetControlesMateriaisEstoquesSaidasAll();
 
         return View(new ControleMaterialEstoqueSaidaModel() { ControlesMateriaisEstoquesSaidas = response });
@@ -68,13 +69,13 @@ public class ControleMaterialEstoqueSaidaController : BaseController
         {
             SetNotifyMessage(notify, message);
             SetCrudMessage(crud);
+            var profissionais = new SelectList(ApiClientFactory.Instance.GetUsuarioAll().Where(x => x.Perfil.Id == (int)EnumPerfil.Profissional), "Id", "Nome");
             var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome");
-            var tipoMateriais = new SelectList(ApiClientFactory.Instance.GetTiposMateriaisAll(), "Id", "Nome");
 
             return View(new ControleMaterialEstoqueSaidaModel()
             {
-                ListTiposMateriais = tipoMateriais,
-                ListEstados = estados
+                ListEstados = estados,
+                ListProfissionais = profissionais
             });
         }
         catch (Exception e)
@@ -107,24 +108,22 @@ public class ControleMaterialEstoqueSaidaController : BaseController
             {
                 MunicipioId = Convert.ToInt32(collection["ddlMunicipio"].ToString()),
                 LocalidadeId = Convert.ToInt32(collection["ddlLocalidade"].ToString()),
-                MaterialId = Convert.ToInt32(collection["ddlMaterial"].ToString()),
+                InventarioId = Convert.ToInt32(collection["ddlInventario"].ToString()),
                 Quantidade = quantidade,
-                Solicitante = collection["solicitante"].ToString()
+                ProfissionalId = Convert.ToInt32(collection["ddlProfissional"].ToString())
             };
 
-            var material = 
-                ApiClientFactory.Instance.GetMaterialById(Convert.ToInt32(collection["ddlMaterial"].ToString()));
+            //var inventario = 
+            //    ApiClientFactory.Instance.GetInventarioById(Convert.ToInt32(collection["ddlInventario"].ToString()));
 
-            var command1 = new MaterialModel.CreateUpdateMaterialCommand
-            {
-                Id = material.Id,
-                UnidadeMedida = material.UnidadeMedida,
-                Descricao = material.Descricao,
-                QtdAdquirida = material.QtdAdquirida + quantidade
-            };
+            //var command1 = new InventarioModel.CreateUpdateInventarioCommand
+            //{
+            //    Id = inventario.Id,
+            //    Quantidade = inventario.Quantidade + quantidade
+            //};
 
             await ApiClientFactory.Instance.CreateControleMaterialEstoqueSaida(command0);
-            await ApiClientFactory.Instance.UpdateMaterial(material.Id ,command1);
+            //await ApiClientFactory.Instance.UpdateInventario(inventario.Id ,command1);
 
             return RedirectToAction(nameof(Index), new { crud = (int)EnumCrud.Created });
         }
@@ -149,7 +148,7 @@ public class ControleMaterialEstoqueSaidaController : BaseController
             var command = new ControleMaterialEstoqueSaidaModel.CreateUpdateControleMaterialEstoqueSaidaCommand
             {
                 Id = Convert.ToInt32(collection["editControleMaterialEstoqueSaidaId"]),
-                Solicitante = collection["solicitante"].ToString()
+                ProfissionalId = Convert.ToInt32(collection["ddlProfissional"])
             };
 
             await ApiClientFactory.Instance.UpdateControleMaterialEstoqueSaida(command.Id, command);
@@ -176,24 +175,22 @@ public class ControleMaterialEstoqueSaidaController : BaseController
             var controleSaida =
                 ApiClientFactory.Instance.GetControleMaterialEstoqueSaidaById(id);
 
-            var material =
-                ApiClientFactory.Instance.GetMaterialById(controleSaida.MaterialId);
+            //var inventario =
+            //    ApiClientFactory.Instance.GetInventarioById(controleSaida.InventarioId);
 
-            var command = new MaterialModel.CreateUpdateMaterialCommand
-            {
-                Id = material.Id,
-                UnidadeMedida = material.UnidadeMedida,
-                Descricao = material.Descricao,
-                QtdAdquirida = material.QtdAdquirida - controleSaida.Quantidade
-            };
+            //var command = new InventarioModel.CreateUpdateInventarioCommand
+            //{
+            //    Id = inventario.Id,
+            //    Quantidade = inventario.Quantidade - controleSaida.Quantidade
+            //};
 
-            ApiClientFactory.Instance.UpdateMaterial(material.Id, command);
+            //ApiClientFactory.Instance.UpdateInventario(inventario.Id, command);
             ApiClientFactory.Instance.DeleteControleMaterialEstoqueSaida(id);
             return RedirectToAction(nameof(Index), new { crud = (int)EnumCrud.Deleted });
         }
         catch (Exception e)
         {
-            return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = "Este grupo de material não pode ser excluído pois possui aulas vinculadas a ele." });
+            return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = "Este grupo de inventario não pode ser excluído pois possui aulas vinculadas a ele." });
         }
     }
 
@@ -224,6 +221,9 @@ public class ControleMaterialEstoqueSaidaController : BaseController
     public Task<ControleMaterialEstoqueSaidaDto> GetControleMaterialEstoqueSaidaById(int id)
     {
         var result = ApiClientFactory.Instance.GetControleMaterialEstoqueSaidaById(id);
+        var profissionais = new SelectList(ApiClientFactory.Instance.GetUsuarioAll().Where(x => x.Perfil.Id == (int)EnumPerfil.Profissional), "Id", "Nome", result.ProfissionalId);
+
+        result.ListProfissionais = profissionais;
 
         return Task.FromResult(result);
     }
@@ -259,7 +259,7 @@ public class ControleMaterialEstoqueSaidaController : BaseController
         try
         {
             if (string.IsNullOrEmpty(id)) throw new Exception("Municipio não informado.");
-            var resultLocal = ApiClientFactory.Instance.GetLocalidadeByMunicipio(id);
+            var resultLocal = ApiClientFactory.Instance.GetLocalidadeByMunicipioId(id);
 
             return Task.FromResult(Json(new SelectList(resultLocal, "Id", "Nome")));
 

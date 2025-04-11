@@ -163,7 +163,7 @@ namespace WebApp.Controllers
             try
             {
                 if (string.IsNullOrEmpty(id)) throw new Exception("Município não informado.");
-                var resultLocal = ApiClientFactory.Instance.GetLocalidadeByMunicipio(id);
+                var resultLocal = ApiClientFactory.Instance.GetLocalidadeByMunicipioId(id);
 
                 return Task.FromResult(Json(new SelectList(resultLocal, "Id", "Nome")));
 
@@ -208,6 +208,29 @@ namespace WebApp.Controllers
                 var resultLocal = ApiClientFactory.Instance.GetProfissionaisByLocalidade(Convert.ToInt32(id));
 
                 return Task.FromResult(Json(new SelectList(resultLocal, "Id", "Nome")));
+
+            }
+            catch (Exception ex)
+            {
+                return Task.FromResult(Json(ex));
+            }
+        }
+
+        /// <summary>
+        /// Busca Localidades pelo id do fomento
+        /// </summary>
+        /// <param name="id">Id do fomento</param>
+        /// <returns>Retorna um json com a lista de localidades</returns>
+        public Task<JsonResult> GetLocalidadesByFomentoId(string id)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(id)) throw new Exception("Fomento não informado.");
+                var fomento = ApiClientFactory.Instance.GetFomentoLocalidadesByLocalidadeId(Convert.ToInt32(id));
+
+                //var localidades = new SelectList(ApiClientFactory.Instance.GetLocalidadesByIds(fomento.LocalidadesIds), "Id", "Nome");
+
+                return Task.FromResult(Json(null));
 
             }
             catch (Exception ex)

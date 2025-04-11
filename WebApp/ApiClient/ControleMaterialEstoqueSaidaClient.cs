@@ -45,10 +45,10 @@ namespace WebApp.ApiClient
                 $"{ResourceControleMaterialEstoqueSaida}"));
             return Get<List<ControleMaterialEstoqueSaidaDto>>(requestUrl);
         }
-        public List<ControleMaterialEstoqueSaidaDto> GetControlesMateriaisEstoquesSaidasByMaterialId(int materialId)
+        public List<ControleMaterialEstoqueSaidaDto> GetControlesMateriaisEstoquesSaidasByInventarioId(int inventarioId)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceControleMaterialEstoqueSaida}/ControleMaterialEstoqueSaida/{materialId}"));
+                $"{ResourceControleMaterialEstoqueSaida}/Inventario/{inventarioId}"));
             return Get<List<ControleMaterialEstoqueSaidaDto>>(requestUrl);
         }
         #endregion

@@ -9,6 +9,25 @@ var vm = new Vue({
         (function ($) {
             'use strict';
 
+            // iosSwitcher
+            (function ($) {
+
+                'use strict';
+
+                if (typeof Switch !== 'undefined' && $.isFunction(Switch)) {
+
+                    $(function () {
+                        $('[data-plugin-ios-switch]').each(function () {
+                            var $this = $(this);
+
+                            $this.themePluginIOS7Switch();
+                        });
+                    });
+
+                }
+
+            }).apply(this, [jQuery]);
+
             var formid = $('form')[1].id;
 
             //triggered when modal is about to be shown
@@ -49,6 +68,39 @@ var vm = new Vue({
                 if ($.isFunction($.fn['tooltip'])) {
                     $('[data-toggle=tooltip],[rel=tooltip]').tooltip({ container: 'body' });
                 }
+
+                //clique de escolha do select
+                $("#ddlFomento").change(function () {
+
+                    self.ShowLoad(true, "pFiltro");
+
+                    var url = "../../Aluno/GetLocalidadeById";
+
+                    var ddlSource = "#ddlFomento";
+
+                    $.getJSON(url,
+                        { id: $(ddlSource).val() },
+                        function (data) {
+                            if (data.length > 0) {
+                                var items = '<option value="">Selecionar Localidade</option>';
+                                $("#ddlLocalidade").empty;
+                                $.each(data,
+                                    function (i, row) {
+                                        items += "<option value='" + row.value + "'>" + row.text + "</option>";
+                                    });
+                                $("#ddlLocalidade").html(items);
+                            }
+                            else {
+                                new PNotify({
+                                    title: 'Usuario',
+                                    text: data,
+                                    type: 'warning'
+                                });
+                            }
+                        });
+
+                    self.ShowLoad(false, "pFiltro");
+                });
 
                 //clique de escolha do select
                 $("#ddlEstado").change(function () {
@@ -120,6 +172,7 @@ var vm = new Vue({
                     self.ShowLoad(false, "pFiltro");
                 });
 
+                //clique de escolha do select
                 $("#ddlLocalidade").change(function () {
                     var id = $("#ddlLocalidade").val();
 
@@ -252,11 +305,18 @@ var vm = new Vue({
                     return axios.get("Aluno/GetModeloCarteirinhaByFomento?fomentoId=" + result.data.fomentoId);
                 })
                 .then(modeloResult => {
+                    // Atualizar o background da frente com o nome da imagem retornado
+                    if (modeloResult.data) {
+                        const frenteElement = document.querySelector('#frente');
+                        if (frenteElement) {
+                            frenteElement.style.backgroundImage = `url(/assets/styles_Carteirinha/modelos/${modeloResult.data.nomeImagemFrente}.png)`;
+                        }
+                    
                     // Atualizar o background do verso com o nome da imagem retornado
-                    if (modeloResult.data && modeloResult.data.nomeImagem) {
+                    
                         const versoElement = document.querySelector('#verso');
                         if (versoElement) {
-                            versoElement.style.backgroundImage = `url(/assets/styles_Carteirinha/modelos/${modeloResult.data.nomeImagem})`;
+                            versoElement.style.backgroundImage = `url(/assets/styles_Carteirinha/modelos/${modeloResult.data.nomeImagemVerso}.png)`;
                         }
                     }
                 })

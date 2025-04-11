@@ -2,7 +2,7 @@
     el: "#vControleMaterialEstoqueSaida",
     data: {
         loading: false,
-        editDto: { Id: "", Quantidade: "", Solicitante: "" }
+        editDto: { Id: "", Quantidade: "" }
     },
     mounted: function () {
         var self = this;
@@ -79,12 +79,15 @@
 
                 //Açao de seleçao de valor na combo primaria para preencher a combo secundára
                 $("#ddlTipoMaterial").change(function () {
-                    var tipoMaterialId = $("#ddlTipoMaterial").val();
 
-                    var url = "../Material/GetMateriaisByTipoMaterialId";
+                    self.ShowLoad(true, "pFiltro");
+
+                    var url = "../../Material/GetMateriaisByTipoMaterialId";
+
+                    var ddlSource = "#ddlTipoMaterial";
 
                     $.getJSON(url,
-                        { id: tipoMaterialId },
+                        { id: $(ddlSource).val() },
                         function (data) {
                             if (data.length > 0) {
                                 var items = '<option value="">Selecionar Material</option>';
@@ -98,11 +101,13 @@
                             else {
                                 new PNotify({
                                     title: 'Material',
-                                    text: 'Materiais não encontrados.',
+                                    text: data,
                                     type: 'warning'
                                 });
                             }
                         });
+
+                    self.ShowLoad(false, "pFiltro");
                 });
 
                 $("#formControleMaterialEstoqueSaida").validate({
@@ -191,6 +196,30 @@
 
                     self.ShowLoad(false, "pFiltro");
                 });
+
+                $("#ddlLocalidade").change(function () {
+                    self.ShowLoad(true, "pFiltro");
+                    var url = "../../Inventario/GetInventariosByLocalidadeId";
+                    var ddlSource = "#ddlLocalidade";
+                    $.getJSON(url, { id: $(ddlSource).val() }, function (data) {
+                        if (data.length > 0) {
+                            var items = '<option value="">Selecionar Material</option>';
+                            $("#ddlInventario").empty;
+                            $.each(data, function (i, row) {
+                                items += "<option value='" + row.value + "'>" + row.text + "</option>";
+                            });
+                            $("#ddlInventario").html(items);
+                        }
+                        else {
+                            new PNotify({
+                                title: 'Inventario',
+                                text: data,
+                                type: 'warning'
+                            });
+                        }
+                    });
+                    self.ShowLoad(false, "pFiltro");
+                });
             }
         }).apply(this, [jQuery]);
     },
@@ -221,13 +250,40 @@
         EditControleMaterialEstoqueSaida: function (id) {
             var self = this;
 
+            self.editDto = { Id: "", Quantidade: "" };
+
             axios.get("ControleMaterialEstoqueSaida/GetControleMaterialEstoqueSaidaById/?id=" + id).then(result => {
 
-                self.editDto.Id = result.data.id;
-                self.editDto.Quantidade = result.data.quantidade;
-                self.editDto.Solicitante = result.data.solicitante;
+                self.$nextTick(() => {
+                    self.editDto = {
+                        Id: result.data.id,
+                        Quantidade: result.data.quantidade
+                    };
+                });
+
+                if (result.data.listProfissionais.length > 0) {
+                    var items = '<option value="">Selecionar o Profissional</option>';
+                    $("#ddlProfissional").empty;
+                    $.each(result.data.listProfissionais,
+                        function (i, row) {
+                            if (row.selected) {
+                                items += "<option selected value='" + row.value + "'>" + row.text + "</option>";
+                            } else {
+                                items += "<option value='" + row.value + "'>" + row.text + "</option>";
+                            }
+                        });
+                    $("#ddlProfissional").html(items);
+                }
+                else {
+                    new PNotify({
+                        title: 'Profissional',
+                        text: 'Profissionais não encontrados.',
+                        type: 'warning'
+                    });
+                }
 
             }).catch(error => {
+                console.error('Erro ao carregar dados:', error);
                 Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
             });
         }
