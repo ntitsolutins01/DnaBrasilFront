@@ -102,7 +102,6 @@ public class AulaController : BaseController
         {
 	        var command = new AulaModel.CreateUpdateAulaCommand
 	        {
-		        CargaHoraria = Convert.ToInt32(collection["cargaHoraria"].ToString()),
 		        ProfessorId = Convert.ToInt32(collection["ddlProfessor"].ToString()),
 		        ModuloEadId = Convert.ToInt32(collection["ddlModuloEad"].ToString()),
 		        Titulo = collection["titulo"].ToString(),
@@ -157,7 +156,6 @@ public class AulaController : BaseController
             var command = new AulaModel.CreateUpdateAulaCommand
             {
                 Id = Convert.ToInt32(collection["editAulaId"]),
-                CargaHoraria = Convert.ToInt32(collection["cargaHoraria"].ToString()),
                 Titulo = collection["nome"].ToString(),
                 Descricao = collection["descricao"].ToString(),
                 Video = collection["video"].ToString(),

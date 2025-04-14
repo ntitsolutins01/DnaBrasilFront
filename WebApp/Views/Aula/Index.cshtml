@@ -26,7 +26,6 @@
 								<th class="text-center">Id</th>
 								<th class="text-center">Professor</th>
 								<th class="text-center">Modulo</th>
-								<th class="text-center">Carga Horária</th>
 								<th class="text-center">Titulo</th>
 								<th class="text-center">Descrição</th>
 								<th class="text-center">Status</th>
@@ -40,7 +39,6 @@
 									<td class="text-center" style="width:20px;">@Html.DisplayFor(modelItem => item.Id)</td>
 									<td class="text-center">@Html.DisplayFor(modelItem => item.NomeProfessor)</td>
 									<td class="text-center">@Html.DisplayFor(modelItem => item.TituloModuloEad)</td>
-									<td class="text-center">@Html.DisplayFor(modelItem => item.CargaHoraria)</td>
 									<td class="text-center">@Html.DisplayFor(modelItem => item.Titulo)</td>
 									<td class="text-center">@Html.DisplayFor(modelItem => item.Descricao)</td>
 									@if (item.Status)
@@ -110,16 +108,11 @@
                         <input type="hidden" name="editAulaId" :value="editDto.Id"/>
                         <div class="form-group row">
                             <label class="col-sm-3 control-label text-sm-right pt-2">Professor <span class="required">*</span></label>
-                            <div class="col-sm-5">
+                            <div class="col-sm-9">
                                 <select class="form-control populate select2" name="ddlProfessor" id="ddlProfessor" style="width:100%"
                                         required title="Por favor selecione o professor">
                                     <option value="">Selecionar Professor</option>
                                 </select>
-                            </div>
-                            <label class="col-sm-2 control-label text-sm-right pt-2">Carga Horária <span class="required">*</span></label>
-                            <div class="col-sm-2">
-                                <input type="text" id="cargaHoraria" name="cargaHoraria" class="form-control" maxlength="6"
-                                       title="Por favor informe o valor final." required :value="editDto.CargaHoraria"/>
                             </div>
                         </div>
                             <div class="form-group row">

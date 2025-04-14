@@ -2,17 +2,12 @@ var vm = new Vue({
     el: "#vModuloEad ",
     data: {
         loading: false,
-        editDto: { Id: "", Titulo: "", Descricao: "", CargaHoraria: "", Status: true }
+        editDto: { Id: "", Titulo: "", Descricao: "", Status: true }
     },
     mounted: function () {
         var self = this;
         (function ($) {
             'use strict';
-
-            //mascara dos inputs
-            var cargaHoraria = $("#cargaHoraria");
-            cargaHoraria.mask('000', { reverse: false });
-
 
             //skin checkbox
             if (typeof Switch !== 'undefined' && $.isFunction(Switch)) {
@@ -160,7 +155,6 @@ var vm = new Vue({
                 self.editDto.Id = result.data.id;
                 self.editDto.Titulo = result.data.titulo;
                 self.editDto.Descricao = result.data.descricao;
-                self.editDto.CargaHoraria = result.data.cargaHoraria;
                 self.editDto.Status = result.data.status;
 
             }).catch(error => {

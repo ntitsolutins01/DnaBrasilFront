@@ -24,7 +24,6 @@ namespace WebApp.Models
 		public class CreateUpdateAulaCommand
 		{
 			public int Id { get; set; }
-            public required int CargaHoraria { get; set; }
 			public required int ProfessorId { get; set; }
 			public int ModuloEadId { get; set; }
             public required string Titulo { get; set; }
