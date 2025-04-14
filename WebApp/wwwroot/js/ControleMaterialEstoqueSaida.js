@@ -9,11 +9,6 @@
         (function ($) {
             'use strict';
 
-            //mascara dos inputs
-            var cargaHoraria = $("#cargaHoraria");
-            cargaHoraria.mask('000', { reverse: false });
-
-
             //skin checkbox
             if (typeof Switch !== 'undefined' && $.isFunction(Switch)) {
 
