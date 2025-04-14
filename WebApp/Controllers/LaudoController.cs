@@ -971,12 +971,12 @@ namespace WebApp.Controllers
                 ws.Cell(1, 7).Value = "Celular";
                 ws.Cell(1, 8).Value = "LaudoId";
                 ws.Cell(1, 9).Value = "Saúde";
-                ws.Cell(1, 11).Value = "Talento Esportivo";
-                ws.Cell(1, 12).Value = "Consumo Alimentar";
-                ws.Cell(1, 13).Value = "Saúde Bucal";
-                ws.Cell(1, 14).Value = "Qualidade de Vida";
-                ws.Cell(1, 15).Value = "Vocacional";
-                ws.Cell(1, 16).Value = "Status Laudo";
+                ws.Cell(1, 10).Value = "Talento Esportivo";
+                ws.Cell(1, 11).Value = "Consumo Alimentar";
+                ws.Cell(1, 12).Value = "Saúde Bucal";
+                ws.Cell(1, 13).Value = "Qualidade de Vida";
+                ws.Cell(1, 14).Value = "Vocacional";
+                ws.Cell(1, 15).Value = "Status Laudo";
                 int row = 2;
                 foreach (var item in result.Laudos.Items.ToList())
                 {
