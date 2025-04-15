@@ -1,0 +1,44 @@
+﻿@model EstruturaCursoModel
+
+@if (Model.Curso != null)
+{
+    <div class="curso-header mb-4">
+        <h4 class="text-primary">
+            @Model.Curso.Titulo
+        </h4>
+    </div>
+}
+
+<div class="dd" id="nestable">
+    <ol class="dd-list">
+        @foreach (var modulo in Model.ModulosEad)
+        {
+            var aulasModulo = Model.Aulas.Where(a => a.ModuloEadId == modulo.Id).ToList();
+            <li class="dd-item" data-id="modulo_@modulo.Id">
+                <div class="dd-handle bg-light">
+                    <i class="fa fa-folder-open mr-2"></i>
+                    @modulo.Titulo
+                </div>
+                @if (aulasModulo.Any())
+                {
+                    <ol class="dd-list">
+                        @foreach (var aula in aulasModulo)
+                        {
+                            <li class="dd-item" data-id="aula_@aula.Id">
+                                <div class="dd-handle">
+                                    <i class="fa fa-file-text mr-2"></i>
+                                    @aula.Titulo
+                                </div>
+                            </li>
+                        }
+                    </ol>
+                }
+            </li>
+        }
+    </ol>
+</div>
+
+@if (!Model.ModulosEad.Any())
+{
+    <div class="alert alert-warning">Nenhum módulo encontrado para este curso</div>
+}
