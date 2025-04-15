@@ -954,7 +954,7 @@ namespace WebApp.Controllers
                     PossuiFoto = possuiFotoValue,
                     Finalizado = finalizadoValue,
                     PageNumber = 1,
-                    PageSize = 1000
+                    PageSize = 10000
                 };
 
                 var result = await ApiClientFactory.Instance.GetLaudosByFilter(searchFilter);
