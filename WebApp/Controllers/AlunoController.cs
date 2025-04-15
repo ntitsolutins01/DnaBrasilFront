@@ -8,6 +8,7 @@ using iText.Kernel.Pdf.Xobject;
 using iText.Layout;
 using iText.Layout.Borders;
 using iText.Layout.Element;
+using iText.Layout.Hyphenation;
 using iText.Layout.Properties;
 using log4net;
 using Microsoft.AspNetCore.Authorization;
@@ -18,6 +19,7 @@ using QRCoder;
 using System;
 using System.Drawing;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using WebApp.Authorization;
 using WebApp.Configuration;
@@ -28,6 +30,7 @@ using WebApp.Identity;
 using WebApp.Models;
 using WebApp.Utility;
 using Claim = WebApp.Identity.Claim;
+using Rectangle = iText.Kernel.Geom.Rectangle;
 
 namespace WebApp.Controllers
 {
@@ -1204,11 +1207,18 @@ namespace WebApp.Controllers
 
             return bytes;
         }
+
+        /// <summary>
+        /// Gera um PDF em formato CMYK contendo a carteirinha do aluno.
+        /// </summary>
+        /// <param name="aluno">Dados do aluno para preenchimento da carteirinha.</param>
+        /// <param name="modeloCarteirinha">Modelo de carteirinha utilizado para gerar o PDF.</param>
+        /// <returns>Retorna os bytes do arquivo PDF gerado.</returns>
         private async Task<byte[]> GerarPdfCmyk(AlunoDto aluno, ModeloCarteirinhaDto modeloCarteirinha)
         {
             // Caminho dos arquivos de background
-            string frenteCaminhoRelativo = "assets/styles_Carteirinha/modelos/carteirinha-frente.tif";
-            string versoCaminhoRelativo = $"assets/styles_Carteirinha/modelos/{modeloCarteirinha.NomeImagem}";
+            string frenteCaminhoRelativo = $"assets/styles_Carteirinha/modelos/{modeloCarteirinha.NomeImagemFrente}.tif";
+            string versoCaminhoRelativo = $"assets/styles_Carteirinha/modelos/{modeloCarteirinha.NomeImagemVerso}.tif";
 
             // Converter caminhos relativos para absolutos
             string frenteCaminhoAbsoluto = System.IO.Path.Combine(_host.WebRootPath, frenteCaminhoRelativo.Replace("/", System.IO.Path.DirectorySeparatorChar.ToString()));
@@ -1271,7 +1281,7 @@ namespace WebApp.Controllers
                 document.Add(backgroundFrente);
 
                 // Desenhar as marcas de corte nos cantos - agora usando cor CMYK para preto
-                DesenharMarcasDeCorte(pdf, 1, sangriaEmPontos, larguraComSangria, alturaComSangria, corPreto);
+                DesenharMarcasDeCorte(pdf, 1, sangriaEmPontos, larguraComSangria, alturaComSangria, corPreto, false);
 
                 // Adicionar informações do aluno - agora com a margem de sangria incluída nas posições
                 float leftMargin = 0.5f * 28.35f + sangriaEmPontos; // 0.5cm do original + sangria
@@ -1280,40 +1290,40 @@ namespace WebApp.Controllers
                 float valueWidth = 3.0f * 28.35f; // Largura do valor
 
                 // Ajustando a posição vertical incluindo a sangria
-                float startY = alturaComSangria - 2.3f * 28.35f - sangriaEmPontos; // Começando 2.3cm do topo + ajuste pela sangria
+                float startY = alturaComSangria - 2.3f * 28.35f - sangriaEmPontos - 10; // Começando 2.3cm do topo + ajuste pela sangria - 10 pontos aproximadamente 0.33333 cm
 
                 // Starting Y position com padding-top ajustado
                 float currentY = startY;
+                float alturaItem;
 
                 // Nome
-                AddInfoRow(document, "NOME DO ESTUDANTE:", aluno.Nome, leftMargin, currentY, labelWidth, valueWidth, corAzul);
-                currentY -= 12; // Mantendo o espaçamento original
+                alturaItem = AddInfoRow(document, "NOME DO ESTUDANTE:", aluno.Nome, leftMargin, currentY, labelWidth, valueWidth, corAzul);
+                currentY -= alturaItem;
 
                 // Data de nascimento
-                AddInfoRow(document, "DATA DE NASCIMENTO:", aluno.DtNascimento, leftMargin, currentY, labelWidth, valueWidth, corAzul);
-                currentY -= 12;
+                alturaItem = AddInfoRow(document, "DATA DE NASCIMENTO:", aluno.DtNascimento, leftMargin, currentY, labelWidth, valueWidth, corAzul);
+                currentY -= alturaItem;
 
                 // Telefone
-                AddInfoRow(document, "TELEFONE:", aluno.Celular, leftMargin, currentY, labelWidth, valueWidth, corAzul);
-                currentY -= 12;
+                alturaItem = AddInfoRow(document, "TELEFONE:", aluno.Celular, leftMargin, currentY, labelWidth, valueWidth, corAzul);
+                currentY -= alturaItem;
 
                 // CPF
-                AddInfoRow(document, "CPF:", aluno.Cpf, leftMargin, currentY, labelWidth, valueWidth, corAzul);
-                currentY -= 12;
+                alturaItem = AddInfoRow(document, "CPF:", aluno.Cpf, leftMargin, currentY, labelWidth, valueWidth, corAzul);
+                currentY -= alturaItem;
 
                 // Matrícula
-                AddInfoRow(document, "MATRÍCULA:", aluno.Id.ToString(), leftMargin, currentY, labelWidth, valueWidth, corAzul);
-                currentY -= 12;
+                alturaItem = AddInfoRow(document, "MATRÍCULA:", aluno.Id.ToString(), leftMargin, currentY, labelWidth, valueWidth, corAzul);
+                currentY -= alturaItem;
 
                 // Modalidades - alterei para "Conhecimento" conforme o modelo
-                AddFullWidthText(document, "Conhecimento", leftMargin, currentY, labelWidth + valueWidth, corAzul, false);
-                currentY -= 12;
+                AddFullWidthText(document, aluno.Modalidades, leftMargin, currentY, labelWidth + valueWidth, corAzul, false);
 
                 // Adicionar foto do aluno - ajustado para incluir sangria
-                float rightMargin = 0.98f * 28.35f + sangriaEmPontos / 3;
-                float topMargin = 0.59f * 28.35f + sangriaEmPontos / 3;
-                float fotoWidth = 40;
-                float fotoHeight = 58; // Altura reduzida para melhor proporção
+                float rightMargin = 0.91f * 28.35f;
+                float topMargin = 0.795f * 28.35f + sangriaEmPontos / 3;
+                float fotoWidth = 48.5f;
+                float fotoHeight = 69.6f; // Altura reduzida para melhor proporção
 
                 // Calculando posição X a partir da direita (incluindo sangria)
                 float fotoX = larguraComSangria - rightMargin - fotoWidth;
@@ -1472,10 +1482,10 @@ namespace WebApp.Controllers
                 if (aluno.QrCode != null && aluno.QrCode.Length > 0)
                 {
                     // Cálculo correto baseado no CSS: right: 0.98cm, bottom: 0.8cm
-                    float qrRightMargin = 0.98f * 28.35f + sangriaEmPontos;
-                    float qrBottomMargin = 0.8f * 28.35f + sangriaEmPontos;
-                    float qrWidth = 40;
-                    float qrHeight = 40;
+                    float qrRightMargin = 0.62f * 28.35f + sangriaEmPontos;
+                    float qrBottomMargin = 0.4f * 28.35f + sangriaEmPontos;
+                    float qrWidth = 48.5f;
+                    float qrHeight = 48.5f;
 
                     // Calculando posição X a partir da direita (incluindo sangria)
                     float qrX = larguraComSangria - qrRightMargin - qrWidth;
@@ -1508,27 +1518,27 @@ namespace WebApp.Controllers
                 document.Add(backgroundVerso);
 
                 // Desenhar as marcas de corte nos cantos - usando cor CMYK para preto
-                DesenharMarcasDeCorte(pdf, 2, sangriaEmPontos, larguraComSangria, alturaComSangria, corPreto);
+                DesenharMarcasDeCorte(pdf, 2, sangriaEmPontos, larguraComSangria, alturaComSangria, corPreto, false);
 
                 // Adicionar informações do verso - ajustado para incluir sangria
                 float versoLeftMargin = 0.6f * 28.35f + sangriaEmPontos;
-                float versoTextWidth = 5.2f * 28.35f;
 
-                // Ajustando posição vertical do verso para centralizar com a sangria
-                // Calculando para 2 linhas de texto
-                float versoContentHeight = 2 * 12;
-                float versoCenterY = alturaComSangria / 2;
-                float versoStartY = versoCenterY + (versoContentHeight / 2);
+                // Usando a mesma lógica de posicionamento vertical da frente
+                float versoStartY = alturaComSangria - 2.3f * 28.35f - sangriaEmPontos - 10;
 
-                // Movendo os textos para o centro vertical
+                // Movendo os textos para a mesma posição inicial da frente
                 float versoY = versoStartY;
 
                 // Município/Estado
-                AddInfoRow(document, "MUNICÍPIO/ESTADO:", aluno.MunicipioEstado, versoLeftMargin, versoY, labelWidth, valueWidth, corAzul);
-                versoY -= 12;
+                alturaItem = AddInfoRow(document, "MUNICÍPIO/ESTADO:", aluno.MunicipioEstado, versoLeftMargin, versoY, labelWidth, valueWidth, corAzul, 8f);
+                versoY -= alturaItem;
 
                 // Unidade Escolar
-                AddInfoRow(document, "UNIDADE ESCOLAR:", aluno.NomeLocalidade, versoLeftMargin, versoY, labelWidth, valueWidth, corAzul);
+                alturaItem = AddInfoRow(document, "UNIDADE ESCOLAR:", aluno.NomeLocalidade, versoLeftMargin, versoY, labelWidth, valueWidth, corAzul, 8f);
+                versoY -= alturaItem;
+
+                // Adicionar sangria
+                DefinirTrimBox(pdf, sangriaEmPontos, larguraComSangria, alturaComSangria);
 
                 // Fechar documento
                 document.Close();
@@ -1539,24 +1549,90 @@ namespace WebApp.Controllers
         }
 
         /// <summary>
-        /// Método auxiliar da carteirinha para adicionar uma linha de informação consistente
+        /// Método auxiliar da carteirinha para adicionar uma linha de informação com suporte adequado a textos longos
         /// </summary>
-        private void AddInfoRow(Document document, string label, string value, float x, float y, float labelWidth, float valueWidth, DeviceCmyk color)
+        /// <param name="document">O documento onde adicionar os elementos</param>
+        /// <param name="label">O texto da label</param>
+        /// <param name="value">O valor a ser exibido</param>
+        /// <param name="x">Posição X inicial</param>
+        /// <param name="y">Posição Y inicial</param>
+        /// <param name="labelWidth">Largura da label</param>
+        /// <param name="valueWidth">Largura máxima do valor</param>
+        /// <param name="color">Cor do texto</param>
+        /// <param name="spacing">Espaçamento vertical adicional (opcional)</param>
+        /// <returns>A altura total ocupada pelo elemento, incluindo espaçamento</returns>
+        private float AddInfoRow(Document document, string label, string value, float x, float y,
+                                 float labelWidth, float valueWidth, DeviceCmyk color, float spacing = 4f)
         {
-            // Label
-            Paragraph labelParagraph = new Paragraph(label);
-            labelParagraph.SetFontSize(6); // Mantendo o tamanho da fonte em 6px
-            labelParagraph.SetBold();
-            labelParagraph.SetFontColor(color);
+            // Adicionar a label
+            Paragraph labelParagraph = new Paragraph(label)
+                .SetFontSize(6)
+                .SetBold()
+                .SetFontColor(color);
             labelParagraph.SetFixedPosition(x, y, labelWidth);
             document.Add(labelParagraph);
 
-            // Value - posicionado à direita da label
-            Paragraph valueParagraph = new Paragraph(value);
-            valueParagraph.SetFontSize(6);
-            valueParagraph.SetFontColor(color);
-            valueParagraph.SetFixedPosition(x + labelWidth, y, valueWidth);
-            document.Add(valueParagraph);
+            // Adicionar o valor
+            Paragraph valueParagraph = new Paragraph(value)
+                .SetFontSize(6)
+                .SetFontColor(color);
+
+            // Estimar o número de linhas que o texto ocupará
+            float charsPerLine = valueWidth / 3.5f;
+            int linhasEstimadas = (int)Math.Ceiling(value.Length / charsPerLine);
+            float alturaLinha = 8f;
+
+            // Posicionar e adicionar o valor
+            if (linhasEstimadas > 1)
+            {
+                // Para texto multilinha, precisamos forçar quebra de linha
+                valueParagraph.SetWidth(valueWidth);
+
+                // Criar um elemento Text que permite quebra de linha
+                Text textoValue = new Text(value);
+                valueParagraph = new Paragraph().Add(textoValue)
+                    .SetFontSize(6)
+                    .SetFontColor(color)
+                    .SetWidth(valueWidth);
+
+                // Posicionar o valor na mesma altura da label
+                valueParagraph.SetFixedPosition(x + labelWidth, y - (linhasEstimadas - 1) * alturaLinha, valueWidth);
+                document.Add(valueParagraph);
+
+                // Retornar a altura que este item ocupou (com espaçamento adicional)
+                return Math.Max(alturaLinha, linhasEstimadas * alturaLinha) + spacing - 1;
+            }
+            else
+            {
+                // Para texto de uma linha, posicionamento simples
+                valueParagraph.SetFixedPosition(x + labelWidth, y, valueWidth);
+                document.Add(valueParagraph);
+                return alturaLinha + spacing;
+            }
+        }
+
+        /// <summary>
+        /// Método auxiliar para adicionar a sangria no documento
+        /// </summary>
+        private void DefinirTrimBox(PdfDocument pdf, float sangria, float larguraComSangria, float alturaComSangria)
+        {
+            // Calcular as dimensões do TrimBox (área após o corte)
+            Rectangle trimBox = new Rectangle(
+                sangria,             // x - início da área de corte (sangria)
+                sangria,             // y - início da área de corte (sangria)
+                larguraComSangria - (2 * sangria),  // largura da área de corte
+                alturaComSangria - (2 * sangria)    // altura da área de corte
+            );
+
+            // Aplicar o TrimBox a cada página do documento
+            for (int i = 1; i <= pdf.GetNumberOfPages(); i++)
+            {
+                // Definir o TrimBox para a página
+                pdf.GetPage(i).SetTrimBox(trimBox);
+
+                // Definir também BleedBox para compatibilidade com diferentes softwares
+                pdf.GetPage(i).SetBleedBox(new Rectangle(0, 0, larguraComSangria, alturaComSangria));
+            }
         }
 
         /// <summary>
@@ -1583,8 +1659,12 @@ namespace WebApp.Controllers
         /// <summary>
         /// Método auxiliar da carteirinha para desenhar as marcas de corte
         /// </summary>
-        private void DesenharMarcasDeCorte(PdfDocument pdf, int numeroPagina, float sangria, float largura, float altura, DeviceCmyk corCmyk)
+        private void DesenharMarcasDeCorte(PdfDocument pdf, int numeroPagina, float sangria, float largura, float altura, DeviceCmyk corCmyk, bool desenharMarcas = true)
         {
+            // Se não for para desenhar as marcas, simplesmente retorna
+            if (!desenharMarcas)
+                return;
+
             // Usando a classe PdfCanvas para desenhar diretamente na página
             PdfCanvas canvas = new PdfCanvas(pdf.GetPage(numeroPagina));
 

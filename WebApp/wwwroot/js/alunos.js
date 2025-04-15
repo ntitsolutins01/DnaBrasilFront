@@ -70,44 +70,26 @@ var vm = new Vue({
                 }
 
                 //clique de escolha do select
-                $("#ddlFomento").change(function () {
-
-                    self.ShowLoad(true, "pFiltro");
-
-                    var url = "../../Aluno/GetLocalidadeById";
-
-                    var ddlSource = "#ddlFomento";
-
-                    $.getJSON(url,
-                        { id: $(ddlSource).val() },
-                        function (data) {
-                            if (data.length > 0) {
-                                var items = '<option value="">Selecionar Localidade</option>';
-                                $("#ddlLocalidade").empty;
-                                $.each(data,
-                                    function (i, row) {
-                                        items += "<option value='" + row.value + "'>" + row.text + "</option>";
-                                    });
-                                $("#ddlLocalidade").html(items);
-                            }
-                            else {
-                                new PNotify({
-                                    title: 'Usuario',
-                                    text: data,
-                                    type: 'warning'
-                                });
-                            }
-                        });
-
-                    self.ShowLoad(false, "pFiltro");
-                });
-
-                //clique de escolha do select
                 $("#ddlEstado").change(function () {
 
                     self.ShowLoad(true, "pFiltro");
 
                     var sigla = $("#ddlEstado").val();
+
+                    $("#ddlMunicipio")
+                        .empty()
+                        .append('<option value="">Selecionar Município</option>');
+                    $("#ddlLocalidade")
+                        .empty()
+                        .append('<option value="">Selecionar Localidade</option>');
+                    $("#ddlFomento")
+                        .empty()
+                        .append('<option value="">Selecionar Fomento</option>');
+
+                    if (!sigla) {
+                        self.ShowLoad(false, "pFiltro");
+                        return;
+                    }
 
                     var url = "../../DivisaoAdministrativa/GetMunicipioByUf?uf=" + sigla;
 
@@ -144,6 +126,15 @@ var vm = new Vue({
 
                     var id = $("#ddlMunicipio").val();
 
+                    $("#ddlLocalidade")
+                        .empty()
+                        .append('<option value="">Selecionar Localidade</option>');
+
+                    if (!id) {
+                        self.ShowLoad(false, "pFiltro");
+                        return;
+                    }
+
                     var url = "../../Localidade/GetLocalidadeByMunicipio?id=" + id;
 
                     var ddlSource = "#ddlLocalidade";
@@ -172,35 +163,67 @@ var vm = new Vue({
                     self.ShowLoad(false, "pFiltro");
                 });
 
-                //clique de escolha do select
-                $("#ddlLocalidade").change(function () {
-                    var id = $("#ddlLocalidade").val();
+                $("#ddlFomento").change(function () {
+                    var fomentoId = $(this).val(),
+                        $ddlEstado = $("#ddlEstado"),
+                        $ddlMunicipio = $("#ddlMunicipio"),
+                        $ddlLocalidade = $("#ddlLocalidade");
 
-                    var urlProfissional = "../../Profissional/GetProfissionaisByLocalidade/?id=" + id;
+                    // limpa todos os selects
+                    $ddlMunicipio
+                        .empty()    
+                        .append('<option value="">Selecionar Município</option>'); 
+                    $ddlLocalidade
+                        .empty()
+                        .append('<option value="">Selecionar Localidade</option>');
 
-                    var ddlSource = "#ddlProfissional";
+                    if (!fomentoId) return;
 
-                    $.getJSON(urlProfissional,
-                        { id: $(ddlSource).val() },
-                        function (data) {
-                            if (data.length > 0) {
-                                var items = '<option value="">Selecionar Profissional</option>';
-                                $("#ddlProfissional").empty;
-                                $.each(data,
-                                    function (i, row) {
-                                        items += "<option value='" + row.value + "'>" + row.text + "</option>";
+                    self.ShowLoad(true, "pFiltro");
+
+                    // busca o fomento
+                    $.getJSON("../../Fomento/GetFomentoById", { id: fomentoId })
+                        .done(function (f) {
+                            $.getJSON("../../DivisaoAdministrativa/GetMunicipioById", { id: f.municipioId })
+                                .done(function (mun) {
+                                    $ddlMunicipio
+                                        .append($("<option>").val(mun.id).text(mun.nome))
+                                        .val(mun.id);
+                                })
+                                .fail(function () {
+                                    new PNotify({
+                                        title: 'Erro',
+                                        text: 'Não foi possível carregar o município.',
+                                        type: 'error'
                                     });
-                                $("#ddlProfissional").html(items);
-                            }
-                            else {
-                                new PNotify({
-                                    title: 'Profissional',
-                                    text: 'Profissional não encontrados.',
-                                    type: 'warning'
                                 });
-                            }
+
+                            $.getJSON("../../Localidade/GetLocalidadeById", { id: f.localidadeId })
+                                .done(function (loc) {
+                                    $ddlLocalidade
+                                        .append($("<option>").val(loc.id).text(loc.nome))
+                                        .val(loc.id);
+                                })
+                                .fail(function () {
+                                    new PNotify({
+                                        title: 'Erro',
+                                        text: 'Não foi possível carregar a localidade.',
+                                        type: 'error'
+                                    });
+                                });
+                        })
+                        .fail(function () {
+                            new PNotify({
+                                title: 'Erro',
+                                text: 'Não foi possível carregar os dados do fomento.',
+                                type: 'error'
+                            });
+                        })
+                        .always(function () {
+                            self.ShowLoad(false, "pFiltro");
                         });
                 });
+
             }
 
             //self.GetPesquisaAluno();
@@ -305,11 +328,18 @@ var vm = new Vue({
                     return axios.get("Aluno/GetModeloCarteirinhaByFomento?fomentoId=" + result.data.fomentoId);
                 })
                 .then(modeloResult => {
+                    // Atualizar o background da frente com o nome da imagem retornado
+                    if (modeloResult.data) {
+                        const frenteElement = document.querySelector('#frente');
+                        if (frenteElement) {
+                            frenteElement.style.backgroundImage = `url(/assets/styles_Carteirinha/modelos/${modeloResult.data.nomeImagemFrente}.png)`;
+                        }
+                    
                     // Atualizar o background do verso com o nome da imagem retornado
-                    if (modeloResult.data && modeloResult.data.nomeImagem) {
+                    
                         const versoElement = document.querySelector('#verso');
                         if (versoElement) {
-                            versoElement.style.backgroundImage = `url(/assets/styles_Carteirinha/modelos/${modeloResult.data.nomeImagem})`;
+                            versoElement.style.backgroundImage = `url(/assets/styles_Carteirinha/modelos/${modeloResult.data.nomeImagemVerso}.png)`;
                         }
                     }
                 })

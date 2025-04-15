@@ -60,21 +60,6 @@
                                 <option value="">Selecionar Aluno</option>
                             </select>
                         </div>
-                        <label class="col-sm-2 control-label">Tipo de Laudo:</label>
-                        <div class="col-md-4 form-group">
-                            <select class="form-control populate select2" name="ddlTipoLaudo" id="ddlTipoLaudo"
-                                    asp-for="TipoLaudoId" asp-items="Model.ListTiposLaudos">
-                                <option value="">Selecionar Tipo de Laudo</option>
-                            </select>
-                        </div>
-                        <label class="col-sm-2 control-label">Deficiencia:</label>
-                        <div class="col-md-4 form-group">
-                            <select class="form-control populate select2" name="ddlDeficiencia" id="ddlDeficiencia"
-                                    asp-for="DeficienciaId" asp-items="Model.ListDeficiencias">
-                                <option value="">Selecionar Deficiência</option>
-                            </select>
-                        </div>
-
                         <label class="col-sm-2 control-label text-sm-right pt-2">Possui Foto: </label>
                         <div class="col-md-1">
                             <div class="switch switch-sm switch-primary">
@@ -319,6 +304,7 @@
                     ddlLocalidade: $('#ddlLocalidade').val(),
                     ddlAluno: $('#ddlAluno').val(),
                     ddlTipoLaudo: $('#ddlTipoLaudo').val(),
+                    ddlDeficiencia: $('#ddlDeficiencia').val(),
                     possuiFoto: $('#possuiFoto').is(':checked').toString(),
                     finalizado: $('#finalizado').is(':checked').toString()
                 };
@@ -333,7 +319,11 @@
                     url += '?' + queryString;
                 }
 
-                window.open(url, '_blank');
+                // Exibir algum indicador de carregamento (opcional)
+                $('#loading-indicator').show();
+
+                // Fazer o download do PDF
+                window.location.href = url;
             });
         });
 

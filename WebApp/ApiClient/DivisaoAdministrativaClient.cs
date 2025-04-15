@@ -18,10 +18,10 @@ namespace WebApp.ApiClient
         /// </summary>
         /// <param name="id">Id de Municipio a ser buscado</param>
         /// <returns>Retorna o objeto de Municipio</returns>
-        public MunicipioDto GetMunicipiosByid(string id)
+        public MunicipioDto GetMunicipioById(int id)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceDivisaoAdministrativa}/{id}"));
+                $"{ResourceDivisaoAdministrativa}/Municipio/{id}"));
             return Get<MunicipioDto>(requestUrl);
         }
 

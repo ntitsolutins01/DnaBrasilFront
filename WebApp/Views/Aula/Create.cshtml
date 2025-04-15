@@ -1,7 +1,7 @@
 @model AulaModel
 @{
-	ViewData["Title"] = "Inclusão de Aula";
-	Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Inclusão de Aula";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div id="vAula">
@@ -126,66 +126,66 @@
 </div>
 @section CssSpecificVendor {
     <link rel="stylesheet" href="~/assets/vendor/bootstrap-fileupload/bootstrap-fileupload.min.css" />
-	<link rel="stylesheet" href="~/assets/vendor/select2/css/select2.css" />
-	<link rel="stylesheet" href="~/assets/vendor/select2-bootstrap-theme/select2-bootstrap.min.css" />
+    <link rel="stylesheet" href="~/assets/vendor/select2/css/select2.css" />
+    <link rel="stylesheet" href="~/assets/vendor/select2-bootstrap-theme/select2-bootstrap.min.css" />
 }
 @section Scripts {
     <script src="~/assets/vendor/bootstrap-fileupload/bootstrap-fileupload.min.js"></script>
-	<script src="~/assets/vendor/select2/js/select2.js"></script>
-	<script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
-	<script src="~/assets/vendor/jquery-mask/jquery.mask.js"></script>
-	<script src="~/js/Aula.js"></script>
-	<script>
+    <script src="~/assets/vendor/select2/js/select2.js"></script>
+    <script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
+    <script src="~/assets/vendor/jquery-mask/jquery.mask.js"></script>
+    <script src="~/js/Aula.js"></script>
+    <script>
 
-		(function ($) {
+        (function ($) {
 
-			'use strict';
-			var crud = @ViewBag.CrudMessage;
+            'use strict';
+            var crud = @ViewBag.CrudMessage;
 
-			if (crud === 1) {
-				new PNotify({
-					title: 'Aula',
-					text: 'Cadastro realizado com sucesso!',
-					type: 'success'
-				});
-			} else if (crud === 2) {
-				new PNotify({
-					title: 'Aula',
-					text: 'Dados alterados com sucesso.',
-					type: 'warning'
-				});
-			} else if (crud === 3) {
-				new PNotify({
-					title: 'Aula',
-					text: 'Registro excluído com sucesso.',
-					type: 'error'
-				});
-			}
+            if (crud === 1) {
+                new PNotify({
+                    title: 'Aula',
+                    text: 'Cadastro realizado com sucesso!',
+                    type: 'success'
+                });
+            } else if (crud === 2) {
+                new PNotify({
+                    title: 'Aula',
+                    text: 'Dados alterados com sucesso.',
+                    type: 'warning'
+                });
+            } else if (crud === 3) {
+                new PNotify({
+                    title: 'Aula',
+                    text: 'Registro excluído com sucesso.',
+                    type: 'error'
+                });
+            }
 
-			var notify = @ViewBag.NotifyMessage;
-			var messagem = '@ViewBag.Notify';
+            var notify = @ViewBag.NotifyMessage;
+            var messagem = '@ViewBag.Notify';
 
-			if (notify === 0) {
-				new PNotify({
-					title: 'Aula',
-					text: messagem,
-					type: 'success'
-				});
-			} else if (notify === 1) {
-				new PNotify({
-					title: 'Aula',
-					text: messagem,
-					type: 'warning'
-				});
-			} else if (notify === 2) {
-				new PNotify({
-					title: 'Aula',
-					text: messagem,
-					type: 'error'
-				});
-			}
+            if (notify === 0) {
+                new PNotify({
+                    title: 'Aula',
+                    text: messagem,
+                    type: 'success'
+                });
+            } else if (notify === 1) {
+                new PNotify({
+                    title: 'Aula',
+                    text: messagem,
+                    type: 'warning'
+                });
+            } else if (notify === 2) {
+                new PNotify({
+                    title: 'Aula',
+                    text: messagem,
+                    type: 'error'
+                });
+            }
 
-		}).apply(this, [jQuery]);
+        }).apply(this, [jQuery]);
 
-	</script>
+    </script>
 }

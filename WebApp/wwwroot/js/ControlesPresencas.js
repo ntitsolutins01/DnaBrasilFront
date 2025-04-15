@@ -320,11 +320,11 @@ var vm = new Vue({
 
                                         table.row.add([
                                         "<div class='switch switch-sm switch-success'>" +
-                                        "    <input type='checkbox' id='habilitado' name='habilitado' data-plugin-ios-switch />" +
+                                        "    <input type='checkbox' id='falta' name='falta-" + item.alunoId +"' data-plugin-ios-switch />" +
                                         "</div>",
                                         item.alunoId + " - " + item.nome,
                                         "<div class='input-group input-group-icon'>" +
-                                        "    <textarea id='justificativa" + item.alunoId + "' name='justificativa" + item.alunoId +"' rows='3' class='form-control form-control-lg'></textarea>" +
+                                        "    <textarea id='justificativa" + item.alunoId + "' name='justificativa-" + item.alunoId +"' rows='1' class='form-control form-control-lg'></textarea>" +
                                         "</div>"])  .draw();
 
                                         self.params.alunos.push(item.alunoId.toString());

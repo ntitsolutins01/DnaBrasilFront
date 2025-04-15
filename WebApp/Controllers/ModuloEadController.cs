@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
@@ -99,7 +99,7 @@ public class ModuloEadController : BaseController
             {
 	            CursoId = Convert.ToInt32(collection["ddlCurso"].ToString()),
 	            Titulo = collection["nome"].ToString(),
-	            Descricao = collection["descricao"].ToString()
+	            Descricao = collection["descricao"].ToString(),
 			};
 
             //foreach (var file in collection.Files)

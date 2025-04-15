@@ -25,8 +25,8 @@ namespace WebApp.Controllers
         private readonly IWebHostEnvironment _host;
         private readonly ILog _logger;
 
-        public LaudoController(IOptions<UrlSettings> appSettings, 
-            IWebHostEnvironment host, 
+        public LaudoController(IOptions<UrlSettings> appSettings,
+            IWebHostEnvironment host,
             ILog logger)
         {
             _appSettings = appSettings;
@@ -377,7 +377,7 @@ namespace WebApp.Controllers
                             StatusSaudeBucal = listSaudeBucal.Count == totalRespSaudeBucal ? "F" : "A"
                         });
                 }
-                
+
                 var commandSaude = new SaudeModel.CreateUpdateSaudeCommand()
                 {
                     ProfissionalId = collection["ddlProfissional"] == ""
@@ -443,8 +443,8 @@ namespace WebApp.Controllers
                     return RedirectToAction(nameof(Create), new { notify = (int)EnumNotify.Error, message = "Favor informar todos os campos de Talento Esportivo." });
                 }
 
-                if (command.SaudeBucalId!= null || command.ConsumoAlimentarId!= null || command.QualidadeDeVidaId != null || 
-                    command.SaudeId!= null || command.TalentoEsportivoId != null || command.VocacionalId != null)
+                if (command.SaudeBucalId != null || command.ConsumoAlimentarId != null || command.QualidadeDeVidaId != null ||
+                    command.SaudeId != null || command.TalentoEsportivoId != null || command.VocacionalId != null)
                 {
                     await ApiClientFactory.Instance.CreateLaudo(command);
                 }
@@ -695,7 +695,7 @@ namespace WebApp.Controllers
 
                     command.TalentoEsportivoId = laudo.TalentoEsportivoId;
 
-                    if (laudo.ModalidadeId ==null)
+                    if (laudo.ModalidadeId == null)
                     {
                         var modalidade = ApiClientFactory.Instance.GetModalidadeAll()
                             .FirstOrDefault(x => x.Nome.Contains(laudo.EncaminhamentoTexto));
@@ -882,43 +882,37 @@ namespace WebApp.Controllers
 
                 foreach (var laudo in result.Laudos.Items)
                 {
-                    if (laudo.AlunoId != null)
-                    {
-                        var aluno = await ApiClientFactory.Instance.GetAlunoById((int)laudo.AlunoId);
-                        if (aluno != null)
-                        {
-                            var profissional = ApiClientFactory.Instance.GetProfissionalById(Convert.ToInt32(aluno.ProfissionalId));
-                            var talentoEsportivo = laudo.TalentoEsportivoId == null ? null :
-                                ApiClientFactory.Instance.GetTalentoEsportivoByAluno((int)laudo.AlunoId);
-                            var encaminhamentoImc = laudo.SaudeId == null ? null :
-                                ApiClientFactory.Instance.GetEncaminhamentoBySaudeId(Convert.ToInt32(laudo.SaudeId));
-                            var qualidadeDeVida = laudo.QualidadeDeVidaId == null ? null :
-                                ApiClientFactory.Instance.GetEncaminhamentoByQualidadeDeVidaId((int)laudo.QualidadeDeVidaId);
-                            var vocacional = laudo.VocacionalId == null ? null :
-                                ApiClientFactory.Instance.GetEncaminhamentoByVocacional();
-                            var encaminhamentoConsumoAlimentar = laudo.ConsumoAlimentarId == null ? null :
-                                ApiClientFactory.Instance.GetEncaminhamentoByConsumoAlimentarId((int)laudo.ConsumoAlimentarId);
-                            var encaminhamentoSaudeBucal = laudo.SaudeBucalId == null ? null :
-                                ApiClientFactory.Instance.GetEncaminhamentoBySaudeBucalId((int)laudo.SaudeBucalId);
-                            var desempenho = ApiClientFactory.Instance.GetDesempenhoByAluno(Convert.ToInt32(laudo.AlunoId));
-                            var modalidade = ApiClientFactory.Instance.GetModalidadeById(Convert.ToInt32(laudo.ModalidadeId));
+                    var aluno = await ApiClientFactory.Instance.GetAlunoById((int)laudo.AlunoId);
+                    var profissional = ApiClientFactory.Instance.GetProfissionalById(Convert.ToInt32(aluno.ProfissionalId));
+                    var talentoEsportivo = laudo.TalentoEsportivoId == null ? null :
+                        ApiClientFactory.Instance.GetTalentoEsportivoByAluno((int)laudo.AlunoId);
+                    var encaminhamentoImc = laudo.SaudeId == null ? null :
+                        ApiClientFactory.Instance.GetEncaminhamentoBySaudeId(Convert.ToInt32(laudo.SaudeId));
+                    var qualidadeDeVida = laudo.QualidadeDeVidaId == null ? null :
+                        ApiClientFactory.Instance.GetEncaminhamentoByQualidadeDeVidaId((int)laudo.QualidadeDeVidaId);
+                    var vocacional = laudo.VocacionalId == null ? null :
+                        ApiClientFactory.Instance.GetEncaminhamentoByVocacional();
+                    var encaminhamentoConsumoAlimentar = laudo.ConsumoAlimentarId == null ? null :
+                        ApiClientFactory.Instance.GetEncaminhamentoByConsumoAlimentarId((int)laudo.ConsumoAlimentarId);
+                    var encaminhamentoSaudeBucal = laudo.SaudeBucalId == null ? null :
+                        ApiClientFactory.Instance.GetEncaminhamentoBySaudeBucalId((int)laudo.SaudeBucalId);
+                    var desempenho = ApiClientFactory.Instance.GetDesempenhoByAluno(Convert.ToInt32(laudo.AlunoId));
+                    var modalidade = ApiClientFactory.Instance.GetModalidadeById(Convert.ToInt32(laudo.ModalidadeId));
 
-                            laudoModels.Add(new LaudoModel
-                            {
-                                Laudo = laudo,
-                                Aluno = aluno,
-                                Profissional = profissional,
-                                TalentoEsportivo = talentoEsportivo,
-                                EncaminhamentoImc = encaminhamentoImc,
-                                ListQualidadeDeVida = qualidadeDeVida,
-                                ListVocacional = vocacional,
-                                EncaminhamentoSaudeBucal = encaminhamentoSaudeBucal,
-                                EncaminhamentoConsumoAlimentar = encaminhamentoConsumoAlimentar,
-                                Desempenho = desempenho,
-                                Modalidade = modalidade
-                            });
-                        }
-                    }
+                    laudoModels.Add(new LaudoModel
+                    {
+                        Laudo = laudo,
+                        Aluno = aluno,
+                        Profissional = profissional,
+                        TalentoEsportivo = talentoEsportivo,
+                        EncaminhamentoImc = encaminhamentoImc,
+                        ListQualidadeDeVida = qualidadeDeVida,
+                        ListVocacional = vocacional,
+                        EncaminhamentoSaudeBucal = encaminhamentoSaudeBucal,
+                        EncaminhamentoConsumoAlimentar = encaminhamentoConsumoAlimentar,
+                        Desempenho = desempenho,
+                        Modalidade = modalidade
+                    });
                 }
 
                 return View(laudoModels);
@@ -930,13 +924,12 @@ namespace WebApp.Controllers
         }
 
         [ClaimsAuthorize(ClaimType.Laudo, Claim.Consultar)]
-        public async Task<IActionResult> ExportLaudo(
-    [FromQuery] string ddlFomento, [FromQuery] string ddlEstado,
-    [FromQuery] string ddlMunicipio, [FromQuery] string ddlLocalidade,
-    [FromQuery] string ddlAluno, [FromQuery] string ddlTipoLaudo,
-    [FromQuery] string ddlDeficiencia,
-    [FromQuery] string possuiFoto, [FromQuery] string finalizado,
-    int? crud = null, int? notify = null, string message = null)
+        public async Task<IActionResult> ExportLaudo([FromQuery] string ddlFomento, [FromQuery] string ddlEstado,
+            [FromQuery] string ddlMunicipio, [FromQuery] string ddlLocalidade,
+            [FromQuery] string ddlAluno, [FromQuery] string ddlTipoLaudo,
+            [FromQuery] string ddlDeficiencia,
+            [FromQuery] string possuiFoto, [FromQuery] string finalizado,
+            int? crud = null, int? notify = null, string message = null)
         {
             try
             {
@@ -961,7 +954,7 @@ namespace WebApp.Controllers
                     PossuiFoto = possuiFotoValue,
                     Finalizado = finalizadoValue,
                     PageNumber = 1,
-                    PageSize = 1000
+                    PageSize = 10000
                 };
 
                 var result = await ApiClientFactory.Instance.GetLaudosByFilter(searchFilter);
@@ -969,43 +962,43 @@ namespace WebApp.Controllers
                 var workbook = new XLWorkbook();
                 workbook.AddWorksheet("sheetName");
                 var ws = workbook.Worksheet("sheetName");
-                ws.Cell(1, 1).Value = "Laudo Id";
+                ws.Cell(1, 1).Value = "Matricula";
                 ws.Cell(1, 2).Value = "Idade";
-                ws.Cell(1, 3).Value = "Matricula";
-                ws.Cell(1, 4).Value = "Aluno";
-                ws.Cell(1, 5).Value = "Localidade";
-                ws.Cell(1, 6).Value = "Email";
-                ws.Cell(1, 7).Value = "Telefone";
-                ws.Cell(1, 8).Value = "Celular";
+                ws.Cell(1, 3).Value = "Aluno";
+                ws.Cell(1, 4).Value = "Localidade";
+                ws.Cell(1, 5).Value = "Email";
+                ws.Cell(1, 6).Value = "Telefone";
+                ws.Cell(1, 7).Value = "Celular";
+                ws.Cell(1, 8).Value = "LaudoId";
                 ws.Cell(1, 9).Value = "Saúde";
                 ws.Cell(1, 10).Value = "Talento Esportivo";
                 ws.Cell(1, 11).Value = "Consumo Alimentar";
                 ws.Cell(1, 12).Value = "Saúde Bucal";
                 ws.Cell(1, 13).Value = "Qualidade de Vida";
                 ws.Cell(1, 14).Value = "Vocacional";
-                ws.Cell(1, 15).Value = "Finalizado";
+                ws.Cell(1, 15).Value = "Status Laudo";
                 int row = 2;
                 foreach (var item in result.Laudos.Items.ToList())
                 {
-                    ws.Cell("A" + row).Value = item.Id;
+                    ws.Cell("A" + row).Value = item.AlunoId;
                     ws.Cell("B" + row).Value = item.Idade;
-                    ws.Cell("C" + row).Value = item.AlunoId;
-                    ws.Cell("D" + row).Value = item.NomeAluno;
-                    ws.Cell("E" + row).Value = item.NomeLocalidade;
-                    ws.Cell("F" + row).Value = item.Email;
+                    ws.Cell("C" + row).Value = item.NomeAluno;
+                    ws.Cell("D" + row).Value = item.NomeLocalidade;
+                    ws.Cell("E" + row).Value = item.Email;
                     ws.Cell("F" + row).Value = item.Telefone;
-                    ws.Cell("H" + row).Value = item.Celular;
-                    ws.Cell("I" + row).Value = item.SaudeId != null ? "X" : "" ;
-                    ws.Cell("J" + row).Value = item.TalentoEsportivoId != null ? "X" : "" ;
-                    ws.Cell("K" + row).Value = item.ConsumoAlimentarId != null ? "X" : "" ;
-                    ws.Cell("L" + row).Value = item.SaudeBucalId != null ? "X" : "" ;
-                    ws.Cell("M" + row).Value = item.QualidadeDeVidaId != null ? "X" : "" ;
-                    ws.Cell("N" + row).Value = item.VocacionalId != null ? "X" : "" ;
+                    ws.Cell("G" + row).Value = item.Celular;
+                    ws.Cell("H" + row).Value = item.Id;
+                    ws.Cell("I" + row).Value = item.SaudeId != null ? "X" : "";
+                    ws.Cell("J" + row).Value = item.TalentoEsportivoId != null ? "X" : "";
+                    ws.Cell("K" + row).Value = item.ConsumoAlimentarId != null ? "X" : "";
+                    ws.Cell("L" + row).Value = item.SaudeBucalId != null ? "X" : "";
+                    ws.Cell("M" + row).Value = item.QualidadeDeVidaId != null ? "X" : "";
+                    ws.Cell("N" + row).Value = item.VocacionalId != null ? "X" : "";
                     ws.Cell("O" + row).Value = item.StatusLaudo;
                     row++;
                 }
 
-                var exportPath = Path.Combine(_host.WebRootPath, "Exportacao");
+                var exportPath = Path.Combine(_host.ContentRootPath, "Exportacao");
                 var fileName = $"laudo_{DateTime.Now:yyyyMMddHHmmss}.xlsx";
                 var filePath = Path.Combine(exportPath, fileName);
 

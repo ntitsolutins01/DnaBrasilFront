@@ -64,7 +64,8 @@
                         <label class="col-sm-2 control-label text-sm-right pt-2">Turma:</label>
                         <div class="col-md-4 form-group">
                             <select class="form-control populate select2" name="ddlTurma" id="ddlTurma"
-                                    title="Por favor informe a turma." required style="width:100%">
+                                    title="Por favor informe a turma." required style="width:100%"
+                                    asp-for="TurmaId" asp-items="Model.ListTurmas">
                                 <option value="">Selecionar Turma</option>
                             </select>
                         </div>
@@ -76,14 +77,14 @@
                         </div>
                         <label class="col-sm-2 control-label">Dias da Semana </label>
                         <div class="col-sm-4 form-group">
-                            <input id="diaSemana" name="diaSemana" disabled
-                                   type="text" class="form-control" :value="editDto.DiasSemana"
+                            <input id="diaSemana" name="diaSemana" readonly="readonly"
+                                   type="text" class="form-control" value="@Model.DiasSemana"
                                    maxlength="14" />
                         </div>
                         <label class="col-sm-2 control-label">Categoria </label>
                         <div class="col-sm-4 form-group">
-                            <input id="categoria" name="categoria" :value="editDto.Categoria"
-                                   type="text" class="form-control" disabled
+                            <input id="categoria" name="categoria" value="@Model.Categoria"
+                                   type="text" class="form-control" readonly="readonly"
                                    maxlength="14" />
                         </div>
                         <label class="col-sm-2 control-label">Data: <span class="required">*</span></label>
@@ -95,7 +96,7 @@
                                 <input id="data" name="data"
                                        required
                                        title="Por favor informe a data."
-                                       style="z-index: auto;"
+                                       style="z-index: auto;" value="@Model.Data"
                                        data-plugin-datepicker data-date-format="dd/mm/yyyy" data-plugin-options='{"language": "pt-BR"}'
                                        placeholder="__/__/____" class="form-control startdate"
                                        class="form-control">
@@ -120,6 +121,7 @@
                 </section>
             </div>
         </div>
+
         <div class="row">
             <div class="col-lg-12">
                 <section class="panel">
@@ -133,11 +135,32 @@
                         <table class="adicionados table table-bordered table-striped mb-0" id="alunoDataTable" name="alunoDataTable">
                             <thead>
                                 <tr>
-                                    <th>Falta</th>
-                                    <th>Nome Aluno</th>
-                                    <th>Justificativa</th>
+                                    <th class="text-center">Falta</th>
+                                    <th class="text-center">Nome Aluno</th>
+                                    <th class="text-center">Justificativa</th>
                                 </tr>
                             </thead>
+                            @if (Model.ListAtividadeAlunos != null)
+                            {
+                                <tbody>
+                                    @foreach (var item in Model.ListAtividadeAlunos)
+                                    {
+                                        <tr>
+                                            <td class="text-center" style="width:10%;">
+                                                <div class='switch switch-sm switch-success'>
+                                                    <input type='checkbox' id='habilitado' name='habilitado' data-plugin-ios-switch />
+                                                </div>
+                                            </td>
+                                            <td class="text-center" style="width:50%;">@Html.DisplayFor(modelItem => item.AlunoId) - @Html.DisplayFor(modelItem => item.Nome)</td>
+                                            <td class="text-center" style="width:40%;">
+                                                <div class='input-group input-group-icon'>
+                                                    <textarea id='falta' name='falta-@Html.DisplayFor(modelItem => item.AlunoId)' rows='1' class='form-control form-control-lg'></textarea>
+                                                </div>"
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            }
                         </table>
                         @* <table class="table table-bordered table-striped mb-0" id="datatable-default">
                         <thead>
@@ -385,7 +408,7 @@
 
             if (crub === 1) {
                 new PNotify({
-                    title: 'ControlePresenca',
+                    title: 'Controle de Presenca',
                     text: 'Cadastro realizado com sucesso!',
                     type: 'success'
                 });
