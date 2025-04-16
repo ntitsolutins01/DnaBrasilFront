@@ -16,5 +16,6 @@ namespace WebApp.Dto
         public string? Material { get; set; }
         public string? NomeMaterial { get; set; }
 		public string? Video { get; set; }
+		public string? NomeVideo { get; set; }
     }
 }

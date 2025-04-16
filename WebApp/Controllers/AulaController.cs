@@ -106,31 +106,53 @@ public class AulaController : BaseController
 		        ModuloEadId = Convert.ToInt32(collection["ddlModuloEad"].ToString()),
 		        Titulo = collection["titulo"].ToString(),
 		        Descricao = collection["descricao"].ToString(),
-		        Video = collection["video"].ToString()
 	        };
 
-            string? filePath;
-            string? fileName;
-            string extension = ".jpg";
-            string newFileName = Path.ChangeExtension(
-	            Guid.NewGuid().ToString(),
-	            extension
-            );
+            string aulasPath = Path.Combine(_host.WebRootPath, "Aulas");
+            if (!Directory.Exists(aulasPath))
+            {
+                Directory.CreateDirectory(aulasPath);
+            }
 
-			foreach (var file in collection.Files)
+            string? filePathMaterial = null;
+            string? fileNameMaterial = null;
+            string? filePathVideo = null;
+            string? fileNameVideo = null;
+
+            foreach (var file in collection.Files)
             {
                 if (file.Length <= 0) continue;
-                fileName = Path.GetFileName(collection.Files[0].FileName);
-                filePath = Path.Combine(_host.WebRootPath, $"Aulas\\{newFileName}");
 
-                if (!Directory.Exists(Path.Combine(_host.WebRootPath, $"Aulas")))
-                    Directory.CreateDirectory(Path.Combine(_host.WebRootPath, $"Aulas"));
+                string extension = Path.GetExtension(file.FileName).ToLowerInvariant();
 
-				command.Material = filePath;
-				command.NomeMaterial = fileName;
+                if (extension == ".jpg" || extension == ".png")
+                {
+                    string newFileNameMaterial = Path.ChangeExtension(Guid.NewGuid().ToString(), extension);
+                    filePathMaterial = Path.Combine(aulasPath, newFileNameMaterial);
+                    fileNameMaterial = Path.GetFileName(file.FileName);
 
-                await using Stream fileStream = new FileStream(filePath, FileMode.Create);
-                await file.CopyToAsync(fileStream);
+                    command.Material = filePathMaterial;
+                    command.NomeMaterial = fileNameMaterial;
+
+                    using (var fileStream = new FileStream(filePathMaterial, FileMode.Create))
+                    {
+                        await file.CopyToAsync(fileStream);
+                    }
+                }
+                else if (extension == ".mp4" || extension == ".avi")
+                {
+                    string newFileNameVideo = Path.ChangeExtension(Guid.NewGuid().ToString(), extension);
+                    filePathVideo = Path.Combine(aulasPath, newFileNameVideo);
+                    fileNameVideo = Path.GetFileName(file.FileName);
+
+                    command.Video = filePathVideo;
+                    command.NomeVideo = fileNameVideo;
+
+                    using (var fileStream = new FileStream(filePathVideo, FileMode.Create))
+                    {
+                        await file.CopyToAsync(fileStream);
+                    }
+                }
             }
 
             await ApiClientFactory.Instance.CreateAula(command);
@@ -158,7 +180,6 @@ public class AulaController : BaseController
                 Id = Convert.ToInt32(collection["editAulaId"]),
                 Titulo = collection["nome"].ToString(),
                 Descricao = collection["descricao"].ToString(),
-                Video = collection["video"].ToString(),
                 Status = collection["editStatus"].ToString() == "" ? false : true,
                 ProfessorId = Convert.ToInt32(collection["ddlProfessor"].ToString())
             };
@@ -252,12 +273,12 @@ public class AulaController : BaseController
     /// </summary>
     /// <param name="id">Id do módulo ead</param>
     /// <returns>Retorna um json com todas as aulas</returns>
-    public Task<JsonResult> GetAulasAllByModuloEadId(string id)
+    public Task<JsonResult> GetAulasByModuloEadId(string id)
     {
         try
         {
             if (string.IsNullOrEmpty(id)) throw new Exception("Modulo não informado.");
-            var resultLocal = ApiClientFactory.Instance.GetAulasAllByModuloEadId(Convert.ToInt32(id));
+            var resultLocal = ApiClientFactory.Instance.GetAulasByModuloEadId(Convert.ToInt32(id));
 
             return Task.FromResult(Json(new SelectList(resultLocal, "Id", "Titulo")));
 
