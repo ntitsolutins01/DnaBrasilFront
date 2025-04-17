@@ -69,22 +69,16 @@ var vm = new Vue({
                     $('[data-toggle=tooltip],[rel=tooltip]').tooltip({ container: 'body' });
                 }
 
-                //clique de escolha do select
+                //clique de escolha do select Estado
                 $("#ddlEstado").change(function () {
 
                     self.ShowLoad(true, "pFiltro");
 
                     var sigla = $("#ddlEstado").val();
 
-                    $("#ddlMunicipio")
-                        .empty()
-                        .append('<option value="">Selecionar Município</option>');
-                    $("#ddlLocalidade")
-                        .empty()
-                        .append('<option value="">Selecionar Localidade</option>');
-                    $("#ddlFomento")
-                        .empty()
-                        .append('<option value="">Selecionar Fomento</option>');
+                    // Limpa apenas municípios e localidades, mas mantém o fomento
+                    $("#ddlMunicipio").empty();
+                    $("#ddlLocalidade").empty();
 
                     if (!sigla) {
                         self.ShowLoad(false, "pFiltro");
@@ -93,42 +87,34 @@ var vm = new Vue({
 
                     var url = "../../DivisaoAdministrativa/GetMunicipioByUf?uf=" + sigla;
 
-                    var ddlSource = "#ddlMunicipio";
-
-                    $.getJSON(url,
-                        { id: $(ddlSource).val() },
-                        function (data) {
-                            if (data.length > 0) {
-                                var items = '<option value="">Selecionar Municipio</option>';
-                                $("#ddlMunicipio").empty;
-                                $.each(data,
-                                    function (i, row) {
-                                        items += "<option value='" + row.value + "'>" + row.text + "</option>";
-                                    });
-                                $("#ddlMunicipio").html(items);
-                            }
-                            else {
-                                new PNotify({
-                                    title: 'Usuario',
-                                    text: data,
-                                    type: 'warning'
-                                });
-                            }
-                        });
+                    $.getJSON(url, function (data) {
+                        if (data.length > 0) {
+                            var items = '';
+                            $.each(data, function (i, row) {
+                                items += "<option value='" + row.value + "'>" + row.text + "</option>";
+                            });
+                            $("#ddlMunicipio").html(items);
+                        }
+                        else {
+                            new PNotify({
+                                title: 'Municípios',
+                                text: 'Municípios não encontrados.',
+                                type: 'warning'
+                            });
+                        }
+                    });
 
                     self.ShowLoad(false, "pFiltro");
                 });
 
-                //clique de escolha do select
+                //clique de escolha do select Municipio
                 $("#ddlMunicipio").change(function () {
 
                     self.ShowLoad(true, "pFiltro");
 
                     var id = $("#ddlMunicipio").val();
 
-                    $("#ddlLocalidade")
-                        .empty()
-                        .append('<option value="">Selecionar Localidade</option>');
+                    $("#ddlLocalidade").empty();
 
                     if (!id) {
                         self.ShowLoad(false, "pFiltro");
@@ -137,80 +123,84 @@ var vm = new Vue({
 
                     var url = "../../Localidade/GetLocalidadeByMunicipio?id=" + id;
 
-                    var ddlSource = "#ddlLocalidade";
-
-                    $.getJSON(url,
-                        { id: $(ddlSource).val() },
-                        function (data) {
-                            if (data.length > 0) {
-                                var items = '<option value="">Selecionar Localidade</option>';
-                                $("#ddlLocalidade").empty;
-                                $.each(data,
-                                    function (i, row) {
-                                        items += "<option value='" + row.value + "'>" + row.text + "</option>";
-                                    });
-                                $("#ddlLocalidade").html(items);
-                            }
-                            else {
-                                new PNotify({
-                                    title: 'Localidades',
-                                    text: 'Localidades não encontradas.',
-                                    type: 'warning'
-                                });
-                            }
-                        });
+                    $.getJSON(url, function (data) {
+                        if (data.length > 0) {
+                            var items = '';
+                            $.each(data, function (i, row) {
+                                items += "<option value='" + row.value + "'>" + row.text + "</option>";
+                            });
+                            $("#ddlLocalidade").html(items);
+                        }
+                        else {
+                            new PNotify({
+                                title: 'Localidades',
+                                text: 'Localidades não encontradas.',
+                                type: 'warning'
+                            });
+                        }
+                    });
 
                     self.ShowLoad(false, "pFiltro");
                 });
 
                 $("#ddlFomento").change(function () {
-                    var fomentoId = $(this).val(),
-                        $ddlEstado = $("#ddlEstado"),
-                        $ddlMunicipio = $("#ddlMunicipio"),
-                        $ddlLocalidade = $("#ddlLocalidade");
+                    var fomentoId = $(this).val();
 
-                    // limpa todos os selects
-                    $ddlMunicipio
-                        .empty()    
-                        .append('<option value="">Selecionar Município</option>'); 
-                    $ddlLocalidade
-                        .empty()
-                        .append('<option value="">Selecionar Localidade</option>');
-
-                    if (!fomentoId) return;
+                    if (!fomentoId) {
+                        return;
+                    }
 
                     self.ShowLoad(true, "pFiltro");
 
                     // busca o fomento
                     $.getJSON("../../Fomento/GetFomentoById", { id: fomentoId })
                         .done(function (f) {
-                            $.getJSON("../../DivisaoAdministrativa/GetMunicipioById", { id: f.municipioId })
-                                .done(function (mun) {
-                                    $ddlMunicipio
-                                        .append($("<option>").val(mun.id).text(mun.nome))
-                                        .val(mun.id);
-                                })
-                                .fail(function () {
-                                    new PNotify({
-                                        title: 'Erro',
-                                        text: 'Não foi possível carregar o município.',
-                                        type: 'error'
-                                    });
-                                });
+                            // Define o estado diretamente da resposta do fomento
+                            $("#ddlEstado").val(f.sigla).trigger('change');
 
-                            $.getJSON("../../Localidade/GetLocalidadeById", { id: f.localidadeId })
-                                .done(function (loc) {
-                                    $ddlLocalidade
-                                        .append($("<option>").val(loc.id).text(loc.nome))
-                                        .val(loc.id);
-                                })
-                                .fail(function () {
-                                    new PNotify({
-                                        title: 'Erro',
-                                        text: 'Não foi possível carregar a localidade.',
-                                        type: 'error'
+                            // Aguarda um momento para que o evento change do estado seja processado
+                            setTimeout(function () {
+                                // Carrega os municípios do estado
+                                $.getJSON("../../DivisaoAdministrativa/GetMunicipioByUf?uf=" + f.sigla)
+                                    .done(function (municipios) {
+                                        // Limpa e preenche o dropdown de municípios
+                                        var items = '';
+                                        $.each(municipios, function (i, row) {
+                                            items += "<option value='" + row.value + "'>" + row.text + "</option>";
+                                        });
+                                        $("#ddlMunicipio").html(items);
+                                        $("#ddlMunicipio").val(f.municipioId).trigger('change');
+
+                                        // Aguarda um momento para que o evento change do município seja processado
+                                        setTimeout(function () {
+                                            // Carrega as localidades do município
+                                            $.getJSON("../../Localidade/GetLocalidadeByMunicipio?id=" + f.municipioId)
+                                                .done(function (localidades) {
+                                                    // Limpa e preenche o dropdown de localidades
+                                                    var localItems = '';
+                                                    $.each(localidades, function (i, row) {
+                                                        localItems += "<option value='" + row.value + "'>" + row.text + "</option>";
+                                                    });
+                                                    $("#ddlLocalidade").html(localItems);
+                                                    $("#ddlLocalidade").val(f.localidadeId);
+                                                })
+                                                .fail(function () {
+                                                    new PNotify({
+                                                        title: 'Erro',
+                                                        text: 'Não foi possível carregar as localidades.',
+                                                        type: 'error'
+                                                    });
+                                                });
+                                        }, 300);
+                                    })
+                                    .fail(function () {
+                                        new PNotify({
+                                            title: 'Erro',
+                                            text: 'Não foi possível carregar os municípios.',
+                                            type: 'error'
+                                        });
                                     });
-                                });
+                            }, 300);
                         })
                         .fail(function () {
                             new PNotify({
@@ -223,7 +213,6 @@ var vm = new Vue({
                             self.ShowLoad(false, "pFiltro");
                         });
                 });
-
             }
 
             //self.GetPesquisaAluno();
@@ -316,14 +305,6 @@ var vm = new Vue({
 
                     self.editDto.QRCode = 'data:image/jpeg;base64,' + result.data.qrCode;
 
-                    //var text = 'http://front.hml.dnadobrasil.org.br/Identity/Account/ControlePresenca?alunoId=' + self.editDto.Id;
-
-                    //$('#qr').ClassyQR({
-                    //    create: true,// signals the library to create the image tag inside the container div.
-                    //    type: 'text',// text/url/sms/email/call/locatithe text to encode in the QR. on/wifi/contact, default is TEXT
-                    //    text: text// the text to encode in the QR.
-                    //});
-
                     // Após ter o fomentoId, buscar o modelo da carteirinha
                     return axios.get("Aluno/GetModeloCarteirinhaByFomento?fomentoId=" + result.data.fomentoId);
                 })
@@ -334,9 +315,9 @@ var vm = new Vue({
                         if (frenteElement) {
                             frenteElement.style.backgroundImage = `url(/assets/styles_Carteirinha/modelos/${modeloResult.data.nomeImagemFrente}.png)`;
                         }
-                    
-                    // Atualizar o background do verso com o nome da imagem retornado
-                    
+
+                        // Atualizar o background do verso com o nome da imagem retornado
+
                         const versoElement = document.querySelector('#verso');
                         if (versoElement) {
                             versoElement.style.backgroundImage = `url(/assets/styles_Carteirinha/modelos/${modeloResult.data.nomeImagemVerso}.png)`;
@@ -361,7 +342,9 @@ var vm = new Vue({
                 DeficienciaId: $("#ddlDeficiencia").val(),
                 Nome: $("#nome").val(),
                 Matricula: $("#matricula").val(),
-                Etnia: $("#ddlEtnia").val()
+                Etnia: $("#ddlEtnia").val(),
+                Sexo: $("#ddlSexo").val(),
+                PossuiFoto: $("#possuiFoto").is(":checked")
             }
 
             let axiosConfig = {
@@ -372,7 +355,6 @@ var vm = new Vue({
             };
 
             axios.post("Aluno/GetAlunosByFilter", obj, axiosConfig).then(result => {
-
                 self.ShowLoad(false, "pResult");
             });
 
