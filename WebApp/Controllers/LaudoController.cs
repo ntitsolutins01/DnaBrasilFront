@@ -878,12 +878,24 @@ namespace WebApp.Controllers
                 };
 
                 var result = await ApiClientFactory.Instance.GetLaudosByFilter(searchFilter);
+
+                if (result?.Laudos?.Items == null || !result.Laudos.Items.Any())
+                {
+                    return View(new List<LaudoModel>()); // Retorna uma lista vazia
+                }
+
                 var laudoModels = new List<LaudoModel>();
 
                 foreach (var laudo in result.Laudos.Items)
                 {
                     var aluno = await ApiClientFactory.Instance.GetAlunoById((int)laudo.AlunoId);
-                    var profissional = ApiClientFactory.Instance.GetProfissionalById(Convert.ToInt32(aluno.ProfissionalId));
+                    if (aluno == null)
+                    {
+                        continue; // Pular este laudo e ir para o próximo
+                    }
+
+                    var profissional = string.IsNullOrEmpty(aluno.ProfissionalId) || aluno.ProfissionalId == "0" ? null :
+                        ApiClientFactory.Instance.GetProfissionalById(Convert.ToInt32(aluno.ProfissionalId));
                     var talentoEsportivo = laudo.TalentoEsportivoId == null ? null :
                         ApiClientFactory.Instance.GetTalentoEsportivoByAluno((int)laudo.AlunoId);
                     var encaminhamentoImc = laudo.SaudeId == null ? null :
@@ -896,8 +908,10 @@ namespace WebApp.Controllers
                         ApiClientFactory.Instance.GetEncaminhamentoByConsumoAlimentarId((int)laudo.ConsumoAlimentarId);
                     var encaminhamentoSaudeBucal = laudo.SaudeBucalId == null ? null :
                         ApiClientFactory.Instance.GetEncaminhamentoBySaudeBucalId((int)laudo.SaudeBucalId);
-                    var desempenho = ApiClientFactory.Instance.GetDesempenhoByAluno(Convert.ToInt32(laudo.AlunoId));
-                    var modalidade = ApiClientFactory.Instance.GetModalidadeById(Convert.ToInt32(laudo.ModalidadeId));
+                    var desempenho = (laudo.AlunoId == null || laudo.AlunoId == 0) ? null :
+                        ApiClientFactory.Instance.GetDesempenhoByAluno(Convert.ToInt32(laudo.AlunoId));
+                    var modalidade = (laudo.ModalidadeId == null || laudo.ModalidadeId == 0) ? null :
+                        ApiClientFactory.Instance.GetModalidadeById(Convert.ToInt32(laudo.ModalidadeId));
 
                     laudoModels.Add(new LaudoModel
                     {
