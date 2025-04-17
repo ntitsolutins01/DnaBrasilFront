@@ -93,11 +93,11 @@
                     @if (laudo.Laudo.ByteImage != null)
                     {
                         var imgSrc = $"data:image/gif;base64,{Convert.ToBase64String(laudo.Laudo.ByteImage)}";
-                        <img src="@imgSrc" style="width:100%; height:100%; object-fit:cover;" />
+                        <img src="@imgSrc" alt="Foto do aluno" />
                     }
                     else
                     {
-                        <img src="/assets/images/user.png" style="width:100%;" />
+                        <img src="/assets/images/user.png" alt="Foto padrão" />
                     }
                 </div>
                 <div class="student-basic-info">
@@ -108,16 +108,19 @@
             </div>
             <div class="student-details">
                 <div class="student-extra-grid">
-                    <div class="left-details">
+                    <div class="detail-row">
                         <div><span class="info-label">Idade:</span> @laudo.Laudo.Idade</div>
+                        <div><span class="info-label">Série:</span> Não definida</div>
+                    </div>
+                    <div class="detail-row">
                         <div><span class="info-label">Etnia:</span> @laudo.Laudo.Etnia</div>
                         @if (@laudo.Laudo.NomeDeficiencia != "NÃO POSSUI")
                         {
-                        <div><span class="info-label">Deficiência:</span> @laudo.Laudo.NomeDeficiencia</div>
+                            <div><span class="info-label">Deficiência:</span> @laudo.Laudo.NomeDeficiencia</div>
                         }
                     </div>
-                    <div class="right-details">
-                        <div><span class="info-label">Série:</span> Não definida</div>
+                    <div class="detail-row">
+                        <div><span class="info-label">Data de Nascimento:</span> @laudo.Aluno.DtNascimento</div>
                     </div>
                 </div>
             </div>
