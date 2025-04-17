@@ -1,3 +1,4 @@
+using DocumentFormat.OpenXml.Presentation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
@@ -262,7 +263,7 @@ public class AulaController : BaseController
     public Task<AulaDto> GetAulaById(int id)
     {
         var result = ApiClientFactory.Instance.GetAulaById(id);
-        var professores = new SelectList(ApiClientFactory.Instance.GetUsuarioAll().Where(x => x.Perfil.Id == (int)EnumPerfil.Professor), "Id", "Nome", result.ProfessorId);
+        var professores = result.ProfessorId == null ? null : new SelectList(ApiClientFactory.Instance.GetUsuarioAll().Where(x => x.Perfil.Id == (int)EnumPerfil.Professor), "Id", "Nome", result.ProfessorId);
         result.ListProfessores = professores;
 
         return Task.FromResult(result);

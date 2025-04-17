@@ -8,5 +8,6 @@
 		public bool Status { get; set; }
 		public required int CursoId { get; set; }
 		public required string TituloCurso { get; set; }
+		public int? Ordem { get; set; }
 	}
 }

@@ -1,42 +1,51 @@
-﻿@model EstruturaCursoModel
-
-@if (Model.Curso != null)
-{
-    <div class="curso-header mb-4">
-        <h4 class="text-primary">
-            @Model.Curso.Titulo
-        </h4>
-    </div>
-}
+﻿@model WebApp.Models.EstruturaCursoModel
 
 <div class="dd" id="nestable">
     <ol class="dd-list">
-        @foreach (var modulo in Model.ModulosEad)
+        @{
+            int posicaoModulo = 1;
+        }
+        @foreach (var modulo in Model.ModulosEad.OrderBy(m => m.Ordem))
         {
-            var aulasModulo = Model.Aulas.Where(a => a.ModuloEadId == modulo.Id).ToList();
             <li class="dd-item" data-id="modulo_@modulo.Id">
-                <div class="dd-handle bg-light">
-                    <i class="fa fa-folder-open mr-2"></i>
+                <div class="dd-handle">
+                    <span class="position-badge">@posicaoModulo</span>
                     @modulo.Titulo
                 </div>
-                @if (aulasModulo.Any())
-                {
-                    <ol class="dd-list">
-                        @foreach (var aula in aulasModulo)
-                        {
-                            <li class="dd-item" data-id="aula_@aula.Id">
-                                <div class="dd-handle">
-                                    <i class="fa fa-file-text mr-2"></i>
-                                    @aula.Titulo
-                                </div>
-                            </li>
-                        }
-                    </ol>
-                }
+                <ol class="dd-list">
+                    @{
+                        int posicaoAula = 1;
+                    }
+                    @foreach (var aula in Model.Aulas.Where(a => a.ModuloEadId == modulo.Id).OrderBy(a => a.Ordem))
+                    {
+                        <li class="dd-item" data-id="aula_@aula.Id">
+                            <div class="dd-handle">
+                                <span class="position-badge">@posicaoModulo.@posicaoAula</span>
+                                @aula.Titulo
+                            </div>
+                        </li>
+                        posicaoAula++;
+                    }
+                </ol>
             </li>
+            posicaoModulo++;
         }
     </ol>
 </div>
+
+<style>
+    .position-badge {
+        background: #007bff;
+        color: white;
+        border-radius: 50%;
+        width: 25px;
+        height: 25px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 10px;
+    }
+</style>
 
 @if (!Model.ModulosEad.Any())
 {

@@ -218,9 +218,7 @@ public class CursoController : BaseController
         {
             var curso = ApiClientFactory.Instance.GetCursoById(cursoId);
             var modulos = ApiClientFactory.Instance.GetModulosEadAllByCursoId(cursoId);
-            var aulas = modulos
-                .SelectMany(m => ApiClientFactory.Instance.GetAulasAllByModuloEadId(m.Id))
-                .ToList();
+            var aulas = ApiClientFactory.Instance.GetAulasByCursoId(cursoId);
 
             return PartialView("_EstruturaCurso", new EstruturaCursoModel
             {
@@ -231,7 +229,7 @@ public class CursoController : BaseController
         }
         catch (Exception ex)
         {
-            return Content($"<div class='alert alert-danger'>Erro ao carregar estrutura: {ex.Message}</div>");
+            return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = "Erro ao executar esta ação. Favor entrar em contato com o administrador do sistema." });
         }
     }
 
