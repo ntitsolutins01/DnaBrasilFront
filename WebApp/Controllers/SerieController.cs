@@ -107,10 +107,9 @@ namespace WebApp.Controllers
                 var command = new SerieModel.CreateUpdateSerieCommand
                 {
                     Nome = collection["nome"].ToString(),
-                    Descricao = collection["descricao"].ToString(),
-                    IdadeInicial = Convert.ToInt32(collection["idadeIni"].ToString()),
-                    IdadeFinal = Convert.ToInt32(collection["idadeFim"].ToString()),
-                    ScoreTotal = Convert.ToInt32(collection["scoreTotal"].ToString())
+                    Turma = collection["turma"].ToString(),
+                    EtapaEnsinoId = Convert.ToInt32(collection["ddlEtapa"].ToString()),
+                    LocalidadeId = Convert.ToInt32(collection["ddlLocalidade"].ToString())
                 };
 
                 await ApiClientFactory.Instance.CreateSerie(command);
@@ -135,11 +134,7 @@ namespace WebApp.Controllers
             {
                 Id = Convert.ToInt32(collection["editSerieId"]),
                 Nome = collection["nome"].ToString(),
-                Status = collection["editStatus"].ToString() == "" ? false : true,
-                Descricao = collection["descricao"].ToString(),
-                IdadeInicial = Convert.ToInt32(collection["idadeIni"].ToString()),
-                IdadeFinal = Convert.ToInt32(collection["idadeFim"].ToString()),
-                ScoreTotal = Convert.ToInt32(collection["scoreTotal"].ToString())
+                Turma = collection["turma"].ToString()
             };
 
             await ApiClientFactory.Instance.UpdateSerie(command.Id, command);
