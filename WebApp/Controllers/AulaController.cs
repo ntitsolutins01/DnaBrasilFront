@@ -251,6 +251,37 @@ public class AulaController : BaseController
             return RedirectToAction(nameof(Index));
         }
     }
+
+    /// <summary>
+    /// Ação de Alteração do Aula
+    /// </summary>
+    /// <param name="id">Identificador do Aula</param>
+    /// <returns>Retorna mensagem de alteração através do parametro crud</returns>
+    [ClaimsAuthorize(ClaimType.Aula, Identity.Claim.Alterar)]
+    [HttpPut]
+    public async Task<IActionResult> Order(int id, [FromBody] WebApp.Dto.AulaDto dto)
+    {
+        try
+        {
+            var command = new AulaModel.CreateUpdateAulaCommand
+            {
+                Id = id,
+                Titulo = dto.Titulo,
+                Status = dto.Status,
+                ProfessorId = dto.ProfessorId,
+                ModuloEadId = dto.ModuloEadId,
+                Ordem = dto.Ordem
+            };
+
+            await ApiClientFactory.Instance.UpdateAula(id, command);
+
+            return NoContent();
+        }
+        catch (Exception e)
+        {
+            return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = "Erro ao executar esta ação. Favor entrar em contato com o administrador do sistema." });
+        }
+    }
     #endregion
 
     #region Get Methods

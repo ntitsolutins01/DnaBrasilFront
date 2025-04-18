@@ -165,14 +165,20 @@ var vm = new Vue({
                                 Ordem: index + 1
                             };
 
+                            const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
                             requests.push(
-                                axios.put("../../Aula/?id=" + aulaData.id, aulaData, {
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                        'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
-                                    }
-                                })
+                                axios
+                                    .put(`/Aula/${aulaData.id}`, aulaData, {
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            'RequestVerificationToken': document
+                                                .querySelector('input[name="__RequestVerificationToken"]')
+                                                .value
+                                        }
+                                    })
                             );
+
                         } catch (error) {
                             console.error('Erro ao buscar aula:', error);
                         }
