@@ -233,8 +233,57 @@
             </table>
         </div>
     </section>
+    
+    <!-- Modal Paginação Impressão em Lote -->
+    <div class="modal fade" id="mdPaginacaoImpressaoLote" tabindex="-1" role="dialog" aria-labelledby="mdPaginacaoImpressaoLoteLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="mdPaginacaoImpressaoLoteLabel">
+                        <i class="fa fa-print"></i> &nbsp;&nbsp;<strong>Impressão em Lote - Paginação</strong>
+                    </h5>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="alert alert-info">
+                                <strong>Info:</strong> Para evitar sobrecarga no servidor, a impressão é limitada a 20 carteirinhas por lote.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p><strong>Total de carteirinhas encontradas: </strong><span id="totalCarteirinhas">0</span></p>
+                            <p><strong>Total de páginas: </strong><span id="totalPaginas">0</span></p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="paginaAtual">Selecione a página para impressão:</label>
+                                <select id="paginaAtual" class="form-control">
+                                    <option value="1">Página 1</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="alert alert-warning">
+                                <strong>Atenção:</strong> Cada página contém até 20 carteirinhas.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i> &nbsp;&nbsp;Cancelar</button>
+                    <button type="button" id="btnConfirmarImpressaoLote" class="btn btn-success"><i class="fa fa-print"></i> &nbsp;&nbsp;Imprimir</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <link rel="stylesheet" href="~/assets/styles_Carteirinha/modal-carteirinha.css" />
+<link rel="stylesheet" href="~/assets/styles_Carteirinha/modal-carteirinha.css" />
 
     <!-- Modal Carteirinha -->
     <div class="modal fade" id="mdCarteirinhaAluno" tabindex="-1" role="dialog" aria-labelledby="mdCarteirinhaAlunoLabel" aria-hidden="true">
