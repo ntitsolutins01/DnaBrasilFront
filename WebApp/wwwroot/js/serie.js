@@ -2,7 +2,7 @@
     el: "#formSerie",
     data: {
         loading: false,
-        editDto: { Id: "", Nome: "", Status: true, IdadeInicial: "", IdadeFinal: "", ScoreTotal: "", Descricao: "" }
+        editDto: { Id: "", Nome: "", Status: true, Turma: "" }
     },
     mounted: function () {
         var self = this;
@@ -185,10 +185,7 @@
 
                 self.editDto.Id = result.data.id;
                 self.editDto.Nome = result.data.nome;
-                self.editDto.Descricao = result.data.descricao;
-                self.editDto.IdadeInicial = result.data.idadeInicial;
-                self.editDto.IdadeFinal = result.data.idadeFinal;
-                self.editDto.ScoreTotal = result.data.scoreTotal;
+                self.editDto.Turma = result.data.turma;
                 self.editDto.Status = result.data.status;
 
             }).catch(error => {
