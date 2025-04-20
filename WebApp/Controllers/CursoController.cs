@@ -210,53 +210,6 @@ public class CursoController : BaseController
         }
     }
 
-
-    [HttpGet]
-    public ActionResult CarregarEstrutura(int cursoId)
-    {
-        try
-        {
-            var curso = ApiClientFactory.Instance.GetCursoById(cursoId);
-            var modulos = ApiClientFactory.Instance.GetModulosEadAllByCursoId(cursoId);
-            var aulas = ApiClientFactory.Instance.GetAulasByCursoId(cursoId);
-
-            return PartialView("_EstruturaCurso", new EstruturaCursoModel
-            {
-                Curso = curso,
-                ModulosEad = modulos,
-                Aulas = aulas
-            });
-        }
-        catch (Exception ex)
-        {
-            return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = "Erro ao executar esta ação. Favor entrar em contato com o administrador do sistema." });
-        }
-    }
-
-    [HttpPost]
-    public JsonResult SalvarOrdem(int cursoId, string novaOrdem)
-    {
-        try
-        {
-            var items = JsonConvert.DeserializeObject<List<NestableItem>>(novaOrdem);
-
-            // Lógica para atualizar a ordem no banco de dados
-            //ApiClientFactory.Instance.AtualizarOrdemCurso(cursoId, items);
-
-            return Json(new { success = true, message = "Ordem salva com sucesso!" });
-        }
-        catch (Exception ex)
-        {
-            return Json(new { success = false, message = ex.Message });
-        }
-    }
-
-    public class NestableItem
-    {
-        public string id { get; set; }
-        public List<NestableItem> children { get; set; }
-    }
-
     /// <summary>
     /// Ação de Exclusão do Curso
     /// </summary>

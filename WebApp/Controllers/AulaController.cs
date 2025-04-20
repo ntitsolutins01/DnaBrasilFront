@@ -258,22 +258,25 @@ public class AulaController : BaseController
     /// <param name="id">Identificador do Aula</param>
     /// <returns>Retorna mensagem de alteração através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.Aula, Identity.Claim.Alterar)]
-    [HttpPut]
-    public async Task<IActionResult> Order(int id, [FromBody] WebApp.Dto.AulaDto dto)
+    [HttpPost]
+    public async Task<IActionResult> Order([FromBody] AulaModel.CreateUpdateAulaCommand model)
     {
         try
         {
             var command = new AulaModel.CreateUpdateAulaCommand
             {
-                Id = id,
-                Titulo = dto.Titulo,
-                Status = dto.Status,
-                ProfessorId = dto.ProfessorId,
-                ModuloEadId = dto.ModuloEadId,
-                Ordem = dto.Ordem
+                Id = model.Id,
+                Titulo = model.Titulo,
+                Status = model.Status,
+                ProfessorId = model.ProfessorId,
+                Material = model.Material,
+                NomeMaterial = model.NomeMaterial,
+                Video = model.Video,
+                Descricao = model.Descricao,
+                Ordem = model.Ordem
             };
 
-            await ApiClientFactory.Instance.UpdateAula(id, command);
+            await ApiClientFactory.Instance.UpdateAula(model.Id, command);
 
             return NoContent();
         }
