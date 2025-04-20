@@ -115,7 +115,7 @@
                                             foreach (var modulo in Model.Modulos)
                                             {
                                                 // Filter lessons that belong to the current module
-                                                var moduloAulas = Model.Aulas?.Where(a => a.ModuloEadId == modulo.Id).ToList()
+                                                var moduloAulas = Model.Aulas?.Where(a => a.ModuloEadId == modulo.Id).OrderBy(a=> a.Ordem).ToList()
                                                 ?? new List<AulaDto>();
                                                 var collapseId = "collapseModulo" + modulo.Id;
                                                 // Expand the first module panel by default

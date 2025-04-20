@@ -220,13 +220,11 @@ var vm = new Vue({
                 self.AtualizarOrdem(serialized); // Persistência no banco
             });
 
-            // Atualizar posições iniciais
             this.AtualizarNumeracaoVisual($('#nestable').nestable('serialize'));
         },
         AtualizarOrdem: async function (items) {
             const requests = [];
 
-            // Adicionado índice no loop
             items.forEach(async (aula, index) => {
                 try {
                     const response = await axios.get("Aula/GetAulaById/?id=" + aula.id.replace('aula_', ''));
@@ -261,8 +259,11 @@ var vm = new Vue({
                 const allSuccess = responses.every(r => r.data.success);
 
                 if (allSuccess) {
-                    toastr.success('Ordem atualizada com sucesso!');
-                    this.AtualizarNumeracaoVisual(items);
+                    new PNotify({
+                        title: 'Aula',
+                        text: 'Ordem alterada com sucesso!',
+                        type: 'success'
+                    });
                 }
             } catch (error) {
                 console.error('Erro:', error);
