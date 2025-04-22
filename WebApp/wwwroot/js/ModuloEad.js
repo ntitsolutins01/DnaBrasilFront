@@ -1,3 +1,21 @@
+var crud = {
+    DeleteModal: function (id) {
+        $('input[name="deleteModuloEadId"]').attr('value', id);
+        $('#mdDeleteModuloEad').modal('show');
+        vm.DeleteModuloEad(id)
+    },
+    EditModal: function (id) {
+        $('input[name="editModuloEadId"]').attr('value', id);
+        $('#mdEditModuloEad').modal('show');
+        vm.EditModuloEad(id)
+    },
+    PlanModal: function (id) {
+        $('input[name="editModuloEadId"]').val(id);
+        $('#mdPlanModuloEad').modal('show');
+        vm.PlanModuloEad(id);
+    }
+};
+
 var vm = new Vue({
     el: "#vModuloEad ",
     data: {
@@ -160,19 +178,126 @@ var vm = new Vue({
             }).catch(error => {
                 Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
             });
+        },
+        PlanModuloEad: function (id) {
+            this.editDto.Id = id;
+            this.LoadEstruturaModuloEad(id);
+        },
+        LoadEstruturaModuloEad: function (id) {
+            var self = this;
+            $('#nestable-container').html('');
+            $('.loading-overlay').show();
+
+            $.ajax({
+                url: '/ModuloEad/CarregarEstrutura',
+                type: 'GET',
+                data: { moduloId: id },
+                success: function (response) {
+                    self.$nextTick(() => {
+                        $('#nestable-container').html(response);
+                        self.InitializeNestable();
+                    });
+                },
+                complete: function () {
+                    $('.loading-overlay').hide();
+                }
+            });
+        },
+        InitializeNestable: function () {
+            var self = this;
+
+            if ($('#nestable').data('nestable')) {
+                $('#nestable').nestable('destroy');
+            }
+
+            $('#nestable').nestable({
+                maxDepth: 2,
+                group: 1
+            }).on('change', function (e) {
+                const serialized = $(this).nestable('serialize');
+                self.novaOrdem = JSON.stringify(serialized);
+                self.AtualizarNumeracaoVisual(serialized); // Atualização imediata
+                self.AtualizarOrdem(serialized); // Persistência no banco
+            });
+
+            this.AtualizarNumeracaoVisual($('#nestable').nestable('serialize'));
+        },
+        AtualizarOrdem: async function (items) {
+            const requests = [];
+
+            items.forEach(async (aula, index) => {
+                try {
+                    const response = await axios.get("Aula/GetAulaById/?id=" + aula.id.replace('aula_', ''));
+                    const aulaData = {
+                        Id: response.data.id,
+                        Titulo: response.data.titulo,
+                        ProfessorId: response.data.professorId,
+                        Video: response.data.video,
+                        NomeMaterial: response.data.nomeMaterial,
+                        Material: response.data.material,
+                        Descricao: response.data.descricao,
+                        Status: response.data.status,
+                        Ordem: index + 1
+                    };
+
+                    requests.push(
+                        axios.post(`/Aula/Order/${aulaData.Id}`, aulaData, {
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                            }
+                        })
+                    );
+
+                    } catch (error) {
+                        console.error('Erro ao buscar aula:', error);
+                    }
+            });
+
+            try {
+                const responses = await Promise.all(requests);
+                const allSuccess = responses.every(r => r.data.success);
+
+                if (allSuccess) {
+                    new PNotify({
+                        title: 'Aula',
+                        text: 'Ordem alterada com sucesso!',
+                        type: 'success'
+                    });
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                toastr.error('Erro ao atualizar ordem');
+            }
+        },
+        AtualizarNumeracaoVisual: function (items) {
+            items.forEach((modulo, modIndex) => {
+                const moduloNumber = modIndex + 1;
+                $(`[data-id="${modulo.id}"] .position-badge`).text(moduloNumber);
+
+                if (modulo.children) {
+                    modulo.children.forEach((aula, aulaIndex) => {
+                        const aulaNumber = aulaIndex + 1;
+                        $(`[data-id="${aula.id}"] .position-badge`).text(`${moduloNumber}.${aulaNumber}`);
+                    });
+                }
+            });
+        },
+        AtualizarNumeracaoVisual: function (items) {
+            // Forçar atualização do DOM
+            this.$nextTick(() => {
+                items.forEach((modulo, modIndex) => {
+                    const moduloNumber = modIndex + 1;
+                    $(`[data-id="${modulo.id}"] .position-badge`).text(moduloNumber);
+
+                    if (modulo.children) {
+                        modulo.children.forEach((aula, aulaIndex) => {
+                            const aulaNumber = aulaIndex + 1;
+                            $(`[data-id="${aula.id}"] .position-badge`).text(`${moduloNumber}.${aulaNumber}`);
+                        });
+                    }
+                });
+            });
         }
     }
 });
-
-var crud = {
-    DeleteModal: function (id) {
-        $('input[name="deleteModuloEadId"]').attr('value', id);
-        $('#mdDeleteModuloEad').modal('show');
-        vm.DeleteModuloEad(id)
-    },
-    EditModal: function (id) {
-        $('input[name="editModuloEadId"]').attr('value', id);
-        $('#mdEditModuloEad').modal('show');
-        vm.EditModuloEad(id)
-    }
-};

@@ -10,6 +10,7 @@ using WebApp.Configuration;
 using WebApp.Identity;
 using Microsoft.Extensions.FileProviders;
 using WebApp.Utility;
+using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 
 var builder = WebApplication.CreateBuilder(args);
 

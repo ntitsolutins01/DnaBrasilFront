@@ -1054,6 +1054,35 @@ namespace WebApp.Controllers
             }
         }
 
+        /// <summary>
+        /// Função de Criação de AlunoAula
+        /// </summary>
+        /// <param name="collection">Coleção de dados para criação de aluno</param>
+        /// <returns>Retorna mensagem de alteração através do parametro crud</returns>
+        [ClaimsAuthorize(ClaimType.Aluno, Claim.Incluir)]
+        [HttpPost]
+        [IgnoreAntiforgeryToken]
+        public async Task<IActionResult> CreateAlunoAula([FromForm] AlunoModel.CreateUpdateAlunoAulaCommand model)
+        {
+            try
+            {
+                var command = new AlunoModel.CreateUpdateAlunoAulaCommand
+                {
+                    AlunoId = Convert.ToInt32(model.AlunoId),
+                    AulaId = model.AulaId,
+                    Progresso = model.Progresso
+                };
+
+                await ApiClientFactory.Instance.CreateAlunoAula(command);
+
+                return NoContent();
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = "Erro ao executar esta ação. Favor entrar em contato com o administrador do sistema." });
+            }
+        }
+
         #endregion
 
         #region Get Methods
