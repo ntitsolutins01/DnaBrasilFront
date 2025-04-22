@@ -249,9 +249,9 @@ var vm = new Vue({
                         })
                     );
 
-                } catch (error) {
-                    console.error('Erro ao buscar aula:', error);
-                }
+                    } catch (error) {
+                        console.error('Erro ao buscar aula:', error);
+                    }
             });
 
             try {
