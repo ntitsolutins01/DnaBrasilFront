@@ -1,3 +1,4 @@
+using DocumentFormat.OpenXml.Presentation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
@@ -250,6 +251,40 @@ public class AulaController : BaseController
             return RedirectToAction(nameof(Index));
         }
     }
+
+    /// <summary>
+    /// Ação de Alteração do Aula
+    /// </summary>
+    /// <param name="id">Identificador do Aula</param>
+    /// <returns>Retorna mensagem de alteração através do parametro crud</returns>
+    [ClaimsAuthorize(ClaimType.Aula, Identity.Claim.Alterar)]
+    [HttpPost]
+    public async Task<IActionResult> Order([FromBody] AulaModel.CreateUpdateAulaCommand model)
+    {
+        try
+        {
+            var command = new AulaModel.CreateUpdateAulaCommand
+            {
+                Id = model.Id,
+                Titulo = model.Titulo,
+                Status = model.Status,
+                ProfessorId = model.ProfessorId,
+                Material = model.Material,
+                NomeMaterial = model.NomeMaterial,
+                Video = model.Video,
+                Descricao = model.Descricao,
+                Ordem = model.Ordem
+            };
+
+            await ApiClientFactory.Instance.UpdateAula(model.Id, command);
+
+            return NoContent();
+        }
+        catch (Exception e)
+        {
+            return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = "Erro ao executar esta ação. Favor entrar em contato com o administrador do sistema." });
+        }
+    }
     #endregion
 
     #region Get Methods
@@ -262,7 +297,7 @@ public class AulaController : BaseController
     public Task<AulaDto> GetAulaById(int id)
     {
         var result = ApiClientFactory.Instance.GetAulaById(id);
-        var professores = new SelectList(ApiClientFactory.Instance.GetUsuarioAll().Where(x => x.Perfil.Id == (int)EnumPerfil.Professor), "Id", "Nome", result.ProfessorId);
+        var professores = result.ProfessorId == null ? null : new SelectList(ApiClientFactory.Instance.GetUsuarioAll().Where(x => x.Perfil.Id == (int)EnumPerfil.Professor), "Id", "Nome", result.ProfessorId);
         result.ListProfessores = professores;
 
         return Task.FromResult(result);

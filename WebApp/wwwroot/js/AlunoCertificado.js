@@ -48,6 +48,209 @@
                 });
             }
 
+            // Inicialização da página
+            $(document).ready(function () {
+                var aulaAtualId = null;
+
+                // Manipulação do clique nas aulas
+                $('.aula-link').on('click', function (e) {
+                    e.preventDefault();
+
+                    // Remover classe ativa de todas as aulas
+                    $('.aula-link').removeClass('active');
+
+                    // Adicionar classe ativa à aula clicada
+                    $(this).addClass('active');
+
+                    // Atualizar o player de vídeo
+                    var videoUrl = $(this).data('video-url');
+                    $('#videoSource').attr('src', videoUrl);
+                    $('#videoPlayer')[0].load();
+
+                    // Atualizar título da aula
+                    var aulaTitulo = $(this).data('aula-titulo');
+                    $('#aulaAtualTitulo').text(aulaTitulo);
+
+                    // Atualizar os materiais
+                    var materiaisJson = $(this).data('materiais');
+                    atualizarMateriais(materiaisJson);
+
+                    // Habilitar botão de próxima aula se não for a última
+                    var $proximaAula = $(this).closest('li').next('li').find('.aula-link');
+                    $('#btnProximaAula').prop('disabled', $proximaAula.length === 0);
+
+                    // Armazenar ID da aula atual
+                    aulaAtualId = $(this).data('aula-id');
+
+                    // Habilitar botão de marcar como concluído
+                    $('#btnMarcarConcluido').prop('disabled', false);
+                });
+
+                // Update de tempo assistido
+                const video = document.getElementById('videoPlayer');
+
+                video.addEventListener('timeupdate', function () {
+                    const duration = video.duration;
+                    if (duration <= 0) return;             
+
+                    const progress = (video.currentTime / duration) * 100;
+
+                    const alunoId = document.getElementById('alunoId').value;
+                    const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+                    // Monta o corpo como form-urlencoded
+                    const form = new URLSearchParams();
+                    form.append('AlunoId', parseInt(alunoId, 10));
+                    form.append('AulaId', aulaAtualId);
+                    form.append('Progresso', progress);
+                    form.append('__RequestVerificationToken', token);
+
+                    if (progress >= 60) {
+                        axios.post('/Aluno/CreateAlunoAula', form, {
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded'
+                            },
+                            withCredentials: true
+                        })
+                            .catch(err => console.error('Erro ao salvar progresso:', err));
+                    }
+                });
+
+
+                // Função para atualizar a lista de materiais
+                function atualizarMateriais(materiaisJson) {
+                    // Limpar a lista atual
+                    $('#lista-materiais').empty();
+
+                    if (materiaisJson && materiaisJson.length > 0) {
+                        try {
+                            var materiais = JSON.parse(materiaisJson);
+
+                            if (materiais.length > 0) {
+                                materiais.forEach(function (material) {
+                                    var icon = 'fa-file-o';
+                                    var colorClass = '';
+
+                                    // Definir ícone com base no tipo de arquivo
+                                    if (material.url.endsWith('.pdf')) {
+                                        icon = 'fa-file-pdf-o';
+                                        colorClass = 'text-danger';
+                                    } else if (material.url.endsWith('.pptx') || material.url.endsWith('.ppt')) {
+                                        icon = 'fa-file-powerpoint-o';
+                                        colorClass = 'text-warning';
+                                    } else if (material.url.endsWith('.xlsx') || material.url.endsWith('.xls')) {
+                                        icon = 'fa-file-excel-o';
+                                        colorClass = 'text-success';
+                                    } else if (material.url.endsWith('.docx') || material.url.endsWith('.doc')) {
+                                        icon = 'fa-file-word-o';
+                                        colorClass = 'text-primary';
+                                    } else if (material.url.endsWith('.zip') || material.url.endsWith('.rar')) {
+                                        icon = 'fa-file-archive-o';
+                                        colorClass = 'text-warning';
+                                    }
+
+                                    var materialHtml = '<li class="list-group-item">' +
+                                        '<i class="fa ' + icon + ' ' + colorClass + ' mr-xs"></i>' +
+                                        '<a href="' + material.url + '" target="_blank">' + material.nome + '</a>' +
+                                        '</li>';
+
+                                    $('#lista-materiais').append(materialHtml);
+                                });
+                                return;
+                            }
+                        } catch (e) {
+                            console.error("Erro ao processar materiais JSON:", e);
+                        }
+                    }
+
+                    // Se não há materiais ou ocorreu um erro
+                    $('#lista-materiais').append('<li class="list-group-item text-center"><i class="fa fa-info-circle"></i> Nenhum material disponível para esta aula.</li>');
+                }
+
+                // Botão para marcar aula como concluída
+                $('#btnMarcarConcluido').on('click', function () {
+                    if (!aulaAtualId) return;
+
+                    // Simular uma chamada para o backend
+                    marcarAulaComoAssistida(aulaAtualId);
+                });
+
+                // Botão de próxima aula
+                $('#btnProximaAula').on('click', function () {
+                    var $aulaAtual = $('.aula-link.active');
+                    var $proximaAula = $aulaAtual.closest('li').next('li').find('.aula-link');
+
+                    if ($proximaAula.length) {
+                        $proximaAula.click();
+                    }
+                });
+
+                // Função para marcar aula como assistida
+                function marcarAulaComoAssistida(aulaId) {
+                    // Simular uma chamada para o backend
+                    console.log('Marcando aula ' + aulaId + ' como assistida');
+
+                    // Para fins de demonstração:
+                    atualizarAulaAssistida(aulaId);
+
+                    // Calcular novo progresso (simulação)
+                    var totalAulas = $('.aula-link').length;
+                    var aulasAssistidas = $('.aula-link').find('.fa-check-circle').length + 1;
+                    var novoProgresso = Math.round(aulasAssistidas / totalAulas);
+
+                    atualizarProgresso(novoProgresso);
+
+                    // Notificar o usuário
+                    new PNotify({
+                        title: 'Aula Concluída',
+                        text: 'Seu progresso foi atualizado!',
+                        type: 'success'
+                    });
+                }
+
+                // Função para atualizar a interface quando uma aula é marcada como assistida
+                function atualizarAulaAssistida(aulaId) {
+                    var $aula = $('.aula-link[data-aula-id="' + aulaId + '"]');
+                    if (!$aula.find('.fa-check-circle').length) {
+                        $aula.append('<span class="pull-right text-success"><i class="fa fa-check-circle"></i></span>');
+                    }
+                }
+
+                // Função para atualizar o progresso do curso
+                function atualizarProgresso(progresso) {
+                    $('.progress-bar').css('width', progresso + '%').attr('aria-valuenow', progresso).text(progresso + '%');
+
+                    // Verificar se o curso foi concluído
+                    if (progresso >= 100) {
+                        // Habilitar o botão de certificado
+                        var certificadoBtn = $('button.btn-default[disabled]').replaceWith(
+                            '<a href="#" class="btn btn-success btn-block">' +
+                            '<i class="fa fa-certificate"></i> Ver Certificado</a>'
+                        );
+
+                        // Notificar conclusão do curso
+                        new PNotify({
+                            title: 'Parabéns!',
+                            text: 'Você concluiu o curso com sucesso! Agora você pode acessar seu certificado.',
+                            type: 'success'
+                        });
+                    }
+                }
+
+                // Abrir o primeiro módulo por padrão
+                $('#collapse1').addClass('in');
+
+                // Tooltips
+                if ($.isFunction($.fn['tooltip'])) {
+                    $('[data-toggle=tooltip],[rel=tooltip]').tooltip({ container: 'body' });
+                }
+
+                $('.btn').tooltip({
+                    container: 'body',
+                    placement: 'top'
+                });
+            });
+
             $("#ddlEstado").change(function () {
 
                 self.ShowLoad(true, "pFiltro");

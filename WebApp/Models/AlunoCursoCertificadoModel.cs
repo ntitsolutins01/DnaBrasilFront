@@ -25,6 +25,7 @@ namespace WebApp.Models
         public SelectList ListLocalidades { get; set; }
         public List<ModuloEadDto> Modulos { get; set; }
         public List<AulaDto> Aulas { get; set; }
+        public List<AlunoAulaDto> AlunosAulas { get; set; }
 
         public class CreateUpdateAlunoCursoCommand
 		{

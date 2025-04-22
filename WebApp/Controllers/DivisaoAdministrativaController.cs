@@ -13,7 +13,7 @@ namespace WebApp.Controllers
     /// Controle de Divisao Administrativa
     /// </summary>
     public class DivisaoAdministrativaController : BaseController
-	{
+    {
         #region Parametro
 
         private readonly ILogger<DivisaoAdministrativaController> _logger;
@@ -58,6 +58,19 @@ namespace WebApp.Controllers
             {
                 return Task.FromResult(Json(ex));
             }
+        }
+
+        /// <summary>
+        ///  Busca Municipio por Id
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns>Retorna a um Municipio</returns>
+        public Task<MunicipioDto> GetMunicipioById(int id)
+        {
+            if (string.IsNullOrEmpty(id.ToString())) throw new Exception("Município não informado.");
+            var resultLocal = ApiClientFactory.Instance.GetMunicipioById(id);
+
+            return Task.FromResult(resultLocal);
         }
 
 

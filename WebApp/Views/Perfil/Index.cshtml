@@ -26,6 +26,7 @@
                                 <th class="text-center">Id</th>
                                 <th class="text-center">Nome Perfil</th>
                                 <th class="text-center">Descrição do Perfil</th>
+                                <th class="text-center">Status</th>
                                 <th class="text-center">Ações</th>
                             </tr>
                         </thead>
@@ -37,6 +38,14 @@
                                     <td class="text-center" style="width:20px;">@Html.DisplayFor(modelItem => item.Id)</td>
                                     <td class="text-center">@Html.DisplayFor(modelItem => item.Nome)</td>
                                     <td class="text-center">@Html.DisplayFor(modelItem => item.Descricao)</td>
+                                    @if (item.Status)
+                                    {
+                                        <td class="text-center"><span class="label label-success">ATIVO</span></td>
+                                    }
+                                    else
+                                    {
+                                        <td class="text-center"><span class="label label-danger">INATIVO</span></td>
+                                    }
                                     <td class="text-center">
                                         <a data-toggle="tooltip" data-placement="top" title="Editar" asp-action="Edit" asp-controller="Perfil" asp-route-Id="@item.Id" class="on-default edit-row" style='color: #FF9800'><i class="fa fa-pencil"></i></a>
                                         <a data-toggle="tooltip" data-placement="top" title="Excluir" asp-action="Delete" asp-controller="Perfil" asp-route-id="@item.Id" class="on-default remove-row" style='color: #F44336'><i class="fa fa-trash"></i></a>

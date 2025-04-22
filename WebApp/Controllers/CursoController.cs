@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using WebApp.Authorization;
 using WebApp.Configuration;
 using WebApp.Dto;
@@ -71,7 +72,7 @@ public class CursoController : BaseController
             SetNotifyMessage(notify, message);
             SetCrudMessage(crud);
             var tiposcursos = new SelectList(ApiClientFactory.Instance.GetTipoCursosAll(), "Id", "Nome");
-            var coordenadores = new SelectList(ApiClientFactory.Instance.GetUsuarioAll().Where(x=>x.Perfil.Id == (int)EnumPerfil.Coordenador), "Id", "Nome");
+            var coordenadores = new SelectList(ApiClientFactory.Instance.GetUsuarioAll().Where(x => x.Perfil.Id == (int)EnumPerfil.Coordenador), "Id", "Nome");
 
 
             return View(new CursoModel()
@@ -101,12 +102,12 @@ public class CursoController : BaseController
         {
             var command = new CursoModel.CreateUpdateCursoCommand
             {
-	            TipoCursoId = Convert.ToInt32(collection["ddlTipoCurso"].ToString()),
-	            CoordenadorId = Convert.ToInt32(collection["ddlCoordenador"].ToString()),
-	            Titulo = collection["nome"].ToString(),
-	            Descricao = collection["descricao"].ToString(),
-				CargaHoraria = Convert.ToInt32(collection["cargaHoraria"].ToString())
-			};
+                TipoCursoId = Convert.ToInt32(collection["ddlTipoCurso"].ToString()),
+                CoordenadorId = Convert.ToInt32(collection["ddlCoordenador"].ToString()),
+                Titulo = collection["nome"].ToString(),
+                Descricao = collection["descricao"].ToString(),
+                CargaHoraria = Convert.ToInt32(collection["cargaHoraria"].ToString())
+            };
 
             string? filePath;
             string? fileName;
@@ -158,7 +159,7 @@ public class CursoController : BaseController
             {
                 Id = Convert.ToInt32(collection["editCursoId"]),
                 CoordenadorId = Convert.ToInt32(collection["ddlCoordenador"].ToString()),
-				Titulo = collection["nome"].ToString(),
+                Titulo = collection["nome"].ToString(),
                 Descricao = collection["descricao"].ToString(),
                 CargaHoraria = Convert.ToInt32(collection["cargaHoraria"].ToString()),
                 Status = collection["editStatus"].ToString() == "" ? false : true
@@ -179,9 +180,9 @@ public class CursoController : BaseController
 
             if (!collection.Files.Any())
             {
-				command.Imagem = curso.Imagem;
-				command.NomeImagem = curso.NomeImagem;
-			}
+                command.Imagem = curso.Imagem;
+                command.NomeImagem = curso.NomeImagem;
+            }
 
             foreach (var file in collection.Files)
             {
@@ -218,8 +219,8 @@ public class CursoController : BaseController
     [ClaimsAuthorize(ClaimType.Curso, Identity.Claim.Excluir)]
     public ActionResult Delete(int id)
     {
-	    try
-	    {
+        try
+        {
             var imagem = ApiClientFactory.Instance.GetCursoById(id).Imagem!;
 
             if (imagem != null)
@@ -227,12 +228,12 @@ public class CursoController : BaseController
 
             ApiClientFactory.Instance.DeleteCurso(id);
 
-		    return RedirectToAction(nameof(Index), new { crud = (int)EnumCrud.Deleted });
-	    }
-	    catch (Exception e)
-	    {
-			return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = "Este curso não pode ser excluído pois possui módulos vinculadas a ele." });
-		}
+            return RedirectToAction(nameof(Index), new { crud = (int)EnumCrud.Deleted });
+        }
+        catch (Exception e)
+        {
+            return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = "Este curso não pode ser excluído pois possui módulos vinculadas a ele." });
+        }
     }
     #endregion
 
@@ -249,7 +250,7 @@ public class CursoController : BaseController
         var coordenadores = new SelectList(ApiClientFactory.Instance.GetUsuarioAll().Where(x => x.Perfil.Id == (int)EnumPerfil.Coordenador), "Id", "Nome", result.CoordenadorId);
         result.ListCoordenadores = coordenadores;
 
-		return Task.FromResult(result);
+        return Task.FromResult(result);
     }
     /// <summary>
     /// Método de busca todos os Cursos pelo id do tipo de curso

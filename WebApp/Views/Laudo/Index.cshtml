@@ -60,21 +60,6 @@
                                 <option value="">Selecionar Aluno</option>
                             </select>
                         </div>
-                        <label class="col-sm-2 control-label">Tipo de Laudo:</label>
-                        <div class="col-md-4 form-group">
-                            <select class="form-control populate select2" name="ddlTipoLaudo" id="ddlTipoLaudo"
-                                    asp-for="TipoLaudoId" asp-items="Model.ListTiposLaudos">
-                                <option value="">Selecionar Tipo de Laudo</option>
-                            </select>
-                        </div>
-                        <label class="col-sm-2 control-label">Deficiencia:</label>
-                        <div class="col-md-4 form-group">
-                            <select class="form-control populate select2" name="ddlDeficiencia" id="ddlDeficiencia"
-                                    asp-for="DeficienciaId" asp-items="Model.ListDeficiencias">
-                                <option value="">Selecionar Deficiência</option>
-                            </select>
-                        </div>
-
                         <label class="col-sm-2 control-label text-sm-right pt-2">Possui Foto: </label>
                         <div class="col-md-1">
                             <div class="switch switch-sm switch-primary">
@@ -122,8 +107,8 @@
                                 </a>
                             </div>
                             <div class="col-sm-2 pull-right">
-                                <a href="@Url.Action("GerarPdfLaudos", "Laudo")" id="btnImprimirLaudo" class="btn btn-block btn-purple pull-right">
-                                    <i class="fa fa-print"></i> &nbsp;&nbsp;Gerar PDF Laudos
+                                <a href="@Url.Action("Print", "Laudo")" id="btnImprimirLaudo" class="btn btn-block btn-purple pull-right" target="_blank">
+                                    <i class="fa fa-print"></i> &nbsp;&nbsp;Imprimir Laudos
                                 </a>
                             </div>
                         </div>
