@@ -176,6 +176,27 @@ namespace WebApp.Controllers
 
             return Task.FromResult(result);
         }
+
+        /// <summary>
+        /// Busca Etapas por Localidade
+        /// </summary>
+        /// <param name="id">Identificador da Localidade</param>
+        /// <returns>Retorna um json com a lista de etapas da Localidade</returns>
+        public Task<JsonResult> GetEtapasByLocalidadeId(string id)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(id)) throw new Exception("Localidade não informada.");
+                var resultLocal = ApiClientFactory.Instance.GetEtapasByLocalidadeId(Convert.ToInt32(id));
+
+                return Task.FromResult(Json(new SelectList(resultLocal, "Id", "Nome")));
+
+            }
+            catch (Exception ex)
+            {
+                return Task.FromResult(Json(ex));
+            }
+        }
     }
 
     #endregion
