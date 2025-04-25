@@ -222,14 +222,14 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
-        /// Busca todos os alunos de um aula
+        /// Busca todos as aulas de um aluno
         /// </summary>
-        /// <param name="id">Id do aula</param>
-        /// <returns>Retorna lista dos alunosaulas</returns>
-        public List<AlunoAulaDto> GetAlunoAulasByAulaId(int aulaId)
+        /// <param name="alunoId">Id do aluno</param>
+        /// <returns>Retorna lista dos AlunosAulas</returns>
+        public List<AlunoAulaDto> GetAlunoAulasByAlunoId(int alunoId)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceAlunos}/AlunoAula/{aulaId}"));
+                $"{ResourceAlunos}/AlunoAula/{alunoId}"));
             return Get<List<AlunoAulaDto>>(requestUrl);
         }
 

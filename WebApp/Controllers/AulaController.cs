@@ -185,37 +185,51 @@ public class AulaController : BaseController
                 ProfessorId = Convert.ToInt32(collection["ddlProfessor"].ToString())
             };
 
+            string aulasPath = Path.Combine(_host.WebRootPath, "Aulas");
+            if (!Directory.Exists(aulasPath))
+            {
+                Directory.CreateDirectory(aulasPath);
+            }
+
+            string? filePathMaterial = null;
+            string? fileNameMaterial = null;
+            string? filePathVideo = null;
+            string? fileNameVideo = null;
+
             foreach (var file in collection.Files)
             {
                 if (file.Length <= 0) continue;
 
-                var currentAula = ApiClientFactory.Instance.GetAulaById(command.Id);
+                string extension = Path.GetExtension(file.FileName).ToLowerInvariant();
 
-                if (!string.IsNullOrEmpty(currentAula.Material) && System.IO.File.Exists(currentAula.Material))
+                if (extension == ".jpg" || extension == ".png")
                 {
-                    System.IO.File.Delete(currentAula.Material);
+                    string newFileNameMaterial = Path.ChangeExtension(Guid.NewGuid().ToString(), extension);
+                    filePathMaterial = Path.Combine(aulasPath, newFileNameMaterial);
+                    fileNameMaterial = Path.GetFileName(file.FileName);
+
+                    command.Material = filePathMaterial;
+                    command.NomeMaterial = fileNameMaterial;
+
+                    using (var fileStream = new FileStream(filePathMaterial, FileMode.Create))
+                    {
+                        await file.CopyToAsync(fileStream);
+                    }
                 }
+                else if (extension == ".mp4" || extension == ".avi")
+                {
+                    string newFileNameVideo = Path.ChangeExtension(Guid.NewGuid().ToString(), extension);
+                    filePathVideo = Path.Combine(aulasPath, newFileNameVideo);
+                    fileNameVideo = Path.GetFileName(file.FileName);
 
-                string extension = ".jpg";
-                string newFileName = Path.ChangeExtension(Guid.NewGuid().ToString(), extension);
-                string fileName = Path.GetFileName(file.FileName);
-                string filePath = Path.Combine(_host.WebRootPath, $"Aulas\\{newFileName}");
+                    command.Video = filePathVideo;
+                    command.NomeVideo = fileNameVideo;
 
-                if (!Directory.Exists(Path.Combine(_host.WebRootPath, "Aulas")))
-                    Directory.CreateDirectory(Path.Combine(_host.WebRootPath, "Aulas"));
-
-                command.Material = filePath;
-                command.NomeMaterial = fileName;
-
-                using Stream fileStream = new FileStream(filePath, FileMode.Create);
-                await file.CopyToAsync(fileStream);
-            }
-
-            if (!collection.Files.Any())
-            {
-                var currentAula = ApiClientFactory.Instance.GetAulaById(command.Id);
-                command.Material = currentAula.Material;
-                command.NomeMaterial = currentAula.NomeMaterial;
+                    using (var fileStream = new FileStream(filePathVideo, FileMode.Create))
+                    {
+                        await file.CopyToAsync(fileStream);
+                    }
+                }
             }
 
             await ApiClientFactory.Instance.UpdateAula(command.Id, command);

@@ -87,32 +87,50 @@
                 });
 
                 // Update de tempo assistido
+                let aulas = [];
+                const alunoId = document.getElementById('alunoId').value;
+
+                if (aulas == []) {
+                    axios.get(`../../Aluno/GetAlunoAulasByAlunoId?alunoId=${alunoId}`)
+                        .then(response => {
+                            aulas = response.data || [];
+                        })
+                        .catch(error => {
+                            aulas = [];
+                        });
+                }
+
                 const video = document.getElementById('videoPlayer');
 
                 video.addEventListener('timeupdate', function () {
-                    const duration = video.duration;
-                    if (duration <= 0) return;             
+                    if (!video.duration || !aulaAtualId) return;
 
-                    const progress = (video.currentTime / duration) * 100;
+                    const progress = (video.currentTime / video.duration) * 100;
 
-                    const alunoId = document.getElementById('alunoId').value;
                     const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
 
-                    // Monta o corpo como form-urlencoded
                     const form = new URLSearchParams();
                     form.append('AlunoId', parseInt(alunoId, 10));
                     form.append('AulaId', aulaAtualId);
-                    form.append('Progresso', progress);
+                    form.append('Progresso', progress.toFixed(2));
                     form.append('__RequestVerificationToken', token);
 
-                    if (progress >= 60) {
+                    if (progress >= 60 && Array.isArray(aulas) && !aulas.some(aula => aula.AulaId === aulaAtualId)) {
+
                         axios.post('/Aluno/CreateAlunoAula', form, {
                             headers: {
                                 'Content-Type': 'application/x-www-form-urlencoded'
                             },
                             withCredentials: true
                         })
-                            .catch(err => console.error('Erro ao salvar progresso:', err));
+                            .then(() => {
+                                aulas.push({ AulaId: aulaAtualId });
+                            })
+                            .catch(err => {
+                                console.error('Erro ao salvar progresso:', err);
+                                Site.Notification("Erro ao salvar", err.message, "error", 1);
+                            });
+                        aulas == [];
                     }
                 });
 
@@ -490,7 +508,11 @@
             axios.get("../../Aula/GetAulaById?id=" + id)
                 .then(response => {
                     self.aula = response.data;
-                    self.selectedVideoUrl = response.data.video;
+                    self.selectedVideoUrl = "";
+                    if (response.data.video != null) {
+                        self.selectedVideoUrl = "\\Aulas" + response.data.video.split("\\Aulas")[1];
+                    }
+
                     $('#aulaAtualTitulo').text(response.data.titulo);
 
                     var player = document.getElementById("videoPlayer");

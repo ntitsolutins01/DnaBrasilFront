@@ -153,17 +153,16 @@
                                                                 <ul class="nav nav-list">
                                                                     @foreach (var aula in moduloAulas)
                                                                     {
-                                                                        string video = "";
+                                                                        @* string video = "";
                                                                         if (!string.IsNullOrEmpty(aula.Video) && aula.Video.Contains("\\Aulas"))
                                                                         {
-                                                                            video = "/Aulas" + aula.Video.Split(new string[] { "\\Aulas" }, StringSplitOptions.None)[1].Replace("\\", "/");
-                                                                        }
+                                                                            video = "http://localhost:5166/Aulas" + aula.Video.Split(new string[] { "\\Aulas" }, StringSplitOptions.None)[1].Replace("\\", "/");
+                                                                        } *@
 
                                                                         <li class="mb-sm">
                                                                             <a href="#" class="aula-link"
                                                                                v-on:click.prevent="selectLesson(@aula.Id)"
                                                                                data-aula-id="@aula.Id"
-                                                                               data-video-url="@video"
                                                                                data-aula-titulo="@aula.Titulo">
                                                                                 <i class="fa fa-play-circle-o mr-xs"></i> @aula.Titulo
                                                                                 @if (Model.AlunosAulas.Any(a => Convert.ToInt32(a.AulaId) == aula.Id))

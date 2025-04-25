@@ -253,7 +253,7 @@ public class AlunoCursoCertificadoController : BaseController
 
             var aulas = ApiClientFactory.Instance.GetAulasByCursoId(id);
 
-            var alunosAulas = ApiClientFactory.Instance.GetAlunoAulasByAulaId(aluno.Id);
+            var alunosAulas = ApiClientFactory.Instance.GetAlunoAulasByAlunoId(aluno.Id);
 
             var model = new AlunoCursoCertificadoModel()
             {
