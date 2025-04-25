@@ -24,6 +24,7 @@ namespace WebApp.Models
             public int Id { get; set; }
             public required string Nome { get; set; }
             public required string Turma { get; set; }
+            public bool Status { get; set; }
             public int EtapaEnsinoId { get; set; }
             public int LocalidadeId { get; set; }
         }

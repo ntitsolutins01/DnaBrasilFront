@@ -134,7 +134,8 @@ namespace WebApp.Controllers
             {
                 Id = Convert.ToInt32(collection["editSerieId"]),
                 Nome = collection["nome"].ToString(),
-                Turma = collection["turma"].ToString()
+                Turma = collection["turma"].ToString(),
+                Status = collection["editStatus"].ToString() == "" ? false : true
             };
 
             await ApiClientFactory.Instance.UpdateSerie(command.Id, command);
