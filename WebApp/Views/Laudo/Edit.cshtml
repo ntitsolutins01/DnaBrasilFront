@@ -150,12 +150,12 @@
                                                 {
                                                     var peso = Math.Round((decimal)Model.Saude.Massa, 0);
 
-                                                    <input type="text" class="form-control peso-mask" id="massaCorporalSaude" name="massaCorporalSaude" maxlength="2" placeholder="00" required value="@peso" title="Por favor informe a Massa Corporal (kg)" />
+                                                    <input type="text" class="form-control peso-mask" id="massaCorporalSaude" name="massaCorporalSaude" maxlength="5" placeholder="00.00" required value="@peso" title="Por favor informe a Massa Corporal (kg)" />
                                                 }
                                                 else
                                                 {
                                                     var peso = Model.TalentoEsportivo.Peso;
-                                                    peso = peso == null ? null : Math.Round((decimal)peso, 0);
+                                                    peso = peso == null ? null : (decimal)peso;
                                                     <input type="text" class="form-control peso-mask" id="massaCorporalSaude" name="massaCorporalSaude" maxlength="2" placeholder="00" required value="@peso" title="Por favor informe a Massa Corporal (kg)" />
                                                 }
                                             </div>
@@ -199,11 +199,11 @@
                                         <div>
                                             @{
                                                 var pesoTalentoEsportivo = Model.TalentoEsportivo.Peso;
-                                                var pesoFormatadoTalentoEsportivo = Math.Round((decimal)pesoTalentoEsportivo, 0);
+                                                var pesoFormatadoTalentoEsportivo = (decimal)pesoTalentoEsportivo;
                                             }
                                             <label class="col-sm-3 control-label"><strong>Massa Corporal (kg)</strong> <span class="required">*</span></label>
                                             <div class="col-sm-3">
-                                                <input type="text" class="form-control peso-mask" id="massaCorporal" name="massaCorporal" maxlength="2" placeholder="00" value="@pesoFormatadoTalentoEsportivo" required title="Favor informe Massa Corporal (kg)" />
+                                                <input type="text" class="form-control peso-mask" id="massaCorporal" name="massaCorporal" maxlength="5" placeholder="00.00" value="@pesoFormatadoTalentoEsportivo" required title="Favor informe Massa Corporal (kg)" />
                                             </div>
                                         </div>
                                     </div>

@@ -1,4 +1,5 @@
-﻿using WebApp.Dto;
+﻿using System.Collections;
+using WebApp.Dto;
 using WebApp.Models;
 
 namespace WebApp.ApiClient
@@ -72,6 +73,18 @@ namespace WebApp.ApiClient
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
                 $"{ResourceEtapaEnsino}"));
+            return Get<List<EtapaEnsinoDto>>(requestUrl);
+        }
+
+        /// <summary>
+        /// Busca uma lista de Etapas por Localidade
+        /// </summary>
+        /// <param name="id">Id da localidade</param>
+        /// <returns>Retorna uma lista de Etapas</returns>
+        public List<EtapaEnsinoDto> GetEtapasByLocalidadeId(int id)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceEtapaEnsino}/Localidade/{id}"));
             return Get<List<EtapaEnsinoDto>>(requestUrl);
         }
 

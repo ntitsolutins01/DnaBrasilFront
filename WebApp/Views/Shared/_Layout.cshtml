@@ -429,7 +429,7 @@
                                     </li>
                                 }
                                 
-                                @if ((await AuthorizationService.AuthorizeAsync(User, ModuloAccess.Aluno)).Succeeded)
+                                @if ((await AuthorizationService.AuthorizeAsync(User, ModuloAccess.MeusCursos)).Succeeded)
                                 {
                                     <li class="nav-parent nav-expanded">
                                         <a href="@Url.Action("Index", "AlunoCursoCertificado")">
@@ -448,18 +448,18 @@
                                         </a>
                                     </li>
                                 }
-@* 
+
                                 @if ((await AuthorizationService.AuthorizeAsync(User, ModuloAccess.ControleFrequenciaEscolar)).Succeeded)
                                 {
                                     <li class="nav-parent nav-expanded">
                                         <a href="@Url.Action("Index", "ControleFrequenciaEscolar")">
-                                            <i class="fa fa-user-plus" aria-hidden="true"></i>
-                                            <span>Controle Frequencia Escolar</span>
+                                            <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                                            <span>Frequência Escolar</span>
                                         </a>
                                     </li>
-                                } *@
+                                }
 
-                                @if ((await AuthorizationService.AuthorizeAsync(User, ModuloAccess.ControleMaterial)).Succeeded)
+                                @if ((await AuthorizationService.AuthorizeAsync(User, ModuloAccess.ControleInventario)).Succeeded)
                                 {
                                     <li class="nav-parent">
                                         <a href="#">

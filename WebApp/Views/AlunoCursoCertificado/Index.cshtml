@@ -107,7 +107,7 @@
 
                                                                     <div class="summary-footer">
                                                                         <hr class="solid mt-sm mb-sm">
-                                                                        <a href="@Url.Action("ContinuarCurso", "AlunoCursoCertificado", new { id = item.Id })"
+                                                                        <a href="@Url.Action("DetalhesCurso", "AlunoCursoCertificado", new { id = item.Id })"
                                                                            class="btn @(progresso == 0 ? "btn-success" : "btn-primary") btn-sm">
                                                                             <i class="fa @(progresso == 0 ? "fa-play-circle" : "fa-play")"></i> @(progresso == 0 ? "Iniciar" : "Continuar")
                                                                         </a>

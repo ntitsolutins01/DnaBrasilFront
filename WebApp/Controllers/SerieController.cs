@@ -107,10 +107,9 @@ namespace WebApp.Controllers
                 var command = new SerieModel.CreateUpdateSerieCommand
                 {
                     Nome = collection["nome"].ToString(),
-                    Descricao = collection["descricao"].ToString(),
-                    IdadeInicial = Convert.ToInt32(collection["idadeIni"].ToString()),
-                    IdadeFinal = Convert.ToInt32(collection["idadeFim"].ToString()),
-                    ScoreTotal = Convert.ToInt32(collection["scoreTotal"].ToString())
+                    Turma = collection["turma"].ToString(),
+                    EtapaEnsinoId = Convert.ToInt32(collection["ddlEtapa"].ToString()),
+                    LocalidadeId = Convert.ToInt32(collection["ddlLocalidade"].ToString())
                 };
 
                 await ApiClientFactory.Instance.CreateSerie(command);
@@ -135,11 +134,8 @@ namespace WebApp.Controllers
             {
                 Id = Convert.ToInt32(collection["editSerieId"]),
                 Nome = collection["nome"].ToString(),
-                Status = collection["editStatus"].ToString() == "" ? false : true,
-                Descricao = collection["descricao"].ToString(),
-                IdadeInicial = Convert.ToInt32(collection["idadeIni"].ToString()),
-                IdadeFinal = Convert.ToInt32(collection["idadeFim"].ToString()),
-                ScoreTotal = Convert.ToInt32(collection["scoreTotal"].ToString())
+                Turma = collection["turma"].ToString(),
+                Status = collection["editStatus"].ToString() == "" ? false : true
             };
 
             await ApiClientFactory.Instance.UpdateSerie(command.Id, command);
@@ -180,6 +176,27 @@ namespace WebApp.Controllers
             var result = ApiClientFactory.Instance.GetSerieById(id);
 
             return Task.FromResult(result);
+        }
+
+        /// <summary>
+        /// Busca Etapas por Localidade
+        /// </summary>
+        /// <param name="id">Identificador da Localidade</param>
+        /// <returns>Retorna um json com a lista de etapas da Localidade</returns>
+        public Task<JsonResult> GetEtapasByLocalidadeId(string id)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(id)) throw new Exception("Localidade não informada.");
+                var resultLocal = ApiClientFactory.Instance.GetEtapasByLocalidadeId(Convert.ToInt32(id));
+
+                return Task.FromResult(Json(new SelectList(resultLocal, "Id", "Nome")));
+
+            }
+            catch (Exception ex)
+            {
+                return Task.FromResult(Json(ex));
+            }
         }
     }
 

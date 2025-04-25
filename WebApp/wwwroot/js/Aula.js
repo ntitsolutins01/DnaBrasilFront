@@ -6,7 +6,6 @@ var vm = new Vue({
             Id: "",
             Titulo: "",
             Descricao: "",
-            CargaHoraria: "",
             Status: true,
             Video: "",
             Material: "",
@@ -45,10 +44,6 @@ var vm = new Vue({
             $select.on('change', function () {
                 $(this).trigger('blur');
             });
-
-            //mascara dos inputs
-            var cargaHoraria = $("#cargaHoraria");
-            cargaHoraria.mask('000', { reverse: false });
 
             //skin checkbox
             if (typeof Switch !== 'undefined' && $.isFunction(Switch)) {
@@ -187,7 +182,6 @@ var vm = new Vue({
                 Id: "",
                 Titulo: "",
                 Descricao: "",
-                CargaHoraria: "",
                 Status: true,
                 Video: "",
                 Material: "",
@@ -202,7 +196,6 @@ var vm = new Vue({
                         Id: result.data.id,
                         Titulo: result.data.titulo,
                         Descricao: result.data.descricao,
-                        CargaHoraria: result.data.cargaHoraria,
                         Status: result.data.status,
                         Video: result.data.video,
                         Material: result.data.material && result.data.material.includes("\\Aulas")

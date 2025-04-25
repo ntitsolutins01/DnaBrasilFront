@@ -46,7 +46,7 @@
                                 <option value="">Selecionar Localidade</option>
                             </select>
                         </div>
-                        
+
                         <label class="col-sm-2 control-label">Profissional:</label>
                         <div class="col-md-4 form-group">
                             <select class="form-control populate select2" name="ddlProfissional" id="ddlProfissional"
@@ -105,19 +105,19 @@
                                     <strong>Info:</strong> Para impressão em lote selecione o filtro e clique em <a href="" class="alert-link">Impressão em Lote</a>.
                                 </div>
                             </div>
-        
+
                             <!-- Espaço entre alertas -->
                             <div class="col-sm-8 pull-left">
                                 &nbsp;&nbsp;
                             </div>
-        
+
                             <!-- Segundo alerta à esquerda -->
                             <div class="col-sm-6 pull-left">
                                 <div class="alert alert-warning" style="padding-bottom: 6px;padding-top: 6px; !important; margin-bottom: 0px; !important">
                                     <strong>Atenção:</strong> Lembre-se de selecionar o fomento e a localidade para que o sistema encontre a carteirinha corretamente.
                                 </div>
                             </div>
-        
+
                             <!-- Botões à direita -->
                             <div class="col-sm-2 pull-right">
                                 <button type="submit" class="btn btn-block btn-info pull-right">
@@ -177,13 +177,13 @@
                     </div>
                     </div>
                     */
-                    
+
 
                 }
                 <div class="col-sm-2 pull-right">
                     <a href="@Url.Action("Create", "Aluno")" id="addToTable" class="btn btn-block btn-primary pull-right"><i class="fa fa-plus"></i>  &nbsp;&nbsp;Novo Aluno </a>
                 </div>
-                
+
             </div>
             <table class="table table-bordered table-striped mb-0" id="datatable-default">
                 <thead>
@@ -233,8 +233,57 @@
             </table>
         </div>
     </section>
+    
+    <!-- Modal Paginação Impressão em Lote -->
+    <div class="modal fade" id="mdPaginacaoImpressaoLote" tabindex="-1" role="dialog" aria-labelledby="mdPaginacaoImpressaoLoteLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="mdPaginacaoImpressaoLoteLabel">
+                        <i class="fa fa-print"></i> &nbsp;&nbsp;<strong>Impressão em Lote - Paginação</strong>
+                    </h5>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="alert alert-info">
+                                <strong>Info:</strong> Para evitar sobrecarga no servidor, a impressão é limitada a 20 carteirinhas por lote.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p><strong>Total de carteirinhas encontradas: </strong><span id="totalCarteirinhas">0</span></p>
+                            <p><strong>Total de páginas: </strong><span id="totalPaginas">0</span></p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="paginaAtual">Selecione a página para impressão:</label>
+                                <select id="paginaAtual" class="form-control">
+                                    <option value="1">Página 1</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="alert alert-warning">
+                                <strong>Atenção:</strong> Cada página contém até 20 carteirinhas.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i> &nbsp;&nbsp;Cancelar</button>
+                    <button type="button" id="btnConfirmarImpressaoLote" class="btn btn-success"><i class="fa fa-print"></i> &nbsp;&nbsp;Imprimir</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <link rel="stylesheet" href="~/assets/styles_Carteirinha/modal-carteirinha.css" />
+<link rel="stylesheet" href="~/assets/styles_Carteirinha/modal-carteirinha.css" />
 
     <!-- Modal Carteirinha -->
     <div class="modal fade" id="mdCarteirinhaAluno" tabindex="-1" role="dialog" aria-labelledby="mdCarteirinhaAlunoLabel" aria-hidden="true">
@@ -259,7 +308,7 @@
                                 </li>
                             </ul>
                             <div class="tab-content">
-                                <div id="frente" class="tab-pane active" style="background-image: url(/assets/styles_Carteirinha/modelos/carteirinha-frente.png);">
+                                <div id="frente" class="tab-pane active">
                                     <div class="student-info">
                                         <div class="info-row">
                                             <label>NOME DO ESTUDANTE:</label>
@@ -312,12 +361,12 @@
                     <button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-remove"></i> &nbsp;&nbsp;Fechar</button>
                     <a data-toggle="tooltip"
                        data-placement="top"
-                       title="Exportar PDF CMYK"
+                       title="Baixar PDF em CMYK"
                        :href="'/Aluno/GerarPdfCarteirinha/' + editDto.Id + '?fomentoId=' + editDto.FomentoId"
                        class="on-default edit-row btn btn-success pull-right"
                        style="margin-left: 5px;"
                        target="_blank">
-                        <i class="fa fa-file-pdf-o"></i> &nbsp;&nbsp;PDF CMYK
+                        <i class="fa fa-print"></i> &nbsp;&nbsp;Imprimir Carteirinha
                     </a>
                 </div>
             </div>

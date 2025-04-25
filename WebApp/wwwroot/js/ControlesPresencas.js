@@ -15,7 +15,7 @@ var vm = new Vue({
 
             var formid = $('form')[1].id;
 
-            if (formid === "formPesquisarAluno") {
+            if (formid === "formControlePresencas") {
 
                 if (typeof Switch !== 'undefined' && $.isFunction(Switch)) {
 
@@ -50,6 +50,43 @@ var vm = new Vue({
 
                 $select.on('change', function () {
                     $(this).trigger('blur');
+                });
+
+                // inicia datatable aluno
+                var datatableInit = function () {
+
+                    $('#alunoDataTable').dataTable({
+                        dom: '<"row"<"col-lg-6"l><"col-lg-6"f>><"table-responsive"t>p',
+                        "language": {
+                            "sEmptyTable": "Nenhum registro encontrado",
+                            "sInfo": "Mostrando de _START_ até _END_ de _TOTAL_ registros",
+                            "sInfoEmpty": "Mostrando 0 até 0 de 0 registros",
+                            "sInfoFiltered": "(Filtrados de _MAX_ registros)",
+                            "sInfoPostFix": "",
+                            "sInfoThousands": ".",
+                            "sLengthMenu": "_MENU_ resultados por página",
+                            "sLoadingRecords": "Carregando...",
+                            "sProcessing": "Processando...",
+                            "sZeroRecords": "Nenhum registro encontrado",
+                            "sSearch": "Pesquisar: ",
+                            "oPaginate": {
+                                "sNext": "Próximo →" +
+                                    "" +
+                                    "",
+                                "sPrevious": "← Anterior",
+                                "sFirst": "Primeiro",
+                                "sLast": "Último"
+                            },
+                            "oAria": {
+                                "sSortAscending": ": Ordenar colunas de forma ascendente",
+                                "sSortDescending": ": Ordenar colunas de forma descendente"
+                            }
+                        }
+                    });
+                }
+
+                $(function () {
+                    datatableInit();
                 });
 
                 //clique de escolha do select
@@ -229,6 +266,11 @@ var vm = new Vue({
                         self.editDto.Estrutura = result.data.nomeEstrutura;
                         self.editDto.DiasSemana = result.data.diasSemana;
                         self.editDto.Horario = result.data.hrInicial + " - " + result.data.hrFinal;
+                        $("#estrutura").val(result.data.nomeEstrutura);
+                        $("#diaSemana").val(result.data.diasSemana);
+                        $("#categoria").val(result.data.nomeCategoria);
+                        $("#horario").val(result.data.hrInicial + " - " + result.data.hrFinal);
+
 
                         axios.get(urlDataTable, {
                             params: {
@@ -247,25 +289,56 @@ var vm = new Vue({
                                         var table = $('#alunoDataTable').DataTable({
                                             columnDefs: [
                                                 { "className": "text-center", "targets": "_all" }
-                                            ]
+                                            ],
+                                            dom: '<"row"<"col-lg-6"l><"col-lg-6"f>><"table-responsive"t>p',
+                                            "language": {
+                                                "sEmptyTable": "Nenhum registro encontrado",
+                                                "sInfo": "Mostrando de _START_ até _END_ de _TOTAL_ registros",
+                                                "sInfoEmpty": "Mostrando 0 até 0 de 0 registros",
+                                                "sInfoFiltered": "(Filtrados de _MAX_ registros)",
+                                                "sInfoPostFix": "",
+                                                "sInfoThousands": ".",
+                                                "sLengthMenu": "_MENU_ resultados por página",
+                                                "sLoadingRecords": "Carregando...",
+                                                "sProcessing": "Processando...",
+                                                "sZeroRecords": "Nenhum registro encontrado",
+                                                "sSearch": "Pesquisar: ",
+                                                "oPaginate": {
+                                                    "sNext": "Próximo →" +
+                                                        "" +
+                                                        "",
+                                                    "sPrevious": "← Anterior",
+                                                    "sFirst": "Primeiro",
+                                                    "sLast": "Último"
+                                                },
+                                                "oAria": {
+                                                    "sSortAscending": ": Ordenar colunas de forma ascendente",
+                                                    "sSortDescending": ": Ordenar colunas de forma descendente"
+                                                }
+                                            }
                                         });
 
                                         table.row.add([
                                         "<div class='switch switch-sm switch-success'>" +
-                                        "    <input type='checkbox' id='habilitado' name='habilitado' data-plugin-ios-switch />" +
+                                        "    <input type='checkbox' id='falta' name='falta-" + item.alunoId +"' data-plugin-ios-switch />" +
                                         "</div>",
                                         item.alunoId + " - " + item.nome,
                                         "<div class='input-group input-group-icon'>" +
-                                        "    <textarea id='justificativa" + item.alunoId + "' name='justificativa" + item.alunoId +"' rows='3' class='form-control form-control-lg'></textarea>" +
-                                        "    <span class='input-group-addon'>" +
-                                        "        <span class='icon icon-lg'>" +
-                                        "            <i class='fa fa-file-text-o'></i>" +
-                                        "        </span>" +
-                                        "    </span>" +
+                                        "    <textarea id='justificativa" + item.alunoId + "' name='justificativa-" + item.alunoId +"' rows='1' class='form-control form-control-lg'></textarea>" +
                                         "</div>"])  .draw();
 
                                         self.params.alunos.push(item.alunoId.toString());
 
+                                        if (typeof Switch !== 'undefined' && $.isFunction(Switch)) {
+
+                                            $(function () {
+                                                $('[data-plugin-ios-switch]').each(function () {
+                                                    var $this = $(this);
+
+                                                    $this.themePluginIOS7Switch();
+                                                });
+                                            });
+                                        }
                                     });
 
                                 $('input[name="arrAlunos"]').attr('value', self.params.alunos);
@@ -282,7 +355,6 @@ var vm = new Vue({
                     });
                 });
             }
-
         }).apply(this, [jQuery]);
     },
     methods: {

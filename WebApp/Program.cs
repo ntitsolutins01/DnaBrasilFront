@@ -109,8 +109,7 @@ builder.Services.AddAuthorization(o =>
 
     o.AddPolicy(ModuloAccess.ControleAcesso, policy =>
         policy.RequireAssertion(context =>
-            context.User.IsInRole(UserRoles.Administrador) ||
-            context.User.IsInRole(UserRoles.AdministradorEad)));
+            context.User.IsInRole(UserRoles.Administrador)));
 
     o.AddPolicy(ModuloAccess.Dashboard, policy =>
         policy.RequireAssertion(context =>
@@ -124,7 +123,11 @@ builder.Services.AddAuthorization(o =>
             context.User.IsInRole(UserRoles.Coordenador) ||
             context.User.IsInRole(UserRoles.Profissional) ||
             context.User.IsInRole(UserRoles.Gestor) ||
-            context.User.IsInRole(UserRoles.AdministradorEad) ||
+            context.User.IsInRole(UserRoles.Administrador)));
+
+    o.AddPolicy(ModuloAccess.ControleFrequenciaEscolar, policy =>
+        policy.RequireAssertion(context =>
+            context.User.IsInRole(UserRoles.Profissional) ||
             context.User.IsInRole(UserRoles.Administrador)));
 
     o.AddPolicy(ModuloAccess.Nota, policy =>
@@ -132,7 +135,6 @@ builder.Services.AddAuthorization(o =>
             context.User.IsInRole(UserRoles.Coordenador) ||
             context.User.IsInRole(UserRoles.Profissional) ||
             context.User.IsInRole(UserRoles.Gestor) ||
-            context.User.IsInRole(UserRoles.AdministradorEad) ||
             context.User.IsInRole(UserRoles.Administrador)));
 
     o.AddPolicy(ModuloAccess.Profissional, policy =>
@@ -171,7 +173,6 @@ builder.Services.AddAuthorization(o =>
             context.User.IsInRole(UserRoles.Gestor) ||
             context.User.IsInRole(UserRoles.Profissional) ||
             context.User.IsInRole(UserRoles.Parceiro) ||
-            context.User.IsInRole(UserRoles.AdministradorEad) ||
             context.User.IsInRole(UserRoles.Administrador)));
 
     o.AddPolicy(ModuloAccess.Evento, policy =>
@@ -183,6 +184,14 @@ builder.Services.AddAuthorization(o =>
 
     o.AddPolicy(ModuloAccess.ControleMaterial, policy =>
         policy.RequireAssertion(context =>
+            context.User.IsInRole(UserRoles.Coordenador) ||
+            context.User.IsInRole(UserRoles.Gestor) ||
+            context.User.IsInRole(UserRoles.Administrador)));
+
+    o.AddPolicy(ModuloAccess.ControleInventario, policy =>
+        policy.RequireAssertion(context =>
+            context.User.IsInRole(UserRoles.Coordenador) ||
+            context.User.IsInRole(UserRoles.Gestor) ||
             context.User.IsInRole(UserRoles.Administrador)));
 
 
@@ -203,6 +212,13 @@ builder.Services.AddAuthorization(o =>
         policy.RequireAssertion(context =>
             context.User.IsInRole(UserRoles.AdministradorEad) ||
             context.User.IsInRole(UserRoles.CoordenadorEad) ||
+            context.User.IsInRole(UserRoles.Administrador)));
+
+    o.AddPolicy(ModuloAccess.MeusCursos, policy =>
+        policy.RequireAssertion(context =>
+            context.User.IsInRole(UserRoles.AdministradorEad) ||
+            context.User.IsInRole(UserRoles.CoordenadorEad) ||
+            context.User.IsInRole(UserRoles.Aluno) ||
             context.User.IsInRole(UserRoles.Administrador)));
 
     #endregion

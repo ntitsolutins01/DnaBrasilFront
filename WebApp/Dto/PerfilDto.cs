@@ -9,5 +9,7 @@ namespace WebApp.Dto
         public string Descricao { get; set; }
         public ListDictionary Claims { get; set; }
         public string AspNetRoleId { get; set; }
+        public bool Status { get; set; } = true;
+        public bool Ead { get; set; } = false;
     }
 }

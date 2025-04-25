@@ -207,6 +207,8 @@
 
                     var url = "../../Profissional/GetProfissionaisByLocalidade/?id=" + id;
 
+                    var urlEtapa = "../../Serie/GetEtapasByLocalidadeId/?id=" + id;
+
                     var ddlSource = "#ddlProfissionalAluno";
 
                     $.getJSON(url,
@@ -229,6 +231,33 @@
                                 });
                             }
                         });
+
+                    axios.get(urlEtapa).then(result => {
+                        console.log('Dados retornados:', result.data);
+
+                        if (result.data && result.data.listProfessores.length > 0) {
+                            var items = '<option value="">Selecionar a etapa</option>';
+                            $("#ddlEtapa").empty();
+                            $.each(result.data,
+                                function (i, row) {
+                                    if (row.selected) {
+                                        items += "<option selected value='" + row.value + "'>" + row.text + "</option>";
+                                    } else {
+                                        items += "<option value='" + row.value + "'>" + row.text + "</option>";
+                                    }
+                                });
+                            $("#ddlEtapa").html(items);
+                        } else {
+                            new PNotify({
+                                title: 'Etapa',
+                                text: 'Etapas não encontradas.',
+                                type: 'warning'
+                            });
+                        }
+                    }).catch(error => {
+                        console.error('Erro ao carregar dados:', error);
+                        Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
+                    });
                 });
 
                 //mascara dos inputs
