@@ -189,11 +189,6 @@ builder.Services.AddAuthorization(o =>
             context.User.IsInRole(UserRoles.Gestor) ||
             context.User.IsInRole(UserRoles.Administrador)));
 
-    o.AddPolicy(ModuloAccess.ControleInventario, policy =>
-        policy.RequireAssertion(context =>
-            context.User.IsInRole(UserRoles.Coordenador) ||
-            context.User.IsInRole(UserRoles.Gestor) ||
-            context.User.IsInRole(UserRoles.Administrador)));
 
 
 

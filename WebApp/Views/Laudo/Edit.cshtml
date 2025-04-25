@@ -129,14 +129,15 @@
                                                 @if (Model.Saude.Altura == null)
                                                 {
                                                     var altura = Model.TalentoEsportivo.Altura;
-                                                    var alturaFormatada = Math.Round((decimal)altura, 0);
-                                                    <input type="text" class="form-control altura-mask" id="alturaSaude" name="alturaSaude" maxlength="3" placeholder="000"
+                                                    var alturaFormatada = altura != null ? Math.Round((decimal)altura, 0) : 0;
+                                                    <input type="text" class="form-control altura-mask" id="alturaSaude" name="alturaSaude" 
+                                                           maxlength="3" placeholder="000"
                                                     required value="@alturaFormatada" title="Por favor informe a Altura (cm)" />
                                                 }
                                                 else
                                                 {
                                                     var altura = Model.Saude.Altura;
-                                                    var alturaFormatada = Math.Round((decimal)altura, 0);
+                                                    var alturaFormatada = altura != null ? Math.Round((decimal)altura, 0): 0;
                                                     <input type="text" class="form-control altura-mask" id="alturaSaude" name="alturaSaude" maxlength="3" placeholder="000"
                                                     required value="@alturaFormatada" title="Por favor informe a Altura (cm)" />
                                                 }
@@ -169,7 +170,7 @@
                                                 @if (Model.Saude.Envergadura == null)
                                                 {
                                                     var envergadura = Model.TalentoEsportivo.Envergadura;
-                                                    var envergaduraFormatado = Math.Round((decimal)envergadura, 0);
+                                                    var envergaduraFormatado = envergadura != null ? Math.Round((decimal)envergadura, 0) : 0;
                                                     <input type="text" class="form-control altura-mask" id="envergaduraSaude" name="envergaduraSaude" maxlength="3" placeholder="000" required value="@envergaduraFormatado" title="Por favor informe a Envergadura (cm)" />
                                                 }
                                                 else
@@ -188,7 +189,7 @@
                                         <div>
                                             @{
                                                 var alturaTalentoEsportivo = Model.TalentoEsportivo.Altura;
-                                                var alturaFormatadaTalentoEsportivo = Math.Round((decimal)alturaTalentoEsportivo, 0); 
+                                                var alturaFormatadaTalentoEsportivo = alturaTalentoEsportivo != null ? Math.Round((decimal)alturaTalentoEsportivo, 0) : 0; 
                                             }
                                             <label class="col-sm-2 control-label"><strong>Altura (cm) </strong> <span class="required">*</span></label>
                                             <div class="col-sm-3">
@@ -199,7 +200,7 @@
                                         <div>
                                             @{
                                                 var pesoTalentoEsportivo = Model.TalentoEsportivo.Peso;
-                                                var pesoFormatadoTalentoEsportivo = (decimal)pesoTalentoEsportivo;
+                                                var pesoFormatadoTalentoEsportivo = pesoTalentoEsportivo != null ? (decimal)pesoTalentoEsportivo : 0;
                                             }
                                             <label class="col-sm-3 control-label"><strong>Massa Corporal (kg)</strong> <span class="required">*</span></label>
                                             <div class="col-sm-3">
@@ -211,7 +212,7 @@
                                         <div>
                                             @{
                                                 var preesaoManualTalentoEsportivo = Model.TalentoEsportivo.PreensaoManual;
-                                                var preesaoManualFormatadoTalentoEsportivo = Math.Round((decimal)preesaoManualTalentoEsportivo, 0);
+                                                var preesaoManualFormatadoTalentoEsportivo = preesaoManualTalentoEsportivo != null ? Math.Round((decimal)preesaoManualTalentoEsportivo, 0) : 0;
                                             }
                                             <label class="col-sm-2 control-label"><strong>Preensão Manual (kg)</strong> <span class="required">*</span></label>
                                             <div class="col-sm-3">
@@ -221,7 +222,7 @@
                                         <div>
                                             @{
                                                 var flexibilidadeTalentoEsportivo = Model.TalentoEsportivo.Flexibilidade;
-                                                var flexibilidadeFormatadaTalentoEsportivo = Math.Round((decimal)flexibilidadeTalentoEsportivo, 0);
+                                                var flexibilidadeFormatadaTalentoEsportivo = flexibilidadeTalentoEsportivo != null ? Math.Round((decimal)flexibilidadeTalentoEsportivo!, 0) : 0;
                                             }
                                             <label class="col-sm-3 control-label"><strong>Flexibilidade (cm)</strong> <span class="required">*</span></label>
                                             <div class="col-sm-3">
@@ -234,7 +235,7 @@
 
                                             @{
                                                 var impulsaoHorizontalTalentoEsportivo = Model.TalentoEsportivo.ImpulsaoHorizontal;
-                                                var impulsaoHorizontalFormatadaTalentoEsportivo = Math.Round((decimal)impulsaoHorizontalTalentoEsportivo, 0);
+                                                var impulsaoHorizontalFormatadaTalentoEsportivo = impulsaoHorizontalTalentoEsportivo != null ? Math.Round((decimal)impulsaoHorizontalTalentoEsportivo, 0) : 0;
                                             }
                                             <label class="col-sm-2 control-label"><strong>Impulsão Horizontal (cm)</strong> <span class="required">*</span></label>
                                             <div class="col-sm-3">
