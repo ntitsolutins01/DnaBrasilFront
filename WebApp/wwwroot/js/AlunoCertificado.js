@@ -105,7 +105,7 @@
                     form.append('Progresso', progress);
                     form.append('__RequestVerificationToken', token);
 
-                    if (true) {
+                    if (progress >= 60) {
                         axios.post('/Aluno/CreateAlunoAula', form, {
                             headers: {
                                 'Content-Type': 'application/x-www-form-urlencoded'
