@@ -6,7 +6,6 @@ namespace WebApp.Dto
     {
 		public required int Id { get; set; }
         public required int ModuloEadId { get; set; }
-        public required int CargaHoraria { get; set; }
 		public required string NomeProfessor { get; set; }
 		public required int ProfessorId { get; set; }
 		public required string TituloModuloEad { get; set; }
@@ -17,5 +16,7 @@ namespace WebApp.Dto
         public string? Material { get; set; }
         public string? NomeMaterial { get; set; }
 		public string? Video { get; set; }
+		public string? NomeVideo { get; set; }
+		public int? Ordem { get; set; }
     }
 }

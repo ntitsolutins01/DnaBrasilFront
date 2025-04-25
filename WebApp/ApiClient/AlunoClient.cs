@@ -49,6 +49,18 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
+        /// Inclusão de AlunoAula
+        /// </summary>
+        /// <param name="command">Objeto para inclusão de AlunoAula</param>
+        /// <returns>Id de AlunoAula inserido</returns>
+        public Task<long> CreateAlunoAula(AlunoModel.CreateUpdateAlunoAulaCommand command)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceAlunos}/Aulas"));
+            return Post(requestUrl, command);
+        }
+
+        /// <summary>
         /// Alteração do Aluno
         /// </summary>
         /// <param name="id">Id de alteração do Aluno</param>
@@ -209,6 +221,29 @@ namespace WebApp.ApiClient
             return Get<ModeloCarteirinhaDto>(requestUrl);
         }
 
+        /// <summary>
+        /// Busca todos os alunos de um curso
+        /// </summary>
+        /// <param name="id">Id do curso</param>
+        /// <returns>Retorna lista dos alunoscursos</returns>
+        public List<AlunoCursoDto> GetAlunosCursosByCursoId(int cursoId)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceAlunos}/AlunoCurso/{cursoId}"));
+            return Get<List<AlunoCursoDto>>(requestUrl);
+        }
+
+        /// <summary>
+        /// Busca todos os alunos de um aula
+        /// </summary>
+        /// <param name="id">Id do aula</param>
+        /// <returns>Retorna lista dos alunosaulas</returns>
+        public List<AlunoAulaDto> GetAlunoAulasByAulaId(int aulaId)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceAlunos}/AlunoAula/{aulaId}"));
+            return Get<List<AlunoAulaDto>>(requestUrl);
+        }
 
         #endregion
     }

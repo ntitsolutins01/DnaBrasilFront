@@ -6,6 +6,8 @@ namespace WebApp.Models
 	public class AlunoCursoCertificadoModel
     {
         public AlunoCursoDto AlunoCurso { get; set; }
+        public AlunoDto Aluno { get; set; }
+        public CursoDto Curso { get; set; }
         public List<AlunoCursoDto> AlunosCursos { get; set; }
         public int AlunoId { get; set; }
         public SelectList ListAlunos { get; set; }
@@ -21,6 +23,9 @@ namespace WebApp.Models
         public SelectList ListMunicipios { get; set; }
         public string? LocalidadeId { get; set; }
         public SelectList ListLocalidades { get; set; }
+        public List<ModuloEadDto> Modulos { get; set; }
+        public List<AulaDto> Aulas { get; set; }
+        public List<AlunoAulaDto> AlunosAulas { get; set; }
 
         public class CreateUpdateAlunoCursoCommand
 		{

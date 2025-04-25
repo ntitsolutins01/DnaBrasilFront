@@ -598,161 +598,580 @@ namespace WebApp.Controllers
         }
 
         /// <summary>
-        /// Acao de Imprimir Carteirinha por Lote
+        /// Obtém a contagem de alunos com base nos filtros informados
         /// </summary>
-        /// <param name="ids">ids</param>
-        /// <param name="fomentoId">Id de fomento</param>
-        /// <param name="estadoId">Id de estudo</param>
-        /// <param name="municipioId">Id de municipio</param>
-        /// <param name="localidadeId">Id de localidade</param>
-        /// <param name="profissionalId">Id do profissional</param>
-        /// <param name="deficienciaId">Id de deficiencia</param>
-        /// <param name="etniaId">Id de etnia</param>
-        /// <param name="sexoId">Id de sexo</param>
-        /// <returns>Retorna impresao de carteirinha</returns>
-        [ClaimsAuthorize(ClaimType.Aluno, Claim.Incluir)]
-        public async Task<ActionResult> ImprimirCarteirinhasLote(string ids, string fomentoId = null, string estadoId = null,
-            string municipioId = null, string localidadeId = null, string profissionalId = null, string deficienciaId = null,
-            string etniaId = null, string sexoId = null)
+        /// <param name="ids">IDs dos alunos selecionados (opcional)</param>
+        /// <param name="fomentoId">ID do Fomento (obrigatório)</param>
+        /// <param name="estadoId">ID do Estado (opcional)</param>
+        /// <param name="municipioId">ID do Município (opcional)</param>
+        /// <param name="localidadeId">ID da Localidade (opcional)</param>
+        /// <param name="profissionalId">ID do Profissional (opcional)</param>
+        /// <param name="deficienciaId">ID da Deficiência (opcional)</param>
+        /// <param name="etniaId">ID da Etnia (opcional)</param>
+        /// <param name="sexoId">ID do Sexo (opcional)</param>
+        /// <param name="possuiFoto">Filtro de alunos que possuem foto (opcional)</param>
+        /// <returns>JSON com a contagem total de alunos</returns>
+        [HttpGet]
+        [ClaimsAuthorize(ClaimType.Aluno, Claim.Consultar)]
+        public async Task<IActionResult> ObterContagemAlunos(string ids, int fomentoId, string estadoId = "",
+            string municipioId = "", string localidadeId = "", string profissionalId = "",
+            string deficienciaId = "", string etniaId = "", string sexoId = "", bool possuiFoto = false)
         {
             try
             {
-                _logger.Info($"Tela para impressao de carteirinha - Aluno.ImprimirCarteirinhasLote");
+                _logger.Info($"Obtendo contagem de alunos - Aluno.ObterContagemAlunos - FomentoId: {fomentoId}");
 
-                // Buscar o modelo da carteirinha baseado no fomentoId
-                ModeloCarteirinhaDto modeloCarteirinha = null;
-                if (!string.IsNullOrEmpty(fomentoId))
+                // Verificar se o fomento foi informado
+                if (fomentoId <= 0)
                 {
-                    modeloCarteirinha = await ApiClientFactory.Instance.GetModeloCarteirinhaByFomentoId(int.Parse(fomentoId));
+                    return BadRequest(new { success = false, message = "É necessário selecionar um Fomento." });
                 }
 
-                IEnumerable<AlunoDto> alunos;
+                int totalAlunos = 0;
+
+                // Se IDs específicos foram informados
                 if (!string.IsNullOrEmpty(ids))
                 {
-                    // Se IDs específicos foram selecionados
-                    var idList = ids.Split(',').Select(int.Parse).ToList();
+                    var alunoIds = ids.Split(',').Select(int.Parse).ToList();
+                    totalAlunos = alunoIds.Count;
 
-                    alunos = idList.Select(async id =>
+                    // Se tiver filtro de foto, precisamos verificar cada aluno
+                    if (possuiFoto)
                     {
-                        var aluno = await ApiClientFactory.Instance.GetAlunoById(id);
-                        if (aluno.QrCode == null)
+                        totalAlunos = 0;
+                        foreach (var id in alunoIds)
                         {
-                            aluno.QrCode = GeraQrCode(aluno.Id);
-                            ApiClientFactory.Instance.UpdateDados(aluno.Id, new AlunoModel.CreateUpdateDadosAlunoCommand
+                            var aluno = await ApiClientFactory.Instance.GetAlunoById(id);
+                            if (aluno != null && aluno.ByteImage != null && aluno.ByteImage.Length > 0)
                             {
-                                Id = aluno.Id,
-                                QrCode = aluno.QrCode
-                            });
+                                totalAlunos++;
+                            }
                         }
-                        return aluno;
-                    }) as IEnumerable<AlunoDto>;
+                    }
                 }
                 else
                 {
-                    // Usa filtros para obter alunos
+                    // Criar filtro para buscar os alunos
                     var searchFilter = new AlunosFilterDto
                     {
-                        FomentoId = fomentoId,
+                        FomentoId = fomentoId.ToString(),
                         Estado = estadoId,
                         MunicipioId = municipioId,
                         LocalidadeId = localidadeId,
                         ProfissionalId = profissionalId,
                         DeficienciaId = deficienciaId,
                         Etnia = etniaId,
-                        Sexo = sexoId
+                        Sexo = sexoId,
+                        PossuiFoto = possuiFoto
                     };
 
-                    _logger.Info($"Filtros aplicados: Sexo={searchFilter.Sexo}, Fomento={searchFilter.FomentoId}, Profissional={searchFilter.ProfissionalId}");
-                    var result = await ApiClientFactory.Instance.GetAlunosByFilter(searchFilter);
-
-                    // Esse trecho comentado está bugando algo, deixa comentado por enquanto
-                    /*if (!string.IsNullOrEmpty(sexoId))
+                    // Buscar apenas a contagem de alunos
+                    var resultado = await ApiClientFactory.Instance.GetAlunosByFilter(searchFilter);
+                    if (resultado != null && resultado.Alunos != null)
                     {
-                        result.Alunos = result.Alunos.Where(a =>
-                            !string.IsNullOrEmpty(a.Sexo) &&
-                            a.Sexo.Equals(sexoId, StringComparison.OrdinalIgnoreCase)
-                        ).ToList();
-                    }*/
-
-                    // Converte AlunoIndexDto para AlunoDto completo
-                    var alunosCompletos = result.Alunos.Select(async a =>
-                    {
-                        var alunoCompleto = await ApiClientFactory.Instance.GetAlunoById(a.Id);
-                        if (alunoCompleto.QrCode == null)
-                        {
-                            alunoCompleto.QrCode = GeraQrCode(alunoCompleto.Id);
-                            await ApiClientFactory.Instance.UpdateQrCode(alunoCompleto.Id, new AlunoModel.CreateUpdateDadosAlunoCommand
-                            {
-                                Id = alunoCompleto.Id,
-                                QrCode = alunoCompleto.QrCode
-                            });
-                        }
-                        return alunoCompleto;
-                    });
-                    alunos = await Task.WhenAll(alunosCompletos);
+                        totalAlunos = resultado.Alunos.Count;
+                    }
                 }
 
-                var alunosList = alunos.ToList();
-                if (!alunosList.Any())
-                {
-                    return RedirectToAction(nameof(Index), new
-                    {
-                        notify = (int)EnumNotify.Warning,
-                        message = "Nenhum aluno encontrado com os filtros selecionados."
-                    });
-                }
-
-                // Se necessário, converte a imagem em base64
-
-                foreach (var aluno in alunosList.Where(a => a.ByteImage != null && a.Image == null))
-                {
-                    aluno.Image = aluno.ByteImage;
-                }
-
-                return View(new AlunoModel
-                {
-                    Alunos = alunosList.Select(a => new AlunoIndexDto
-                    {
-                        Id = a.Id,
-                        Nome = a.Nome,
-                        Email = a.Email,
-                        DtNascimento = a.DtNascimento,
-                        Status = a.Status,
-                        Cpf = a.Cpf,
-                        Telefone = a.Telefone,
-                        Celular = a.Celular,
-                        ByteImage = a.ByteImage,
-                        QrCode = a.QrCode,
-                        Sexo = a.Sexo,
-                        ModalidadeLinhaAcao = a.ModalidadeLinhaAcao,
-                        MunicipioEstado = a.MunicipioEstado,
-                        NomeLocalidade = a.NomeLocalidade,
-                        // Adicionando os campos de navegação
-                        Municipio = new MunicipioDto
-                        {
-                            Id = int.TryParse(a.MunicipioId, out var mid) ? mid : 0,
-                            Nome = a.NomeMunicipio
-                        },
-                        Localidade = new LocalidadeDto
-                        {
-                            Id = a.LocalidadeId,
-                            Nome = a.NomeLocalidade
-                        },
-                        Modalidades = a.Modalidades
-                    }).ToList(),
-                    ModeloCarteirinha = modeloCarteirinha
-                });
+                return Json(new { success = true, total = totalAlunos });
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                _logger.Error($"Ação de imprimir carteirinha em lote - Aluno.ImprimirCarteirinhasLote: {e.StackTrace}");
-                _logger.Error($"Erro ao aplicar filtros: {e.Message}");
+                _logger.Error($"Erro ao obter contagem de alunos: {ex.Message}", ex);
+                return StatusCode(500, new { success = false, message = "Erro ao obter contagem de alunos: " + ex.Message });
+            }
+        }
 
-                return RedirectToAction(nameof(Index), new
+        /// <summary>
+        /// Gera um PDF com múltiplas carteirinhas de alunos com base nos filtros ou IDs informados
+        /// </summary>
+        /// <param name="ids">IDs dos alunos selecionados (opcional)</param>
+        /// <param name="fomentoId">ID do Fomento (obrigatório)</param>
+        /// <param name="estadoId">ID do Estado (opcional)</param>
+        /// <param name="municipioId">ID do Município (opcional)</param>
+        /// <param name="localidadeId">ID da Localidade (opcional)</param>
+        /// <param name="profissionalId">ID do Profissional (opcional)</param>
+        /// <param name="deficienciaId">ID da Deficiência (opcional)</param>
+        /// <param name="etniaId">ID da Etnia (opcional)</param>
+        /// <param name="sexoId">ID do Sexo (opcional)</param>
+        /// <param name="possuiFoto">Filtro de alunos que possuem foto (opcional)</param>
+        /// <param name="pagina">Número da página atual (começando em 1)</param>
+        /// <param name="itensPorPagina">Quantidade de itens por página</param>
+        /// <returns>Arquivo PDF com múltiplas carteirinhas</returns>
+        [ClaimsAuthorize(ClaimType.Aluno, Claim.Incluir)]
+        public async Task<IActionResult> ImprimirCarteirinhasLote(string ids, int fomentoId, string estadoId = "",
+            string municipioId = "", string localidadeId = "", string profissionalId = "",
+            string deficienciaId = "", string etniaId = "", string sexoId = "", bool possuiFoto = false,
+            int pagina = 1, int itensPorPagina = 20)
+        {
+            try
+            {
+                _logger.Info($"Gerando PDF CMYK de carteirinhas em lote - Aluno.ImprimirCarteirinhasLote - FomentoId: {fomentoId}, Página: {pagina}");
+
+                // Verificar o ambiente
+                if (!VerificarAmbientePdfCmyk())
                 {
-                    notify = (int)EnumNotify.Error,
-                    message = "Erro ao gerar impressão em lote: " + e.Message
-                });
+                    return StatusCode(500, "Configurações necessárias para geração de PDF CMYK não encontradas");
+                }
+
+                // Verificar se o fomento foi informado
+                if (fomentoId <= 0)
+                {
+                    _logger.Error("Fomento não informado para impressão em lote");
+                    return BadRequest("É necessário selecionar um Fomento para a impressão em lote");
+                }
+
+                // Obter o modelo de carteirinha
+                var modeloCarteirinha = await ApiClientFactory.Instance.GetModeloCarteirinhaByFomentoId(fomentoId);
+                if (modeloCarteirinha == null)
+                {
+                    _logger.Error($"Modelo de carteirinha não encontrado - FomentoId: {fomentoId}");
+                    return NotFound("Modelo de carteirinha não encontrado");
+                }
+
+                // Lista para armazenar todos os alunos
+                List<AlunoDto> todosAlunos = new List<AlunoDto>();
+
+                // Lista para armazenar os alunos da página atual
+                List<AlunoDto> alunosPaginados = new List<AlunoDto>();
+
+                // Se IDs específicos foram informados
+                if (!string.IsNullOrEmpty(ids))
+                {
+                    var alunoIds = ids.Split(',').Select(int.Parse).ToList();
+
+                    // Buscar cada aluno individualmente
+                    foreach (var id in alunoIds)
+                    {
+                        var aluno = await ApiClientFactory.Instance.GetAlunoById(id);
+                        if (aluno != null)
+                        {
+                            // Filtrar por possuiFoto se o filtro estiver ativo
+                            if (possuiFoto)
+                            {
+                                if (aluno.ByteImage != null && aluno.ByteImage.Length > 0)
+                                {
+                                    todosAlunos.Add(aluno);
+                                }
+                            }
+                            else
+                            {
+                                todosAlunos.Add(aluno);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    // Criar filtro para buscar os alunos
+                    var searchFilter = new AlunosFilterDto
+                    {
+                        FomentoId = fomentoId.ToString(),
+                        Estado = estadoId,
+                        MunicipioId = municipioId,
+                        LocalidadeId = localidadeId,
+                        ProfissionalId = profissionalId,
+                        DeficienciaId = deficienciaId,
+                        Etnia = etniaId,
+                        Sexo = sexoId,
+                        PossuiFoto = possuiFoto
+                    };
+
+                    // Buscar alunos com base nos filtros
+                    var resultado = await ApiClientFactory.Instance.GetAlunosByFilter(searchFilter);
+
+                    if (resultado != null && resultado.Alunos != null && resultado.Alunos.Any())
+                    {
+                        // Para cada AlunoIndexDto, buscar o AlunoDto completo com todas as informações necessárias
+                        foreach (var alunoIndex in resultado.Alunos)
+                        {
+                            var alunoCompleto = await ApiClientFactory.Instance.GetAlunoById(alunoIndex.Id);
+                            if (alunoCompleto != null)
+                            {
+                                // Se o filtro possuiFoto estiver ativo e o aluno tiver imagem, ou se o filtro não estiver ativo
+                                if (!possuiFoto || (alunoCompleto.ByteImage != null && alunoCompleto.ByteImage.Length > 0))
+                                {
+                                    todosAlunos.Add(alunoCompleto);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Verificar se encontrou alunos
+                if (todosAlunos == null || !todosAlunos.Any())
+                {
+                    _logger.Warn("Nenhum aluno encontrado com os filtros informados");
+                    return NotFound("Nenhum aluno encontrado com os filtros informados");
+                }
+
+                // Aplicar paginação
+                int totalPaginas = (int)Math.Ceiling(todosAlunos.Count / (double)itensPorPagina);
+
+                // Ajustar a página caso esteja fora dos limites
+                if (pagina < 1) pagina = 1;
+                if (pagina > totalPaginas) pagina = totalPaginas;
+
+                // Calcular índices de início e fim para a página atual
+                int indiceInicio = (pagina - 1) * itensPorPagina;
+                int indiceFim = Math.Min(indiceInicio + itensPorPagina, todosAlunos.Count);
+
+                // Obter os alunos da página atual
+                alunosPaginados = todosAlunos.Skip(indiceInicio).Take(indiceFim - indiceInicio).ToList();
+
+                // Gerar o PDF com as carteirinhas da página atual
+                byte[] pdfBytes = await GerarPdfCarteirinhasLote(alunosPaginados, modeloCarteirinha);
+
+                // Retornar o arquivo PDF
+                return File(
+                    pdfBytes,
+                    "application/pdf",
+                    $"Carteirinhas_Lote_Pagina{pagina}_{DateTime.Now:yyyyMMdd}.pdf"
+                );
+            }
+            catch (OutOfMemoryException ex)
+            {
+                _logger.Error($"Erro de memória ao gerar PDF das carteirinhas em lote: {ex.Message}", ex);
+                return StatusCode(500, "Erro de memória ao gerar o PDF. Por favor, reduza o número de alunos selecionados.");
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"Erro ao gerar PDF das carteirinhas em lote: {ex.Message}", ex);
+                return StatusCode(500, "Erro ao gerar o PDF das carteirinhas em lote: " + ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Gera um PDF em formato CMYK contendo múltiplas carteirinhas de alunos.
+        /// </summary>
+        /// <param name="alunos">Lista de alunos para gerar as carteirinhas</param>
+        /// <param name="modeloCarteirinha">Modelo de carteirinha utilizado para gerar o PDF</param>
+        /// <returns>Retorna os bytes do arquivo PDF gerado</returns>
+        private async Task<byte[]> GerarPdfCarteirinhasLote(List<AlunoDto> alunos, ModeloCarteirinhaDto modeloCarteirinha)
+        {
+            // Caminho dos arquivos de background
+            string frenteCaminhoRelativo = $"assets/styles_Carteirinha/modelos/{modeloCarteirinha.NomeImagemFrente}.tif";
+            string versoCaminhoRelativo = $"assets/styles_Carteirinha/modelos/{modeloCarteirinha.NomeImagemVerso}.tif";
+
+            // Converter caminhos relativos para absolutos
+            string frenteCaminhoAbsoluto = System.IO.Path.Combine(_host.WebRootPath, frenteCaminhoRelativo.Replace("/", System.IO.Path.DirectorySeparatorChar.ToString()));
+            string versoCaminhoAbsoluto = System.IO.Path.Combine(_host.WebRootPath, versoCaminhoRelativo.Replace("/", System.IO.Path.DirectorySeparatorChar.ToString()));
+
+            // Verificar se os arquivos existem
+            if (!System.IO.File.Exists(frenteCaminhoAbsoluto))
+            {
+                _logger.Error($"Arquivo de fundo da frente não encontrado: {frenteCaminhoAbsoluto}");
+                throw new FileNotFoundException("Arquivo de fundo da frente não encontrado", frenteCaminhoAbsoluto);
+            }
+
+            if (!System.IO.File.Exists(versoCaminhoAbsoluto))
+            {
+                _logger.Error($"Arquivo de fundo do verso não encontrado: {versoCaminhoAbsoluto}");
+                throw new FileNotFoundException("Arquivo de fundo do verso não encontrado", versoCaminhoAbsoluto);
+            }
+
+            // Criar memorystream para armazenar o PDF
+            using (MemoryStream ms = new MemoryStream())
+            {
+                // Definição da sangria de 3mm (em pontos)
+                float sangriaEmPontos = 3f / 10f * 28.35f; // 3mm em pontos
+
+                // Dimensões originais do documento
+                float larguraOriginal = 8.5f * 28.35f;
+                float alturaOriginal = 5.4f * 28.35f;
+
+                // Dimensões com sangria
+                float larguraComSangria = larguraOriginal + (2 * sangriaEmPontos);
+                float alturaComSangria = alturaOriginal + (2 * sangriaEmPontos);
+
+                // Configuração das cores CMYK para todo o documento
+                DeviceCmyk corPreto = new DeviceCmyk(0.75f, 0.68f, 0.67f, 0.9f); // "Rich black" CMYK
+                DeviceCmyk corAzul = new DeviceCmyk(0.75f, 0.68f, 0, 0.2f);
+                DeviceCmyk corBranca = new DeviceCmyk(0, 0, 0, 0); // Branco em CMYK
+
+                // Criar documento PDF com suporte a CMYK
+                PdfWriter writer = new PdfWriter(ms);
+                PdfDocument pdf = new PdfDocument(writer);
+
+                // Configurar Output Intent para CMYK
+                PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "",
+                    "http://www.color.org", "FOGRA39", null);
+                pdf.AddOutputIntent(outputIntent);
+
+                // Configurações para o documento com tamanho ajustado para incluir sangria
+                Document document = new Document(pdf, new PageSize(larguraComSangria, alturaComSangria));
+                document.SetMargins(0, 0, 0, 0);
+
+                // Definir o TrimBox que será aplicado a cada página
+                Rectangle trimBox = new Rectangle(
+                    sangriaEmPontos,
+                    sangriaEmPontos,
+                    larguraComSangria - (2 * sangriaEmPontos),
+                    alturaComSangria - (2 * sangriaEmPontos)
+                );
+
+                // Para cada aluno na lista, criar uma frente e um verso (duas páginas por aluno)
+                foreach (var aluno in alunos)
+                {
+                    // === FRENTE DA CARTEIRINHA ===
+                    // Se não for a primeira página, adicionar uma quebra de página
+                    if (pdf.GetNumberOfPages() > 0)
+                    {
+                        document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
+                    }
+
+                    // Adicionar imagem de fundo da frente
+                    ImageData imgDataFrente = ImageDataFactory.Create(frenteCaminhoAbsoluto);
+                    iText.Layout.Element.Image backgroundFrente = new iText.Layout.Element.Image(imgDataFrente);
+                    backgroundFrente.SetFixedPosition(0, 0);
+                    backgroundFrente.SetWidth(larguraComSangria);
+                    backgroundFrente.SetHeight(alturaComSangria);
+                    document.Add(backgroundFrente);
+
+                    // Adicionar informações do aluno - com a margem de sangria incluída nas posições
+                    float leftMargin = 0.5f * 28.35f + sangriaEmPontos; // 0.5cm do original + sangria
+                    float textWidth = 5.5f * 28.35f;
+                    float labelWidth = 2.5f * 28.35f; // Largura da label
+                    float valueWidth = 3.0f * 28.35f; // Largura do valor
+
+                    // Ajustando a posição vertical incluindo a sangria
+                    float startY = alturaComSangria - 2.3f * 28.35f - sangriaEmPontos - 10;
+                    float currentY = startY;
+                    float alturaItem;
+
+                    // Nome
+                    alturaItem = AddInfoRow(document, "NOME DO ESTUDANTE:", aluno.Nome, leftMargin, currentY, labelWidth, valueWidth, corAzul);
+                    currentY -= alturaItem;
+
+                    // Data de nascimento
+                    alturaItem = AddInfoRow(document, "DATA DE NASCIMENTO:", aluno.DtNascimento, leftMargin, currentY, labelWidth, valueWidth, corAzul);
+                    currentY -= alturaItem;
+
+                    // Telefone
+                    alturaItem = AddInfoRow(document, "TELEFONE:", aluno.Celular, leftMargin, currentY, labelWidth, valueWidth, corAzul);
+                    currentY -= alturaItem;
+
+                    // CPF
+                    alturaItem = AddInfoRow(document, "CPF:", aluno.Cpf, leftMargin, currentY, labelWidth, valueWidth, corAzul);
+                    currentY -= alturaItem;
+
+                    // Matrícula
+                    alturaItem = AddInfoRow(document, "MATRÍCULA:", aluno.Id.ToString(), leftMargin, currentY, labelWidth, valueWidth, corAzul);
+                    currentY -= alturaItem;
+
+                    // Modalidades
+                    AddFullWidthText(document, aluno.Modalidades, leftMargin, currentY, labelWidth + valueWidth, corAzul, false);
+
+                    // Adicionar foto do aluno
+                    float rightMargin = 0.91f * 28.35f;
+                    float topMargin = 0.795f * 28.35f + sangriaEmPontos / 3;
+                    float fotoWidth = 48.5f;
+                    float fotoHeight = 69.6f;
+
+                    float fotoX = larguraComSangria - rightMargin - fotoWidth;
+                    float fotoY = alturaComSangria - topMargin - fotoHeight;
+                    float radioBorda = 4; // 4 pontos (aprox. 1.4mm)
+
+                    if (aluno.ByteImage != null && aluno.ByteImage.Length > 0)
+                    {
+                        float fotoInternalX = fotoX;
+                        float fotoInternalY = fotoY;
+                        float fotoInternalWidth = fotoWidth;
+                        float fotoInternalHeight = fotoHeight;
+
+                        // Desenhar fundo branco com cantos arredondados
+                        PdfCanvas canvasFundoFoto = new PdfCanvas(pdf.GetPage(pdf.GetNumberOfPages()));
+                        canvasFundoFoto.SaveState();
+                        canvasFundoFoto.SetFillColor(corBranca);
+                        canvasFundoFoto.RoundRectangle(fotoInternalX, fotoInternalY, fotoInternalWidth, fotoInternalHeight, radioBorda);
+                        canvasFundoFoto.Fill();
+                        canvasFundoFoto.RestoreState();
+
+                        ImageData imgDataFoto = ImageDataFactory.Create(aluno.ByteImage);
+                        float imgOriginalWidth = imgDataFoto.GetWidth();
+                        float imgOriginalHeight = imgDataFoto.GetHeight();
+                        float imgRatio = imgOriginalWidth / imgOriginalHeight;
+                        float containerRatio = fotoInternalWidth / fotoInternalHeight;
+
+                        iText.Layout.Element.Image foto = new iText.Layout.Element.Image(imgDataFoto);
+
+                        // Implementando comportamento similar ao background-size: cover
+                        if (imgRatio > containerRatio)
+                        {
+                            foto.SetHeight(fotoInternalHeight);
+                            float newWidth = fotoInternalHeight * imgRatio;
+                            foto.SetWidth(newWidth);
+                            float offsetX = (newWidth - fotoInternalWidth) / 2;
+                            foto.SetFixedPosition(fotoInternalX - offsetX, fotoInternalY);
+                        }
+                        else
+                        {
+                            foto.SetWidth(fotoInternalWidth);
+                            float newHeight = fotoInternalWidth / imgRatio;
+                            foto.SetHeight(newHeight);
+                            float offsetY = (newHeight - fotoInternalHeight) / 2;
+                            foto.SetFixedPosition(fotoInternalX, fotoInternalY - offsetY);
+                        }
+
+                        // Aplicar o recorte em formato arredondado na imagem
+                        PdfCanvas clipCanvas = new PdfCanvas(pdf.GetPage(pdf.GetNumberOfPages()));
+                        clipCanvas.SaveState();
+                        clipCanvas.SetFillColor(corPreto);
+                        clipCanvas.SetStrokeColor(corPreto);
+                        clipCanvas.RoundRectangle(fotoInternalX, fotoInternalY, fotoInternalWidth, fotoInternalHeight, radioBorda);
+                        clipCanvas.Clip().EndPath();
+
+                        document.Add(foto);
+                        clipCanvas.RestoreState();
+                    }
+                    else
+                    {
+                        // Se não tiver foto, usar imagem padrão
+                        string fotoDefaultPath = aluno.Sexo == "Feminino"
+                            ? System.IO.Path.Combine(_host.WebRootPath, "assets", "images", "menina.png")
+                            : System.IO.Path.Combine(_host.WebRootPath, "assets", "images", "menino.png");
+
+                        float fotoInternalX = fotoX;
+                        float fotoInternalY = fotoY;
+                        float fotoInternalWidth = fotoWidth;
+                        float fotoInternalHeight = fotoHeight;
+
+                        // Desenhar fundo branco com cantos arredondados
+                        PdfCanvas canvasFundoFotoDefault = new PdfCanvas(pdf.GetPage(pdf.GetNumberOfPages()));
+                        canvasFundoFotoDefault.SaveState();
+                        canvasFundoFotoDefault.SetFillColor(corBranca);
+                        canvasFundoFotoDefault.RoundRectangle(fotoInternalX, fotoInternalY, fotoInternalWidth, fotoInternalHeight, radioBorda);
+                        canvasFundoFotoDefault.Fill();
+                        canvasFundoFotoDefault.RestoreState();
+
+                        ImageData imgDataDefault = ImageDataFactory.Create(fotoDefaultPath);
+                        float imgOriginalWidth = imgDataDefault.GetWidth();
+                        float imgOriginalHeight = imgDataDefault.GetHeight();
+                        float imgRatio = imgOriginalWidth / imgOriginalHeight;
+                        float containerRatio = fotoInternalWidth / fotoInternalHeight;
+
+                        iText.Layout.Element.Image fotoDefault = new iText.Layout.Element.Image(imgDataDefault);
+
+                        if (imgRatio > containerRatio)
+                        {
+                            fotoDefault.SetHeight(fotoInternalHeight);
+                            float newWidth = fotoInternalHeight * imgRatio;
+                            fotoDefault.SetWidth(newWidth);
+                            float offsetX = (newWidth - fotoInternalWidth) / 2;
+                            fotoDefault.SetFixedPosition(fotoInternalX - offsetX, fotoInternalY);
+                        }
+                        else
+                        {
+                            fotoDefault.SetWidth(fotoInternalWidth);
+                            float newHeight = fotoInternalWidth / imgRatio;
+                            fotoDefault.SetHeight(newHeight);
+                            float offsetY = (newHeight - fotoInternalHeight) / 2;
+                            fotoDefault.SetFixedPosition(fotoInternalX, fotoInternalY - offsetY);
+                        }
+
+                        PdfCanvas clipCanvasDefault = new PdfCanvas(pdf.GetPage(pdf.GetNumberOfPages()));
+                        clipCanvasDefault.SaveState();
+                        clipCanvasDefault.SetFillColor(corPreto);
+                        clipCanvasDefault.SetStrokeColor(corPreto);
+                        clipCanvasDefault.RoundRectangle(fotoInternalX, fotoInternalY, fotoInternalWidth, fotoInternalHeight, radioBorda);
+                        clipCanvasDefault.Clip().EndPath();
+
+                        document.Add(fotoDefault);
+                        clipCanvasDefault.RestoreState();
+                    }
+
+                    // Adicionar QR Code
+                    if (aluno.QrCode != null && aluno.QrCode.Length > 0)
+                    {
+                        float qrRightMargin = 0.62f * 28.35f + sangriaEmPontos;
+                        float qrBottomMargin = 0.4f * 28.35f + sangriaEmPontos;
+                        float qrWidth = 48.5f;
+                        float qrHeight = 48.5f;
+
+                        float qrX = larguraComSangria - qrRightMargin - qrWidth;
+                        float qrY = qrBottomMargin;
+
+                        ImageData imgDataQr = ImageDataFactory.Create(aluno.QrCode);
+                        iText.Layout.Element.Image qrCode = new iText.Layout.Element.Image(imgDataQr);
+                        qrCode.SetFixedPosition(qrX, qrY);
+                        qrCode.SetHeight(qrHeight);
+                        qrCode.SetWidth(qrWidth);
+                        qrCode.ScaleToFit(qrWidth, qrHeight);
+
+                        document.Add(qrCode);
+                    }
+
+                    // Aplicar TrimBox imediatamente após concluir a página da frente
+                    try
+                    {
+                        int paginaAtual = pdf.GetNumberOfPages();
+                        if (paginaAtual > 0) // Verificação adicional de segurança
+                        {
+                            PdfPage pagina = pdf.GetPage(paginaAtual);
+                            if (pagina != null)
+                            {
+                                pagina.SetTrimBox(trimBox);
+                                pagina.SetBleedBox(new Rectangle(0, 0, larguraComSangria, alturaComSangria));
+                                _logger.Info($"TrimBox aplicado com sucesso à página {paginaAtual} (frente)");
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Error($"Erro ao definir TrimBox para página (frente): {ex.Message}", ex);
+                        // Continuar mesmo se falhar
+                    }
+
+                    // === VERSO DA CARTEIRINHA ===
+                    document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
+
+                    // Adicionar imagem de fundo do verso
+                    ImageData imgDataVerso = ImageDataFactory.Create(versoCaminhoAbsoluto);
+                    iText.Layout.Element.Image backgroundVerso = new iText.Layout.Element.Image(imgDataVerso);
+                    backgroundVerso.SetFixedPosition(0, 0);
+                    backgroundVerso.SetWidth(larguraComSangria);
+                    backgroundVerso.SetHeight(alturaComSangria);
+                    document.Add(backgroundVerso);
+
+                    // Adicionar informações do verso
+                    float versoLeftMargin = 0.6f * 28.35f + sangriaEmPontos;
+                    float versoStartY = alturaComSangria - 2.3f * 28.35f - sangriaEmPontos - 10;
+                    float versoY = versoStartY;
+
+                    // Município/Estado
+                    alturaItem = AddInfoRow(document, "MUNICÍPIO/ESTADO:", aluno.MunicipioEstado, versoLeftMargin, versoY, labelWidth, valueWidth, corAzul, 8f);
+                    versoY -= alturaItem;
+
+                    // Unidade Escolar
+                    alturaItem = AddInfoRow(document, "UNIDADE ESCOLAR:", aluno.NomeLocalidade, versoLeftMargin, versoY, labelWidth, valueWidth, corAzul, 8f);
+
+                    // Aplicar TrimBox imediatamente após concluir a página do verso
+                    try
+                    {
+                        int paginaAtual = pdf.GetNumberOfPages();
+                        if (paginaAtual > 0) // Verificação adicional de segurança
+                        {
+                            PdfPage pagina = pdf.GetPage(paginaAtual);
+                            if (pagina != null)
+                            {
+                                pagina.SetTrimBox(trimBox);
+                                pagina.SetBleedBox(new Rectangle(0, 0, larguraComSangria, alturaComSangria));
+                                _logger.Info($"TrimBox aplicado com sucesso à página {paginaAtual} (verso)");
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Error($"Erro ao definir TrimBox para página (verso): {ex.Message}", ex);
+                        // Continuar mesmo se falhar
+                    }
+                }
+
+                // Fechar documento
+                document.Close();
+
+                // Retornar os bytes do PDF
+                return ms.ToArray();
             }
         }
 
@@ -1054,6 +1473,35 @@ namespace WebApp.Controllers
             }
         }
 
+        /// <summary>
+        /// Função de Criação de AlunoAula
+        /// </summary>
+        /// <param name="collection">Coleção de dados para criação de aluno</param>
+        /// <returns>Retorna mensagem de alteração através do parametro crud</returns>
+        [ClaimsAuthorize(ClaimType.Aluno, Claim.Incluir)]
+        [HttpPost]
+        [IgnoreAntiforgeryToken]
+        public async Task<IActionResult> CreateAlunoAula([FromForm] AlunoModel.CreateUpdateAlunoAulaCommand model)
+        {
+            try
+            {
+                var command = new AlunoModel.CreateUpdateAlunoAulaCommand
+                {
+                    AlunoId = Convert.ToInt32(model.AlunoId),
+                    AulaId = model.AulaId,
+                    Progresso = model.Progresso
+                };
+
+                await ApiClientFactory.Instance.CreateAlunoAula(command);
+
+                return NoContent();
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = "Erro ao executar esta ação. Favor entrar em contato com o administrador do sistema." });
+            }
+        }
+
         #endregion
 
         #region Get Methods
@@ -1279,9 +1727,6 @@ namespace WebApp.Controllers
                 backgroundFrente.SetWidth(larguraComSangria);
                 backgroundFrente.SetHeight(alturaComSangria);
                 document.Add(backgroundFrente);
-
-                // Desenhar as marcas de corte nos cantos - agora usando cor CMYK para preto
-                DesenharMarcasDeCorte(pdf, 1, sangriaEmPontos, larguraComSangria, alturaComSangria, corPreto, false);
 
                 // Adicionar informações do aluno - agora com a margem de sangria incluída nas posições
                 float leftMargin = 0.5f * 28.35f + sangriaEmPontos; // 0.5cm do original + sangria
@@ -1517,9 +1962,6 @@ namespace WebApp.Controllers
                 backgroundVerso.SetHeight(alturaComSangria);
                 document.Add(backgroundVerso);
 
-                // Desenhar as marcas de corte nos cantos - usando cor CMYK para preto
-                DesenharMarcasDeCorte(pdf, 2, sangriaEmPontos, larguraComSangria, alturaComSangria, corPreto, false);
-
                 // Adicionar informações do verso - ajustado para incluir sangria
                 float versoLeftMargin = 0.6f * 28.35f + sangriaEmPontos;
 
@@ -1612,26 +2054,62 @@ namespace WebApp.Controllers
         }
 
         /// <summary>
-        /// Método auxiliar para adicionar a sangria no documento
+        /// Método auxiliar para adicionar a sangria no documento com tratamento de erro aprimorado
         /// </summary>
         private void DefinirTrimBox(PdfDocument pdf, float sangria, float larguraComSangria, float alturaComSangria)
         {
-            // Calcular as dimensões do TrimBox (área após o corte)
-            Rectangle trimBox = new Rectangle(
-                sangria,             // x - início da área de corte (sangria)
-                sangria,             // y - início da área de corte (sangria)
-                larguraComSangria - (2 * sangria),  // largura da área de corte
-                alturaComSangria - (2 * sangria)    // altura da área de corte
-            );
-
-            // Aplicar o TrimBox a cada página do documento
-            for (int i = 1; i <= pdf.GetNumberOfPages(); i++)
+            try
             {
-                // Definir o TrimBox para a página
-                pdf.GetPage(i).SetTrimBox(trimBox);
+                if (pdf == null)
+                {
+                    _logger.Error("Documento PDF nulo ao definir TrimBox");
+                    return;
+                }
 
-                // Definir também BleedBox para compatibilidade com diferentes softwares
-                pdf.GetPage(i).SetBleedBox(new Rectangle(0, 0, larguraComSangria, alturaComSangria));
+                // Calcular as dimensões do TrimBox (área após o corte)
+                Rectangle trimBox = new Rectangle(
+                    sangria,             // x - início da área de corte (sangria)
+                    sangria,             // y - início da área de corte (sangria)
+                    larguraComSangria - (2 * sangria),  // largura da área de corte
+                    alturaComSangria - (2 * sangria)    // altura da área de corte
+                );
+
+                // Obter o número de páginas com verificação de segurança
+                int numPaginas = pdf.GetNumberOfPages();
+                _logger.Info($"Definindo TrimBox para {numPaginas} páginas");
+
+                // Aplicar o TrimBox a cada página do documento com verificação adicional
+                for (int i = 1; i <= numPaginas; i++)
+                {
+                    try
+                    {
+                        // Obter a página com verificação de nulo
+                        PdfPage pagina = pdf.GetPage(i);
+                        if (pagina != null)
+                        {
+                            // Definir o TrimBox para a página
+                            pagina.SetTrimBox(trimBox);
+
+                            // Definir também BleedBox para compatibilidade com diferentes softwares
+                            pagina.SetBleedBox(new Rectangle(0, 0, larguraComSangria, alturaComSangria));
+                        }
+                        else
+                        {
+                            _logger.Warn($"Página {i} nula ao definir TrimBox");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        // Logar o erro mas continuar para as próximas páginas
+                        _logger.Error($"Erro ao definir TrimBox para página {i}: {ex.Message}", ex);
+                        // Não relançar a exceção para permitir que o resto do documento seja processado
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"Erro geral ao definir TrimBox: {ex.Message}", ex);
+                // Registrar o erro, mas não lançar exceção para não interromper a geração do PDF
             }
         }
 
@@ -1654,59 +2132,6 @@ namespace WebApp.Controllers
             paragraph.SetTextAlignment(TextAlignment.LEFT);
 
             document.Add(paragraph);
-        }
-
-        /// <summary>
-        /// Método auxiliar da carteirinha para desenhar as marcas de corte
-        /// </summary>
-        private void DesenharMarcasDeCorte(PdfDocument pdf, int numeroPagina, float sangria, float largura, float altura, DeviceCmyk corCmyk, bool desenharMarcas = true)
-        {
-            // Se não for para desenhar as marcas, simplesmente retorna
-            if (!desenharMarcas)
-                return;
-
-            // Usando a classe PdfCanvas para desenhar diretamente na página
-            PdfCanvas canvas = new PdfCanvas(pdf.GetPage(numeroPagina));
-
-            // Salvar o estado antes de fazer alterações
-            canvas.SaveState();
-
-            // Usar explicitamente a cor CMYK passada como parâmetro
-            canvas.SetStrokeColor(corCmyk);
-            canvas.SetLineWidth(0.25f);
-
-            // Comprimento das linhas de marca de corte (5mm)
-            float tamanhoMarca = 5f / 10f * 28.35f;
-
-            // Superior esquerdo
-            canvas.MoveTo(0, sangria);
-            canvas.LineTo(tamanhoMarca, sangria);
-            canvas.MoveTo(sangria, 0);
-            canvas.LineTo(sangria, tamanhoMarca);
-
-            // Superior direito
-            canvas.MoveTo(largura, sangria);
-            canvas.LineTo(largura - tamanhoMarca, sangria);
-            canvas.MoveTo(largura - sangria, 0);
-            canvas.LineTo(largura - sangria, tamanhoMarca);
-
-            // Inferior esquerdo
-            canvas.MoveTo(0, altura - sangria);
-            canvas.LineTo(tamanhoMarca, altura - sangria);
-            canvas.MoveTo(sangria, altura);
-            canvas.LineTo(sangria, altura - tamanhoMarca);
-
-            // Inferior direito
-            canvas.MoveTo(largura, altura - sangria);
-            canvas.LineTo(largura - tamanhoMarca, altura - sangria);
-            canvas.MoveTo(largura - sangria, altura);
-            canvas.LineTo(largura - sangria, altura - tamanhoMarca);
-
-            // Desenhar as linhas
-            canvas.Stroke();
-
-            // Restaurar o estado
-            canvas.RestoreState();
         }
 
         /// <summary>

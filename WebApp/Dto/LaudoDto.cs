@@ -36,7 +36,7 @@ namespace WebApp.Dto
         public string? Sexo { get; set; }
         public string? Etnia { get; set; }
         public string? StatusLaudo { get; set; }
-        public DateTime? DtNascimento { get; set; }
+        public string? DtNascimento { get; set; }
         public int? Idade { get; set; }
         public string? Email { get; set; }
         public byte[]? QrCode { get; set; }

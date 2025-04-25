@@ -331,8 +331,8 @@ var vm = new Vue({
                 });
 
                 //mascara dos inputs 
-                var $numeric = $(".numeric");
-                $numeric.mask('00.00', { reverse: false });
+                var $numeric2 = $(".numeric2");
+                $numeric2.mask('00', { reverse: false });
 
                 $("#formEditLaudo").validate({
                     rules: {

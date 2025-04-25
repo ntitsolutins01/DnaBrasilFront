@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using WebApp.Authorization;
 using WebApp.Configuration;
 using WebApp.Dto;
@@ -100,7 +101,6 @@ public class ModuloEadController : BaseController
 	            CursoId = Convert.ToInt32(collection["ddlCurso"].ToString()),
 	            Titulo = collection["nome"].ToString(),
 	            Descricao = collection["descricao"].ToString(),
-				CargaHoraria = Convert.ToInt32(collection["cargaHoraria"].ToString())
 			};
 
             //foreach (var file in collection.Files)
@@ -144,7 +144,6 @@ public class ModuloEadController : BaseController
                 Id = Convert.ToInt32(collection["editModuloEadId"]),
                 Titulo = collection["nome"].ToString(),
                 Descricao = collection["descricao"].ToString(),
-                CargaHoraria = Convert.ToInt32(collection["cargaHoraria"].ToString()),
                 Status = collection["editStatus"].ToString() == "" ? false : true
             };
 
@@ -170,6 +169,50 @@ public class ModuloEadController : BaseController
         {
             return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = "Erro ao executar esta ação. Favor entrar em contato com o administrador do sistema." });
         }
+    }
+
+    [HttpGet]
+    public ActionResult CarregarEstrutura(int moduloId)
+    {
+        try
+        {
+            var modulo = ApiClientFactory.Instance.GetModuloEadById(moduloId);
+            var aulas = ApiClientFactory.Instance.GetAulasByModuloEadId(moduloId);
+
+            return PartialView("_EstruturaModuloEad", new EstruturaModuloEadModel
+            {
+                ModuloEad = modulo,
+                Aulas = aulas
+            });
+        }
+        catch (Exception ex)
+        {
+            return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = "Erro ao executar esta ação. Favor entrar em contato com o administrador do sistema." });
+        }
+    }
+
+    [HttpPost]
+    public JsonResult SalvarOrdem(int cursoId, string novaOrdem)
+    {
+        try
+        {
+            var items = JsonConvert.DeserializeObject<List<NestableItem>>(novaOrdem);
+
+            // Lógica para atualizar a ordem no banco de dados
+            //ApiClientFactory.Instance.AtualizarOrdemCurso(cursoId, items);
+
+            return Json(new { success = true, message = "Ordem salva com sucesso!" });
+        }
+        catch (Exception ex)
+        {
+            return Json(new { success = false, message = ex.Message });
+        }
+    }
+
+    public class NestableItem
+    {
+        public string id { get; set; }
+        public List<NestableItem> children { get; set; }
     }
 
     /// <summary>

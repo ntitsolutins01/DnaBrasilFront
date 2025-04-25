@@ -1,232 +1,263 @@
 ﻿@model WebApp.Models.ModuloEadModel
 @{
-	ViewData["Title"] = "Listagem de Módulos";
-	Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Listagem de Módulos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div id="vModuloEad">
-	<div class="row">
-		<div class="col-lg-12">
-			<section class="panel">
-				<header class="panel-heading">
-					<div class="panel-actions">
-						<a href="#" class="card-action card-action-toggle" data-card-toggle></a>
-					</div>
-					<h2 class="panel-title">Listagem de Módulos</h2>
-				</header>
-				<div class="panel-body">
-					<div class="form-group row">
-						<div class="col-sm-12 pull-right">
-							<a href="@Url.Action("Create", "ModuloEad")" id="addToTable" class="btn btn-primary pull-right"><i class="fa fa-plus"></i> Novo Módulo </a>
-						</div>
-					</div>
-					<table class="table table-bordered table-striped mb-0" id="datatable-default">
-						<thead>
-							<tr>
-								<th class="text-center">Id</th>
-								<th class="text-center">Nome</th>
-								<th class="text-center">Curso</th>
-								<th class="text-center">Status</th>
-								<th class="text-center">Ações</th>
-							</tr>
-						</thead>
+    <div class="row">
+        <div class="col-lg-12">
+            <section class="panel">
+                <header class="panel-heading">
+                    <div class="panel-actions">
+                        <a href="#" class="card-action card-action-toggle" data-card-toggle></a>
+                    </div>
+                    <h2 class="panel-title">Listagem de Módulos</h2>
+                </header>
+                <div class="panel-body">
+                    <div class="form-group row">
+                        <div class="col-sm-12 pull-right">
+                            <a href="@Url.Action("Create", "ModuloEad")" id="addToTable" class="btn btn-primary pull-right"><i class="fa fa-plus"></i> Novo Módulo </a>
+                        </div>
+                    </div>
+                    <table class="table table-bordered table-striped mb-0" id="datatable-default">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Id</th>
+                                <th class="text-center">Nome</th>
+                                <th class="text-center">Curso</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center">Ações</th>
+                            </tr>
+                        </thead>
                         <tbody>
-                        @foreach (var item in Model.ModulosEad)
-							{ 
-								<tr>
-									<td class="text-center" style="width:20px;">@Html.DisplayFor(modelItem => item.Id)</td>
-									<td class="text-center">@Html.DisplayFor(modelItem => item.Titulo)</td>
-									<td class="text-center">@Html.DisplayFor(modelItem => item.TituloCurso)</td>
-									@if (item.Status)
-									{
-										<td class="text-center"><span class="label label-success">ATIVO</span></td>
-									}
-									else
-									{
-										<td class="text-center"><span class="label label-danger">INATIVO</span></td>
-									}
-									<td class="actions text-center">
-										<a data-toggle="tooltip" data-placement="top" title="Editar"
-										   href='javascript:(crud.EditModal(@item.Id))'
-										   class="on-default edit-row" style='color: #FF9800'>
-											<i class="fa fa-pencil"></i>
-										</a>
-										<a data-toggle="tooltip" data-placement="top" title="Excluir" href='javascript:(crud.DeleteModal(@item.Id))'
-										   class="on-default remove-row" style="ModuloEadr: pointer;color: #F44336"><i class="fa fa-trash"></i></a>
-									</td>
-								</tr>
-								}
+                            @foreach (var item in Model.ModulosEad)
+                            {
+                                <tr>
+                                    <td class="text-center" style="width:20px;">@Html.DisplayFor(modelItem => item.Id)</td>
+                                    <td class="text-center">@Html.DisplayFor(modelItem => item.Titulo)</td>
+                                    <td class="text-center">@Html.DisplayFor(modelItem => item.TituloCurso)</td>
+                                    @if (item.Status)
+                                    {
+                                        <td class="text-center"><span class="label label-success">ATIVO</span></td>
+                                    }
+                                    else
+                                    {
+                                        <td class="text-center"><span class="label label-danger">INATIVO</span></td>
+                                    }
+                                    <td class="actions text-center">
+                                        <a data-toggle="tooltip" data-placement="top" title="Organizar"
+                                           href="javascript:void(0);"
+                                           onclick="crud.PlanModal(@item.Id)"
+                                           class="on-default plan-row" style='color: #898989'>
+                                            <i class="fa fa-align-justify"></i>
+                                        </a>
+                                        <a data-toggle="tooltip" data-placement="top" title="Editar"
+                                           href='javascript:(crud.EditModal(@item.Id))'
+                                           class="on-default edit-row" style='color: #FF9800'>
+                                            <i class="fa fa-pencil"></i>
+                                        </a>
+                                        <a data-toggle="tooltip" data-placement="top" title="Excluir" href='javascript:(crud.DeleteModal(@item.Id))'
+                                           class="on-default remove-row" style="ModuloEadr: pointer;color: #F44336"><i class="fa fa-trash"></i></a>
+                                    </td>
+                                </tr>
+                            }
                         </tbody>
-					</table>
-				</div>
-			</section>
-		</div>
-	</div>
-	<!-- Modal -->
-	<div class="modal fade" id="mdDeleteModuloEad" tabindex="-1" role="dialog" aria-labelledby="mdDeleteModuloEadLabel" aria-hidden="true">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="mdDeleteModuloEadLabel">
-						<i class="fa fa-trash"></i> &nbsp;&nbsp;<strong>Exclusão de ModuloEad</strong>
-					</h5>
-				</div>
-				<div class="modal-body">
-					<div class="modal-icon">
-						<i class="fa fa-question-circle"></i>
-					</div>
-					<div class="modal-text">
-						<input type="hidden" id="deleteModuloEadId" />
-						<p class="mb-0">Tem certeza que deseja <b>excluir</b> esse registro?</p>
-					</div>
-					<div class="modal-wrapper">
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button type="submit" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-thumbs-o-down"></i> &nbsp;&nbsp;Não</button>
-					<a id="deleteModuloEadHref" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-thumbs-o-up"></i> &nbsp;&nbsp;Sim</a>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- Modal -->
-	<div class="modal fade" id="mdEditModuloEad" tabindex="-1" role="dialog" aria-labelledby="mdEditModuloEadLabel" aria-hidden="true">
-		<div class="modal-dialog modal-md" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="mdEditModuloEadLabel">
-						<i class="fa fa-pencil"></i> &nbsp;&nbsp;<strong>Alterar ModuloEad</strong>
-					</h5>
-				</div>
-				@using (@Html.BeginForm("Edit", "ModuloEad", FormMethod.Post, new { id = "formEditModuloEad", @class = "form-horizontal" }))
-				{
-					<div class="modal-body">
-						<input type="hidden" name="editModuloEadId" :value="editDto.Id" />
-						<div class="form-group row">
-							<label class="col-sm-3 control-label text-sm-right pt-2">Titulo do Modulo Ead  <span class="required">*</span></label>
-							<div class="col-sm-9">
-								<input type="text" name="nome" :value="editDto.Titulo" class="form-control"
-								       maxlength="150"
-									   title="Por favor informe o nome do ModuloEad." required/>
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="col-sm-3 control-label text-sm-right pt-2">Descrição </label>
-							<div class="col-sm-9">
-								<textarea class="form-control" rows="3" maxlength="500" name="descricao" :value="editDto.Descricao" id="descricao"></textarea>
-							</div>
-						</div>
-						<div class="form-group row">
-							<label class="col-sm-3 control-label text-sm-right pt-2">Carga Horária<span class="required">*</span></label>
-							<div class="col-sm-2">
-								<input type="text" id="cargaHoraria" name="cargaHoraria" class="form-control" maxlength="6"
-									   title="Por favor informe o valor final." required :value="editDto.CargaHoraria" />
-							</div>
-						</div>
-						<div class="form-group row">
-							<label class="col-sm-3 control-label text-sm-right pt-2">Status</label>
-							<div class="col-md-3">
-								<div class="switch switch-sm switch-primary">
-									<div v-show="editDto.Status">
-										<input type="checkbox" id="editStatus" name="editStatus" data-plugin-ios-switch checked="checked" />
-									</div>
-									<div v-show="!editDto.Status">
-										<input type="checkbox" id="editStatus" name="editStatus" data-plugin-ios-switch />
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="modal-footer">
-						<button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-remove"></i> &nbsp;&nbsp;Cancelar</button>
-						<button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
-					</div>
-				}
-			</div>
-		</div>
-	</div>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="mdDeleteModuloEad" tabindex="-1" role="dialog" aria-labelledby="mdDeleteModuloEadLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="mdDeleteModuloEadLabel">
+                        <i class="fa fa-trash"></i> &nbsp;&nbsp;<strong>Exclusão de ModuloEad</strong>
+                    </h5>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-icon">
+                        <i class="fa fa-question-circle"></i>
+                    </div>
+                    <div class="modal-text">
+                        <input type="hidden" id="deleteModuloEadId" />
+                        <p class="mb-0">Tem certeza que deseja <b>excluir</b> esse registro?</p>
+                    </div>
+                    <div class="modal-wrapper">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-thumbs-o-down"></i> &nbsp;&nbsp;Não</button>
+                    <a id="deleteModuloEadHref" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-thumbs-o-up"></i> &nbsp;&nbsp;Sim</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="mdEditModuloEad" tabindex="-1" role="dialog" aria-labelledby="mdEditModuloEadLabel" aria-hidden="true">
+        <div class="modal-dialog modal-md" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="mdEditModuloEadLabel">
+                        <i class="fa fa-pencil"></i> &nbsp;&nbsp;<strong>Alterar ModuloEad</strong>
+                    </h5>
+                </div>
+                @using (@Html.BeginForm("Edit", "ModuloEad", FormMethod.Post, new { id = "formEditModuloEad", @class = "form-horizontal" }))
+                {
+                    <div class="modal-body">
+                        <input type="hidden" name="editModuloEadId" :value="editDto.Id" />
+                        <div class="form-group row">
+                            <label class="col-sm-3 control-label text-sm-right pt-2">Titulo do Modulo Ead  <span class="required">*</span></label>
+                            <div class="col-sm-9">
+                                <input type="text" name="nome" :value="editDto.Titulo" class="form-control"
+                                       maxlength="150"
+                                       title="Por favor informe o nome do ModuloEad." required />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label text-sm-right pt-2">Descrição </label>
+                            <div class="col-sm-9">
+                                <textarea class="form-control" rows="3" maxlength="500" name="descricao" :value="editDto.Descricao" id="descricao"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-3 control-label text-sm-right pt-2">Status</label>
+                            <div class="col-md-3">
+                                <div class="switch switch-sm switch-primary">
+                                    <div v-show="editDto.Status">
+                                        <input type="checkbox" id="editStatus" name="editStatus" data-plugin-ios-switch checked="checked" />
+                                    </div>
+                                    <div v-show="!editDto.Status">
+                                        <input type="checkbox" id="editStatus" name="editStatus" data-plugin-ios-switch />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-remove"></i> &nbsp;&nbsp;Cancelar</button>
+                        <button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <!-- Modal Organizar Módulos -->
+    <div class="modal fade" id="mdPlanModuloEad" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fa fa-pencil"></i> Organizar Estrutura do Módulo
+                    </h5>
+                </div>
+                <input type="hidden" name="cursoId" :value="editDto.Id" />
+                <input type="hidden" name="novaOrdem" value="" />
+
+                <div class="modal-body">
+                    <div class="loading-overlay" style="display: none;">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="sr-only">Carregando...</span>
+                        </div>
+                    </div>
+
+                    <!-- O nome será carregado dinamicamente aqui -->
+                    <div id="nestable-container"></div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        <i class="fa fa-times"></i> Fechar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section CssSpecificVendor {
-	<link rel="stylesheet" href="~/assets/vendor/select2/css/select2.css" />
-	<link rel="stylesheet" href="~/assets/vendor/select2-bootstrap-theme/select2-bootstrap.min.css" />
-	<link rel="stylesheet" href="~/assets/vendor/datatables/media/css/dataTables.bootstrap4.css" />
+    <link rel="stylesheet" href="~/assets/vendor/select2/css/select2.css" />
+    <link rel="stylesheet" href="~/assets/vendor/select2-bootstrap-theme/select2-bootstrap.min.css" />
+    <link rel="stylesheet" href="~/assets/vendor/datatables/media/css/dataTables.bootstrap4.css" />
 }
 @section Scripts {
-	<script src="~/assets/vendor/select2/js/select2.js"></script>
-	<script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
-	<script src="~/assets/vendor/jquery-mask/jquery.mask.js"></script>
-	<script src="~/assets/vendor/ios7-switch/ios7-switch.js"></script>
-	<script src="~/assets/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
-	<script src="~/assets/vendor/datatables/media/js/dataTables.bootstrap4.min.js"></script>
-	<script src="~/js/formatTable.js"></script>
-	<script src="~/js/ModuloEad.js"></script>
+    <script src="~/assets/vendor/select2/js/select2.js"></script>
+    <script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
+    <script src="~/assets/vendor/jquery-mask/jquery.mask.js"></script>
+    <script src="~/assets/vendor/ios7-switch/ios7-switch.js"></script>
+    <script src="~/assets/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
+    <script src="~/assets/vendor/datatables/media/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/assets/vendor/jquery-nestable/jquery-nestable.js"></script>
+    <script src="~/js/formatTable.js"></script>
+    <script src="~/js/ModuloEad.js"></script>
 
-	<script>
+    <script>
 
-		(function ($) {
+        (function ($) {
 
-			'use strict';
-			var crub = @ViewBag.CrudMessage;
+            'use strict';
+            var crub = @ViewBag.CrudMessage;
 
-			if (crub === 1) {
-				new PNotify({
-					title: 'Modulo Ead',
-					text: 'Cadastro realizado com sucesso!',
-					type: 'success'
-				});
-				crub = 0;
-			} else if (crub === 2) {
-				new PNotify({
-					title: 'Modulo Ead',
-					text: 'Dados alterados com sucesso.',
-					type: 'warning',
-					icon: 'fa fa-pencil'
-				});
-				crub = 0;
-			} else if (crub === 3) {
-				new PNotify({
-					title: 'Modulo Ead',
-					text: 'Registro excluído com sucesso.',
-					type: 'error',
-					icon: 'fa fa-trash-o'
-				});
-				crub = 0;
-			}
+            if (crub === 1) {
+                new PNotify({
+                    title: 'Módulo Ead',
+                    text: 'Cadastro realizado com sucesso!',
+                    type: 'success'
+                });
+                crub = 0;
+            } else if (crub === 2) {
+                new PNotify({
+                    title: 'Módulo Ead',
+                    text: 'Dados alterados com sucesso.',
+                    type: 'warning',
+                    icon: 'fa fa-pencil'
+                });
+                crub = 0;
+            } else if (crub === 3) {
+                new PNotify({
+                    title: 'Módulo Ead',
+                    text: 'Registro excluído com sucesso.',
+                    type: 'error',
+                    icon: 'fa fa-trash-o'
+                });
+                crub = 0;
+            }
 
 
-			var notify = @ViewBag.NotifyMessage;
-			var messagem = '@ViewBag.Notify';
+            var notify = @ViewBag.NotifyMessage;
+            var messagem = '@ViewBag.Notify';
 
-			if (notify === 0) {
-				new PNotify({
-					title: 'Modulo Ead',
-					text: messagem,
-					type: 'success'
-				});
-				crub = 0;
-			} else if (notify === 1) {
-				new PNotify({
-					title: 'Modulo Ead',
-					text: messagem,
-					type: 'warning'
-				});
-				crub = 0;
-			} else if (notify === 2) {
-				new PNotify({
-					title: 'Modulo Ead',
-					text: messagem,
-					type: 'error'
-				});
-				crub = 0;
-			}
+            if (notify === 0) {
+                new PNotify({
+                    title: 'Módulo Ead',
+                    text: messagem,
+                    type: 'success'
+                });
+                crub = 0;
+            } else if (notify === 1) {
+                new PNotify({
+                    title: 'Módulo Ead',
+                    text: messagem,
+                    type: 'warning'
+                });
+                crub = 0;
+            } else if (notify === 2) {
+                new PNotify({
+                    title: 'Módulo Ead',
+                    text: messagem,
+                    type: 'error'
+                });
+                crub = 0;
+            }
 
-			if ($.isFunction($.fn['tooltip'])) {
-				$('[data-toggle=tooltip],[rel=tooltip]').tooltip({ container: 'body' });
-			}
+            if ($.isFunction($.fn['tooltip'])) {
+                $('[data-toggle=tooltip],[rel=tooltip]').tooltip({ container: 'body' });
+            }
 
-		}).apply(this, [jQuery]);
-	</script>
+        }).apply(this, [jQuery]);
+    </script>
 }
 
 

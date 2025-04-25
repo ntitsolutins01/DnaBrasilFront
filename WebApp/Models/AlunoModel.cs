@@ -23,6 +23,10 @@ namespace WebApp.Models
         public SelectList ListFomentos { get; set; }
         public string? LocalidadeId { get; set; }
         public SelectList ListLocalidades { get; set; }
+        public string? SerieId { get; set; }
+        public SelectList ListSeries { get; set; }
+        public string? EtapaId { get; set; }
+        public SelectList ListEtapas { get; set; }
         public SelectList ListProfissionais { get; set; }
         public string ProfissionalId { get; set; }
         public List<ModalidadeDto>? Modalidades { get; set; }
@@ -94,6 +98,12 @@ namespace WebApp.Models
         {
             public required int AlunoId { get; set; }
             public required string CertificadosId { get; set; }
+        }
+        public class CreateUpdateAlunoAulaCommand
+        {
+            public required int AlunoId { get; set; }
+            public required string AulaId { get; set; }
+            public int? Progresso { get; set; }
         }
     }
 
