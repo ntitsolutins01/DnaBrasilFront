@@ -5,9 +5,9 @@
 }
 
 <div id="vAula">
-    <div class="row">
-        <div class="col-md-12">
-            @using (@Html.BeginForm("Create", "Aula", FormMethod.Post, new { id = "formAula", @class = "form-horizontal" }))
+	<div class="row">
+		<div class="col-md-12">
+            @using (Html.BeginForm("Create", "Aula", FormMethod.Post, new { id = "formAula", @class = "form-horizontal", @enctype = "multipart/form-data" }))
             {
                 <section class="panel">
                     <header class="panel-heading">
@@ -68,15 +68,26 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-sm-3 control-label text-sm-right pt-2">Video</label>
-                            <div class="col-sm-9">
-                                <textarea class="form-control" rows="3" maxlength="500" name="video" id="video"></textarea>
+                            <label class="col-sm-3 control-label">Video</label>
+                            <div class="col-sm-3">
+                                <div class="fileupload fileupload-new" data-provides="fileupload" id="videoFileUpload">
+                                    <div class="input-append">
+                                        <div class="uneditable-input">
+                                            <i class="fa fa-file fileupload-exists"></i>
+                                            <span class="fileupload-preview"></span>
+                                        </div>
+                                        <span class="btn btn-default btn-file">
+                                            <span class="fileupload-exists">Alterar</span>
+                                            <span class="fileupload-new">Selecionar Arquivo</span>
+                                            <input type="file" id="video" name="video" accept="video/*" />
+                                        </span>
+                                        <a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload">Remover</a>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group row">
                             <label class="col-sm-3 control-label">Material Didático</label>
-                            <div class="col-sm-5">
-                                <div class="fileupload fileupload-new" data-provides="fileupload">
+                            <div class="col-sm-3">
+                                <div class="fileupload fileupload-new" data-provides="fileupload" id="materialFileUpload">
                                     <div class="input-append">
                                         <div class="uneditable-input">
                                             <i class="fa fa-file fileupload-exists"></i>
@@ -92,28 +103,26 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row form-group">
-                            <label class="col-sm-2 control-label">Ordem</label>
-                            <div class="col-sm-4">
-                                <input type="number" class="form-control" id="ordem" name="ordem" maxlength="2" placeholder="2"
-                                       required title="Favor informe Envergadura (cm)" />
-                            </div>
-                        </div>
                     </div>
                     <footer class="panel-footer">
                         <div class="row">
                             <div class="col-md-9 col-md-offset-3">
-                                <a href="@Url.Action("Index", "Aula")" class="btn btn-dark pull-right" style="margin-left: 5px;margin-right: 5px;"><i class="fa fa-reply"></i> &nbsp;&nbsp;Voltar</a>
-                                <button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;"><i class="fa fa-remove"></i> &nbsp;&nbsp;Cancelar</button>
-                                <button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
+                                <a href="@Url.Action("Index", "Aula")" class="btn btn-dark pull-right" style="margin: 0 5px;">
+                                    <i class="fa fa-reply"></i> Voltar
+                                </a>
+                                <button type="reset" class="btn btn-danger pull-right" style="margin: 0 5px;">
+                                    <i class="fa fa-remove"></i> Cancelar
+                                </button>
+                                <button type="submit" class="btn btn-success pull-right" style="margin: 0 5px;">
+                                    <i class="fa fa-save"></i> Salvar
+                                </button>
                             </div>
                         </div>
                     </footer>
                 </section>
-
             }
-        </div>
-    </div>
+		</div>
+	</div>
 </div>
 @section CssSpecificVendor {
     <link rel="stylesheet" href="~/assets/vendor/bootstrap-fileupload/bootstrap-fileupload.min.css" />

@@ -361,7 +361,7 @@ var vm = new Vue({
             self.ShowLoad(false, "pResult");
         },
         DeleteAluno: function (id) {
-            var url = "Aluno/Delete/" + id;
+            var url = "Aluno/Delete/" + id; 
             $("#deleteAlunoHref").prop("href", url);
         }
     }

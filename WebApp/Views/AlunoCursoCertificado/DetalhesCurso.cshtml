@@ -1,13 +1,23 @@
-﻿@{
+﻿@using System.Globalization
+@using DocumentFormat.OpenXml.Drawing
+@using WebApp.Dto
+@model AlunoCursoCertificadoModel
+@{
     ViewData["Title"] = "Detalhes do Curso";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div id="vCursoDetalhes">
+    <input type="hidden" id="alunoId" value="@Model.Aluno.Id" />
     <div class="row mb-lg">
         <div class="col-lg-12">
-            <h2 class="mt-none mb-sm text-dark">Desenvolvimento Web com ASP.NET Core</h2>
-            <p class="mb-lg">Aprenda a criar aplicações web modernas e escaláveis utilizando ASP.NET Core. Este curso aborda desde os conceitos básicos até técnicas avançadas de desenvolvimento.</p>
+            <h2 class="mt-none mb-sm text-dark">@Model.Curso.Titulo</h2>
+            <p class="mb-lg">
+                @if (Model.Curso.Descricao != null)
+                {
+                    @Model.Curso.Descricao
+                }
+            </p>
         </div>
     </div>
 
@@ -27,10 +37,11 @@
                             <!-- Player de vídeo -->
                             <div class="embed-responsive embed-responsive-16by9 mb-md">
                                 <video id="videoPlayer" class="embed-responsive-item" controls>
-                                    <source src="" type="video/mp4" id="videoSource">
+                                    <source :src="selectedVideoUrl" type="video/mp4" id="videoSource">
                                     Seu navegador não suporta a tag de vídeo.
                                 </video>
                             </div>
+
 
                             <!-- Título da Aula Atual -->
                             <div class="mb-md">
@@ -48,7 +59,7 @@
                                     <div class="summary">
                                         <h4 class="title">Professor</h4>
                                         <div class="info">
-                                            <strong class="amount">Ana Silva</strong>
+                                            <strong class="amount">@Model.Curso.NomeCoordenador</strong>
                                             <p class="text-muted">Desenvolvedora Full Stack</p>
                                         </div>
                                     </div>
@@ -78,10 +89,13 @@
                                 </div>
                                 <div class="panel-body">
                                     <div class="progress light mb-md">
+                                        @{
+                                            var progress = Math.Round((double)Model.AlunosAulas.Count() / Model.Aulas.Count() * 100, 1);
+                                        }
                                         <div class="progress-bar progress-bar-primary" role="progressbar"
-                                             aria-valuenow="45" aria-valuemin="0"
-                                             aria-valuemax="100" style="width: 45%;">
-                                            45%
+                                             aria-valuenow="@progress" aria-valuemin="0"
+                                             aria-valuemax="100" style="width: @progress%;">
+                                            @progress%
                                         </div>
                                     </div>
 
@@ -101,103 +115,73 @@
                                 </div>
                                 <div class="panel-body">
                                     <div class="panel-group" id="accordion">
-                                        <div class="panel panel-accordion">
-                                            <div class="panel-heading">
-                                                <h4 class="panel-title">
-                                                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse1">
-                                                        <i class="fa fa-folder-o mr-xs"></i> Módulo 1: Introdução ao ASP.NET Core
-                                                    </a>
-                                                </h4>
-                                            </div>
-                                            <div id="collapse1" class="accordion-body collapse in">
-                                                <div class="panel-body">
-                                                    <ul class="nav nav-list">
-                                                        <li class="mb-sm">
-                                                            <a href="#" class="aula-link" data-aula-id="1" data-video-url="https://exemplo.com/videos/aula1.mp4" data-materiais='[{"nome":"Slides da Aula 1", "url":"https://exemplo.com/materiais/slides-aula1.pdf"},{"nome":"Código de Exemplo", "url":"https://exemplo.com/materiais/codigo-aula1.zip"}]' data-aula-titulo="Aula 1: Visão Geral do ASP.NET Core">
-                                                                <i class="fa fa-play-circle-o mr-xs"></i> Aula 1: Visão Geral do ASP.NET Core
-                                                                <span class="pull-right text-success"><i class="fa fa-check-circle"></i></span>
+                                        @if (Model.Modulos != null && Model.Modulos.Any())
+                                        {
+                                            foreach (var modulo in Model.Modulos)
+                                            {
+                                                // Filter lessons that belong to the current module
+                                                var moduloAulas = Model.Aulas?.Where(a => a.ModuloEadId == modulo.Id).OrderBy(a => a.Ordem).ToList()
+                                                ?? new List<AulaDto>();
+                                                var collapseId = "collapseModulo" + modulo.Id;
+                                                // Expand the first module panel by default
+                                                var isExpanded = modulo.Equals(Model.Modulos.First()) ? "in" : "";
+                                                <div class="panel panel-accordion">
+                                                    <div class="panel-heading">
+                                                        <h4 class="panel-title">
+                                                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#@collapseId">
+                                                                <i class="fa fa-folder-o mr-xs"></i> @modulo.Titulo
                                                             </a>
-                                                        </li>
-                                                        <li class="mb-sm">
-                                                            <a href="#" class="aula-link" data-aula-id="2" data-video-url="https://exemplo.com/videos/aula2.mp4" data-materiais='[{"nome":"Slides da Aula 2", "url":"https://exemplo.com/materiais/slides-aula2.pdf"},{"nome":"Exercícios Práticos", "url":"https://exemplo.com/materiais/exercicios-aula2.docx"}]' data-aula-titulo="Aula 2: Configuração do Ambiente de Desenvolvimento">
-                                                                <i class="fa fa-play-circle-o mr-xs"></i> Aula 2: Configuração do Ambiente de Desenvolvimento
-                                                                <span class="pull-right text-success"><i class="fa fa-check-circle"></i></span>
-                                                            </a>
-                                                        </li>
-                                                        <li class="mb-sm">
-                                                            <a href="#" class="aula-link" data-aula-id="3" data-video-url="https://exemplo.com/videos/aula3.mp4" data-materiais='[{"nome":"Slides da Aula 3", "url":"https://exemplo.com/materiais/slides-aula3.pdf"}]' data-aula-titulo="Aula 3: Criando seu Primeiro Projeto">
-                                                                <i class="fa fa-play-circle-o mr-xs"></i> Aula 3: Criando seu Primeiro Projeto
-                                                                <span class="pull-right text-success"><i class="fa fa-check-circle"></i></span>
-                                                            </a>
-                                                        </li>
-                                                    </ul>
+                                                        </h4>
+                                                    </div>
+                                                    <div id="@collapseId" class="accordion-body collapse @isExpanded">
+                                                        <div class="panel-body">
+                                                            @if (moduloAulas.Any())
+                                                            {
+                                                                <ul class="nav nav-list">
+                                                                    @foreach (var aula in moduloAulas)
+                                                                    {
+                                                                        string video = "";
+                                                                        if (!string.IsNullOrEmpty(aula.Video) && aula.Video.Contains("\\Aulas"))
+                                                                        {
+                                                                            video = "/Aulas" + aula.Video.Split(new string[] { "\\Aulas" }, StringSplitOptions.None)[1].Replace("\\", "/");
+                                                                        }
+
+                                                                        <li class="mb-sm">
+                                                                            <a href="#" class="aula-link"
+                                                                               v-on:click.prevent="selectLesson(@aula.Id)"
+                                                                               data-aula-id="@aula.Id"
+                                                                               data-video-url="@video"
+                                                                               data-aula-titulo="@aula.Titulo">
+                                                                                <i class="fa fa-play-circle-o mr-xs"></i> @aula.Titulo
+                                                                                @if (Model.AlunosAulas.Any(a => Convert.ToInt32(a.AulaId) == aula.Id))
+                                                                                {
+                                                                                    <span class="pull-right text-success">
+                                                                                        <i class="fa fa-check-circle"></i>
+                                                                                    </span>
+                                                                                }
+                                                                            </a>
+                                                                        </li>
+                                                                    }
+                                                                </ul>
+                                                            }
+                                                            else
+                                                            {
+                                                                <p>Nenhuma aula disponível para este módulo.</p>
+                                                            }
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                        <div class="panel panel-accordion">
-                                            <div class="panel-heading">
-                                                <h4 class="panel-title">
-                                                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse2">
-                                                        <i class="fa fa-folder-o mr-xs"></i> Módulo 2: Trabalhando com MVC
-                                                    </a>
-                                                </h4>
-                                            </div>
-                                            <div id="collapse2" class="accordion-body collapse">
-                                                <div class="panel-body">
-                                                    <ul class="nav nav-list">
-                                                        <li class="mb-sm">
-                                                            <a href="#" class="aula-link" data-aula-id="4" data-video-url="https://exemplo.com/videos/aula4.mp4" data-materiais='[{"nome":"Slides da Aula 4", "url":"https://exemplo.com/materiais/slides-aula4.pdf"},{"nome":"Código de Exemplo", "url":"https://exemplo.com/materiais/codigo-aula4.zip"}]' data-aula-titulo="Aula 4: Estrutura MVC no ASP.NET Core">
-                                                                <i class="fa fa-play-circle-o mr-xs"></i> Aula 4: Estrutura MVC no ASP.NET Core
-                                                                <span class="pull-right text-success"><i class="fa fa-check-circle"></i></span>
-                                                            </a>
-                                                        </li>
-                                                        <li class="mb-sm">
-                                                            <a href="#" class="aula-link" data-aula-id="5" data-video-url="https://exemplo.com/videos/aula5.mp4" data-materiais='[{"nome":"Slides da Aula 5", "url":"https://exemplo.com/materiais/slides-aula5.pdf"}]' data-aula-titulo="Aula 5: Controllers e Rotas">
-                                                                <i class="fa fa-play-circle-o mr-xs"></i> Aula 5: Controllers e Rotas
-                                                            </a>
-                                                        </li>
-                                                        <li class="mb-sm">
-                                                            <a href="#" class="aula-link" data-aula-id="6" data-video-url="https://exemplo.com/videos/aula6.mp4" data-materiais='[{"nome":"Slides da Aula 6", "url":"https://exemplo.com/materiais/slides-aula6.pdf"},{"nome":"Exercícios Práticos", "url":"https://exemplo.com/materiais/exercicios-aula6.docx"}]' data-aula-titulo="Aula 6: Views e Razor">
-                                                                <i class="fa fa-play-circle-o mr-xs"></i> Aula 6: Views e Razor
-                                                            </a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="panel panel-accordion">
-                                            <div class="panel-heading">
-                                                <h4 class="panel-title">
-                                                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse3">
-                                                        <i class="fa fa-folder-o mr-xs"></i> Módulo 3: Banco de Dados e Entity Framework Core
-                                                    </a>
-                                                </h4>
-                                            </div>
-                                            <div id="collapse3" class="accordion-body collapse">
-                                                <div class="panel-body">
-                                                    <ul class="nav nav-list">
-                                                        <li class="mb-sm">
-                                                            <a href="#" class="aula-link" data-aula-id="7" data-video-url="https://exemplo.com/videos/aula7.mp4" data-materiais='[{"nome":"Slides da Aula 7", "url":"https://exemplo.com/materiais/slides-aula7.pdf"}]' data-aula-titulo="Aula 7: Introdução ao Entity Framework Core">
-                                                                <i class="fa fa-play-circle-o mr-xs"></i> Aula 7: Introdução ao Entity Framework Core
-                                                            </a>
-                                                        </li>
-                                                        <li class="mb-sm">
-                                                            <a href="#" class="aula-link" data-aula-id="8" data-video-url="https://exemplo.com/videos/aula8.mp4" data-materiais='[{"nome":"Slides da Aula 8", "url":"https://exemplo.com/materiais/slides-aula8.pdf"},{"nome":"Scripts SQL", "url":"https://exemplo.com/materiais/scripts-aula8.sql"}]' data-aula-titulo="Aula 8: Migrations e Seed Data">
-                                                                <i class="fa fa-play-circle-o mr-xs"></i> Aula 8: Migrations e Seed Data
-                                                            </a>
-                                                        </li>
-                                                        <li class="mb-sm">
-                                                            <a href="#" class="aula-link" data-aula-id="9" data-video-url="https://exemplo.com/videos/aula9.mp4" data-materiais='[{"nome":"Slides da Aula 9", "url":"https://exemplo.com/materiais/slides-aula9.pdf"},{"nome":"Código de Exemplo", "url":"https://exemplo.com/materiais/codigo-aula9.zip"}]' data-aula-titulo="Aula 9: Operações CRUD com Entity Framework Core">
-                                                                <i class="fa fa-play-circle-o mr-xs"></i> Aula 9: Operações CRUD com Entity Framework Core
-                                                            </a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <p>Nenhum módulo encontrado.</p>
+                                        }
                                     </div>
+
                                 </div>
                             </div>
+
 
                             <!-- Opções -->
                             <div class="panel panel-default">
@@ -208,10 +192,6 @@
                                     <a href="#" class="btn btn-default btn-block mb-xs">
                                         <i class="fa fa-arrow-left"></i> Voltar para Meus Cursos
                                     </a>
-
-                                    <button class="btn btn-primary btn-block mb-xs" id="btnMarcarConcluido">
-                                        <i class="fa fa-check"></i> Marcar Aula como Concluída
-                                    </button>
 
                                     <button class="btn btn-success btn-block" id="btnProximaAula" disabled>
                                         <i class="fa fa-forward"></i> Próxima Aula
@@ -284,182 +264,6 @@
     <script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
     <script src="~/assets/vendor/jquery-mask/jquery.mask.js"></script>
     <script src="~/assets/vendor/ios7-switch/ios7-switch.js"></script>
+    <script src="~/js/AlunoCertificado.js"></script>
 
-    <script>
-        (function ($) {
-            'use strict';
-
-            // Inicialização da página
-            $(document).ready(function() {
-                var aulaAtualId = null;
-
-                // Manipulação do clique nas aulas
-                $('.aula-link').on('click', function(e) {
-                    e.preventDefault();
-
-                    // Remover classe ativa de todas as aulas
-                    $('.aula-link').removeClass('active');
-
-                    // Adicionar classe ativa à aula clicada
-                    $(this).addClass('active');
-
-                    // Atualizar o player de vídeo
-                    var videoUrl = $(this).data('video-url');
-                    $('#videoSource').attr('src', videoUrl);
-                    $('#videoPlayer')[0].load();
-
-                    // Atualizar título da aula
-                    var aulaTitulo = $(this).data('aula-titulo');
-                    $('#aulaAtualTitulo').text(aulaTitulo);
-
-                    // Atualizar os materiais
-                    var materiaisJson = $(this).data('materiais');
-                    atualizarMateriais(materiaisJson);
-
-                    // Habilitar botão de próxima aula se não for a última
-                    var $proximaAula = $(this).closest('li').next('li').find('.aula-link');
-                    $('#btnProximaAula').prop('disabled', $proximaAula.length === 0);
-
-                    // Armazenar ID da aula atual
-                    aulaAtualId = $(this).data('aula-id');
-
-                    // Habilitar botão de marcar como concluído
-                    $('#btnMarcarConcluido').prop('disabled', false);
-                });
-
-                // Função para atualizar a lista de materiais
-                function atualizarMateriais(materiaisJson) {
-                    // Limpar a lista atual
-                    $('#lista-materiais').empty();
-
-                    if (materiaisJson && materiaisJson.length > 0) {
-                        try {
-                            var materiais = JSON.parse(materiaisJson);
-
-                            if (materiais.length > 0) {
-                                materiais.forEach(function(material) {
-                                    var icon = 'fa-file-o';
-                                    var colorClass = '';
-
-                                    // Definir ícone com base no tipo de arquivo
-                                    if (material.url.endsWith('.pdf')) {
-                                        icon = 'fa-file-pdf-o';
-                                        colorClass = 'text-danger';
-                                    } else if (material.url.endsWith('.pptx') || material.url.endsWith('.ppt')) {
-                                        icon = 'fa-file-powerpoint-o';
-                                        colorClass = 'text-warning';
-                                    } else if (material.url.endsWith('.xlsx') || material.url.endsWith('.xls')) {
-                                        icon = 'fa-file-excel-o';
-                                        colorClass = 'text-success';
-                                    } else if (material.url.endsWith('.docx') || material.url.endsWith('.doc')) {
-                                        icon = 'fa-file-word-o';
-                                        colorClass = 'text-primary';
-                                    } else if (material.url.endsWith('.zip') || material.url.endsWith('.rar')) {
-                                        icon = 'fa-file-archive-o';
-                                        colorClass = 'text-warning';
-                                    }
-
-                                    var materialHtml = '<li class="list-group-item">' +
-                                                       '<i class="fa ' + icon + ' ' + colorClass + ' mr-xs"></i>' +
-                                                       '<a href="' + material.url + '" target="_blank">' + material.nome + '</a>' +
-                                                       '</li>';
-
-                                    $('#lista-materiais').append(materialHtml);
-                                });
-                                return;
-                            }
-                        } catch (e) {
-                            console.error("Erro ao processar materiais JSON:", e);
-                        }
-                    }
-
-                    // Se não há materiais ou ocorreu um erro
-                    $('#lista-materiais').append('<li class="list-group-item text-center"><i class="fa fa-info-circle"></i> Nenhum material disponível para esta aula.</li>');
-                }
-
-                // Botão para marcar aula como concluída
-                $('#btnMarcarConcluido').on('click', function() {
-                    if (!aulaAtualId) return;
-
-                    // Simular uma chamada para o backend
-                    marcarAulaComoAssistida(aulaAtualId);
-                });
-
-                // Botão de próxima aula
-                $('#btnProximaAula').on('click', function() {
-                    var $aulaAtual = $('.aula-link.active');
-                    var $proximaAula = $aulaAtual.closest('li').next('li').find('.aula-link');
-
-                    if ($proximaAula.length) {
-                        $proximaAula.click();
-                    }
-                });
-
-                // Função para marcar aula como assistida
-                function marcarAulaComoAssistida(aulaId) {
-                    // Simular uma chamada para o backend
-                    console.log('Marcando aula ' + aulaId + ' como assistida');
-
-                    // Para fins de demonstração:
-                    atualizarAulaAssistida(aulaId);
-
-                    // Calcular novo progresso (simulação)
-                    var totalAulas = $('.aula-link').length;
-                    var aulasAssistidas = $('.aula-link').find('.fa-check-circle').length + 1;
-                    var novoProgresso = Math.round((aulasAssistidas / totalAulas) * 100);
-
-                    atualizarProgresso(novoProgresso);
-
-                    // Notificar o usuário
-                    new PNotify({
-                        title: 'Aula Concluída',
-                        text: 'Seu progresso foi atualizado!',
-                        type: 'success'
-                    });
-                }
-
-                // Função para atualizar a interface quando uma aula é marcada como assistida
-                function atualizarAulaAssistida(aulaId) {
-                    var $aula = $('.aula-link[data-aula-id="' + aulaId + '"]');
-                    if (!$aula.find('.fa-check-circle').length) {
-                        $aula.append('<span class="pull-right text-success"><i class="fa fa-check-circle"></i></span>');
-                    }
-                }
-
-                // Função para atualizar o progresso do curso
-                function atualizarProgresso(progresso) {
-                    $('.progress-bar').css('width', progresso + '%').attr('aria-valuenow', progresso).text(progresso + '%');
-
-                    // Verificar se o curso foi concluído
-                    if (progresso >= 100) {
-                        // Habilitar o botão de certificado
-                        var certificadoBtn = $('button.btn-default[disabled]').replaceWith(
-                            '<a href="#" class="btn btn-success btn-block">' +
-                            '<i class="fa fa-certificate"></i> Ver Certificado</a>'
-                        );
-
-                        // Notificar conclusão do curso
-                        new PNotify({
-                            title: 'Parabéns!',
-                            text: 'Você concluiu o curso com sucesso! Agora você pode acessar seu certificado.',
-                            type: 'success'
-                        });
-                    }
-                }
-
-                // Abrir o primeiro módulo por padrão
-                $('#collapse1').addClass('in');
-
-                // Tooltips
-                if ($.isFunction($.fn['tooltip'])) {
-                    $('[data-toggle=tooltip],[rel=tooltip]').tooltip({ container: 'body' });
-                }
-
-                $('.btn').tooltip({
-                    container: 'body',
-                    placement: 'top'
-                });
-            });
-        }).apply(this, [jQuery]);
-    </script>
 }

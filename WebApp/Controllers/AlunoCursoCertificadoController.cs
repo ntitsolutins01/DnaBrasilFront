@@ -181,70 +181,6 @@ public class AlunoCursoCertificadoController : BaseController
         }
     }
 
-    ///// <summary>
-    ///// Ação de Alteração do AlunoCurso
-    ///// </summary>
-    ///// <param name="id">Identificador do AlunoCurso</param>
-    ///// <returns>Retorna mensagem de alteração através do parametro crud</returns>
-    //[ClaimsAuthorize(ClaimType.Curso, Identity.Claim.Alterar)]
-    //public async Task<ActionResult> Edit(IFormCollection collection)
-    //{
-    //    try
-    //    {
-    //        var command = new AlunoCursoModel.CreateUpdateAlunoCursoCommand
-    //        {
-    //            Id = Convert.ToInt32(collection["editAlunoCursoId"]),
-    //            CargaHoraria = Convert.ToInt32(collection["cargaHoraria"].ToString()),
-    //            Titulo = collection["nome"].ToString(),
-    //            Descricao = collection["descricao"].ToString(),
-    //            Video = collection["video"].ToString(),
-    //            Status = collection["editStatus"].ToString() == "" ? false : true,
-    //            ProfessorId = Convert.ToInt32(collection["ddlProfessor"].ToString())
-    //        };
-
-    //        foreach (var file in collection.Files)
-    //        {
-    //            if (file.Length <= 0) continue;
-
-    //            var currentAlunoCurso = ApiClientFactory.Instance.GetAlunoCursoById(command.Id);
-
-    //            if (!string.IsNullOrEmpty(currentAlunoCurso.Material) && System.IO.File.Exists(currentAlunoCurso.Material))
-    //            {
-    //                System.IO.File.Delete(currentAlunoCurso.Material);
-    //            }
-
-    //            string extension = ".jpg";
-    //            string newFileName = Path.ChangeExtension(Guid.NewGuid().ToString(), extension);
-    //            string fileName = Path.GetFileName(file.FileName);
-    //            string filePath = Path.Combine(_host.WebRootPath, $"AlunosCursos\\{newFileName}");
-
-    //            if (!Directory.Exists(Path.Combine(_host.WebRootPath, "AlunosCursos")))
-    //                Directory.CreateDirectory(Path.Combine(_host.WebRootPath, "AlunosCursos"));
-
-    //            command.Material = filePath;
-    //            command.NomeMaterial = fileName;
-
-    //            using Stream fileStream = new FileStream(filePath, FileMode.Create);
-    //            await file.CopyToAsync(fileStream);
-    //        }
-
-    //        if (!collection.Files.Any())
-    //        {
-    //            var currentAlunoCurso = ApiClientFactory.Instance.GetAlunoCursoById(command.Id);
-    //            command.Material = currentAlunoCurso.Material;
-    //            command.NomeMaterial = currentAlunoCurso.NomeMaterial;
-    //        }
-
-    //        await ApiClientFactory.Instance.UpdateAlunoCurso(command.Id, command);
-
-    //        return RedirectToAction(nameof(Index), new { crud = (int)EnumCrud.Updated });
-    //    }
-    //    catch (Exception e)
-    //    {
-    //        return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = "Erro ao executar esta ação. Favor entrar em contato com o administrador do sistema." });
-    //    }
-    //}
-
     /// <summary>
     /// Ação de Exclusão do AlunoCurso
     /// </summary>
@@ -271,11 +207,36 @@ public class AlunoCursoCertificadoController : BaseController
     /// <param name="aulaId">ID opcional da aula a ser exibida inicialmente</param>
     /// <returns>View com os detalhes do curso</returns>
     [ClaimsAuthorize(ClaimType.Curso, Identity.Claim.Consultar)]
-    public IActionResult DetalhesCurso(int id, int? aulaId = null)
+    public IActionResult DetalhesCurso(int id)
     {
         try
         {
-            return View();
+            var usuario = User.Identity.Name;
+
+            var aluno = ApiClientFactory.Instance.GetAlunoByEmail(usuario);
+            var curso = ApiClientFactory.Instance.GetCursoById(id);
+
+            var alunosCursos = ApiClientFactory.Instance.GetAlunosCursosByCursoId(id);
+            var alunoCurso = alunosCursos.FirstOrDefault(ac => Convert.ToInt32(ac.AlunoId) == aluno.Id);
+
+            var modulos = ApiClientFactory.Instance.GetModulosEadAllByCursoId(id);
+
+            var aulas = ApiClientFactory.Instance.GetAulasByCursoId(id);
+
+            var alunosAulas = ApiClientFactory.Instance.GetAlunoAulasByAulaId(aluno.Id);
+
+            var model = new AlunoCursoCertificadoModel()
+            {
+                AlunoCurso = alunoCurso,
+                Aluno = aluno,
+                Curso = curso,
+                Modulos = modulos,
+                Aulas = aulas,
+                AlunosAulas = alunosAulas
+            };
+
+            return View(model);
+
         }
         catch (Exception ex)
         {

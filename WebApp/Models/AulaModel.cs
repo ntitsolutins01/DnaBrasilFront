@@ -15,7 +15,6 @@ namespace WebApp.Models
         public SelectList ListCursos { get; set; }
         public string TipoCursosId { get; set; }
         public SelectList ListTipoCursos { get; set; }
-
         public string EstadoId { get; set; }
         public SelectList ListEstados { get; set; }
         public string MunicipioId { get; set; }
@@ -29,9 +28,11 @@ namespace WebApp.Models
             public required string Titulo { get; set; }
             public string? Descricao { get; set; }
             public string? Video { get; set; }
+            public string? NomeVideo { get; set; }
             public bool Status { get; set; } = true;
             public string? Material { get; set; }
             public string? NomeMaterial { get; set; }
+            public int? Ordem { get; set; }
         }
 	}
 
