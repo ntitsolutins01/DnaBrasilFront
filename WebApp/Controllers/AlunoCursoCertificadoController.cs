@@ -190,18 +190,21 @@ public class AlunoCursoCertificadoController : BaseController
     /// <returns>Retorna mensagem de alteração através do parametro crud</returns>
     [HttpPost]
     [IgnoreAntiforgeryToken]
-    public async Task<IActionResult> UpdateProgresso([FromBody] AlunoCursoCertificadoModel.UpdateProgressoCommand model)
+    public async Task<IActionResult> UpdateProgresso([FromForm] AlunoCursoCertificadoModel.UpdateProgressoCommand model)
     {
         try
         {
-            var command = new AlunoCursoCertificadoModel.UpdateProgressoCommand
+            if (model != null)
             {
-                AlunoId = model.AlunoId,
-                CursoId = model.CursoId,
-                Progresso = Convert.ToInt32(model.Progresso)
-            };
+                var command = new AlunoCursoCertificadoModel.UpdateProgressoCommand
+                {
+                    AlunoId = model.AlunoId,
+                    CursoId = model.CursoId,
+                    Progresso = Convert.ToInt32(model.Progresso)
+                };
 
-            await ApiClientFactory.Instance.UpdateAlunoCurso(command.AlunoId, command.CursoId, command);
+                await ApiClientFactory.Instance.UpdateAlunoCurso(command.AlunoId, command.CursoId, command);
+            }
 
             return NoContent();
         }

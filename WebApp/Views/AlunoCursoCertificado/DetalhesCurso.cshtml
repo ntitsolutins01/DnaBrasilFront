@@ -91,12 +91,17 @@
                                 <div class="panel-body">
                                     <div class="progress light mb-md">
                                         @{
-                                            var progress = Math.Round((double)Model.AlunosAulas.Count() / Model.Aulas.Count() * 100, 1);
+                                            var progress = (double)0;
+                                            if (Model.Aulas != null)
+                                            {
+                                                progress = Math.Round((double)Model.AlunosAulas.Count() / Model.Aulas.Count() * 100, 1);
+                                            }
+
 
                                             var serializerOptions = new JsonSerializerOptions
-                                            {
-                                                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-                                            };
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            };
 
                                             var alunoCurso = new
                                             {
@@ -153,12 +158,6 @@
                                                                 <ul class="nav nav-list">
                                                                     @foreach (var aula in moduloAulas)
                                                                     {
-                                                                        @* string video = "";
-                                                                        if (!string.IsNullOrEmpty(aula.Video) && aula.Video.Contains("\\Aulas"))
-                                                                        {
-                                                                            video = "http://localhost:5166/Aulas" + aula.Video.Split(new string[] { "\\Aulas" }, StringSplitOptions.None)[1].Replace("\\", "/");
-                                                                        } *@
-
                                                                         <li class="mb-sm">
                                                                             <a href="#" class="aula-link"
                                                                                v-on:click.prevent="selectLesson(@aula.Id)"
@@ -283,15 +282,19 @@
             const alunoCurso = @Html.Raw(JsonSerializer.Serialize(alunoCurso, serializerOptions));
             const url = `/AlunoCursoCertificado/UpdateProgresso`;
 
-            axios.post(url,
-                JSON.stringify(alunoCurso),
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
-                    }
-                }
-            );
+            const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+            const form = new URLSearchParams();
+            form.append('AlunoId', alunoCurso.alunoId);
+            form.append('CursoId', alunoCurso.cursoId);
+            form.append('Progresso', alunoCurso.progresso);
+            form.append('__RequestVerificationToken', token);
+
+            axios.post(url, form, {
+                headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                withCredentials: true
+            })
         });
     </script>
 }
