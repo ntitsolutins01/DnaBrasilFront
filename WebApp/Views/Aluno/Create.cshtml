@@ -123,21 +123,28 @@
                         </div>
                         
                         <div class="form-group row">
-	                        
-	                        <label class="col-sm-2 control-label">Etapa de Ensino <span class="required">*</span></label>
-	                        <div class="col-md-4">
+	                        <label class="col-sm-1 control-label">Etapa de Ensino <span class="required">*</span></label>
+	                        <div class="col-md-3">
 		                        <select class="form-control populate select2" name="ddlEtapa" id="ddlEtapa"
 		                                title="Por favor informe a etapa de ensino." required
 		                                asp-for="EtapaId" asp-items="Model.ListEtapas">
-			                        <option value="">Selecionar Etapa de Ensinol</option>
+			                        <option value="">Selecionar Etapa de Ensino</option>
 		                        </select>
 	                        </div>
-	                        <label class="col-sm-2 control-label">Série <span class="required">*</span></label>
-	                        <div class="col-md-4">
+	                        <label class="col-sm-1 control-label">Série <span class="required">*</span></label>
+	                        <div class="col-md-2">
                                 <select class="form-control populate select2" name="ddlSerie" id="ddlSerie"
 		                                title="Por favor informe a série." required
 		                                asp-for="SerieId" asp-items="Model.ListSeries">
 			                        <option value="">Selecionar Série</option>
+		                        </select>
+	                        </div>
+	                        <label class="col-sm-1 control-label">Turma <span class="required">*</span></label>
+	                        <div class="col-md-4">
+                                <select class="form-control populate select2" name="ddlTurma" id="ddlTurma"
+		                                title="Por favor informe a turma." required
+		                                asp-for="TurmaId" asp-items="Model.ListTurmas">
+			                        <option value="">Selecionar Turma</option>
 		                        </select>
 	                        </div>
                         </div>
