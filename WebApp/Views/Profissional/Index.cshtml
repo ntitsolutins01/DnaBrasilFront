@@ -112,38 +112,88 @@
     </div>
     <!-- Modal -->
     <div class="modal fade" id="mdDesvincularAlunos" tabindex="-1" role="dialog" aria-labelledby="mdDesvincularAlunosLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
+	    <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+			    <div class="modal-header">
+				    <h5 class="modal-title" id="mdDesvincularAlunosLabel">
+					    <i class="fa fa-check-circle"></i> &nbsp;&nbsp;<strong>DesvincularAlunos</strong>&nbsp;&nbsp;<strong style="color: #f44336">EM DESENVOLVIMENTO</strong>
+				    </h5>
+			    </div>
+			    @using (@Html.BeginForm("DesvincularAlunos", "Profissional", FormMethod.Post, new { id = "formDesvincularAlunos", @class = "form-horizontal" }))
+			    {
+				    <input type="hidden" name="profissionalId" :value="editDto.ProfissionaId" />
+
+				    <div class="modal-body">
+					    <div class="form-group row">
+						    <label class="col-sm-3 control-label text-sm-right pt-2">Novo Profissional <span class="required">*</span></label>
+						    <div class="col-sm-9">
+							    <select class="form-control populate select2" name="ddlNovoProfissional" id="ddlNovoProfissional" style="width:100%"
+							            required title="Por favor selecione o coordenador"
+							            asp-for="ProfissionalId" asp-items="Model.ListProfissionals">
+								    <option value="">Selecionar Profissional</option>
+							    </select>
+						    </div>
+					    </div>
+					    <div class="form-group row">
+						    <div class="col-sm-12">
+							    <div class="alert alert-success">
+								    <strong>Quantidade de alunos</strong> {{editDto.QuantidadeAlunos}}.
+							    </div>
+						    </div>
+					    </div>
+				    </div>
+				    <div class="modal-footer">
+					    <button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-remove"></i> &nbsp;&nbsp;Cancelar</button>
+					    <button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
+				    </div>
+			    }
+		    </div>
+	    </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="mdHabilitarProfissional" tabindex="-1" role="dialog" aria-labelledby="mdHabilitarProfissionalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-md" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="mdDesvincularAlunosLabel">
-                        <i class="fa fa-check-circle"></i> &nbsp;&nbsp;<strong>DesvincularAlunos</strong>&nbsp;&nbsp;<strong style="color: #f44336">EM DESENVOLVIMENTO</strong>
+                    <h5 class="modal-title" id="mdHabilitarProfissionalLabel">
+                        <i class="fa fa-check-circle"></i> &nbsp;&nbsp;<strong>Habilitar Profissional</strong>
                     </h5>
                 </div>
-                @using (@Html.BeginForm("DesvincularAlunos", "Profissional", FormMethod.Post, new { id = "formDesvincularAlunos", @class = "form-horizontal" }))
+                @using (@Html.BeginForm("Habilitar", "SistemaSocioeconomico", FormMethod.Post, new { id = "formHabilitarProfissional", @class = "form-horizontal" }))
                 {
-                    <input type="hidden" name="profissionalId" :value="editDto.ProfissionaId" />
+                    <input type="hidden" name="habilitarProfissionalId" :value="editDto.Id" />
 
                     <div class="modal-body">
-                        <div class="form-group row">
-                            <label class="col-sm-3 control-label text-sm-right pt-2">Novo Profissional <span class="required">*</span></label>
-                            <div class="col-sm-9">
-                                <select class="form-control populate select2" name="ddlNovoProfissional" id="ddlNovoProfissional" style="width:100%"
-                                        required title="Por favor selecione o coordenador"
-                                        asp-for="ProfissionalId" asp-items="Model.ListProfissionals">
-                                    <option value="">Selecionar Profissional</option>
-                                </select>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Nome</label>
+                            <div class="col-sm-6">
+                                <input type="text" id="nome" name="nome" class="form-control" readonly
+                                       :value="editDto.Nome" />
+                            </div>
+                            <label v-show="editDto.Pf" class="col-sm-1 control-label">CPF</label>
+                            <label v-show="!editDto.Pf" class="col-sm-1 control-label">CNPJ</label>
+                            <div class="col-sm-3">
+                                <input type="text" id="cpfCnpj" name="cpfCnpj" class="form-control" readonly
+                                       :value="editDto.Cpf" />
                             </div>
                         </div>
                         <div class="form-group row">
-                            <div class="col-sm-12">
-                                <div class="alert alert-success">
-                                    <strong>Quantidade de alunos</strong> {{editDto.QuantidadeAlunos}}.
+                            <label class="col-sm-2 control-label text-sm-right pt-2">Email <span class="required">*</span></label>
+                            <div class="col-sm-6">
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <i class="fa fa-envelope"></i>
+                                    </span>
+                                    <input type="text" id="email" name="email"
+                                           class="form-control"
+                                           maxlength="100" :value="editDto.Email"
+                                           title="Por favor informe um Email válido do Profissional." required />
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-remove"></i> &nbsp;&nbsp;Cancelar</button>
+                        <button type="button" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-remove"></i> &nbsp;&nbsp;Cancelar</button>
                         <button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
                     </div>
                 }
