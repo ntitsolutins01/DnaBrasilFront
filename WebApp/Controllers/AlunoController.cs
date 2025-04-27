@@ -238,6 +238,7 @@ namespace WebApp.Controllers
             var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome");
             var deficiencias = new SelectList(ApiClientFactory.Instance.GetDeficienciaAll().Where(x => x.Status), "Id", "Nome");
             var modalidades = new SelectList(ApiClientFactory.Instance.GetModalidadeAll(), "Id", "Nome");
+            var etapas = new SelectList(ApiClientFactory.Instance.GetEtapasEnsinoAll(), "Id", "Nome");
 
             List<SelectListDto> list = new List<SelectListDto>
             {
@@ -256,7 +257,8 @@ namespace WebApp.Controllers
                 ListDeficiencias = deficiencias,
                 ListModalidades = modalidades,
                 ListEtnias = etnias,
-                ListFomentos = fomentos
+                ListFomentos = fomentos,
+                ListEtapas = etapas
             });
         }
 
@@ -285,6 +287,16 @@ namespace WebApp.Controllers
                 var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentosAll(), "Id", "Nome", aluno.FomentoId);
                 var deficiencias = new SelectList(ApiClientFactory.Instance.GetDeficienciaAll(), "Id", "Nome", aluno.DeficienciaId);
                 var listModalidades = new SelectList(ApiClientFactory.Instance.GetModalidadeAll(), "Id", "Nome", aluno.ModalidadesIds);
+                var etapas = new SelectList(ApiClientFactory.Instance.GetEtapasEnsinoAll(), "Id", "Nome", aluno.EtapaId);
+                var series = new SelectList(
+                    ApiClientFactory.Instance
+                        .GetSeriesByLocalidadeIdEtapaId(Convert.ToInt32(aluno.LocalidadeId),
+                            Convert.ToInt32(aluno.EtapaId)).Select(s => new { Id = s.Nome, Nome = s.Nome }).Distinct()
+                        .ToList(), "Nome", "Nome", aluno.SerieNome);
+                var turmas = new SelectList(
+                    ApiClientFactory.Instance
+                        .GetTurmasByLocalidadeIdEtapaIdSerie(Convert.ToInt32(aluno.LocalidadeId), Convert.ToInt32(aluno.EtapaId), aluno.SerieNome)
+                        .Select(s => new { Id = s.Id, Turma = s.Turma }).ToList(), "Id", "Turma", aluno.SerieId);
 
                 List<SelectListDto> list = new List<SelectListDto>
                 {
@@ -309,7 +321,10 @@ namespace WebApp.Controllers
                     ListEtnias = etnias,
                     ListFomentos = fomentos,
                     ListDeficiencias = deficiencias,
-                    ListModalidades = listModalidades
+                    ListModalidades = listModalidades,
+                    ListEtapas = etapas,
+                    ListSeries = series,
+                    ListTurmas = turmas
 
                 });
 
@@ -370,7 +385,8 @@ namespace WebApp.Controllers
                     UtilizacaoImagem = Convert.ToBoolean(collection["utilizacaoImagem"].ToString()),
                     ParticipacaoProgramaCompartilhamentoDados = Convert.ToBoolean(collection["participacao"].ToString()),
                     CopiaDocAlunoResponsavel = Convert.ToBoolean(collection["copiaDoc"].ToString()),
-                    AutorizacaoConsentimentoAssentimento = collection["agreeterms"].ToString() != ""
+                    AutorizacaoConsentimentoAssentimento = collection["agreeterms"].ToString() != "",
+                    SerieId = collection["ddlTurma"] == "" ? null : Convert.ToInt32(collection["ddlTurma"].ToString())
 
                 };
 
@@ -453,6 +469,7 @@ namespace WebApp.Controllers
                     Status = status != "",
                     NomeFoto = filePath,
                     ModalidadesIds = collection["ddlModalidades"].ToString(),
+                    SerieId = collection["ddlTurma"] == "" ? null : Convert.ToInt32(collection["ddlTurma"].ToString())
                 };
 
                 foreach (var file in collection.Files)
