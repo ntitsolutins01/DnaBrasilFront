@@ -857,7 +857,7 @@ namespace WebApp.Controllers
                 bool possuiFotoValue = bool.TryParse(possuiFoto, out var pfoto) ? pfoto : false;
                 bool finalizadoValue = bool.TryParse(finalizado, out var fin) ? fin : false;
 
-                var searchFilter = new LaudosFilterDto
+                var searchFilter = new LaudosResumidosFilterDto
                 {
                     UsuarioEmail = usuario,
                     FomentoId = ddlFomento,
@@ -871,22 +871,38 @@ namespace WebApp.Controllers
                     Finalizado = finalizadoValue,
                     PageNumber = 1,
 #if DEBUG
-                    PageSize = 2000
+                    PageSize = 10000
 #else
             PageSize = 1000
 #endif
                 };
 
-                var result = await ApiClientFactory.Instance.GetLaudosByFilter(searchFilter);
+                var result = await ApiClientFactory.Instance.GetLaudosResumidosByFilter(searchFilter);
 
-                if (result?.Laudos?.Items == null || !result.Laudos.Items.Any())
+                var lista = result.LaudosResumidos.Items.Where(x => x.Idade <= 19 && x.StatusLaudo == "F" && x.ModalidadeId != null).OrderBy(o => o.EncaminhamentoTexto).ToList();
+
+                var model = new LaudoResumidoModel()
                 {
-                    return View(new List<LaudoModel>()); // Retorna uma lista vazia
-                }
+                    ListLaudosResumidos = lista
 
-                var laudoModels = new List<LaudoModel>();
 
-                foreach (var laudo in result.Laudos.Items)
+
+                    //Aluno = aluno,
+                    //Profissional = profissional,
+                    //TalentoEsportivo = talentoEsportivo,
+                    //EncaminhamentoImc = encaminhamentoImc,
+                    //ListQualidadeDeVida = qualidadeDeVida,
+                    //ListVocacional = vocacional,
+                    //EncaminhamentoSaudeBucal = encaminhamentoSaudeBucal,
+                    //EncaminhamentoConsumoAlimentar = encaminhamentoConsumoAlimentar,
+                    //Desempenho = desempenho,
+                    //Modalidade = modalidade
+                };
+
+                return View(model);
+
+
+                foreach (var laudo in lista)
                 {
                     var aluno = await ApiClientFactory.Instance.GetAlunoById((int)laudo.AlunoId);
                     if (aluno == null)
@@ -894,8 +910,7 @@ namespace WebApp.Controllers
                         continue; // Pular este laudo e ir para o próximo
                     }
 
-                    var profissional = string.IsNullOrEmpty(aluno.ProfissionalId) || aluno.ProfissionalId == "0" ? null :
-                        ApiClientFactory.Instance.GetProfissionalById(Convert.ToInt32(aluno.ProfissionalId));
+                    var profissional = ApiClientFactory.Instance.GetProfissionalById(Convert.ToInt32(aluno.ProfissionalId));
                     var talentoEsportivo = laudo.TalentoEsportivoId == null ? null :
                         ApiClientFactory.Instance.GetTalentoEsportivoByAluno((int)laudo.AlunoId);
                     var encaminhamentoImc = laudo.SaudeId == null ? null :
@@ -910,26 +925,17 @@ namespace WebApp.Controllers
                         ApiClientFactory.Instance.GetEncaminhamentoBySaudeBucalId((int)laudo.SaudeBucalId);
                     var desempenho = (laudo.AlunoId == null || laudo.AlunoId == 0) ? null :
                         ApiClientFactory.Instance.GetDesempenhoByAluno(Convert.ToInt32(laudo.AlunoId));
-                    var modalidade = (laudo.ModalidadeId == null || laudo.ModalidadeId == 0) ? null :
-                        ApiClientFactory.Instance.GetModalidadeById(Convert.ToInt32(laudo.ModalidadeId));
+                    var modalidade = ApiClientFactory.Instance.GetModalidadeById(Convert.ToInt32(laudo.ModalidadeId));
 
-                    laudoModels.Add(new LaudoModel
+                    if (modalidade == null)
                     {
-                        Laudo = laudo,
-                        Aluno = aluno,
-                        Profissional = profissional,
-                        TalentoEsportivo = talentoEsportivo,
-                        EncaminhamentoImc = encaminhamentoImc,
-                        ListQualidadeDeVida = qualidadeDeVida,
-                        ListVocacional = vocacional,
-                        EncaminhamentoSaudeBucal = encaminhamentoSaudeBucal,
-                        EncaminhamentoConsumoAlimentar = encaminhamentoConsumoAlimentar,
-                        Desempenho = desempenho,
-                        Modalidade = modalidade
-                    });
+                        continue;
+                    }
+
+                    
                 }
 
-                return View(laudoModels);
+                
             }
             catch (Exception e)
             {

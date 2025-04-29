@@ -1,497 +1,474 @@
-﻿@model List<WebApp.Models.LaudoModel>
+﻿@model WebApp.Models.LaudoResumidoModel
 @using System.Globalization
+@using WebApp.Dto
 @{
-    Layout = null;
+	Layout = null;
 
-    string GetProgressBarWidth(string title, string value)
-    {
-        if (string.IsNullOrEmpty(value)) return "0%";
+	string GetProgressBarWidth(string title, string value)
+	{
+		if (string.IsNullOrEmpty(value)) return "0%";
 
-        double numValue;
-        if (!double.TryParse(value.Replace(",", "."), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out numValue)) return "0%";
+		double numValue;
+		if (!double.TryParse(value.Replace(",", "."), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out numValue)) return "0%";
 
-        double percentage = 0;
-        switch (title)
-        {
-            case "Impulsão Horizontal":
-                percentage = (numValue / 250.0) * 100;
-                break;
-            case "Preensão Manual":
-                percentage = (numValue / 80.0) * 100;
-                break;
-            case "Flexibilidade":
-                percentage = (numValue / 455.0) * 100;
-                break;
-            case "Índice de Massa Corporal":
-                percentage = (numValue / 37.26) * 100;
-                percentage = Math.Min(percentage, 100);
-                break;
-            case "imc":
-                percentage = (numValue / 37.26) * 100;
-                percentage = Math.Min(percentage, 100);
-                break;
-            default:
-                percentage = 0;
-                break;
-        }
+		double percentage = 0;
+		switch (title)
+		{
+			case "Impulsão Horizontal":
+				percentage = (numValue / 250.0) * 100;
+				break;
+			case "Preensão Manual":
+				percentage = (numValue / 80.0) * 100;
+				break;
+			case "Flexibilidade":
+				percentage = (numValue / 455.0) * 100;
+				break;
+			case "Índice de Massa Corporal":
+				percentage = (numValue / 37.26) * 100;
+				percentage = Math.Min(percentage, 100);
+				break;
+			case "imc":
+				percentage = (numValue / 37.26) * 100;
+				percentage = Math.Min(percentage, 100);
+				break;
+			default:
+				percentage = 0;
+				break;
+		}
 
-        return $"{percentage.ToString("F1", System.Globalization.CultureInfo.InvariantCulture)}%";
-    }
+		return $"{percentage.ToString("F1", System.Globalization.CultureInfo.InvariantCulture)}%";
+	}
 
-    async Task RenderHeaderAsync(WebApp.Models.LaudoModel laudo)
-    {
-        <header class="header">
-            <img src="~/assets/images/logo2.png" alt="DNA do Brasil" class="logo-dna" />
-            <div class="talent-info">
-                <div class="text-info">
-                    <div class="talent-label">MEU TALENTO</div>
-                    <div class="talent-name">
-                        @if (@laudo.Modalidade == null)
-                        {
-                            <text>Não Definido</text>
-                        }
-                        else
-                        {
-                            <text>@laudo.Modalidade.Nome</text>
-                        }
-                    </div>
-                </div>
-                @if (@laudo.Modalidade != null && laudo.Modalidade.Id != 0)
-                {
-                    <div class="sport-icon"
-                         style=" background-size: cover;">
-                        @{
-                            var base64 = Convert.ToBase64String(@laudo.Modalidade.ByteImage);
-                            var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
-                        }
-                        <img src="@imgSrc" />
-                    </div>
+	async Task RenderHeaderAsync(string nome, byte[] byteImage)
+	{
+		<header class="header">
+			<img src="~/assets/images/logo2.png" alt="DNA do Brasil" class="logo-dna" />
+			<div class="talent-info">
+				<div class="text-info">
+					<div class="talent-label">MEU TALENTO</div>
+					<div class="talent-name">
 
-                }
-                else
-                {
-                    @* <div class="img-qrcode-info"
-                             style="background-image: url('/assets/assets_Laudo/qrCode.svg'); background-size: cover;">
-                        </div> *@
-                    <div class="img-qrcode-info"
-                         style="background-image: url('/assets/assets_Laudo/icon_info_esporte.png'); background-size: cover;">
+						<text>@nome</text>
+					</div>
+				</div>
+				<div class="sport-icon"
+					 style=" background-size: cover;">
+					@{
+						var base64 = Convert.ToBase64String(byteImage);
+						var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+					}
+					<img src="@imgSrc" />
+				</div>
+			</div>
+		</header>
+	}
 
-                        @*<img src="/assets/assets_Laudo/icon_info_esporte.png" alt="Vamos colocar uma imagem padrão pra todas as NomeModalidades por exemplo uma estrela sei la " class="sport-icon" />*@
-                    </div>
-                }
-                    
+	async Task RenderStudentInfoAsync(byte[]? byteImageFotoAluno, string nomeAluno, string nomeLocalidade, string email, int idade, string etnia,
+									string nomeDeficiencia, string dtNascimento)
+	{
+		<div class="left-section">
+			<div class="student-info">
+				<div class="student-photo">
+					@if (byteImageFotoAluno != null)
+					{
+						var imgSrc = $"data:image/gif;base64,{Convert.ToBase64String(byteImageFotoAluno)}";
+						<img src="@imgSrc" alt="Foto do aluno" />
+					}
+					else
+					{
+						<img src="/assets/images/user.png" alt="Foto padrão" />
+					}
+				</div>
+				<div class="student-basic-info">
+					<div class="student-name">@nomeAluno</div>
+					<div class="student-school">@nomeLocalidade</div>
+					<div class="student-email">@email</div>
+				</div>
+			</div>
+			<div class="student-details">
+				<div class="student-extra-grid">
+					<div class="detail-row">
+						<div><span class="info-label">Idade:</span> @idade</div>
+						<div><span class="info-label">Série:</span> Não definida</div>
+					</div>
+					<div class="detail-row">
+						<div><span class="info-label">Etnia:</span> @etnia</div>
+							<div><span class="info-label">Deficiência:</span> @nomeDeficiencia</div>
+					</div>
+					<div class="detail-row">
+						<div><span class="info-label">Data de Nascimento:</span> @dtNascimento</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	}
 
-            </div>
-        </header>
-    }
+	async Task RenderDnaScoreAsync(DesempenhoDto? desempenho)
+	{
+		if (desempenho == null)
+		{
+			<div class="dna-score">
+				<div class="score-info">
+					<div style="font-weight: 600; margin-bottom: 6px;">Desempenho não disponível</div>
+				</div>
+			</div>
+			return;
+		}
 
-    async Task RenderStudentInfoAsync(WebApp.Models.LaudoModel laudo)
-    {
-        <div class="left-section">
-            <div class="student-info">
-                <div class="student-photo">
-                    @if (laudo.Laudo.ByteImage != null)
-                    {
-                        var imgSrc = $"data:image/gif;base64,{Convert.ToBase64String(laudo.Laudo.ByteImage)}";
-                        <img src="@imgSrc" alt="Foto do aluno" />
-                    }
-                    else
-                    {
-                        <img src="/assets/images/user.png" alt="Foto padrão" />
-                    }
-                </div>
-                <div class="student-basic-info">
-                    <div class="student-name">@laudo.Laudo.NomeAluno</div>
-                    <div class="student-school">@laudo.Laudo.NomeLocalidade</div>
-                    <div class="student-email">@laudo.Laudo.Email</div>
-                </div>
-            </div>
-            <div class="student-details">
-                <div class="student-extra-grid">
-                    <div class="detail-row">
-                        <div><span class="info-label">Idade:</span> @laudo.Laudo.Idade</div>
-                        <div><span class="info-label">Série:</span> Não definida</div>
-                    </div>
-                    <div class="detail-row">
-                        <div><span class="info-label">Etnia:</span> @laudo.Laudo.Etnia</div>
-                        @if (@laudo.Laudo.NomeDeficiencia != "NÃO POSSUI")
-                        {
-                            <div><span class="info-label">Deficiência:</span> @laudo.Laudo.NomeDeficiencia</div>
-                        }
-                    </div>
-                    <div class="detail-row">
-                        <div><span class="info-label">Data de Nascimento:</span> @laudo.Aluno.DtNascimento</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    }
+		<div class="dna-score">
+			<div class="circular-progress" style="--progress: (@desempenho.ScoreDna)/6; --color-main: #00eabc; --color-second: #c0faee;">
+				<div class="circular-progress-inner">
+					<div class="circular-progress-value">@desempenho.ScoreDna</div>
+					<div class="circular-progress-label">DNA</div>
+				</div>
+			</div>
+			<div class="score-info">
+				<div style="font-weight: 600; margin-bottom: 6px;">O que é o índice DNA?</div>
+				<div style="font-size: 14px">O Score DNA é um sistema que permitirá acompanhar seu rendimento em diferentes momentos.</div>
+			</div>
+		</div>
+	}
 
-    async Task RenderDnaScoreAsync(WebApp.Models.LaudoModel laudo)
-    {
-        if (laudo.Desempenho == null)
-        {
-            <div class="dna-score">
-                <div class="score-info">
-                    <div style="font-weight: 600; margin-bottom: 6px;">Desempenho não disponível</div>
-                </div>
-            </div>
-            return;
-        }
+	async Task RenderMetricCardAsync(string title, double score, string colorMain, string colorSecond, string message, string description = null, string imc = null)
+	{
+		<div class="metric-card">
+			<div class="card-header @title.ToLower()">
+				<div class="card-title">@title</div>
+				<div class="card-score">
+					<div class="circular-progress" style="--progress: @score; --color-main: @colorMain; --color-second: @colorSecond;">
+						<div class="circular-progress-inner">
+							<div class="circular-progress-value">@score</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<h3>@message</h3>
+			@if (imc != null)
+			{
+				<div class="progress-bar-page1"
+					 style="display: flex;
+					justify-content: space-between;
+					align-items: center;
+					padding: 50x 0;
+					margin-bottom: 5px;">
+					<span>IMC</span>
+					<span style="color: #00eabc; font-weight: bold;">@imc</span>
+				</div>
+				<div class="progress-bar progress-bar-page1">
+					<div class="progress" style="width: @GetProgressBarWidth("imc", imc);"></div>
+				</div>
+			}
+			@if (!string.IsNullOrEmpty(description))
+			{
+				<p style="flex-grow: 1">@description</p>
+			}
+		</div>
+	}
 
-        <div class="dna-score">
-            <div class="circular-progress" style="--progress: (@laudo.Desempenho.ScoreDna)/6; --color-main: #00eabc; --color-second: #c0faee;">
-                <div class="circular-progress-inner">
-                    <div class="circular-progress-value">@laudo.Desempenho.ScoreDna</div>
-                    <div class="circular-progress-label">DNA</div>
-                </div>
-            </div>
-            <div class="score-info">
-                <div style="font-weight: 600; margin-bottom: 6px;">O que é o índice DNA?</div>
-                <div style="font-size: 14px">O Score DNA é um sistema que permitirá acompanhar seu rendimento em diferentes momentos.</div>
-            </div>
-        </div>
-    }
+	async Task RenderSectionHeaderAsync(string title, double score, string colorMain, string colorSecond)
+	{
+		<div class="section-header">
+			<div class="card-header @title.ToLower()">
+				<div class="card-title">@title</div>
+				<div class="card-score">
+					<div class="circular-progress" style="--progress: @score; --color-main: @colorMain; --color-second: @colorSecond;">
+						<div class="circular-progress-inner">
+							<div class="circular-progress-value">@score</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	}
 
-    async Task RenderMetricCardAsync(string title, double score, string colorMain, string colorSecond, string message, string description = null, string imc = null)
-    {
-        <div class="metric-card">
-            <div class="card-header @title.ToLower()">
-                <div class="card-title">@title</div>
-                <div class="card-score">
-                    <div class="circular-progress" style="--progress: @score; --color-main: @colorMain; --color-second: @colorSecond;">
-                        <div class="circular-progress-inner">
-                            <div class="circular-progress-value">@score</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <h3>@message</h3>
-            @if (imc != null)
-            {
-                <div class="progress-bar-page1"
-                     style="display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding: 50x 0;
-                margin-bottom: 5px;">
-                    <span>IMC</span>
-                    <span style="color: #00eabc; font-weight: bold;">@imc</span>
-                </div>
-                <div class="progress-bar progress-bar-page1">
-                    <div class="progress" style="width: @GetProgressBarWidth("imc", imc);"></div>
-                </div>
-            }
-            @if (!string.IsNullOrEmpty(description))
-            {
-                <p style="flex-grow: 1">@description</p>
-            }
-        </div>
-    }
-
-    async Task RenderSectionHeaderAsync(string title, double score, string colorMain, string colorSecond)
-    {
-        <div class="section-header">
-            <div class="card-header @title.ToLower()">
-                <div class="card-title">@title</div>
-                <div class="card-score">
-                    <div class="circular-progress" style="--progress: @score; --color-main: @colorMain; --color-second: @colorSecond;">
-                        <div class="circular-progress-inner">
-                            <div class="circular-progress-value">@score</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    }
-
-    async Task RenderSportCardAsync(string title, string unit, string value, string message, string description = null, bool showProgressBar = false)
-    {
-        <div class="sport-card">
-            <h3>@title</h3>
-            @if (!string.IsNullOrEmpty(message))
-            {
-                <p>@message</p>
-            }
-            <div class="metric-value" style="@(showProgressBar ? "border-bottom: none" : "")">
-                <span>@unit</span>
-                <span class="@(title.Contains("Impulsão") ? "sport" : "default")">@value</span>
-            </div>
-            @if (showProgressBar && value != "N/A")
-            {
-                <div class="progress-bar @(title.Contains("Impulsão") ? "progress-bar-sport" : "")">
-                    <div class="progress @(title.Contains("Impulsão") ? "progress-sport" : "")"
-                         style="width: @GetProgressBarWidth(title, value);">
-                    </div>
-                </div>
-            }
-            @if (!string.IsNullOrEmpty(description))
-            {
-                <p class="description">@description</p>
-            }
-            else
-            {
-                <p class="description">O aluno não tem essa informação preenchida no laudo de Esporte.</p>
-            }
-        </div>
-    }
+	async Task RenderSportCardAsync(string title, string unit, string value, string message, string description = null, bool showProgressBar = false)
+	{
+		<div class="sport-card">
+			<h3>@title</h3>
+			@if (!string.IsNullOrEmpty(message))
+			{
+				<p>@message</p>
+			}
+			<div class="metric-value" style="@(showProgressBar ? "border-bottom: none" : "")">
+				<span>@unit</span>
+				<span class="@(title.Contains("Impulsão") ? "sport" : "default")">@value</span>
+			</div>
+			@if (showProgressBar && value != "N/A")
+			{
+				<div class="progress-bar @(title.Contains("Impulsão") ? "progress-bar-sport" : "")">
+					<div class="progress @(title.Contains("Impulsão") ? "progress-sport" : "")"
+						 style="width: @GetProgressBarWidth(title, value);">
+					</div>
+				</div>
+			}
+			@if (!string.IsNullOrEmpty(description))
+			{
+				<p class="description">@description</p>
+			}
+			else
+			{
+				<p class="description">O aluno não tem essa informação preenchida no laudo de Esporte.</p>
+			}
+		</div>
+	}
 }
 
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@DateTime.Now.ToString("ddMMyyyy")-laudo</title>
-    <link href="https://fonts.googleapis.com/css?family=Ubuntu&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
-    <link rel="stylesheet" href="~/assets/styles_Laudo/indexLote.css" media="all" />
-    <link rel="stylesheet" href="~/assets/styles_Laudo/pages.css" media="all" />
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>@DateTime.Now.ToString("ddMMyyyy")-laudo</title>
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu&display=swap" rel="stylesheet" />
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+	<link rel="stylesheet" href="~/assets/styles_Laudo/indexLote.css" media="all" />
+	<link rel="stylesheet" href="~/assets/styles_Laudo/pages.css" media="all" />
 </head>
 <body>
-    <div class="navigation-bar">
-        <div class="page-navigation">
-            <button class="nav-button" id="prevButton" onclick="previousPage()" title="Página Anterior">
-                <span class="material-icons">arrow_upward</span>
-            </button>
-            <div class="page-counter">
-                <span id="currentPage">0</span>/<span id="totalPages">0</span>
-            </div>
-            <button class="nav-button" id="nextButton" onclick="nextPage()" title="Próxima Página">
-                <span class="material-icons">arrow_downward</span>
-            </button>
-        </div>
-        <div class="action-buttons">
-            <button class="action-button" onclick="printDocument()" title="Imprimir">
-                <span class="material-icons">print</span>
-            </button>
-            <button class="action-button" onclick="downloadDocument()" title="Baixar">
-                <span class="material-icons">download</span>
-            </button>
-        </div>
-    </div>
+	<div class="navigation-bar">
+		<div class="page-navigation">
+			<button class="nav-button" id="prevButton" onclick="previousPage()" title="Página Anterior">
+				<span class="material-icons">arrow_upward</span>
+			</button>
+			<div class="page-counter">
+				<span id="currentPage">0</span>/<span id="totalPages">0</span>
+			</div>
+			<button class="nav-button" id="nextButton" onclick="nextPage()" title="Próxima Página">
+				<span class="material-icons">arrow_downward</span>
+			</button>
+		</div>
+		<div class="action-buttons">
+			<button class="action-button" onclick="printDocument()" title="Imprimir">
+				<span class="material-icons">print</span>
+			</button>
+			<button class="action-button" onclick="downloadDocument()" title="Baixar">
+				<span class="material-icons">download</span>
+			</button>
+		</div>
+	</div>
 
-    @foreach (var laudo in Model)
-    {
-            <div class="page-container page1">
-                <div class="newContainer">
-                    @{
-                        await RenderHeaderAsync(laudo);
-                    }
-                    <section class="info-section">
-                        @{
-                            await RenderStudentInfoAsync(laudo);
-                            await RenderDnaScoreAsync(laudo);
-                        }
-                    </section>
+	@foreach (var laudoResumido in Model.ListLaudosResumidos)
+	{
+		<div class="page-container page1">
+			<div class="newContainer">
+				@{
+					await RenderHeaderAsync(laudoResumido.NomeModalidade, laudoResumido.ByteImageModalidade);
+				}
+				<section class="info-section">
+					@{
+						await RenderStudentInfoAsync(laudoResumido.ByteImageFotoAluno, laudoResumido.NomeAluno, laudoResumido.NomeLocalidade, laudoResumido.Email,
+							laudoResumido.Idade, laudoResumido.Etnia, laudoResumido.NomeDeficiencia, laudoResumido.DtNascimento);
+						await RenderDnaScoreAsync(laudoResumido.Desempenho);
+					}
+				</section>
 
-                    <div class="cards-grid">
-                    @if (laudo.Laudo.SaudeId != null)
-                    {
-                        // Verificação de Desempenho nulo antes de acessar suas propriedades
-                        if (laudo.Desempenho != null)
-                        {
-                            var scoreSaude = laudo.Desempenho.ScoreSaude;
-                            var textoImc = laudo.Desempenho.TextoImc;
-                            var imcSaude = laudo.Laudo.ImcSaude != null ? laudo.Laudo.ImcSaude : null;
+				<div class="cards-grid">
+					@if (laudoResumido.Laudo.SaudeId != null)
+					{
+						// Verificação de Desempenho nulo antes de acessar suas propriedades
+						if (laudoResumido.Desempenho != null)
+						{
+							var scoreSaude = laudoResumido.Desempenho.ScoreSaude;
+							var textoImc = laudoResumido.Desempenho.TextoImc;
+							var imcSaude = laudoResumido.Laudo.ImcSaude != null ? laudoResumido.Laudo.ImcSaude : null;
 
-                            await RenderMetricCardAsync("Saúde", scoreSaude, "#efad57", "#ffeed9",
-                            "Índice de massa corporal", textoImc, imcSaude);
-                        }
-                        else
-                        {
-                            // Renderização alternativa quando Desempenho é nulo
-                            <div class="metric-card">
-                                <div class="card-header saúde">
-                                    <div class="card-title">Saúde</div>
-                                    <div class="card-score">
-                                        <div>Dados não disponíveis</div>
-                                    </div>
-                                </div>
-                            </div>
-                        }
-                    }
+							await RenderMetricCardAsync("Saúde", scoreSaude, "#efad57", "#ffeed9",
+							"Índice de massa corporal", textoImc, imcSaude);
+						}
+						else
+						{
+							// Renderização alternativa quando Desempenho é nulo
+							<div class="metric-card">
+								<div class="card-header saúde">
+									<div class="card-title">Saúde</div>
+									<div class="card-score">
+										<div>Dados não disponíveis</div>
+									</div>
+								</div>
+							</div>
+						}
+					}
 
-                    @if (laudo.Laudo.SaudeBucalId != null)
-                    {
-                        if (laudo.Desempenho != null && laudo.EncaminhamentoSaudeBucal != null)
-                        {
-                            await RenderMetricCardAsync("Saúde Bucal", laudo.Desempenho.ScoreSaudeBucal, "#e96c52", "#fce3de",
-                            laudo.Desempenho.AvisoSaudeBucal, laudo.EncaminhamentoSaudeBucal.Descricao);
-                        }
-                        else
-                        {
-                            <div class="metric-card">
-                                <div class="card-header saúde bucal">
-                                    <div class="card-title">Saúde Bucal</div>
-                                    <div class="card-score">
-                                        <div>Dados não disponíveis</div>
-                                    </div>
-                                </div>
-                            </div>
-                        }
-                    }
+					@if (laudoResumido.Laudo.SaudeBucalId != null)
+					{
+						if (laudoResumido.Desempenho != null && laudoResumido.EncaminhamentoSaudeBucal != null)
+						{
+							await RenderMetricCardAsync("Saúde Bucal", laudoResumido.Desempenho.ScoreSaudeBucal, "#e96c52", "#fce3de",
+							laudoResumido.Desempenho.AvisoSaudeBucal, laudoResumido.EncaminhamentoSaudeBucal.Descricao);
+						}
+						else
+						{
+							<div class="metric-card">
+								<div class="card-header saúde bucal">
+									<div class="card-title">Saúde Bucal</div>
+									<div class="card-score">
+										<div>Dados não disponíveis</div>
+									</div>
+								</div>
+							</div>
+						}
+					}
 
-                    @if (laudo.Laudo.ConsumoAlimentarId != null)
-                    {
-                        if (laudo.Desempenho != null)
-                        {
-                            var descricao = laudo.EncaminhamentoConsumoAlimentar != null ?
-                            laudo.EncaminhamentoConsumoAlimentar.Descricao : "";
+					@if (laudoResumido.Laudo.ConsumoAlimentarId != null)
+					{
+						if (laudoResumido.Desempenho != null)
+						{
+							var descricao = laudoResumido.EncaminhamentoConsumoAlimentar != null ?
+							laudoResumido.EncaminhamentoConsumoAlimentar.Descricao : "";
 
-                            await RenderMetricCardAsync("Consumo Alimentar", laudo.Desempenho.ScoreConsumoAlimentar,
-                            "#73dc69", "#deffdc", laudo.Desempenho.AvisoConsumoAlimentar, descricao);
-                        }
-                        else
-                        {
-                            <div class="metric-card">
-                                <div class="card-header consumo alimentar">
-                                    <div class="card-title">Consumo Alimentar</div>
-                                    <div class="card-score">
-                                        <div>Dados não disponíveis</div>
-                                    </div>
-                                </div>
-                            </div>
-                        }
-                    }
+							await RenderMetricCardAsync("Consumo Alimentar", laudoResumido.Desempenho.ScoreConsumoAlimentar,
+							"#73dc69", "#deffdc", laudoResumido.Desempenho.AvisoConsumoAlimentar, descricao);
+						}
+						else
+						{
+							<div class="metric-card">
+								<div class="card-header consumo alimentar">
+									<div class="card-title">Consumo Alimentar</div>
+									<div class="card-score">
+										<div>Dados não disponíveis</div>
+									</div>
+								</div>
+							</div>
+						}
+					}
 
-                    @if (laudo.Laudo.VocacionalId != null)
-                    {
-                        if (laudo.ListVocacional != null && laudo.ListVocacional.Any())
-                        {
-                            foreach (var vocacional in laudo.ListVocacional)
-                            {
-                                if (vocacional.Id == laudo.Laudo.EncaminhamentoVocacionalId)
-                                {
-                                    await RenderMetricCardAsync("Vocação", 100, "#5b5c9c", "#d5d6e7",
-                                    vocacional.Nome, vocacional.Descricao);
-                                }
-                            }
-                        }
-                        else
-                        {
-                            <div class="metric-card">
-                                <div class="card-header vocação">
-                                    <div class="card-title">Vocação</div>
-                                    <div class="card-score">
-                                        <div>Dados não disponíveis</div>
-                                    </div>
-                                </div>
-                            </div>
-                        }
-                    }
-                    </div>
-                </div>
-                <div class="page-date">
-                    @DateTime.Now.ToString("D", CultureInfo.CreateSpecificCulture("pt-BR")).ToUpper()
-                </div>
-            </div>
+					@if (laudoResumido.Laudo.VocacionalId != null)
+					{
+						if (laudoResumido.ListVocacional != null && laudoResumido.ListVocacional.Any())
+						{
+							foreach (var vocacional in laudoResumido.ListVocacional)
+							{
+								if (vocacional.Id == laudoResumido.Laudo.EncaminhamentoVocacionalId)
+								{
+									await RenderMetricCardAsync("Vocação", 100, "#5b5c9c", "#d5d6e7",
+									vocacional.Nome, vocacional.Descricao);
+								}
+							}
+						}
+						else
+						{
+							<div class="metric-card">
+								<div class="card-header vocação">
+									<div class="card-title">Vocação</div>
+									<div class="card-score">
+										<div>Dados não disponíveis</div>
+									</div>
+								</div>
+							</div>
+						}
+					}
+				</div>
+			</div>
+			<div class="page-date">
+				@DateTime.Now.ToString("D", CultureInfo.CreateSpecificCulture("pt-BR")).ToUpper()
+			</div>
+		</div>
 
-            <div class="page-container page1">
-                <div class="newContainer">
-                @if (laudo.Laudo.QualidadeDeVidaId != null)
-                {
-                    if (laudo.Desempenho != null && laudo.ListQualidadeDeVida != null && laudo.ListQualidadeDeVida.Any())
-                    {
-                        <section class="quality-section">
-                            @{
-                                await RenderSectionHeaderAsync("Qualidade de Vida", laudo.Desempenho.ScoreVida, "#23bfff", "#c8eeff");
-                            }
+		<div class="page-container page1">
+			<div class="newContainer">
+				@if (laudoResumido.Laudo.QualidadeDeVidaId != null)
+				{
+					if (laudoResumido.Desempenho != null && laudoResumido.ListQualidadeDeVida != null && laudoResumido.ListQualidadeDeVida.Any())
+					{
+						<section class="quality-section">
+							@{
+								await RenderSectionHeaderAsync("Qualidade de Vida", laudoResumido.Desempenho.ScoreVida, "#23bfff", "#c8eeff");
+							}
 
-                            <div class="quality-grid">
-                                @{
-                                    var textosVida = new List<string>
-                                        {
-                                        laudo.Desempenho.TextoBemEstar,
-                                        laudo.Desempenho.TextoAutoestima,
-                                        laudo.Desempenho.TextoFamilia,
-                                        laudo.Desempenho.TextoContexto
-                                        };
+							<div class="quality-grid">
+								@{
+									var textosVida = new List<string>
+					{
+					laudoResumido.Desempenho.TextoBemEstar,
+					laudoResumido.Desempenho.TextoAutoestima,
+					laudoResumido.Desempenho.TextoFamilia,
+					laudoResumido.Desempenho.TextoContexto
+					};
 
-                                    for (var i = 0; i < laudo.ListQualidadeDeVida.Count; i++)
-                                    {
-                                        <div class="quality-card">
-                                            <h3>@laudo.ListQualidadeDeVida[i].Nome</h3>
-                                            <p>@(i<textosVida.Count? textosVida[i] : "Informação não disponível")</p>
-                                        </div>
-                                    }
-                                }
-                            </div>
-                        </section>
-                    }
-                    else
-                    {
-                        <section class="quality-section">
-                            <div class="section-header">
-                                <div class="card-header qualidade de vida">
-                                    <div class="card-title">Qualidade de Vida</div>
-                                    <div class="card-score">
-                                        <div>Dados não disponíveis</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-                    }
-                }
+									for (var i = 0; i < laudoResumido.ListQualidadeDeVida.Count; i++)
+									{
+										<div class="quality-card">
+											<h3>@laudoResumido.ListQualidadeDeVida[i].Nome</h3>
+											<p>@(i < textosVida.Count ? textosVida[i] : "Informação não disponível")</p>
+										</div>
+									}
+								}
+							</div>
+						</section>
+					}
+					else
+					{
+						<section class="quality-section">
+							<div class="section-header">
+								<div class="card-header qualidade de vida">
+									<div class="card-title">Qualidade de Vida</div>
+									<div class="card-score">
+										<div>Dados não disponíveis</div>
+									</div>
+								</div>
+							</div>
+						</section>
+					}
+				}
 
-                @if (laudo.Laudo.TalentoEsportivoId != null && laudo.TalentoEsportivo != null && laudo.Desempenho != null)
-                {
-                    <section class="sport-section">
-                        @{
-                            await RenderSectionHeaderAsync("Esporte", laudo.Desempenho.ScoreTalentoEsportivo, "#df436c", "#f7d1db");
-                        }
+				@if (laudoResumido.Laudo.TalentoEsportivoId != null && laudoResumido.TalentoEsportivo != null && laudoResumido.Desempenho != null)
+				{
+					<section class="sport-section">
+						@{
+							await RenderSectionHeaderAsync("Esporte", laudoResumido.Desempenho.ScoreTalentoEsportivo, "#df436c", "#f7d1db");
+						}
 
-                        <div class="sport-grid">
-                            @{
-                                // Verificar se ImcSaude não é nulo
-                                var imcValue = laudo.Laudo.ImcSaude != null ? laudo.Laudo.ImcSaude.ToString() : "N/A";
-                                await RenderSportCardAsync("Índice de Massa Corporal", "imc",
-                                imcValue, laudo.Desempenho.AvisoImc,
-                                laudo.Desempenho.TextoImc, true);
+						<div class="sport-grid">
+							@{
+								// Verificar se ImcSaude não é nulo
+								var imcValue = laudoResumido.Laudo.ImcSaude != null ? laudoResumido.Laudo.ImcSaude.ToString() : "N/A";
+								await RenderSportCardAsync("Índice de Massa Corporal", "imc",
+								imcValue, laudoResumido.Desempenho.AvisoImc,
+								laudoResumido.Desempenho.TextoImc, true);
 
-                                // Verificar se Velocidade não é nulo
-                                var velocidadeValue = laudo.TalentoEsportivo.Velocidade != null ?
-                                laudo.TalentoEsportivo.Velocidade.ToString() : "N/A";
-                                await RenderSportCardAsync("Velocidade 20m", "seg",
-                                velocidadeValue, "",
-                                laudo.Desempenho.TextoVelocidade);
+								// Verificar se Velocidade não é nulo
+								var velocidadeValue = laudoResumido.TalentoEsportivo.Velocidade != null ?
+								laudoResumido.TalentoEsportivo.Velocidade.ToString() : "N/A";
+								await RenderSportCardAsync("Velocidade 20m", "seg",
+								velocidadeValue, "",
+								laudoResumido.Desempenho.TextoVelocidade);
 
-                                // Verificar se ImpulsaoHorizontal não é nulo
-                                var impulsaoValue = laudo.TalentoEsportivo.ImpulsaoHorizontal != null ?
-                                laudo.TalentoEsportivo.ImpulsaoHorizontal.ToString() : "N/A";
-                                await RenderSportCardAsync("Impulsão Horizontal", "cm",
-                                impulsaoValue, laudo.Desempenho.AvisoImpulsao,
-                                laudo.Desempenho.TextoImpulsao, true);
+								// Verificar se ImpulsaoHorizontal não é nulo
+								var impulsaoValue = laudoResumido.TalentoEsportivo.ImpulsaoHorizontal != null ?
+								laudoResumido.TalentoEsportivo.ImpulsaoHorizontal.ToString() : "N/A";
+								await RenderSportCardAsync("Impulsão Horizontal", "cm",
+								impulsaoValue, laudoResumido.Desempenho.AvisoImpulsao,
+								laudoResumido.Desempenho.TextoImpulsao, true);
 
-                                // Verificar se Flexibilidade não é nulo
-                                var flexibilidadeValue = laudo.TalentoEsportivo.Flexibilidade != null ?
-                                laudo.TalentoEsportivo.Flexibilidade.ToString() : "N/A";
-                                await RenderSportCardAsync("Flexibilidade", "cm",
-                                flexibilidadeValue, laudo.Desempenho.AvisoFlexibilidadeMuscular,
-                                laudo.Desempenho.TextoFlexibilidadeMuscular, true);
+								// Verificar se Flexibilidade não é nulo
+								var flexibilidadeValue = laudoResumido.TalentoEsportivo.Flexibilidade != null ?
+								laudoResumido.TalentoEsportivo.Flexibilidade.ToString() : "N/A";
+								await RenderSportCardAsync("Flexibilidade", "cm",
+								flexibilidadeValue, laudoResumido.Desempenho.AvisoFlexibilidadeMuscular,
+								laudoResumido.Desempenho.TextoFlexibilidadeMuscular, true);
 
-                                // Verificar se Vo2Max não é nulo
-                                var vo2MaxValue = laudo.TalentoEsportivo.Vo2Max != null ?
-                                laudo.TalentoEsportivo.Vo2Max.ToString() : "N/A";
-                                await RenderSportCardAsync("Aptidão Aeróbica", "seg",
-                                vo2MaxValue, "",
-                                laudo.Desempenho.TextoAptidaoCardio);
+								// Verificar se Vo2Max não é nulo
+								var vo2MaxValue = laudoResumido.TalentoEsportivo.Vo2Max != null ?
+								laudoResumido.TalentoEsportivo.Vo2Max.ToString() : "N/A";
+								await RenderSportCardAsync("Aptidão Aeróbica", "seg",
+								vo2MaxValue, "",
+								laudoResumido.Desempenho.TextoAptidaoCardio);
 
-                                // Verificar se PreensaoManual não é nulo
-                                var preensaoValue = laudo.TalentoEsportivo.PreensaoManual != null ?
-                                laudo.TalentoEsportivo.PreensaoManual.ToString() : "N/A";
-                                await RenderSportCardAsync("Preensão Manual", "kg",
-                                preensaoValue, laudo.Desempenho.AvisoForcaMembrosSup,
-                                laudo.Desempenho.TextoForcaMembrosSup, true);
-                            }
-                        </div>
-                    </section>
-                }
-                </div>
-            </div>
-        
-    }
+								// Verificar se PreensaoManual não é nulo
+								var preensaoValue = laudoResumido.TalentoEsportivo.PreensaoManual != null ?
+								laudoResumido.TalentoEsportivo.PreensaoManual.ToString() : "N/A";
+								await RenderSportCardAsync("Preensão Manual", "kg",
+								preensaoValue, laudoResumido.Desempenho.AvisoForcaMembrosSup,
+								laudoResumido.Desempenho.TextoForcaMembrosSup, true);
+							}
+						</div>
+					</section>
+				}
+			</div>
+		</div>
 
-    <script src="~/assets/scripts_Laudo/index.js"></script>
+	}
+
+	<script src="~/assets/scripts_Laudo/index.js"></script>
 </body>
 </html>

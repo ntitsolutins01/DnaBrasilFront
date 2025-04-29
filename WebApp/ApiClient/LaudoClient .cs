@@ -173,6 +173,18 @@ namespace WebApp.ApiClient
             return GetFiltro(requestUrl, searchFilter);
         }
 
+        /// <summary>
+        /// Busca Laudos Resumidos por Filtro
+        /// </summary>
+        /// <param name="searchFilter">filtro para pesquisa de Laudos Resumidos</param>
+        /// <returns>retorna a lista de Laudos Resumidos por Filtro</returns>
+        public Task<LaudosResumidosFilterDto?> GetLaudosResumidosByFilter(LaudosResumidosFilterDto searchFilter)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceLaudo}/ResumidosFilter"));
+            return GetFiltro(requestUrl, searchFilter);
+        }
+
         #endregion
 
     }
