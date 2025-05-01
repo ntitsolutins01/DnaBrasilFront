@@ -1,6 +1,7 @@
 ﻿@using System.Globalization
 @using DocumentFormat.OpenXml.Drawing
 @using WebApp.Dto
+@using WebApp.Factory
 @model AlunoCursoCertificadoModel
 @{
     ViewData["Title"] = "Detalhes do Curso";
@@ -92,6 +93,7 @@
                                         @{
                                             var progress = Math.Round((double)Model.AlunosAulas.Count() / Model.Aulas.Count() * 100, 1);
                                         }
+                                        <input type="hidden" id="progresso" value="@progress" />
                                         <div class="progress-bar progress-bar-primary" role="progressbar"
                                              aria-valuenow="@progress" aria-valuemin="0"
                                              aria-valuemax="100" style="width: @progress%;">
