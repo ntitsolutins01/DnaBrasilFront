@@ -58,12 +58,14 @@ public class AlunoCursoCertificadoController : BaseController
         var aluno = ApiClientFactory.Instance.GetAlunoByEmail(usuario);
         var cursos = ApiClientFactory.Instance.GetCursosByAlunoId(aluno.Id);
         var certificados = ApiClientFactory.Instance.GetCertificadosByAlunoId(aluno.Id);
+        var alunosCursos = ApiClientFactory.Instance.GetAlunoCursosByAlunoId(aluno.Id);
 
         return View(new AlunoCursoCertificadoModel()
         {
             AlunoId = aluno.Id,
             Cursos = cursos,
-            Certificados = certificados
+            Certificados = certificados,
+            AlunosCursos = alunosCursos
         });
     }
 
@@ -182,6 +184,37 @@ public class AlunoCursoCertificadoController : BaseController
     }
 
     /// <summary>
+    /// Ação de Alteração do Curso
+    /// </summary>
+    /// <param name="model">Modelo de dados para alteração de Curso</param>
+    /// <returns>Retorna mensagem de alteração através do parametro crud</returns>
+    [HttpPost]
+    [IgnoreAntiforgeryToken]
+    public async Task<IActionResult> UpdateProgresso([FromForm] AlunoCursoCertificadoModel.UpdateProgressoCommand model)
+    {
+        try
+        {
+            if (model != null)
+            {
+                var command = new AlunoCursoCertificadoModel.UpdateProgressoCommand
+                {
+                    AlunoId = model.AlunoId,
+                    CursoId = model.CursoId,
+                    Progresso = Convert.ToInt32(model.Progresso)
+                };
+
+                await ApiClientFactory.Instance.UpdateAlunoCurso(command.AlunoId, command.CursoId, command);
+            }
+
+            return NoContent();
+        }
+        catch (Exception e)
+        {
+            return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = "Erro ao executar esta ação. Favor entrar em contato com o administrador do sistema." });
+        }
+    }
+
+    /// <summary>
     /// Ação de Exclusão do AlunoCurso
     /// </summary>
     /// <param name="id">Identificador do AlunoCurso</param>
@@ -223,7 +256,7 @@ public class AlunoCursoCertificadoController : BaseController
 
             var aulas = ApiClientFactory.Instance.GetAulasByCursoId(id);
 
-            var alunosAulas = ApiClientFactory.Instance.GetAlunoAulasByAulaId(aluno.Id);
+            var alunosAulas = ApiClientFactory.Instance.GetAlunoAulasByAlunoId(aluno.Id);
 
             var model = new AlunoCursoCertificadoModel()
             {

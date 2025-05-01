@@ -1,4 +1,5 @@
 ﻿@using System.Globalization
+@using System.Text.Json
 @using DocumentFormat.OpenXml.Drawing
 @using WebApp.Dto
 @using WebApp.Factory
@@ -91,7 +92,24 @@
                                 <div class="panel-body">
                                     <div class="progress light mb-md">
                                         @{
-                                            var progress = Math.Round((double)Model.AlunosAulas.Count() / Model.Aulas.Count() * 100, 1);
+                                            var progress = (double)0;
+                                            if (Model.Aulas != null)
+                                            {
+                                                progress = Math.Round((double)Model.AlunosAulas.Count() / Model.Aulas.Count() * 100, 1);
+                                            }
+
+
+                                            var serializerOptions = new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            };
+
+                                            var alunoCurso = new
+                                            {
+                                                AlunoId = Model.Aluno.Id,
+                                                CursoId = Model.Curso.Id,
+                                                Progresso = progress
+                                            };
                                         }
                                         <input type="hidden" id="progresso" value="@progress" />
                                         <div class="progress-bar progress-bar-primary" role="progressbar"
@@ -142,17 +160,10 @@
                                                                 <ul class="nav nav-list">
                                                                     @foreach (var aula in moduloAulas)
                                                                     {
-                                                                        string video = "";
-                                                                        if (!string.IsNullOrEmpty(aula.Video) && aula.Video.Contains("\\Aulas"))
-                                                                        {
-                                                                            video = "/Aulas" + aula.Video.Split(new string[] { "\\Aulas" }, StringSplitOptions.None)[1].Replace("\\", "/");
-                                                                        }
-
                                                                         <li class="mb-sm">
                                                                             <a href="#" class="aula-link"
                                                                                v-on:click.prevent="selectLesson(@aula.Id)"
                                                                                data-aula-id="@aula.Id"
-                                                                               data-video-url="@video"
                                                                                data-aula-titulo="@aula.Titulo">
                                                                                 <i class="fa fa-play-circle-o mr-xs"></i> @aula.Titulo
                                                                                 @if (Model.AlunosAulas.Any(a => Convert.ToInt32(a.AulaId) == aula.Id))
@@ -268,4 +279,24 @@
     <script src="~/assets/vendor/ios7-switch/ios7-switch.js"></script>
     <script src="~/js/AlunoCertificado.js"></script>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const alunoCurso = @Html.Raw(JsonSerializer.Serialize(alunoCurso, serializerOptions));
+            const url = `/AlunoCursoCertificado/UpdateProgresso`;
+
+            const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+            const form = new URLSearchParams();
+            form.append('AlunoId', alunoCurso.alunoId);
+            form.append('CursoId', alunoCurso.cursoId);
+            form.append('Progresso', alunoCurso.progresso);
+            form.append('__RequestVerificationToken', token);
+
+            axios.post(url, form, {
+                headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                withCredentials: true
+            })
+        });
+    </script>
 }

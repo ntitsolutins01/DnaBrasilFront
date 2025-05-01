@@ -1188,6 +1188,31 @@ namespace WebApp.Controllers
             return Json(modeloCarteirinha);
         }
 
+        /// <summary>
+        /// Busca de Idade do Aluno por Id
+        /// </summary>
+        /// <param name="id">Identificador do aluno</param>
+        /// <returns>Retorna a idade do aluno</returns>
+        [ClaimsAuthorize(ClaimType.Aluno, Claim.Consultar)]
+        public async Task<JsonResult> GetAlunoAulasByAlunoId(string alunoId)
+        {
+            try
+            {
+                _logger.Info($"Busca de Aulas do Aluno por Id - GetAlunoAulasByAlunoId: {alunoId}");
+
+                if (string.IsNullOrEmpty(alunoId)) throw new Exception("Aluno não informado.");
+                var alunosAulas = ApiClientFactory.Instance.GetAlunoAulasByAlunoId(Convert.ToInt32(alunoId));
+
+                return new JsonResult(alunosAulas);
+
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"Busca de Aulas do Aluno por Id - GetAlunoAulasByAlunoId: {ex.StackTrace}");
+                return new JsonResult(ex.StackTrace);
+            }
+        }
+
         #endregion
 
         #region Private Methods
