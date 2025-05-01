@@ -43,7 +43,7 @@ namespace WebApp.Models
         {
             public required int AlunoId { get; set; }
             public required int CursoId { get; set; }
-            public required double Progresso { get; set; }
+            public required int Progresso { get; set; }
         }
     }
 
