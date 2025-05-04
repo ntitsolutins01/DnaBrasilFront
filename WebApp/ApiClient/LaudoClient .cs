@@ -154,7 +154,7 @@ namespace WebApp.ApiClient
         /// </summary>
         /// <param name="id">id que busca Desempenho por Aluno</param>
         /// <returns>retorna lista de Desempenho por Aluno</returns>
-        public DesempenhoDto GetDesempenhoByAluno(int id)
+        public DesempenhoDto GetDesempenhoByAluno(int? id)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
                 $"{ResourceLaudo}/Desempenho/{id}"));
@@ -170,6 +170,18 @@ namespace WebApp.ApiClient
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
                 $"{ResourceLaudo}/Filter"));
+            return GetFiltro(requestUrl, searchFilter);
+        }
+
+        /// <summary>
+        /// Busca Laudos Resumidos por Filtro
+        /// </summary>
+        /// <param name="searchFilter">filtro para pesquisa de Laudos Resumidos</param>
+        /// <returns>retorna a lista de Laudos Resumidos por Filtro</returns>
+        public Task<LaudosResumidosFilterDto?> GetLaudosResumidosByFilter(LaudosResumidosFilterDto searchFilter)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceLaudo}/ResumidosFilter"));
             return GetFiltro(requestUrl, searchFilter);
         }
 
