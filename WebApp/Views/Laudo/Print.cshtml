@@ -93,7 +93,7 @@
 					</div>
 					<div class="detail-row">
 						<div><span class="info-label">Etnia:</span> @etnia</div>
-							<div><span class="info-label">Deficiência:</span> @nomeDeficiencia</div>
+						<div><span class="info-label">Deficiência:</span> @nomeDeficiencia</div>
 					</div>
 					<div class="detail-row">
 						<div><span class="info-label">Data de Nascimento:</span> @dtNascimento</div>
@@ -147,10 +147,10 @@
 			{
 				<div class="progress-bar-page1"
 					 style="display: flex;
-					justify-content: space-between;
-					align-items: center;
-					padding: 50x 0;
-					margin-bottom: 5px;">
+						justify-content: space-between;
+						align-items: center;
+						padding: 50x 0;
+						margin-bottom: 5px;">
 					<span>IMC</span>
 					<span style="color: #00eabc; font-weight: bold;">@imc</span>
 				</div>
@@ -249,6 +249,7 @@
 
 	@foreach (var laudoResumido in Model.ListLaudosResumidos)
 	{
+		var desempenho = laudoResumido.Desempenho;
 		<div class="page-container page1">
 			<div class="newContainer">
 				@{
@@ -257,20 +258,20 @@
 				<section class="info-section">
 					@{
 						await RenderStudentInfoAsync(laudoResumido.ByteImageFotoAluno, laudoResumido.NomeAluno, laudoResumido.NomeLocalidade, laudoResumido.Email,
-							laudoResumido.Idade, laudoResumido.Etnia, laudoResumido.NomeDeficiencia, laudoResumido.DtNascimento);
+						laudoResumido.Idade, laudoResumido.Etnia, laudoResumido.NomeDeficiencia, laudoResumido.DtNascimento);
 						await RenderDnaScoreAsync(laudoResumido.Desempenho);
 					}
 				</section>
 
 				<div class="cards-grid">
-					@if (laudoResumido.Laudo.SaudeId != null)
+					@if (laudoResumido.SaudeId != null)
 					{
 						// Verificação de Desempenho nulo antes de acessar suas propriedades
 						if (laudoResumido.Desempenho != null)
 						{
 							var scoreSaude = laudoResumido.Desempenho.ScoreSaude;
 							var textoImc = laudoResumido.Desempenho.TextoImc;
-							var imcSaude = laudoResumido.Laudo.ImcSaude != null ? laudoResumido.Laudo.ImcSaude : null;
+							var imcSaude = laudoResumido.ImcSaude != null ? laudoResumido.ImcSaude : null;
 
 							await RenderMetricCardAsync("Saúde", scoreSaude, "#efad57", "#ffeed9",
 							"Índice de massa corporal", textoImc, imcSaude);
@@ -289,7 +290,7 @@
 						}
 					}
 
-					@if (laudoResumido.Laudo.SaudeBucalId != null)
+					@if (laudoResumido.SaudeBucalId != null)
 					{
 						if (laudoResumido.Desempenho != null && laudoResumido.EncaminhamentoSaudeBucal != null)
 						{
@@ -309,7 +310,7 @@
 						}
 					}
 
-					@if (laudoResumido.Laudo.ConsumoAlimentarId != null)
+					@if (laudoResumido.ConsumoAlimentarId != null)
 					{
 						if (laudoResumido.Desempenho != null)
 						{
@@ -332,18 +333,12 @@
 						}
 					}
 
-					@if (laudoResumido.Laudo.VocacionalId != null)
+					@if (laudoResumido.VocacionalId != null)
 					{
-						if (laudoResumido.ListVocacional != null && laudoResumido.ListVocacional.Any())
+						if (laudoResumido.Desempenho != null)
 						{
-							foreach (var vocacional in laudoResumido.ListVocacional)
-							{
-								if (vocacional.Id == laudoResumido.Laudo.EncaminhamentoVocacionalId)
-								{
-									await RenderMetricCardAsync("Vocação", 100, "#5b5c9c", "#d5d6e7",
-									vocacional.Nome, vocacional.Descricao);
-								}
-							}
+							await RenderMetricCardAsync("Vocação", 100, "#5b5c9c", "#d5d6e7",
+							laudoResumido.EncaminhamentoVocacional.Nome, laudoResumido.EncaminhamentoVocacional.Descricao);
 						}
 						else
 						{
@@ -366,29 +361,30 @@
 
 		<div class="page-container page1">
 			<div class="newContainer">
-				@if (laudoResumido.Laudo.QualidadeDeVidaId != null)
+				@if (laudoResumido.QualidadeDeVidaId != null)
 				{
-					if (laudoResumido.Desempenho != null && laudoResumido.ListQualidadeDeVida != null && laudoResumido.ListQualidadeDeVida.Any())
+
+					if (desempenho != null)
 					{
 						<section class="quality-section">
 							@{
-								await RenderSectionHeaderAsync("Qualidade de Vida", laudoResumido.Desempenho.ScoreVida, "#23bfff", "#c8eeff");
+								await RenderSectionHeaderAsync("Qualidade de Vida", desempenho.ScoreVida, "#23bfff", "#c8eeff");
 							}
 
 							<div class="quality-grid">
 								@{
 									var textosVida = new List<string>
 					{
-					laudoResumido.Desempenho.TextoBemEstar,
-					laudoResumido.Desempenho.TextoAutoestima,
-					laudoResumido.Desempenho.TextoFamilia,
-					laudoResumido.Desempenho.TextoContexto
+					desempenho.TextoBemEstar,
+					desempenho.TextoAutoestima,
+					desempenho.TextoFamilia,
+					desempenho.TextoContexto
 					};
 
-									for (var i = 0; i < laudoResumido.ListQualidadeDeVida.Count; i++)
+									for (var i = 0; i < laudoResumido.EncaminhamentoQualidadeDeVida.Count; i++)
 									{
 										<div class="quality-card">
-											<h3>@laudoResumido.ListQualidadeDeVida[i].Nome</h3>
+											<h3>@laudoResumido.EncaminhamentoQualidadeDeVida[i].Nome</h3>
 											<p>@(i < textosVida.Count ? textosVida[i] : "Informação não disponível")</p>
 										</div>
 									}
@@ -411,55 +407,55 @@
 					}
 				}
 
-				@if (laudoResumido.Laudo.TalentoEsportivoId != null && laudoResumido.TalentoEsportivo != null && laudoResumido.Desempenho != null)
+				@if (laudoResumido.TalentoEsportivoId != null && laudoResumido.TalentoEsportivo != null && desempenho != null)
 				{
 					<section class="sport-section">
 						@{
-							await RenderSectionHeaderAsync("Esporte", laudoResumido.Desempenho.ScoreTalentoEsportivo, "#df436c", "#f7d1db");
+							await RenderSectionHeaderAsync("Esporte", desempenho.ScoreTalentoEsportivo, "#df436c", "#f7d1db");
 						}
 
 						<div class="sport-grid">
 							@{
 								// Verificar se ImcSaude não é nulo
-								var imcValue = laudoResumido.Laudo.ImcSaude != null ? laudoResumido.Laudo.ImcSaude.ToString() : "N/A";
+								var imcValue = laudoResumido.ImcSaude != null ? laudoResumido.ImcSaude.ToString() : "N/A";
 								await RenderSportCardAsync("Índice de Massa Corporal", "imc",
-								imcValue, laudoResumido.Desempenho.AvisoImc,
-								laudoResumido.Desempenho.TextoImc, true);
+								imcValue, desempenho.AvisoImc,
+								desempenho.TextoImc, true);
 
 								// Verificar se Velocidade não é nulo
 								var velocidadeValue = laudoResumido.TalentoEsportivo.Velocidade != null ?
 								laudoResumido.TalentoEsportivo.Velocidade.ToString() : "N/A";
 								await RenderSportCardAsync("Velocidade 20m", "seg",
 								velocidadeValue, "",
-								laudoResumido.Desempenho.TextoVelocidade);
+								desempenho.TextoVelocidade);
 
 								// Verificar se ImpulsaoHorizontal não é nulo
 								var impulsaoValue = laudoResumido.TalentoEsportivo.ImpulsaoHorizontal != null ?
 								laudoResumido.TalentoEsportivo.ImpulsaoHorizontal.ToString() : "N/A";
 								await RenderSportCardAsync("Impulsão Horizontal", "cm",
-								impulsaoValue, laudoResumido.Desempenho.AvisoImpulsao,
-								laudoResumido.Desempenho.TextoImpulsao, true);
+								impulsaoValue, desempenho.AvisoImpulsao,
+								desempenho.TextoImpulsao, true);
 
 								// Verificar se Flexibilidade não é nulo
 								var flexibilidadeValue = laudoResumido.TalentoEsportivo.Flexibilidade != null ?
 								laudoResumido.TalentoEsportivo.Flexibilidade.ToString() : "N/A";
 								await RenderSportCardAsync("Flexibilidade", "cm",
-								flexibilidadeValue, laudoResumido.Desempenho.AvisoFlexibilidadeMuscular,
-								laudoResumido.Desempenho.TextoFlexibilidadeMuscular, true);
+								flexibilidadeValue, desempenho.AvisoFlexibilidadeMuscular,
+								desempenho.TextoFlexibilidadeMuscular, true);
 
 								// Verificar se Vo2Max não é nulo
 								var vo2MaxValue = laudoResumido.TalentoEsportivo.Vo2Max != null ?
 								laudoResumido.TalentoEsportivo.Vo2Max.ToString() : "N/A";
 								await RenderSportCardAsync("Aptidão Aeróbica", "seg",
 								vo2MaxValue, "",
-								laudoResumido.Desempenho.TextoAptidaoCardio);
+								desempenho.TextoAptidaoCardio);
 
 								// Verificar se PreensaoManual não é nulo
 								var preensaoValue = laudoResumido.TalentoEsportivo.PreensaoManual != null ?
 								laudoResumido.TalentoEsportivo.PreensaoManual.ToString() : "N/A";
 								await RenderSportCardAsync("Preensão Manual", "kg",
-								preensaoValue, laudoResumido.Desempenho.AvisoForcaMembrosSup,
-								laudoResumido.Desempenho.TextoForcaMembrosSup, true);
+								preensaoValue, desempenho.AvisoForcaMembrosSup,
+								desempenho.TextoForcaMembrosSup, true);
 							}
 						</div>
 					</section>

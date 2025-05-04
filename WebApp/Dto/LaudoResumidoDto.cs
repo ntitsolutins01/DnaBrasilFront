@@ -6,6 +6,22 @@ namespace WebApp.Dto
     {
 
         public int Id { get; set; }
+        public string? StatusLaudo { get; set; }
+        public string? EncaminhamentoTexto { get; set; }
+        public int? ModalidadeId { get; set; }
+        public int? AlunoId { get; set; }
+        public int? SaudeId { get; set; }
+        public string? ImcSaude { get; set; }
+        public int SaudeBucalId { get; set; }
+        public EncaminhamentoDto? EncaminhamentoSaudeBucal { get; set; }
+        public int? ConsumoAlimentarId { get; set; }
+        public EncaminhamentoDto? EncaminhamentoConsumoAlimentar { get; set; }
+        public int? VocacionalId { get; set; }
+        public EncaminhamentoDto? EncaminhamentoVocacional { get; set; }
+        public int? QualidadeDeVidaId { get; set; }
+        public List<EncaminhamentoDto>? EncaminhamentoQualidadeDeVida { get; set; }
+        public int? TalentoEsportivoId { get; set; }
+        public TalentoEsportivoDto? TalentoEsportivo { get; set; }
 
         #region RenderHeaderAsync
         public required string NomeModalidade { get; set; }
@@ -21,7 +37,6 @@ namespace WebApp.Dto
         public required string Etnia { get; set; }
         public required string NomeDeficiencia { get; set; }
         public required string DtNascimento { get; set; }
-
         #endregion
 
         #region RenderDnaScoreAsync

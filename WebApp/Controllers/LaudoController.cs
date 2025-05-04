@@ -869,73 +869,19 @@ namespace WebApp.Controllers
                     DeficienciaId = ddlDeficiencia,
                     PossuiFoto = possuiFotoValue,
                     Finalizado = finalizadoValue,
-                    PageNumber = 1,
-#if DEBUG
-                    PageSize = 10000
-#else
-            PageSize = 1000
-#endif
+                    
                 };
 
                 var result = await ApiClientFactory.Instance.GetLaudosResumidosByFilter(searchFilter);
 
-                var lista = result.LaudosResumidos.Items.Where(x => x.Idade <= 19 && x.StatusLaudo == "F" && x.ModalidadeId != null).OrderBy(o => o.EncaminhamentoTexto).ToList();
+                //var lista = result.LaudosResumidos.Where(x => x.Idade >= 14 && x.StatusLaudo == "F").ToList();
 
                 var model = new LaudoResumidoModel()
                 {
-                    ListLaudosResumidos = lista
-
-
-
-                    //Aluno = aluno,
-                    //Profissional = profissional,
-                    //TalentoEsportivo = talentoEsportivo,
-                    //EncaminhamentoImc = encaminhamentoImc,
-                    //ListQualidadeDeVida = qualidadeDeVida,
-                    //ListVocacional = vocacional,
-                    //EncaminhamentoSaudeBucal = encaminhamentoSaudeBucal,
-                    //EncaminhamentoConsumoAlimentar = encaminhamentoConsumoAlimentar,
-                    //Desempenho = desempenho,
-                    //Modalidade = modalidade
+                    ListLaudosResumidos = result.LaudosResumidos.ToList()
                 };
 
                 return View(model);
-
-
-                foreach (var laudo in lista)
-                {
-                    var aluno = await ApiClientFactory.Instance.GetAlunoById((int)laudo.AlunoId);
-                    if (aluno == null)
-                    {
-                        continue; // Pular este laudo e ir para o próximo
-                    }
-
-                    var profissional = ApiClientFactory.Instance.GetProfissionalById(Convert.ToInt32(aluno.ProfissionalId));
-                    var talentoEsportivo = laudo.TalentoEsportivoId == null ? null :
-                        ApiClientFactory.Instance.GetTalentoEsportivoByAluno((int)laudo.AlunoId);
-                    var encaminhamentoImc = laudo.SaudeId == null ? null :
-                        ApiClientFactory.Instance.GetEncaminhamentoBySaudeId(Convert.ToInt32(laudo.SaudeId));
-                    var qualidadeDeVida = laudo.QualidadeDeVidaId == null ? null :
-                        ApiClientFactory.Instance.GetEncaminhamentoByQualidadeDeVidaId((int)laudo.QualidadeDeVidaId);
-                    var vocacional = laudo.VocacionalId == null ? null :
-                        ApiClientFactory.Instance.GetEncaminhamentoByVocacional();
-                    var encaminhamentoConsumoAlimentar = laudo.ConsumoAlimentarId == null ? null :
-                        ApiClientFactory.Instance.GetEncaminhamentoByConsumoAlimentarId((int)laudo.ConsumoAlimentarId);
-                    var encaminhamentoSaudeBucal = laudo.SaudeBucalId == null ? null :
-                        ApiClientFactory.Instance.GetEncaminhamentoBySaudeBucalId((int)laudo.SaudeBucalId);
-                    var desempenho = (laudo.AlunoId == null || laudo.AlunoId == 0) ? null :
-                        ApiClientFactory.Instance.GetDesempenhoByAluno(Convert.ToInt32(laudo.AlunoId));
-                    var modalidade = ApiClientFactory.Instance.GetModalidadeById(Convert.ToInt32(laudo.ModalidadeId));
-
-                    if (modalidade == null)
-                    {
-                        continue;
-                    }
-
-                    
-                }
-
-                
             }
             catch (Exception e)
             {

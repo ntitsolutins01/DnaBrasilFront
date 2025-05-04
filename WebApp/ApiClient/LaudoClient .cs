@@ -154,7 +154,7 @@ namespace WebApp.ApiClient
         /// </summary>
         /// <param name="id">id que busca Desempenho por Aluno</param>
         /// <returns>retorna lista de Desempenho por Aluno</returns>
-        public DesempenhoDto GetDesempenhoByAluno(int id)
+        public DesempenhoDto GetDesempenhoByAluno(int? id)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
                 $"{ResourceLaudo}/Desempenho/{id}"));
