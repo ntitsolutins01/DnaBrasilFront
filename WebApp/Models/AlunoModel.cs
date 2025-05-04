@@ -23,6 +23,12 @@ namespace WebApp.Models
         public SelectList ListFomentos { get; set; }
         public string? LocalidadeId { get; set; }
         public SelectList ListLocalidades { get; set; }
+        public string? SerieId { get; set; }
+        public SelectList ListSeries { get; set; }
+        public string? TurmaId { get; set; }
+        public SelectList ListTurmas { get; set; }
+        public string? EtapaId { get; set; }
+        public SelectList ListEtapas { get; set; }
         public SelectList ListProfissionais { get; set; }
         public string ProfissionalId { get; set; }
         public List<ModalidadeDto>? Modalidades { get; set; }
@@ -83,6 +89,7 @@ namespace WebApp.Models
             public bool? CopiaDocAlunoResponsavel { get; set; } = false;
             public int? FomentoId { get; set; }
             public bool? Convidado { get; set; } = false;
+            public int? SerieId { get; set; }
         }
         public class CreateUpdateAlunoCursoCommand
         {

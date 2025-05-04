@@ -199,8 +199,6 @@
                         });
                 });
 
-
-
                 //clique de escolha do select
                 $("#ddlLocalidade").change(function () {
                     var id = $("#ddlLocalidade").val();
@@ -229,6 +227,139 @@
                                 });
                             }
                         });
+                });
+
+                //clique de escolha do select
+                $("#ddlEtapa").change(function () {
+
+                    var etapaId = $("#ddlEtapa").val();
+                    var localidadeId = $("#ddlLocalidade").val();
+
+                    if (localidadeId === "") {
+                        new PNotify({
+                            title: 'Aluno',
+                            text: 'Por favor selecione a localidade.',
+                            type: 'warning'
+                        });
+                        return;
+                    }
+
+                    if (etapaId === "") {
+                        new PNotify({
+                            title: 'Aluno',
+                            text: 'Por favor selecione a etapa de ensino.',
+                            type: 'warning'
+                        });
+                        return;
+                    }
+
+                    var url = "../../Serie/GetSeriesByLocalidadeIdEtapaId/";
+
+                    axios.get(url, {
+                        params: {
+                            localidadeId: localidadeId,
+                            etapaId: etapaId
+                        }
+                    }).then(result => {
+                        console.log('Dados retornados:', result.data);
+
+                        if (result.data && result.data.length > 0) {
+                            var items = '<option value="">Selecionar a série</option>';
+                            $("#ddlSerie").empty();
+                            $.each(result.data,
+                                function (i, row) {
+                                    if (row.selected) {
+                                        items += "<option selected value='" + row.value + "'>" + row.text + "</option>";
+                                    } else {
+                                        items += "<option value='" + row.value + "'>" + row.text + "</option>";
+                                    }
+                                });
+                            $("#ddlSerie").html(items);
+                        } else {
+                            new PNotify({
+                                title: 'Aluno',
+                                text: 'Séries não encontradas.',
+                                type: 'warning'
+                            });
+                        }
+                    }).catch(error => {
+                        console.error('Erro ao carregar dados:', error);
+                        Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
+                    }).finally(function () {
+                        // sempre será executado
+                    });;
+                });
+
+                //clique de escolha do select
+                $("#ddlSerie").change(function () {
+
+                    var serie = $("#ddlSerie").val();
+                    var etapaId = $("#ddlEtapa").val();
+                    var localidadeId = $("#ddlLocalidade").val();
+
+                    if (localidadeId === "") {
+                        new PNotify({
+                            title: 'Aluno',
+                            text: 'Por favor selecione a localidade.',
+                            type: 'warning'
+                        });
+                        return;
+                    }
+
+                    if (etapaId === "") {
+                        new PNotify({
+                            title: 'Aluno',
+                            text: 'Por favor selecione a etapa de ensino.',
+                            type: 'warning'
+                        });
+                        return;
+                    }
+
+                    if (serie === "") {
+                        new PNotify({
+                            title: 'Aluno',
+                            text: 'Por favor selecione a série',
+                            type: 'warning'
+                        });
+                        return;
+                    }
+
+                    var url = "../../Serie/GetTurmasByLocalidadeIdEtapaIdSerie/";
+
+                    axios.get(url, {
+                        params: {
+                            localidadeId: localidadeId,
+                            etapaId: etapaId,
+                            serie: serie
+                        }
+                    }).then(result => {
+                        console.log('Dados retornados:', result.data);
+
+                        if (result.data && result.data.length > 0) {
+                            var items = '<option value="">Selecionar a turma</option>';
+                            $("#ddlTurma").empty();
+                            $.each(result.data,
+                                function (i, row) {
+                                    if (row.selected) {
+                                        items += "<option selected value='" + row.value + "'>" + row.text + "</option>";
+                                    } else {
+                                        items += "<option value='" + row.value + "'>" + row.text + "</option>";
+                                    }
+                                });
+                            $("#ddlTurma").html(items);
+                        } else {
+                            new PNotify({
+                                title: 'Aluno',
+                                text: 'Turmas não encontradas.',
+                                type: 'warning'
+                            });
+                        }
+                    }).catch(error => {
+                        console.error('Erro ao carregar dados:', error);
+                        Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
+                    }).finally(function () {
+                        // sempre será executado
+                    });;
                 });
 
                 //mascara dos inputs
@@ -449,8 +580,8 @@
 
             var table = $('#deficienciaDataTable').DataTable();
             table.rows(function (idx, data, node) {
-                    return data[0] === id;
-                })
+                return data[0] === id;
+            })
                 .remove()
                 .draw();
 
@@ -461,8 +592,8 @@
 
             var table = $('#modalidadeAlunoDataTable').DataTable();
             table.rows(function (idx, data, node) {
-                    return data[0] === id;
-                })
+                return data[0] === id;
+            })
                 .remove()
                 .draw();
 
@@ -485,7 +616,7 @@
 
                 $('#deficienciaDataTable').DataTable().destroy();
 
-                $('#deficienciaDataTable').DataTable().clear(); 
+                $('#deficienciaDataTable').DataTable().clear();
 
                 $("divDeficiencia").hide();
 

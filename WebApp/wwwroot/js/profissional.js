@@ -8,7 +8,8 @@
         },
         loading: false,
         editDto: {
-            Categoria: "", Estrutura: "", DiasSemana: "", Horario: "", Update: true
+            Categoria: "", Estrutura: "", DiasSemana: "", Horario: "", Update: true,
+            Email: "", Cpf: ""
         }
     },
     mounted: function () {
@@ -961,9 +962,9 @@
                 .remove()
                 .draw();
 
-            const alunos = self.params.alunos;
+            var alunos = self.params.alunos;
 
-            const index = alunos.indexOf(id);
+            var index = alunos.indexOf(id);
 
             if (index !== -1) {
                 alunos.splice(index, 1);
@@ -975,15 +976,28 @@
 
             $("#ddlAluno").select2("val", "0");
             self.ShowLoad(false, "divAlunos");
+        },
+        HabilitarProfissional: function (id) {
+            var self = this;
+
+            axios.get("Profissional/GetProfissionalById/?id=" + id).then(result => {
+
+                self.editDto.Id = result.data.id;
+                self.editDto.Email = result.data.email;
+                self.editDto.Cpf = result.data.cpf;
+
+            }).catch(error => {
+                Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
+            });
         }
     }
 });
 var crud = {
     AddAluno: function () {
-        vm.AddAluno()
+        vm.AddAluno();
     },
     DeleteAluno: function (index) {
-        vm.DeleteAluno(index.toString())
+        vm.DeleteAluno(index.toString());
     },
     DeleteModal: function (id) {
         $('input[name="deleteProfissionalId"]').attr('value', id);
@@ -993,6 +1007,11 @@ var crud = {
     DesvincularAlunoModal: function (id) {
         $('input[name="profissionalId"]').attr('value', id);
         $('#mdDesvincularAlunos').modal('show');
-        vm.DesvincularAlunos(id)
+        vm.DesvincularAlunos(id);
+    },
+    HabilitarModal: function (id) {
+        $('input[name="habilitarProfissionalId"]').attr('value', id);
+        $('#mdHabilitarProfissional').modal('show');
+        vm.EditProfissional(id);
     }
 };

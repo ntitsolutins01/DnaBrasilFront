@@ -857,7 +857,7 @@ namespace WebApp.Controllers
                 bool possuiFotoValue = bool.TryParse(possuiFoto, out var pfoto) ? pfoto : false;
                 bool finalizadoValue = bool.TryParse(finalizado, out var fin) ? fin : false;
 
-                var searchFilter = new LaudosFilterDto
+                var searchFilter = new LaudosResumidosFilterDto
                 {
                     UsuarioEmail = usuario,
                     FomentoId = ddlFomento,
@@ -869,53 +869,19 @@ namespace WebApp.Controllers
                     DeficienciaId = ddlDeficiencia,
                     PossuiFoto = possuiFotoValue,
                     Finalizado = finalizadoValue,
-                    PageNumber = 1,
-#if DEBUG
-                    PageSize = 2000
-#else
-            PageSize = 1000
-#endif
+                    
                 };
 
-                var result = await ApiClientFactory.Instance.GetLaudosByFilter(searchFilter);
-                var laudoModels = new List<LaudoModel>();
+                var result = await ApiClientFactory.Instance.GetLaudosResumidosByFilter(searchFilter);
 
-                foreach (var laudo in result.Laudos.Items)
+                //var lista = result.LaudosResumidos.Where(x => x.Idade >= 14 && x.StatusLaudo == "F").ToList();
+
+                var model = new LaudoResumidoModel()
                 {
-                    var aluno = await ApiClientFactory.Instance.GetAlunoById((int)laudo.AlunoId);
-                    var profissional = ApiClientFactory.Instance.GetProfissionalById(Convert.ToInt32(aluno.ProfissionalId));
-                    var talentoEsportivo = laudo.TalentoEsportivoId == null ? null :
-                        ApiClientFactory.Instance.GetTalentoEsportivoByAluno((int)laudo.AlunoId);
-                    var encaminhamentoImc = laudo.SaudeId == null ? null :
-                        ApiClientFactory.Instance.GetEncaminhamentoBySaudeId(Convert.ToInt32(laudo.SaudeId));
-                    var qualidadeDeVida = laudo.QualidadeDeVidaId == null ? null :
-                        ApiClientFactory.Instance.GetEncaminhamentoByQualidadeDeVidaId((int)laudo.QualidadeDeVidaId);
-                    var vocacional = laudo.VocacionalId == null ? null :
-                        ApiClientFactory.Instance.GetEncaminhamentoByVocacional();
-                    var encaminhamentoConsumoAlimentar = laudo.ConsumoAlimentarId == null ? null :
-                        ApiClientFactory.Instance.GetEncaminhamentoByConsumoAlimentarId((int)laudo.ConsumoAlimentarId);
-                    var encaminhamentoSaudeBucal = laudo.SaudeBucalId == null ? null :
-                        ApiClientFactory.Instance.GetEncaminhamentoBySaudeBucalId((int)laudo.SaudeBucalId);
-                    var desempenho = ApiClientFactory.Instance.GetDesempenhoByAluno(Convert.ToInt32(laudo.AlunoId));
-                    var modalidade = ApiClientFactory.Instance.GetModalidadeById(Convert.ToInt32(laudo.ModalidadeId));
+                    ListLaudosResumidos = result.LaudosResumidos.ToList()
+                };
 
-                    laudoModels.Add(new LaudoModel
-                    {
-                        Laudo = laudo,
-                        Aluno = aluno,
-                        Profissional = profissional,
-                        TalentoEsportivo = talentoEsportivo,
-                        EncaminhamentoImc = encaminhamentoImc,
-                        ListQualidadeDeVida = qualidadeDeVida,
-                        ListVocacional = vocacional,
-                        EncaminhamentoSaudeBucal = encaminhamentoSaudeBucal,
-                        EncaminhamentoConsumoAlimentar = encaminhamentoConsumoAlimentar,
-                        Desempenho = desempenho,
-                        Modalidade = modalidade
-                    });
-                }
-
-                return View(laudoModels);
+                return View(model);
             }
             catch (Exception e)
             {
@@ -963,38 +929,40 @@ namespace WebApp.Controllers
                 workbook.AddWorksheet("sheetName");
                 var ws = workbook.Worksheet("sheetName");
                 ws.Cell(1, 1).Value = "Matricula";
-                ws.Cell(1, 2).Value = "Idade";
-                ws.Cell(1, 3).Value = "Aluno";
-                ws.Cell(1, 4).Value = "Localidade";
-                ws.Cell(1, 5).Value = "Email";
-                ws.Cell(1, 6).Value = "Telefone";
-                ws.Cell(1, 7).Value = "Celular";
-                ws.Cell(1, 8).Value = "LaudoId";
-                ws.Cell(1, 9).Value = "Saúde";
-                ws.Cell(1, 10).Value = "Talento Esportivo";
-                ws.Cell(1, 11).Value = "Consumo Alimentar";
-                ws.Cell(1, 12).Value = "Saúde Bucal";
-                ws.Cell(1, 13).Value = "Qualidade de Vida";
-                ws.Cell(1, 14).Value = "Vocacional";
-                ws.Cell(1, 15).Value = "Status Laudo";
+                ws.Cell(1, 2).Value = "Data Nascimento";
+                ws.Cell(1, 3).Value = "Idade";
+                ws.Cell(1, 4).Value = "Aluno";
+                ws.Cell(1, 5).Value = "Localidade";
+                ws.Cell(1, 6).Value = "Email";
+                ws.Cell(1, 7).Value = "Telefone";
+                ws.Cell(1, 8).Value = "Celular";
+                ws.Cell(1, 9).Value = "LaudoId";
+                ws.Cell(1, 10).Value = "Saúde";
+                ws.Cell(1, 11).Value = "Talento Esportivo";
+                ws.Cell(1, 12).Value = "Consumo Alimentar";
+                ws.Cell(1, 13).Value = "Saúde Bucal";
+                ws.Cell(1, 14).Value = "Qualidade de Vida";
+                ws.Cell(1, 15).Value = "Vocacional";
+                ws.Cell(1, 16).Value = "Status Laudo";
                 int row = 2;
                 foreach (var item in result.Laudos.Items.ToList())
                 {
                     ws.Cell("A" + row).Value = item.AlunoId;
-                    ws.Cell("B" + row).Value = item.Idade;
-                    ws.Cell("C" + row).Value = item.NomeAluno;
-                    ws.Cell("D" + row).Value = item.NomeLocalidade;
-                    ws.Cell("E" + row).Value = item.Email;
-                    ws.Cell("F" + row).Value = item.Telefone;
-                    ws.Cell("G" + row).Value = item.Celular;
-                    ws.Cell("H" + row).Value = item.Id;
-                    ws.Cell("I" + row).Value = item.SaudeId != null ? "X" : "";
-                    ws.Cell("J" + row).Value = item.TalentoEsportivoId != null ? "X" : "";
-                    ws.Cell("K" + row).Value = item.ConsumoAlimentarId != null ? "X" : "";
-                    ws.Cell("L" + row).Value = item.SaudeBucalId != null ? "X" : "";
-                    ws.Cell("M" + row).Value = item.QualidadeDeVidaId != null ? "X" : "";
-                    ws.Cell("N" + row).Value = item.VocacionalId != null ? "X" : "";
-                    ws.Cell("O" + row).Value = item.StatusLaudo;
+                    ws.Cell("B" + row).Value = item.DtNascimento;
+                    ws.Cell("C" + row).Value = item.Idade;
+                    ws.Cell("D" + row).Value = item.NomeAluno;
+                    ws.Cell("E" + row).Value = item.NomeLocalidade;
+                    ws.Cell("F" + row).Value = item.Email;
+                    ws.Cell("G" + row).Value = item.Telefone;
+                    ws.Cell("H" + row).Value = item.Celular;
+                    ws.Cell("I" + row).Value = item.Id;
+                    ws.Cell("J" + row).Value = item.SaudeId != null ? "X" : "";
+                    ws.Cell("K" + row).Value = item.TalentoEsportivoId != null ? "X" : "";
+                    ws.Cell("L" + row).Value = item.ConsumoAlimentarId != null ? "X" : "";
+                    ws.Cell("M" + row).Value = item.SaudeBucalId != null ? "X" : "";
+                    ws.Cell("N" + row).Value = item.QualidadeDeVidaId != null ? "X" : "";
+                    ws.Cell("O" + row).Value = item.VocacionalId != null ? "X" : "";
+                    ws.Cell("P" + row).Value = item.StatusLaudo;
                     row++;
                 }
 

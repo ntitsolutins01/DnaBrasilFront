@@ -75,6 +75,33 @@ namespace WebApp.ApiClient
             return Get<List<SerieDto>>(requestUrl);
         }
 
+        /// <summary>
+        /// Busca uma lista de séries por localidade e etapa
+        /// </summary>
+        /// <param name="localidadeId">Id da localidade</param>
+        /// <param name="etapaId">Id da etapa de ensino</param>
+        /// <returns>Retorna um json com a lista de séries</returns>
+        public List<SerieDto> GetSeriesByLocalidadeIdEtapaId(int localidadeId, int etapaId)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceSerie}/Localidade/{localidadeId}/Etapa/{etapaId}"));
+            return Get<List<SerieDto>>(requestUrl);
+        }
+
+        /// <summary>
+        /// Busca uma lista de turmas por localidade, etapa e série
+        /// </summary>
+        /// <param name="localidadeId">Id da localidade</param>
+        /// <param name="etapaId">Id da etapa de ensino</param>
+        /// <param name="serie">Série selecionada</param>
+        /// <returns>Retorna um json com a lista de séries</returns>
+        public List<SerieDto> GetTurmasByLocalidadeIdEtapaIdSerie(int localidadeId, int etapaId, string serie)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceSerie}/Localidade/{localidadeId}/Etapa/{etapaId}/Serie/{serie}"));
+            return Get<List<SerieDto>>(requestUrl);
+        }
+
         #endregion
     }
 }
