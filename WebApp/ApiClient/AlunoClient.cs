@@ -229,7 +229,7 @@ namespace WebApp.ApiClient
         public List<AlunoCursoDto> GetAlunosCursosByCursoId(int cursoId)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceAlunos}/AlunoCurso/{cursoId}"));
+                $"{ResourceAlunos}/AlunosCursos/Curso/{cursoId}"));
             return Get<List<AlunoCursoDto>>(requestUrl);
         }
 
