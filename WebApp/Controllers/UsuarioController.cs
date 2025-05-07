@@ -145,6 +145,8 @@ namespace WebApp.Controllers
                         });
                 }
 
+                var status = collection["status"].ToString();
+
                 var command = new UsuarioModel.CreateUpdateUsuarioCommand
                 {
                     Email = collection["email"].ToString(),
@@ -152,7 +154,8 @@ namespace WebApp.Controllers
                     CpfCnpj = collection["cpf"].ToString(),
                     TipoPessoa = collection["tipoPessoa"].ToString(),
                     MunicipioId = Convert.ToInt32(collection["ddlMunicipio"].ToString()),
-                    LocalidadeId = Convert.ToInt32(collection["ddlLocalidade"].ToString())
+                    LocalidadeId = Convert.ToInt32(collection["ddlLocalidade"].ToString()),
+                    Status = status != ""
                 };
 
 
@@ -271,6 +274,7 @@ namespace WebApp.Controllers
                 await _userManager.RemoveFromRoleAsync(user, currentRole.Name);
                 await _userManager.AddToRoleAsync(user, role.Name);
 
+                var status = collection["status"].ToString();
 
                 var command = new UsuarioModel.CreateUpdateUsuarioCommand
                 {
@@ -283,7 +287,8 @@ namespace WebApp.Controllers
                     AspNetUserId = usuario.AspNetUserId,
                     AspNetRoleId = perfil.AspNetRoleId,
                     MunicipioId = Convert.ToInt32(collection["ddlMunicipio"].ToString()),
-                    LocalidadeId = Convert.ToInt32(collection["ddlLocalidade"].ToString())
+                    LocalidadeId = Convert.ToInt32(collection["ddlLocalidade"].ToString()),
+                    Status = status != ""
                 };
 
                 await ApiClientFactory.Instance.UpdateUsuario(id, command);
