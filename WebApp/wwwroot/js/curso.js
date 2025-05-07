@@ -99,6 +99,26 @@ var vm = new Vue({
                         NomeImagem: result.data.nomeImagem
                     };
                 });
+
+                if (result.data.listCoordenadores && result.data.listCoordenadores.length > 0) {
+                    var items = '<option value="">Selecionar o Coordenador</option>';
+                    $("#ddlCoordenador").empty();
+                    $.each(result.data.listCoordenadores,
+                        function (i, row) {
+                            if (row.selected) {
+                                items += "<option selected value='" + row.value + "'>" + row.text + "</option>";
+                            } else {
+                                items += "<option value='" + row.value + "'>" + row.text + "</option>";
+                            }
+                        });
+                    $("#ddlCoordenador").html(items);
+                } else {
+                    new PNotify({
+                        title: 'Coordenador',
+                        text: 'Coordenadores não encontrados.',
+                        type: 'warning'
+                    });
+                }
             }).catch(error => {
                 console.error('Erro ao carregar dados:', error);
             });
