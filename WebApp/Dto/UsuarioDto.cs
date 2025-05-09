@@ -10,7 +10,7 @@ namespace WebApp.Dto
         public  string? Email { get; set; }
         public  string? Url { get; set; }
 	    public  string? AspNetRoleId { get; set; }
-        public PerfilDto Perfil { get; set; }
+        public PerfilDto? Perfil { get; set; }
         public string? Uf { get; set; }
         public int? MunicipioId { get; set; }
         public string? LocalidadeId { get; set; }
