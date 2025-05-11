@@ -224,40 +224,81 @@ var vm = new Vue({
                     }
                 });
 
-                $("#formUsuario").validate({
-                    rules: {
-                        "email": {
-                            required: true,
-                            email: true
+                if (formid === "formUsuario") {
+                    $("#formUsuario").validate({
+                        rules: {
+                            "email": {
+                                required: true,
+                                email: true
+                            },
+                            cpf: { cpf: true, required: true },
+                            cnpj: { cnpj: true, required: true }
                         },
-                        cpf: { cpf: true, required: true },
-                        cnpj: { cnpj: true, required: true }
-                    },
-                    messages: {
-                        "email": {
-                            required: "Por favor informe o endereço eletrônico válido do usuário.",
-                            email: "Formato de e-mail inválido."
+                        messages: {
+                            "email": {
+                                required: "Por favor informe o endereço eletrônico válido do usuário.",
+                                email: "Formato de e-mail inválido."
+                            },
+                            cpf: { cpf: 'Formato de CPF inválido', required: "Por favor informe o número do CPF do parceiro." },
+                            cnpj: { cnpj: 'Formato de CNPJ inválido', required: "Por favor informe o número do CNPJ do parceiro." }
                         },
-                        cpf: { cpf: 'Formato de CPF inválido', required: "Por favor informe o número do CPF do parceiro." },
-                        cnpj: { cnpj: 'Formato de CNPJ inválido', required: "Por favor informe o número do CNPJ do parceiro." }
-                    },
-                    highlight: function (label) {
-                        $(label).closest('.form-group').removeClass('has-success').addClass('has-error');
-                    },
-                    success: function (label) {
-                        $(label).closest('.form-group').removeClass('has-error');
-                        label.remove();
-                    },
-                    errorPlacement: function (error, element) {
-                        var placement = element.closest('.input-group');
-                        if (!placement.get(0)) {
-                            placement = element;
+                        highlight: function (label) {
+                            $(label).closest('.form-group').removeClass('has-success').addClass('has-error');
+                        },
+                        success: function (label) {
+                            $(label).closest('.form-group').removeClass('has-error');
+                            label.remove();
+                        },
+                        errorPlacement: function (error, element) {
+                            var placement = element.closest('.input-group');
+                            if (!placement.get(0)) {
+                                placement = element;
+                            }
+                            if (error.text() !== '') {
+                                placement.after(error);
+                            }
                         }
-                        if (error.text() !== '') {
-                            placement.after(error);
+                    });
+                }
+
+                if (formid === "formEditUsuario") {
+                    $("#formUsuario").validate({
+                        rules: {
+                            "email": {
+                                required: true,
+                                email: true
+                            },
+                            cpf: { cpf: true, required: true },
+                            cnpj: { cnpj: true, required: true }
+                        },
+                        messages: {
+                            "email": {
+                                required: "Por favor informe o endereço eletrônico válido do usuário.",
+                                email: "Formato de e-mail inválido."
+                            },
+                            cpf: { cpf: 'Formato de CPF inválido', required: "Por favor informe o número do CPF do parceiro." },
+                            cnpj: { cnpj: 'Formato de CNPJ inválido', required: "Por favor informe o número do CNPJ do parceiro." }
+                        },
+                        highlight: function (label) {
+                            $(label).closest('.form-group').removeClass('has-success').addClass('has-error');
+                        },
+                        success: function (label) {
+                            $(label).closest('.form-group').removeClass('has-error');
+                            label.remove();
+                        },
+                        errorPlacement: function (error, element) {
+                            var placement = element.closest('.input-group');
+                            if (!placement.get(0)) {
+                                placement = element;
+                            }
+                            if (error.text() !== '') {
+                                placement.after(error);
+                            }
                         }
-                    }
-                });
+                    });
+                }
+
+                
             }
 
             
