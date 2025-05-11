@@ -38,6 +38,13 @@ namespace WebApp.Models
             public required int AlunoId { get; set; }
             public required string CertificadosId { get; set; }
         }
+
+        public class UpdateProgressoCommand
+        {
+            public required int AlunoId { get; set; }
+            public required int CursoId { get; set; }
+            public required int Progresso { get; set; }
+        }
     }
 
 }
