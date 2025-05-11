@@ -1,16 +1,3 @@
-var crud = {
-    DeleteModal: function (id) {
-        $('input[name="deleteCursoId"]').val(id);
-        $('#mdDeleteCurso').modal('show');
-        vm.DeleteCurso(id);
-    },
-    EditModal: function (id) {
-        $('input[name="editCursoId"]').val(id);
-        $('#mdEditCurso').modal('show');
-        vm.EditCurso(id);
-    }
-};
-
 var vm = new Vue({
     el: "#vCurso",
     data: {
@@ -31,11 +18,11 @@ var vm = new Vue({
         (function ($) {
             'use strict';
 
-            // InicializaÁ„o de componentes
+            // Inicializa√ß√£o de componentes
             var cargaHoraria = $("#cargaHoraria");
             cargaHoraria.mask('000', { reverse: false });
 
-            // InicializaÁ„o do Select2
+            // Inicializa√ß√£o do Select2
             var $select = $(".select2").select2({
                 allowClear: true
             });
@@ -55,7 +42,7 @@ var vm = new Vue({
                 $(this).trigger('blur');
             });
 
-            // InicializaÁ„o do Switch
+            // Inicializa√ß√£o do Switch
             if (typeof Switch !== 'undefined' && $.isFunction(Switch)) {
                 $(function () {
                     $('[data-plugin-ios-switch]').each(function () {
@@ -113,15 +100,37 @@ var vm = new Vue({
                         });
                     $("#ddlCoordenador").html(items);
                 } else {
-                    new PNotify({
-                        title: 'Coordenador',
-                        text: 'Coordenadores n„o encontrados.',
-                        type: 'warning'
-                    });
+                    Site.Notification("Coordenador", "Coordenadores n√£o encontrados.", "warning", 1);
                 }
             }).catch(error => {
                 console.error('Erro ao carregar dados:', error);
             });
+        },
+        ValidateFileType: function() {
+            var fileName = document.getElementById("arquivo").value;
+            var idxDot = fileName.lastIndexOf(".") + 1;
+            var extFile = fileName.substr(idxDot, fileName.length).toLowerCase();
+            if (extFile === "jpg" || extFile === "jpeg" || extFile === "png") {
+                //TO DO
+            } else {
+                Site.Notification("Erro ao realizar Upload", "Somente arquivos jpg/jpeg e png s√£o permitidos.", "error", 2);
+                
+            }   
         }
+
     }
 });
+
+var crud = {
+    DeleteModal: function (id) {
+        $('input[name="deleteCursoId"]').val(id);
+        $('#mdDeleteCurso').modal('show');
+        vm.DeleteCurso(id);
+    },
+    EditModal: function (id) {
+        $('input[name="editCursoId"]').val(id);
+        $('#mdEditCurso').modal('show');
+        vm.EditCurso(id);
+    },
+
+};
