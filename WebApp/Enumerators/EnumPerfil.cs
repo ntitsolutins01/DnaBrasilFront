@@ -19,6 +19,8 @@ namespace WebApp.Enumerators
         [Description("Gestor Pedagógico")]
         GestorPedagogico = 9,
         [Description("Gestor do Projeto")]
-        GestorProjeto = 10
+        GestorProjeto = 10,
+        [Description("Coordenador Ead")]
+        CoordenadorEad = 15
     }
 }

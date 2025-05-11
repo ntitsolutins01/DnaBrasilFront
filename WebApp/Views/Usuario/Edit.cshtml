@@ -6,7 +6,7 @@
 
 <div class="row" id="vUsuario">
     <div class="col-md-12">
-        @using (@Html.BeginForm("Edit", "Usuario", FormMethod.Post, new { id = "formEditUsuario", @class = "form-horizontal" }))
+        @using (@Html.BeginForm("Edit", "Usuario", FormMethod.Post, new { id = "formUsuario", @class = "form-horizontal" }))
         {
             <section class="panel">
                 <header class="panel-heading">
@@ -40,7 +40,7 @@
                             <label class="col-sm-3 control-label text-sm-right pt-2">Localidade <span class="required">*</span> </label>
                             <div class="col-md-3">
                                 <select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade"
-                                        title="Por favor informe a localidade."
+                                        title="Por favor informe a localidade." required
                                         asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
                                     <option value="">Selecionar Localidade</option>
                                 </select>
