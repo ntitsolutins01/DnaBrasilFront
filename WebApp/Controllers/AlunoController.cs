@@ -55,6 +55,7 @@ namespace WebApp.Controllers
         /// </summary>
         /// <param name="appSettings">configurações de urls do sistema</param>
         /// <param name="host">informações da aplicação em execução</param>
+        /// <param name="logger">Log de mensagens da aplicação</param>
         public AlunoController(IOptions<UrlSettings> appSettings,
             IWebHostEnvironment host,
             ILog logger)
@@ -531,12 +532,12 @@ namespace WebApp.Controllers
 
                 await ApiClientFactory.Instance.UpdateAlunoFoto(command.Id, command);
 
-                return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Success, mesage = "Upload realizado com sucesso." });
+                return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Success, message = "Upload realizado com sucesso." });
             }
             catch (Exception e)
             {
                 _logger.Error($"Ação de upload de foto do aluno - Aluno.Upload: {e.StackTrace}");
-                return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, mesage = e.Message });
+                return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = e.Message });
             }
         }
 

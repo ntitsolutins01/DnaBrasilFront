@@ -59,6 +59,15 @@ var vm = new Vue({
 
             var formid = $('form')[1].id;
 
+            //triggered when modal is about to be shown
+            $('#mdUpload').on('show.bs.modal', function (e) {
+
+                //get data-id attribute of the clicked element
+                var id = $(e.relatedTarget).data('id');
+
+                $("input[name='aulaId']").val(id);
+            });
+
             if (formid === "formEditAula") {
                 $("#formEditAula").validate({
                     highlight: function (label) {
@@ -241,6 +250,16 @@ var vm = new Vue({
                 console.error('Erro ao carregar dados:', error);
                 Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
             });
+        },
+        ValidateFileType: function () {
+
+            var fileName = document.getElementById("arquivoVideo").value;
+            var idxDot = fileName.lastIndexOf(".") + 1;
+            var extFile = fileName.substr(idxDot, fileName.length).toLowerCase();
+
+            if (extFile !== "mp4" && extFile !== "avi") {
+                Site.Notification("Aula", "Erro ao realizar Upload. Somente arquivos MP4 e AVI são permitidos.", "error", 2);
+            }
         }
     }
 });
