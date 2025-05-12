@@ -5,10 +5,12 @@
         selectedVideoUrl: "",
         editDto: { Id: "" },
         aula: null,
-        aulas: []
+        aulas: []           
     },
     mounted: function () {
-        var self = this;
+        const vm = this;
+        vm.aulas = []; 
+
         (function ($) {
             'use strict';
 
@@ -87,32 +89,57 @@
                 });
 
                 // Update de tempo assistido
+                let alreadyPosted = false; // Flag de controle
+                const alunoId = document.getElementById('alunoId').value;
+
+                function loadAulas() {
+                    axios.get(`../../Aluno/GetAlunoAulasByAlunoId?alunoId=${alunoId}`)
+                        .then(response => {
+                            vm.aulas = Array.isArray(response.data) ? response.data : [];
+                        })
+                        .catch(() => {
+                            vm.aulas = [];
+                        });
+                }
+
+                loadAulas();
+
                 const video = document.getElementById('videoPlayer');
 
                 video.addEventListener('timeupdate', function () {
-                    const duration = video.duration;
-                    if (duration <= 0) return;             
+                    if (!video.duration || alreadyPosted || !aulaAtualId) return;
 
-                    const progress = (video.currentTime / duration) * 100;
-
-                    const alunoId = document.getElementById('alunoId').value;
-                    const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
-
-                    // Monta o corpo como form-urlencoded
-                    const form = new URLSearchParams();
-                    form.append('AlunoId', parseInt(alunoId, 10));
-                    form.append('AulaId', aulaAtualId);
-                    form.append('Progresso', progress);
-                    form.append('__RequestVerificationToken', token);
+                    const progress = (video.currentTime / video.duration) * 100;
 
                     if (progress >= 60) {
-                        axios.post('/Aluno/CreateAlunoAula', form, {
-                            headers: {
-                                'Content-Type': 'application/x-www-form-urlencoded'
-                            },
-                            withCredentials: true
-                        })
-                            .catch(err => console.error('Erro ao salvar progresso:', err));
+                        const exists = vm.aulas.some(a =>
+                            a.AlunoId === +alunoId && a.AulaId === aulaAtualId
+                        );
+
+                        if (!exists) {
+                            const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+                            const form = new URLSearchParams();
+                            form.append('AlunoId', alunoId);
+                            form.append('AulaId', aulaAtualId);
+                            form.append('Progresso', progress.toFixed(2));
+                            form.append('__RequestVerificationToken', token);
+
+                            alreadyPosted = true;
+
+                            axios.post('/Aluno/CreateAlunoAula', form, {
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded'
+                                },
+                                withCredentials: true
+                            })
+                                .then(() => {
+                                    vm.aulas.push({ AlunoId: +alunoId, AulaId: aulaAtualId });
+                                })
+                                .catch(err => {
+                                    alreadyPosted = false;
+                                    console.error('Erro:', err);
+                                });
+                        }
                     }
                 });
 
@@ -490,7 +517,11 @@
             axios.get("../../Aula/GetAulaById?id=" + id)
                 .then(response => {
                     self.aula = response.data;
-                    self.selectedVideoUrl = response.data.video;
+                    self.selectedVideoUrl = "";
+                    if (response.data.video != undefined) {
+                        self.selectedVideoUrl = "\\Aulas" + response.data.video.split("\\Aulas")[1];
+                    }
+
                     $('#aulaAtualTitulo').text(response.data.titulo);
 
                     var player = document.getElementById("videoPlayer");
