@@ -512,31 +512,11 @@ namespace WebApp.Controllers
         /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
         /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
         [ClaimsAuthorize(ClaimType.ControlePresenca, Claim.Incluir)]
-        public ActionResult ImprimirFrequencia(int id, int mes)
+        public ActionResult ImprimirFrequencia(int mes)
         {
-            var result = ApiClientFactory.Instance.GetControlePresencaById(id);
+            ViewBag.Mes = mes;
 
-            var model = new ControlePresencaModel()
-            {
-                ControlePresenca = new ControlePresencaDto
-                {
-                    Id = result.Id,
-                    AlunoId = result.AlunoId,
-                    EventoId = result.EventoId,
-                    NomeAluno = result.NomeAluno,
-                    Controle = result.Controle,
-                    Justificativa = result.Justificativa,
-                    MunicipioEstado = result.MunicipioEstado,
-                    NomeLocalidade = result.NomeLocalidade,
-                    Data = result.Data,
-                    LocalidadeId = result.LocalidadeId,
-                    MunicipioId = result.MunicipioId,
-                    Status = result.Status,
-                    Mes = mes,
-                }
-            };
-
-            return View("ImprimirFrequencia", model);
+            return View("ImprimirFrequencia");
         }
 
         #endregion
