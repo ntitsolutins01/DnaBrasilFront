@@ -667,7 +667,7 @@ namespace WebApp.Controllers
                         StatusSaude = "F"
                     };
 
-                    commandSaude.Id = (int)await ApiClientFactory.Instance.CreateSaude(commandSaude);
+                    command.SaudeId = (int)await ApiClientFactory.Instance.CreateSaude(commandSaude);
                 }
 
                 if (laudo.TalentoEsportivoId != null)
@@ -726,7 +726,26 @@ namespace WebApp.Controllers
                         StatusTalentosEsportivos = "F"
                     };
 
-                    command.TalentoEsportivoId = (int)await ApiClientFactory.Instance.CreateTalentoEsportivo(commandTalentoEsportivo);
+                    if (commandTalentoEsportivo.Altura != null && commandTalentoEsportivo.MassaCorporal != null && commandTalentoEsportivo.PreensaoManual != null &&
+                        commandTalentoEsportivo.Flexibilidade != null && commandTalentoEsportivo.ImpulsaoHorizontal != null && commandTalentoEsportivo.Velocidade != null &&
+                        commandTalentoEsportivo.AptidaoFisica != null && commandTalentoEsportivo.Agilidade != null)
+                    {
+                        command.TalentoEsportivoId = (int)await ApiClientFactory.Instance.CreateTalentoEsportivo(commandTalentoEsportivo);
+
+                        var encaminhamento = ApiClientFactory.Instance.GetTalentoEsportivoById((int)command.TalentoEsportivoId)
+                            .Encaminhamento;
+
+                        var modalidade = ApiClientFactory.Instance.GetModalidadeAll()
+                            .FirstOrDefault(x => x.Nome.Contains(encaminhamento.Nome));
+
+                        command.ModalidadeId = modalidade!.Id;
+
+                    }
+                    else
+                    {
+                        return RedirectToAction(nameof(Create), new { notify = (int)EnumNotify.Error, message = "Favor informar todos os campos de Talento Esportivo." });
+                    }
+
                 }
 
                 await ApiClientFactory.Instance.UpdateLaudo(command.Id, command);
