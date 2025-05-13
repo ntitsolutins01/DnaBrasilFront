@@ -638,7 +638,8 @@ namespace WebApp.Controllers
                             : Convert.ToDecimal(collection["envergaduraSaude"].ToString()),
                         MassaCorporalSaude = collection["massaCorporalSaude"] == ""
                             ? null
-                            : Convert.ToDecimal(collection["massaCorporalSaude"].ToString()),
+                            : decimal.Parse(collection["massaCorporalSaude"].ToString().Replace(".", ","),
+                                System.Globalization.CultureInfo.GetCultureInfo("pt-BR")),
                         AlturaSaude = collection["alturaSaude"] == ""
                             ? null
                             : Convert.ToDecimal(collection["alturaSaude"].ToString()),

@@ -334,6 +334,15 @@ var vm = new Vue({
                 var $numeric2 = $(".numeric2");
                 $numeric2.mask('00', { reverse: false });
 
+                // Configuração correta para campos de peso com separador decimal
+                $(".numeric").mask('000.00', {
+                    reverse: true,
+                    translation: {
+                        '.': { pattern: /[.]/, fallback: '.' },
+                        placeholder: "000.00"
+                    }
+                });
+
                 $("#formEditLaudo").validate({
                     rules: {
                         alturaSaude: {

@@ -149,15 +149,17 @@
                                             <div class="col-sm-3">
                                                 @if (Model.Saude.Massa != null)
                                                 {
-                                                    var peso = Math.Round((decimal)Model.Saude.Massa, 0);
-
-                                                    <input type="text" class="form-control peso-mask" id="massaCorporalSaude" name="massaCorporalSaude" maxlength="5" placeholder="00.00" required value="@peso" title="Por favor informe a Massa Corporal (kg)" />
+                                                    var peso = Model.Saude.Massa;
+                                                    <input type="text" class="form-control numeric" id="massaCorporalSaude" name="massaCorporalSaude" 
+                                                           maxlength="6" placeholder="000.00" required value="@peso.ToString().Replace(",", ".")" 
+                                                           title="Por favor informe a Massa Corporal (kg)" />
                                                 }
                                                 else
                                                 {
                                                     var peso = Model.TalentoEsportivo.Peso;
-                                                    peso = peso == null ? null : (decimal)peso;
-                                                    <input type="text" class="form-control peso-mask" id="massaCorporalSaude" name="massaCorporalSaude" maxlength="2" placeholder="00" required value="@peso" title="Por favor informe a Massa Corporal (kg)" />
+                                                    <input type="text" class="form-control numeric" id="massaCorporalSaude" name="massaCorporalSaude" 
+                                                           maxlength="6" placeholder="000.00" required value="@(peso != null ? peso.ToString().Replace(",", ".") : "")" 
+                                                           title="Por favor informe a Massa Corporal (kg)" />
                                                 }
                                             </div>
                                         </div>
