@@ -334,6 +334,33 @@ var vm = new Vue({
                 var $numeric2 = $(".numeric2");
                 $numeric2.mask('00', { reverse: false });
 
+                // Configuração para campos de peso com separador decimal (000.00)
+                $(".numeric-peso").mask('000.00', {
+                    reverse: true,
+                    translation: {
+                        '.': { pattern: /[.]/, fallback: '.' },
+                        placeholder: "000.00"
+                    }
+                });
+
+                // Configuração para campos com duas casas antes do decimal (00.00)
+                $(".numeric-tempo").mask('00.00', {
+                    reverse: true,
+                    translation: {
+                        '.': { pattern: /[.]/, fallback: '.' },
+                        placeholder: "00.00"
+                    }
+                });
+
+                // Manter compatibilidade com código existente
+                $(".numeric").mask('000.00', {
+                    reverse: true,
+                    translation: {
+                        '.': { pattern: /[.]/, fallback: '.' },
+                        placeholder: "000.00"
+                    }
+                });
+
                 // Configuração correta para campos de peso com separador decimal
                 $(".numeric").mask('000.00', {
                     reverse: true,
@@ -583,8 +610,26 @@ var vm = new Vue({
                 });
 
                 //mascara dos inputs 
-                var $numeric = $(".numeric");
-                $numeric.mask('00.00', { reverse: false });
+                var $numeric2 = $(".numeric2");
+                $numeric2.mask('00', { reverse: false });
+
+                // Configuração para campos de peso com separador decimal (000.00)
+                $(".numeric").mask('000.00', {
+                    reverse: true,
+                    translation: {
+                        '.': { pattern: /[.]/, fallback: '.' },
+                        placeholder: "000.00"
+                    }
+                });
+
+                // Adicionar configuração para campos de tempo e valores menores (00.00)
+                $(".numeric-tempo").mask('00.00', {
+                    reverse: true,
+                    translation: {
+                        '.': { pattern: /[.]/, fallback: '.' },
+                        placeholder: "00.00"
+                    }
+                });
 
                 $("#formLaudo").validate({
                     rules: {

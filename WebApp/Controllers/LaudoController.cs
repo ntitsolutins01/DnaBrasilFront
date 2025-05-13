@@ -388,13 +388,16 @@ namespace WebApp.Controllers
                         : Convert.ToInt32(collection["ddlAluno"].ToString()),
                     EnvergaduraSaude = collection["envergaduraSaude"] == ""
                         ? null
-                        : Convert.ToDecimal(collection["envergaduraSaude"].ToString()),
+                        : decimal.Parse(collection["envergaduraSaude"].ToString().Replace(".", ","),
+                            System.Globalization.CultureInfo.GetCultureInfo("pt-BR")),
                     MassaCorporalSaude = collection["massaCorporalSaude"] == ""
                         ? null
-                        : Convert.ToDecimal(collection["massaCorporalSaude"].ToString()),
+                        : decimal.Parse(collection["massaCorporalSaude"].ToString().Replace(".", ","),
+                            System.Globalization.CultureInfo.GetCultureInfo("pt-BR")),
                     AlturaSaude = collection["alturaSaude"] == ""
                         ? null
-                        : Convert.ToDecimal(collection["alturaSaude"].ToString()),
+                        : decimal.Parse(collection["alturaSaude"].ToString().Replace(".", ","),
+                            System.Globalization.CultureInfo.GetCultureInfo("pt-BR")),
                     StatusSaude = "F"
                 };
 
@@ -411,14 +414,22 @@ namespace WebApp.Controllers
                 {
                     ProfissionalId = collection["ddlProfissional"] == "" ? null : Convert.ToInt32(collection["ddlProfissional"].ToString()),
                     AlunoId = collection["ddlAluno"] == "" ? null : Convert.ToInt32(collection["ddlAluno"].ToString()),
-                    Altura = collection["altura"] == "" ? null : Convert.ToDecimal(collection["altura"].ToString()),
-                    MassaCorporal = collection["massaCorporal"] == "" ? null : Convert.ToDecimal(collection["massaCorporal"].ToString()),
-                    PreensaoManual = collection["preensaoManual"] == "" ? null : Convert.ToDecimal(collection["preensaoManual"].ToString()),
-                    Flexibilidade = collection["flexibilidade"] == "" ? null : Convert.ToDecimal(collection["flexibilidade"].ToString()),
-                    ImpulsaoHorizontal = collection["impulsaoHorizontal"] == "" ? null : Convert.ToDecimal(collection["impulsaoHorizontal"].ToString()),
-                    Velocidade = collection["testeVelocidade"] == "" ? null : Convert.ToDecimal(collection["testeVelocidade"].ToString()),
-                    AptidaoFisica = collection["aptidaoFisica"] == "" ? null : Convert.ToDecimal(collection["aptidaoFisica"].ToString()),
-                    Agilidade = collection["agilidade"] == "" ? null : Convert.ToDecimal(collection["agilidade"].ToString()),
+                    Altura = collection["altura"] == "" ? null : decimal.Parse(collection["altura"].ToString().Replace(".", ","),
+                                                         System.Globalization.CultureInfo.GetCultureInfo("pt-BR")),
+                    MassaCorporal = collection["massaCorporal"] == "" ? null : decimal.Parse(collection["massaCorporal"].ToString().Replace(".", ","),
+                                                             System.Globalization.CultureInfo.GetCultureInfo("pt-BR")),
+                    PreensaoManual = collection["preensaoManual"] == "" ? null : decimal.Parse(collection["preensaoManual"].ToString().Replace(".", ","),
+                                                                 System.Globalization.CultureInfo.GetCultureInfo("pt-BR")),
+                    Flexibilidade = collection["flexibilidade"] == "" ? null : decimal.Parse(collection["flexibilidade"].ToString().Replace(".", ","),
+                                                            System.Globalization.CultureInfo.GetCultureInfo("pt-BR")),
+                    ImpulsaoHorizontal = collection["impulsaoHorizontal"] == "" ? null : decimal.Parse(collection["impulsaoHorizontal"].ToString().Replace(".", ","),
+                                                                      System.Globalization.CultureInfo.GetCultureInfo("pt-BR")),
+                    Velocidade = collection["testeVelocidade"] == "" ? null : decimal.Parse(collection["testeVelocidade"].ToString().Replace(".", ","),
+                                                           System.Globalization.CultureInfo.GetCultureInfo("pt-BR")),
+                    AptidaoFisica = collection["aptidaoFisica"] == "" ? null : decimal.Parse(collection["aptidaoFisica"].ToString().Replace(".", ","),
+                                                             System.Globalization.CultureInfo.GetCultureInfo("pt-BR")),
+                    Agilidade = collection["agilidade"] == "" ? null : decimal.Parse(collection["agilidade"].ToString().Replace(".", ","),
+                                                         System.Globalization.CultureInfo.GetCultureInfo("pt-BR")),
                     Abdominal = Convert.ToBoolean(collection["rdbAbdominal"]),
                     StatusTalentosEsportivos = "F"
                 };
@@ -680,14 +691,22 @@ namespace WebApp.Controllers
                         Id = (int)laudo.TalentoEsportivoId,
                         ProfissionalId = talentoEsportivo.ProfissionalId,
                         AlunoId = (int)laudo.AlunoId,
-                        Altura = collection["altura"] == "" ? null : Convert.ToDecimal(collection["altura"].ToString()),
-                        MassaCorporal = collection["massaCorporal"] == "" ? null : Convert.ToDecimal(collection["massaCorporal"].ToString()),
-                        PreensaoManual = collection["preensaoManual"] == "" ? null : Convert.ToDecimal(collection["preensaoManual"].ToString()),
-                        Flexibilidade = collection["flexibilidade"] == "" ? null : Convert.ToDecimal(collection["flexibilidade"].ToString()),
-                        ImpulsaoHorizontal = collection["impulsaoHorizontal"] == "" ? null : Convert.ToDecimal(collection["impulsaoHorizontal"].ToString()),
-                        Velocidade = collection["testeVelocidade"] == "" ? null : Convert.ToDecimal(collection["testeVelocidade"].ToString()),
-                        AptidaoFisica = collection["aptidaoFisica"] == "" ? null : Convert.ToDecimal(collection["aptidaoFisica"].ToString()),
-                        Agilidade = collection["agilidade"] == "" ? null : Convert.ToDecimal(collection["agilidade"].ToString()),
+                        Altura = collection["altura"] == "" ? null : decimal.Parse(collection["altura"].ToString().Replace(".", ","),
+                                                                       System.Globalization.CultureInfo.GetCultureInfo("pt-BR")),
+                        MassaCorporal = collection["massaCorporal"] == "" ? null : decimal.Parse(collection["massaCorporal"].ToString().Replace(".", ","),
+                                                                           System.Globalization.CultureInfo.GetCultureInfo("pt-BR")),
+                        PreensaoManual = collection["preensaoManual"] == "" ? null : decimal.Parse(collection["preensaoManual"].ToString().Replace(".", ","),
+                                                                           System.Globalization.CultureInfo.GetCultureInfo("pt-BR")),
+                        Flexibilidade = collection["flexibilidade"] == "" ? null : decimal.Parse(collection["flexibilidade"].ToString().Replace(".", ","),
+                                                                          System.Globalization.CultureInfo.GetCultureInfo("pt-BR")),
+                        ImpulsaoHorizontal = collection["impulsaoHorizontal"] == "" ? null : decimal.Parse(collection["impulsaoHorizontal"].ToString().Replace(".", ","),
+                                                                                  System.Globalization.CultureInfo.GetCultureInfo("pt-BR")),
+                        Velocidade = collection["testeVelocidade"] == "" ? null : decimal.Parse(collection["testeVelocidade"].ToString().Replace(".", ","),
+                                                                          System.Globalization.CultureInfo.GetCultureInfo("pt-BR")),
+                        AptidaoFisica = collection["aptidaoFisica"] == "" ? null : decimal.Parse(collection["aptidaoFisica"].ToString().Replace(".", ","),
+                                                                           System.Globalization.CultureInfo.GetCultureInfo("pt-BR")),
+                        Agilidade = collection["agilidade"] == "" ? null : decimal.Parse(collection["agilidade"].ToString().Replace(".", ","),
+                                                                        System.Globalization.CultureInfo.GetCultureInfo("pt-BR")),
                         Abdominal = Convert.ToBoolean(collection["rdbAbdominal"]),
                         StatusTalentosEsportivos = "F"
                     };
@@ -889,7 +908,7 @@ namespace WebApp.Controllers
                     DeficienciaId = ddlDeficiencia,
                     PossuiFoto = possuiFotoValue,
                     Finalizado = finalizadoValue,
-                    
+
                 };
 
                 var result = await ApiClientFactory.Instance.GetLaudosResumidosByFilter(searchFilter);
