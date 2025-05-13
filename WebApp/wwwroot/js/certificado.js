@@ -131,7 +131,7 @@ var vm = new Vue({
                 self.editDto.Status = result.data.status;
 
                 self.editDto.ImagemFrente = "\\Certificados\\" + result.data.imagemFrente;
-                if (result.data.imagemVerso && result.data.imagemVerso.includes("\Certificados")) {
+                if (result.data.imagemVerso) {
                     self.editDto.ImagemVerso = "\\Certificados\\" + result.data.imagemVerso;
                 } else {
                     self.editDto.ImagemVerso = null;
