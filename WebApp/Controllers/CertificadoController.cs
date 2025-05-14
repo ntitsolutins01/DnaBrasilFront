@@ -168,7 +168,7 @@ namespace WebApp.Controllers
             SetCrudMessage(crud);
 
             var certificado = ApiClientFactory.Instance.GetCertificadoById(id);
-            var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentosAll(), "Id", "Nome");
+            var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentosAll(), "Id", "Nome", certificado.FomentoId);
 
             var model = new CertificadoModel
             {
@@ -232,6 +232,8 @@ namespace WebApp.Controllers
         /// </summary>
         /// <param name="id">Identificador de Certificado</param>
         /// <returns>Retorna o Certificado</returns>
+        [HttpGet]
+        [Route("Certificado/GetCertificadoById")]
         public Task<CertificadoDto> GetCertificadoById(int id)
         {
             var result = ApiClientFactory.Instance.GetCertificadoById(id);
