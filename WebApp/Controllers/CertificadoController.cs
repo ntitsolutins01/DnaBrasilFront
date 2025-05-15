@@ -97,7 +97,7 @@ namespace WebApp.Controllers
         {
             try
             {
-                var command = new CertificadoModel.CreateUpdateCertificadoCommand
+                var command = new CertificadoModel.CreateCertificadoCommand
                 {
                     FomentoId = Convert.ToInt32(collection["ddlFomento"].ToString()),
                     HtmlFrente = collection["HtmlFrente"].ToString(),
@@ -188,12 +188,10 @@ namespace WebApp.Controllers
         [HttpPost]
         public async Task<ActionResult> Edit(int id, IFormCollection collection)
         {
-            var command = new CertificadoModel.CreateUpdateCertificadoCommand
+            var command = new CertificadoModel.UpdateCertificadoCommand
             {
                 Id = id,
-                FomentoId = Convert.ToInt32(collection["FomentoId"].ToString()),
-                ImagemFrente = collection["ImagemFrente"].ToString(),
-                ImagemVerso = collection["ImagemVerso"].ToString(),
+                FomentoId = Convert.ToInt32(collection["ddlFomento"].ToString()),
                 HtmlFrente = collection["HtmlFrente"].ToString(),
                 HtmlVerso = collection["HtmlVerso"].ToString(),
                 Status = collection["Status"].ToString() == "" ? false : true
