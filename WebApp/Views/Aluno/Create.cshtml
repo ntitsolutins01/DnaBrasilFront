@@ -20,7 +20,7 @@
                         <h2 class="panel-title">Cadastro de Aluno</h2>
                     </header>
                     <div class="panel-body">
-                        <div class="form-group">
+                        <div class="form-group" id="pAluno">
                             <label class="col-sm-1 control-label">Foto</label>
                             <div class="col-sm-4">
                                 <div class="fileupload fileupload-new" data-provides="fileupload">
@@ -43,7 +43,7 @@
                                 <input id="cpf" name="cpf"
                                        v-model="params.cpf"
                                        type="text" value="" class="form-control"
-                                       maxlength="14" />
+                                       maxlength="14" v-on:blur="ExisteCpf" />
                             </div>
                         </div>
                         <div class="form-group">

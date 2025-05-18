@@ -23,6 +23,8 @@ namespace WebApp.Models
             public ListDictionary Claims { get; set; }
             public string Descricao { get; set; }
             public string AspNetRoleId { get; set; }
+            public bool Status { get; set; }
+            public bool Ead { get; set; }
         }
     }
 

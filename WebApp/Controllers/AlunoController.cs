@@ -414,11 +414,16 @@ namespace WebApp.Controllers
                 await ApiClientFactory.Instance.UpdateDados((int)alunoId, updateCommand);
 
                 return RedirectToAction(nameof(Index), new { id = alunoId, crud = (int)EnumCrud.Created });
+
             }
             catch (Exception e)
             {
-                _logger.Error($"Ação de inclusao do aluno - Aluno.CreateDados: {e.StackTrace}");
-                return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = "Este cpf ou email já pertencem a outro aluno." });
+                _logger.Error($"Ação de inclusão do aluno - Aluno.Edit: {e.StackTrace}");
+                return RedirectToAction(nameof(Index), new
+                {
+                    notify = EnumNotify.Error,
+                    mesage = e.Message
+                });
             }
         }
 

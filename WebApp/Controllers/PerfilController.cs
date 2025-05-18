@@ -185,13 +185,18 @@ namespace WebApp.Controllers
                     list.Add(modulo.Nome, string.Join(",", listValue));
                 }
 
+                var status = collection["status"].ToString();
+                var ead = collection["ead"].ToString();
+
                 var command = new PerfilModel.CreateUpdateCommand
                 {
                     Id = perfil.Id,
                     Nome = collection["nome"].ToString(),
                     Descricao = collection["descricao"].ToString(),
                     Claims = list,
-                    AspNetRoleId = perfil.AspNetRoleId
+                    AspNetRoleId = perfil.AspNetRoleId,
+                    Ead = ead != "",
+                    Status = status != "",
                 };
 
                 var adminRole = await _roleManager.FindByIdAsync(perfil.AspNetRoleId);
