@@ -8,7 +8,7 @@ namespace WebApp.ApiClient
     /// </summary>
     public partial class DnaApiClient
     {
-	    private const string ResourceControleAcessoAula = "ControlesAcessosAulas";
+        private const string ResourceControleAcessoAula = "ControlesAcessosAulas";
 
         #region Main Methods
 
@@ -17,10 +17,10 @@ namespace WebApp.ApiClient
         /// </summary>
         /// <param name="command">Objeto para inclusão de ControleAcessoAula</param>
         /// <returns>Id de ControleAcessoAula inserido</returns>
-        public Task<long> CreateControleAcessoAula (ControleAcessoAulaModel.CreateUpdateControleAcessoAulaCommand command)
+        public Task<long> CreateControleAcessoAula(ControleAcessoAulaModel.CreateUpdateControleAcessoAulaCommand command)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceControleAcessoAula }"));
+                $"{ResourceControleAcessoAula}"));
             return Post(requestUrl, command);
         }
 
@@ -30,10 +30,10 @@ namespace WebApp.ApiClient
         /// <param name="id">Id de alteração de ControleAcessoAula</param>
         /// <param name="command">Objeto de alteração de ControleAcessoAula</param>
         /// <returns>Retorna true ou false</returns>
-        public Task<bool> UpdateControleAcessoAula (int id, ControleAcessoAulaModel.CreateUpdateControleAcessoAulaCommand command)
+        public Task<bool> UpdateControleAcessoAula(int id, ControleAcessoAulaModel.CreateUpdateControleAcessoAulaCommand command)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceControleAcessoAula }/{id}"));
+                $"{ResourceControleAcessoAula}/{id}"));
             return Put(requestUrl, command);
         }
 
@@ -42,10 +42,10 @@ namespace WebApp.ApiClient
         /// </summary>
         /// <param name="id">Id de exclusao da ControleAcessoAula</param>
         /// <returns>Retorna true ou false</returns>
-        public Task<bool> DeleteControleAcessoAula (int id)
+        public Task<bool> DeleteControleAcessoAula(int id)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceControleAcessoAula }/{id}"));
+                $"{ResourceControleAcessoAula}/{id}"));
             return Delete<bool>(requestUrl);
         }
 

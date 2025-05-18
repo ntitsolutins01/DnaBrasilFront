@@ -1,4 +1,3 @@
-using DocumentFormat.OpenXml.Presentation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
@@ -101,13 +100,13 @@ public class AulaController : BaseController
     {
         try
         {
-	        var command = new AulaModel.CreateUpdateAulaCommand
-	        {
-		        ProfessorId = Convert.ToInt32(collection["ddlProfessor"].ToString()),
-		        ModuloEadId = Convert.ToInt32(collection["ddlModuloEad"].ToString()),
-		        Titulo = collection["titulo"].ToString(),
-		        Descricao = collection["descricao"].ToString(),
-	        };
+            var command = new AulaModel.CreateUpdateAulaCommand
+            {
+                ProfessorId = Convert.ToInt32(collection["ddlProfessor"].ToString()),
+                ModuloEadId = Convert.ToInt32(collection["ddlModuloEad"].ToString()),
+                Titulo = collection["titulo"].ToString(),
+                Descricao = collection["descricao"].ToString(),
+            };
 
             string aulasPath = Path.Combine(_host.WebRootPath, "Aulas");
             if (!Directory.Exists(aulasPath))
@@ -252,12 +251,12 @@ public class AulaController : BaseController
     {
         try
         {
-	        var material = ApiClientFactory.Instance.GetAulaById(id).Material!;
+            var material = ApiClientFactory.Instance.GetAulaById(id).Material!;
 
-	        if (material != null)
-		        System.IO.File.Delete(material);
+            if (material != null)
+                System.IO.File.Delete(material);
 
-			ApiClientFactory.Instance.DeleteAula(id);
+            ApiClientFactory.Instance.DeleteAula(id);
             return RedirectToAction(nameof(Index), new { crud = (int)EnumCrud.Deleted });
         }
         catch

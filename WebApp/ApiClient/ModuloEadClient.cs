@@ -8,7 +8,7 @@ namespace WebApp.ApiClient
     /// </summary>
     public partial class DnaApiClient
     {
-	    private const string ResourceModuloEad = "ModulosEad";
+        private const string ResourceModuloEad = "ModulosEad";
 
         #region Main Methods
 
@@ -17,7 +17,7 @@ namespace WebApp.ApiClient
         /// </summary>
         /// <param name="command">Objeto de inclusão da Modulo Ead</param>
         /// <returns>Id do Modulo Ead inserido</returns>
-        public Task<long> CreateModuloEad (ModuloEadModel.CreateUpdateModuloEadCommand command)
+        public Task<long> CreateModuloEad(ModuloEadModel.CreateUpdateModuloEadCommand command)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
                 $"{ResourceModuloEad}"));
@@ -30,7 +30,7 @@ namespace WebApp.ApiClient
         /// <param name="id">Id de Alteração da Modulo Ead</param>
         /// <param name="command">Objeto de alteração da Modulo Ead</param>
         /// <returns>Retorna true ou false</returns>
-        public Task<bool> UpdateModuloEad (int id, ModuloEadModel.CreateUpdateModuloEadCommand command)
+        public Task<bool> UpdateModuloEad(int id, ModuloEadModel.CreateUpdateModuloEadCommand command)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
                 $"{ResourceModuloEad}/{id}"));
@@ -42,7 +42,7 @@ namespace WebApp.ApiClient
         /// </summary>
         /// <param name="id">Id de exclusao da Modulo Ead</param>
         /// <returns>Retorna true ou false</returns>
-        public Task<bool> DeleteModuloEad (int id)
+        public Task<bool> DeleteModuloEad(int id)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
                 $"{ResourceModuloEad}/{id}"));

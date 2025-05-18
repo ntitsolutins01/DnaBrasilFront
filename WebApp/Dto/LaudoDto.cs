@@ -1,6 +1,4 @@
-﻿using ClosedXML.Excel;
-
-namespace WebApp.Dto
+﻿namespace WebApp.Dto
 {
     public class LaudoDto
     {

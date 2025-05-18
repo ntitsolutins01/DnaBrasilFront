@@ -16,6 +16,6 @@ namespace WebApp.Enumerators
         ConsumoAlimentar = 8,
         [Description("Saúde")]
         Saude = 9
-        
+
     }
 }

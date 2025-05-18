@@ -10,11 +10,11 @@ using WebApp.Utility;
 
 namespace WebApp.Controllers
 {
-	/// <summary>
-	/// Controle de Resposta
-	/// </summary>
-	public class RespostaController : BaseController
-	{
+    /// <summary>
+    /// Controle de Resposta
+    /// </summary>
+    public class RespostaController : BaseController
+    {
 
         #region Parametros
 

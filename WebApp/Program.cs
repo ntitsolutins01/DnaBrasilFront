@@ -2,15 +2,14 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using WebApp.Areas.Identity.Models;
+using WebApp.Configuration;
 using WebApp.Data;
+using WebApp.Identity;
 using WebApp.Models;
 using WebApp.Services;
-using WebApp.Configuration;
-using WebApp.Identity;
-using Microsoft.Extensions.FileProviders;
 using WebApp.Utility;
-using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 
 var builder = WebApplication.CreateBuilder(args);
 

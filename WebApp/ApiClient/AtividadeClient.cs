@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using WebApp.Dto;
+﻿using WebApp.Dto;
 using WebApp.Models;
 
 namespace WebApp.ApiClient
@@ -9,7 +8,7 @@ namespace WebApp.ApiClient
     /// </summary>
     public partial class DnaApiClient
     {
-	    private const string ResourceAtividade = "Atividades";
+        private const string ResourceAtividade = "Atividades";
 
         #region Main Methods
 
@@ -18,10 +17,10 @@ namespace WebApp.ApiClient
         /// </summary>
         /// <param name="command">Objeto para inclusão de Atividade</param>
         /// <returns>Id de Atividade inserido</returns>
-        public Task<long> CreateAtividade (AtividadeModel.CreateUpdateAtividadeCommand command)
+        public Task<long> CreateAtividade(AtividadeModel.CreateUpdateAtividadeCommand command)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceAtividade }"));
+                $"{ResourceAtividade}"));
             return Post(requestUrl, command);
         }
 
@@ -31,10 +30,10 @@ namespace WebApp.ApiClient
         /// <param name="id">Id de alteração de Atividade</param>
         /// <param name="command">Objeto de alteração de Atividade</param>
         /// <returns>Retorna true ou false</returns>
-        public Task<bool> UpdateAtividade (int id, AtividadeModel.CreateUpdateAtividadeCommand command)
+        public Task<bool> UpdateAtividade(int id, AtividadeModel.CreateUpdateAtividadeCommand command)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceAtividade }/{id}"));
+                $"{ResourceAtividade}/{id}"));
             return Put(requestUrl, command);
         }
 
@@ -43,10 +42,10 @@ namespace WebApp.ApiClient
         /// </summary>
         /// <param name="id">Id de exclusão de Atividade</param>
         /// <returns>Retorna true ou false</returns>
-        public Task<bool> DeleteAtividade (int id)
+        public Task<bool> DeleteAtividade(int id)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceAtividade }/{id}"));
+                $"{ResourceAtividade}/{id}"));
             return Delete<bool>(requestUrl);
         }
 

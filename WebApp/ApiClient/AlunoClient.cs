@@ -1,5 +1,4 @@
-﻿using DocumentFormat.OpenXml.Office2010.Excel;
-using WebApp.Dto;
+﻿using WebApp.Dto;
 using WebApp.Models;
 
 namespace WebApp.ApiClient
@@ -142,11 +141,11 @@ namespace WebApp.ApiClient
         /// </summary>
         /// <param name="email">email</param>
         /// <returns>Retorna uma lista de Email</returns>
-        public AlunoDto GetAlunoByEmail(string email)
+        public AlunoDto? GetAlunoByEmail(string email)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
                 $"{ResourceAlunos}/Email/{email}"));
-            return Get<AlunoDto>(requestUrl);
+            return Get<AlunoDto?>(requestUrl);
         }
 
         /// <summary>

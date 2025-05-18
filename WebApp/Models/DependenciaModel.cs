@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using WebApp.Dto;
+﻿using WebApp.Dto;
 
 namespace WebApp.Models
 {
@@ -15,7 +14,7 @@ namespace WebApp.Models
             public string? Nacionalidade { get; set; }
             public string? Naturalidade { get; set; }
             public string? NomeEscola { get; set; }
-			public string? TipoEscola { get; set; }
+            public string? TipoEscola { get; set; }
             public string? TipoEscolaridade { get; set; }
             public string? Turno { get; set; }
             public string? Serie { get; set; }

@@ -31,9 +31,9 @@ namespace WebApp.ApiClient
         /// <returns>Retorna true ou false</returns>
         public Task<bool> UpdateDisciplina(int id, DisciplinaModel.CreateUpdateDisciplinaCommand command)
         {
-	        var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-		        $"{ResourceDisciplina}/{id}"));
-	        return Put(requestUrl, command);
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceDisciplina}/{id}"));
+            return Put(requestUrl, command);
         }
 
         /// <summary>
@@ -43,9 +43,9 @@ namespace WebApp.ApiClient
         /// <returns>Retorna true ou false</returns>
         public Task<bool> DeleteDisciplina(int id)
         {
-	        var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-		        $"{ResourceDisciplina}/{id}"));
-	        return Delete<bool>(requestUrl);
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceDisciplina}/{id}"));
+            return Delete<bool>(requestUrl);
         }
 
         #endregion
@@ -70,10 +70,10 @@ namespace WebApp.ApiClient
         /// <returns>Retorna o objeto da Disciplina</returns>
         public DisciplinaDto GetDisciplinaById(int id)
         {
-	        var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-		        $"{ResourceDisciplina}/{id}"));
-	        return Get<DisciplinaDto>(requestUrl);
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceDisciplina}/{id}"));
+            return Get<DisciplinaDto>(requestUrl);
         }
-		#endregion
-	}
+        #endregion
+    }
 }

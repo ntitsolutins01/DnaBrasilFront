@@ -1,6 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
 using WebApp.Dto;
-using WebApp.Models;
 
 namespace WebApp.ApiClient
 {
@@ -8,8 +6,8 @@ namespace WebApp.ApiClient
     /// Divisao Administrativa Client
     /// </summary>
     public partial class DnaApiClient
-	{
-		private const string ResourceDivisaoAdministrativa = "DivisoesAdministrativas";
+    {
+        private const string ResourceDivisaoAdministrativa = "DivisoesAdministrativas";
 
         #region Methods
 
@@ -43,12 +41,12 @@ namespace WebApp.ApiClient
         /// <returns>Retorna um objeto de Municipio pela Uf</returns>
         public List<MunicipioDto> GetMunicipiosByUf(string uf)
         {
-			var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-				$"{ResourceDivisaoAdministrativa}/Municipios/{uf}"));
-			return Get<List<MunicipioDto>>(requestUrl);
-		}
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceDivisaoAdministrativa}/Municipios/{uf}"));
+            return Get<List<MunicipioDto>>(requestUrl);
+        }
 
         #endregion
 
-	}
+    }
 }

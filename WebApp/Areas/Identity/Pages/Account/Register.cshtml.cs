@@ -7,9 +7,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Options;
-using WebApp.Areas.Identity.Models;
 using WebApp.Configuration;
 using WebApp.Data;
 using WebApp.Dto;
@@ -37,8 +35,8 @@ namespace WebApp.Areas.Identity.Pages.Account
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender, 
-            RoleManager<IdentityRole> roleManager, 
+            IEmailSender emailSender,
+            RoleManager<IdentityRole> roleManager,
             ApplicationDbContext db,
             IHostingEnvironment host)
         {
@@ -180,8 +178,8 @@ namespace WebApp.Areas.Identity.Pages.Account
                 PerfilId = perfil.Id,
                 MunicipioId = (int)commandAluno.MunicipioId,
                 TipoPessoa = "pf"
-			};
-            
+            };
+
             var usu = await ApiClientFactory.Instance.CreateUsuario(command);
 
             var userRole = _roleManager.Roles.FirstOrDefault(x => x.Id == perfil.AspNetRoleId).Name;
@@ -190,8 +188,8 @@ namespace WebApp.Areas.Identity.Pages.Account
 
             commandAluno.AspNetUserId = command.AspNetUserId;
 
-			var alunoId = await ApiClientFactory.Instance.CreateDados(commandAluno);
-            
+            var alunoId = await ApiClientFactory.Instance.CreateDados(commandAluno);
+
             SendNewUserEmail(newUser, command.Email, command.Nome);
 
             string returnUrl = null;

@@ -98,7 +98,7 @@ public class EncaminhamentoController : BaseController
                 Nome = collection["nome"].ToString(),
                 Parametro = collection["parametro"].ToString(),
                 Descricao = collection["descricao"].ToString(),
-			};
+            };
 
             foreach (var file in collection.Files)
             {
@@ -135,25 +135,25 @@ public class EncaminhamentoController : BaseController
         {
             var command = new EncaminhamentoModel.CreateUpdateEncaminhamentoCommand
             {
-	            Id = Convert.ToInt32(collection["editEncaminhamentoId"]),
-				Nome = collection["nome"].ToString(),
-				Parametro = collection["parametro"].ToString(),
-				Descricao = collection["descricao"].ToString(),
-				Status = collection["editStatus"].ToString() == "" ? false : true
+                Id = Convert.ToInt32(collection["editEncaminhamentoId"]),
+                Nome = collection["nome"].ToString(),
+                Parametro = collection["parametro"].ToString(),
+                Descricao = collection["descricao"].ToString(),
+                Status = collection["editStatus"].ToString() == "" ? false : true
 
-			};
+            };
 
             foreach (var file in collection.Files)
             {
-	            if (file.Length <= 0) continue;
+                if (file.Length <= 0) continue;
 
-	            using var ms = new MemoryStream();
-	            await file.CopyToAsync(ms);
-	            var byteIMage = ms.ToArray();
-	            command.ByteImage = byteIMage;
+                using var ms = new MemoryStream();
+                await file.CopyToAsync(ms);
+                var byteIMage = ms.ToArray();
+                command.ByteImage = byteIMage;
             }
 
-			await ApiClientFactory.Instance.UpdateEncaminhamento(command.Id, command);
+            await ApiClientFactory.Instance.UpdateEncaminhamento(command.Id, command);
 
             return RedirectToAction(nameof(Index), new { crud = (int)EnumCrud.Updated });
         }

@@ -98,10 +98,10 @@ public class ModuloEadController : BaseController
         {
             var command = new ModuloEadModel.CreateUpdateModuloEadCommand
             {
-	            CursoId = Convert.ToInt32(collection["ddlCurso"].ToString()),
-	            Titulo = collection["nome"].ToString(),
-	            Descricao = collection["descricao"].ToString(),
-			};
+                CursoId = Convert.ToInt32(collection["ddlCurso"].ToString()),
+                Titulo = collection["nome"].ToString(),
+                Descricao = collection["descricao"].ToString(),
+            };
 
             //foreach (var file in collection.Files)
             //{
@@ -231,11 +231,11 @@ public class ModuloEadController : BaseController
         }
         catch (Exception e)
         {
-			return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = "Este módulo não pode ser excluído pois possui aulas vinculadas a ele." });
-		}
+            return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = "Este módulo não pode ser excluído pois possui aulas vinculadas a ele." });
+        }
     }
 
-    
+
     #endregion
 
     #region Get Methods

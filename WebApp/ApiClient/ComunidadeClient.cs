@@ -8,7 +8,7 @@ namespace WebApp.ApiClient
     /// </summary>
     public partial class DnaApiClient
     {
-	    private const string ResourceComunidade = "Comunidades";
+        private const string ResourceComunidade = "Comunidades";
 
         #region Main Methods
 
@@ -17,10 +17,10 @@ namespace WebApp.ApiClient
         /// </summary>
         /// <param name="command">Objeto para inclusão de Comunidade</param>
         /// <returns>Id de Comunidade inserido</returns>
-        public Task<long> CreateComunidade (ComunidadeModel.CreateUpdateComunidadeCommand command)
+        public Task<long> CreateComunidade(ComunidadeModel.CreateUpdateComunidadeCommand command)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceComunidade }"));
+                $"{ResourceComunidade}"));
             return Post(requestUrl, command);
         }
 
@@ -30,10 +30,10 @@ namespace WebApp.ApiClient
         /// <param name="id">Id de alteração de Comunidade</param>
         /// <param name="command">Objeto de alteração de Comunidade</param>
         /// <returns>Retorna true ou false</returns>
-        public Task<bool> UpdateComunidade (int id, ComunidadeModel.CreateUpdateComunidadeCommand command)
+        public Task<bool> UpdateComunidade(int id, ComunidadeModel.CreateUpdateComunidadeCommand command)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceComunidade }/{id}"));
+                $"{ResourceComunidade}/{id}"));
             return Put(requestUrl, command);
         }
 
@@ -42,10 +42,10 @@ namespace WebApp.ApiClient
         /// </summary>
         /// <param name="id">Id de exclusão de Comunidade</param>
         /// <returns>Retorna true ou false</returns>
-        public Task<bool> DeleteComunidade (int id)
+        public Task<bool> DeleteComunidade(int id)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceComunidade }/{id}"));
+                $"{ResourceComunidade}/{id}"));
             return Delete<bool>(requestUrl);
         }
 

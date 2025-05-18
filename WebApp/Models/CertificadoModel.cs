@@ -13,7 +13,7 @@ namespace WebApp.Models
         public List<CertificadoDto> Certificados { get; set; }
         public string FomentoId { get; set; }
         public SelectList ListFomentos { get; set; }
-        public class CreateUpdateCertificadoCommand
+        public class CreateCertificadoCommand
         {
             public int Id { get; set; }
             public int FomentoId { get; set; }
@@ -21,6 +21,14 @@ namespace WebApp.Models
             public string? ImagemVerso { get; set; }
             public string NomeImagemFrente { get; set; }
             public string? NomeImagemVerso { get; set; }
+            public string HtmlFrente { get; set; }
+            public string HtmlVerso { get; set; }
+            public bool Status { get; set; } = true;
+        }
+        public class UpdateCertificadoCommand
+        {
+            public int Id { get; set; }
+            public int FomentoId { get; set; }
             public string HtmlFrente { get; set; }
             public string HtmlVerso { get; set; }
             public bool Status { get; set; } = true;

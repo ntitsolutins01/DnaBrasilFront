@@ -9,4 +9,3 @@
         public Dictionary<string, decimal>? PercDeficiencia { get; set; }
     }
 }
-    

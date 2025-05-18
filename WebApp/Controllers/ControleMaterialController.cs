@@ -35,7 +35,7 @@ public class ControleMaterialController : BaseController
         ApplicationSettings.WebApiUrl = _appSettings.Value.WebApiBaseUrl;
     }
     #endregion
-    
+
     #region Main Methods
     /// <summary>
     /// Listagem de Controle Material
@@ -81,78 +81,78 @@ public class ControleMaterialController : BaseController
         }
     }
 
-	/// <summary>
-	/// Ação de Inclusão do Controle Material
-	/// </summary>
-	/// <param name="collection">Coleção de dados para inclusao de Controle Material</param>
-	/// <returns>Retorna mensagem de inclusao através do parametro crud</returns>
-	[ClaimsAuthorize(ClaimType.ControleMaterial, Identity.Claim.Incluir)]
-	[HttpPost]
-	public async Task<ActionResult> Create(IFormCollection collection)
-	{
-		try
-		{
-			var command = new ControleMaterialModel.CreateUpdateControleMaterialCommand
-			{
-				Id = Convert.ToInt32(collection["editControleMaterialId"]),
-				LinhaAcaoId = Convert.ToInt32(collection["ddlLinhaAcao"]),
-				Descricao = collection["descricao"].ToString(),
-				UnidadeMedida = collection["unidademedida"].ToString(),
-				Quantidade = Convert.ToInt32(collection["quantidade"]),
-				Saida = Convert.ToInt32(collection["saida"]),
-				Disponivel = Convert.ToInt32(collection["disponivel"]),
-				Status = collection["editStatus"].ToString() == "" ? false : true
+    /// <summary>
+    /// Ação de Inclusão do Controle Material
+    /// </summary>
+    /// <param name="collection">Coleção de dados para inclusao de Controle Material</param>
+    /// <returns>Retorna mensagem de inclusao através do parametro crud</returns>
+    [ClaimsAuthorize(ClaimType.ControleMaterial, Identity.Claim.Incluir)]
+    [HttpPost]
+    public async Task<ActionResult> Create(IFormCollection collection)
+    {
+        try
+        {
+            var command = new ControleMaterialModel.CreateUpdateControleMaterialCommand
+            {
+                Id = Convert.ToInt32(collection["editControleMaterialId"]),
+                LinhaAcaoId = Convert.ToInt32(collection["ddlLinhaAcao"]),
+                Descricao = collection["descricao"].ToString(),
+                UnidadeMedida = collection["unidademedida"].ToString(),
+                Quantidade = Convert.ToInt32(collection["quantidade"]),
+                Saida = Convert.ToInt32(collection["saida"]),
+                Disponivel = Convert.ToInt32(collection["disponivel"]),
+                Status = collection["editStatus"].ToString() == "" ? false : true
 
-			};
+            };
 
-			//var possuiControleMaterial = ApiClientFactory.Instance.GetControleMaterialByAlunoIdDisciplinaId(Convert.ToInt32(command.AlunoId), Convert.ToInt32(command.DisciplinaId));
+            //var possuiControleMaterial = ApiClientFactory.Instance.GetControleMaterialByAlunoIdDisciplinaId(Convert.ToInt32(command.AlunoId), Convert.ToInt32(command.DisciplinaId));
 
-			//if (possuiControleMaterial==null)
-			//{
-			// return RedirectToAction(nameof(Create), new { notify = (int)EnumNotify.Warning, message = "Já existe ControleMaterial cadastrada para este aluno na disciplina informada." });
-			//}
+            //if (possuiControleMaterial==null)
+            //{
+            // return RedirectToAction(nameof(Create), new { notify = (int)EnumNotify.Warning, message = "Já existe ControleMaterial cadastrada para este aluno na disciplina informada." });
+            //}
 
-			await ApiClientFactory.Instance.CreateControleMaterial(command);
+            await ApiClientFactory.Instance.CreateControleMaterial(command);
 
-			return RedirectToAction(nameof(Index), new { crud = (int)EnumCrud.Created });
-		}
-		catch (Exception e)
-		{
-			return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = "Erro ao executar esta ação. Favor entrar em contato com o administrador do sistema." });
-		}
-	}
+            return RedirectToAction(nameof(Index), new { crud = (int)EnumCrud.Created });
+        }
+        catch (Exception e)
+        {
+            return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = "Erro ao executar esta ação. Favor entrar em contato com o administrador do sistema." });
+        }
+    }
 
-	/// <summary>
-	/// Ação de Alteração do Controle Material
-	/// </summary>
-	/// <param name="collection">Coleção de dados para alteração de Controle Material</param>
-	/// <returns>Retorna mensagem de alteração através do parametro crud</returns>
-	[ClaimsAuthorize(ClaimType.ControleMaterial, Identity.Claim.Alterar)]
-	public async Task<ActionResult> Edit(IFormCollection collection)
-	{
-		try
-		{
-			var command = new ControleMaterialModel.CreateUpdateControleMaterialCommand
-			{
-				Id = Convert.ToInt32(collection["editControleMaterialId"]),
-				Descricao = collection["descricao"].ToString(),
-				UnidadeMedida = collection["unidademedida"].ToString(),
-				Quantidade = Convert.ToInt32(collection["quantidade"]),
-				Saida = Convert.ToInt32(collection["saida"]),
-				Disponivel = Convert.ToInt32(collection["disponivel"]),
-				Status = collection["editStatus"].ToString() == "" ? false : true
+    /// <summary>
+    /// Ação de Alteração do Controle Material
+    /// </summary>
+    /// <param name="collection">Coleção de dados para alteração de Controle Material</param>
+    /// <returns>Retorna mensagem de alteração através do parametro crud</returns>
+    [ClaimsAuthorize(ClaimType.ControleMaterial, Identity.Claim.Alterar)]
+    public async Task<ActionResult> Edit(IFormCollection collection)
+    {
+        try
+        {
+            var command = new ControleMaterialModel.CreateUpdateControleMaterialCommand
+            {
+                Id = Convert.ToInt32(collection["editControleMaterialId"]),
+                Descricao = collection["descricao"].ToString(),
+                UnidadeMedida = collection["unidademedida"].ToString(),
+                Quantidade = Convert.ToInt32(collection["quantidade"]),
+                Saida = Convert.ToInt32(collection["saida"]),
+                Disponivel = Convert.ToInt32(collection["disponivel"]),
+                Status = collection["editStatus"].ToString() == "" ? false : true
 
-			};
+            };
 
-			await ApiClientFactory.Instance.UpdateControleMaterial(command.Id, command);
+            await ApiClientFactory.Instance.UpdateControleMaterial(command.Id, command);
 
-			return RedirectToAction(nameof(Index), new { crud = (int)EnumCrud.Updated });
-		}
-		catch (Exception e)
-		{
-			return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = "Erro ao executar esta ação. Favor entrar em contato com o administrador do sistema." });
-		}
-	}
+            return RedirectToAction(nameof(Index), new { crud = (int)EnumCrud.Updated });
+        }
+        catch (Exception e)
+        {
+            return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = "Erro ao executar esta ação. Favor entrar em contato com o administrador do sistema." });
+        }
+    }
 
     /// <summary>
     /// Ação de Exclusão do Controle Material

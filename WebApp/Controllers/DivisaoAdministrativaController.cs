@@ -4,7 +4,6 @@ using Microsoft.Extensions.Options;
 using WebApp.Configuration;
 using WebApp.Dto;
 using WebApp.Factory;
-using WebApp.Models;
 using WebApp.Utility;
 
 namespace WebApp.Controllers

@@ -127,8 +127,8 @@ public class ControleAcessoAulaController : BaseController
 
             return View(new ControleAcessoAulaModel()
             {
-                
-             
+
+
             });
         }
         catch (Exception ex)

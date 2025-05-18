@@ -1,14 +1,11 @@
-using DocumentFormat.OpenXml.Office2010.Excel;
+using System.Drawing;
 using iText.IO.Image;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
-using iText.Kernel.Pdf.Xobject;
 using iText.Layout;
-using iText.Layout.Borders;
 using iText.Layout.Element;
-using iText.Layout.Hyphenation;
 using iText.Layout.Properties;
 using log4net;
 using Microsoft.AspNetCore.Authorization;
@@ -16,11 +13,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
 using QRCoder;
-using System;
-using System.Drawing;
-using System.IO;
-using System.Text;
-using System.Threading.Tasks;
 using WebApp.Authorization;
 using WebApp.Configuration;
 using WebApp.Dto;
@@ -414,11 +406,16 @@ namespace WebApp.Controllers
                 await ApiClientFactory.Instance.UpdateDados((int)alunoId, updateCommand);
 
                 return RedirectToAction(nameof(Index), new { id = alunoId, crud = (int)EnumCrud.Created });
+
             }
             catch (Exception e)
             {
-                _logger.Error($"Ação de inclusao do aluno - Aluno.CreateDados: {e.StackTrace}");
-                return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = "Este cpf ou email já pertencem a outro aluno." });
+                _logger.Error($"Ação de inclusão do aluno - Aluno.Edit: {e.StackTrace}");
+                return RedirectToAction(nameof(Index), new
+                {
+                    notify = EnumNotify.Error,
+                    mesage = e.Message
+                });
             }
         }
 

@@ -12,11 +12,11 @@ using WebApp.Utility;
 
 namespace WebApp.Controllers
 {
-	/// <summary>
-	/// Controle de Disciplina 
-	/// </summary>
-	[Authorize(Policy = ModuloAccess.ConfiguracaoSistema)]
-	public class DisciplinaController : BaseController
+    /// <summary>
+    /// Controle de Disciplina 
+    /// </summary>
+    [Authorize(Policy = ModuloAccess.ConfiguracaoSistema)]
+    public class DisciplinaController : BaseController
     {
         #region Constructor
         private readonly IOptions<UrlSettings> _appSettings;
@@ -28,9 +28,9 @@ namespace WebApp.Controllers
         /// <param name="appSettings">Configurações de urls do sistema</param>
         /// <param name="host">Informações da aplicação em execução</param>
         public DisciplinaController(IOptions<UrlSettings> appSettings)
-		{
-			_appSettings = appSettings;
-			ApplicationSettings.WebApiUrl = _appSettings.Value.WebApiBaseUrl;
+        {
+            _appSettings = appSettings;
+            ApplicationSettings.WebApiUrl = _appSettings.Value.WebApiBaseUrl;
         }
         #endregion
 
@@ -44,13 +44,13 @@ namespace WebApp.Controllers
         /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
         [ClaimsAuthorize(ClaimType.Disciplina, Identity.Claim.Consultar)]
         public IActionResult Index(int? crud, int? notify, string message = null)
-		{
-			SetNotifyMessage(notify, message);
-			SetCrudMessage(crud);
-			var response = ApiClientFactory.Instance.GetDisciplinasAll();
+        {
+            SetNotifyMessage(notify, message);
+            SetCrudMessage(crud);
+            var response = ApiClientFactory.Instance.GetDisciplinasAll();
 
-			return View(new DisciplinaModel() { Disciplinas = response });
-		}
+            return View(new DisciplinaModel() { Disciplinas = response });
+        }
 
         /// <summary>
         /// Listagem de Disciplina
@@ -60,12 +60,12 @@ namespace WebApp.Controllers
         /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
         /// <returns>Returns true false</returns>
         public ActionResult Create(int? crud, int? notify, string message = null)
-		{
-			SetNotifyMessage(notify, message);
-			SetCrudMessage(crud);
+        {
+            SetNotifyMessage(notify, message);
+            SetCrudMessage(crud);
 
-			return View();
-		}
+            return View();
+        }
 
         /// <summary>
         ///  Ação de Inclusão de Disciplina 
@@ -74,24 +74,24 @@ namespace WebApp.Controllers
         /// <returns>Retorna mensagem de inclusao através do parametro crud</returns>
         //[ClaimsAuthorize("Usuario", "Incluir")]
         [HttpPost]
-		public async Task<ActionResult> Create(IFormCollection collection)
-		{
-			try
-			{
-				var command = new DisciplinaModel.CreateUpdateDisciplinaCommand
-				{
-					Nome = collection["nome"].ToString(),
-				};
+        public async Task<ActionResult> Create(IFormCollection collection)
+        {
+            try
+            {
+                var command = new DisciplinaModel.CreateUpdateDisciplinaCommand
+                {
+                    Nome = collection["nome"].ToString(),
+                };
 
-				await ApiClientFactory.Instance.CreateDisciplina(command);
+                await ApiClientFactory.Instance.CreateDisciplina(command);
 
-				return RedirectToAction(nameof(Index), new { crud = (int)EnumCrud.Created });
-			}
-			catch (Exception e)
-			{
-				return RedirectToAction(nameof(Index));
-			}
-		}
+                return RedirectToAction(nameof(Index), new { crud = (int)EnumCrud.Created });
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+        }
 
         /// <summary>
         /// Ação de Alteração de Disciplina 
@@ -100,17 +100,17 @@ namespace WebApp.Controllers
         /// <returns>Retorna mensagem de alteração através do parametro crud</returns>
         //[ClaimsAuthorize("Usuario", "Alterar")]
         public async Task<ActionResult> Edit(IFormCollection collection)
-		{
-			var command = new DisciplinaModel.CreateUpdateDisciplinaCommand
-			{
-				Id = Convert.ToInt32(collection["editDisciplinaId"]),
-				Nome = collection["nome"].ToString(),
-			};
+        {
+            var command = new DisciplinaModel.CreateUpdateDisciplinaCommand
+            {
+                Id = Convert.ToInt32(collection["editDisciplinaId"]),
+                Nome = collection["nome"].ToString(),
+            };
 
-			await ApiClientFactory.Instance.UpdateDisciplina(command.Id, command);
+            await ApiClientFactory.Instance.UpdateDisciplina(command.Id, command);
 
-			return RedirectToAction(nameof(Index), new { crud = (int)EnumCrud.Updated });
-		}
+            return RedirectToAction(nameof(Index), new { crud = (int)EnumCrud.Updated });
+        }
 
         /// <summary>
         ///  Ação de Exclusão de Disciplina
@@ -119,17 +119,17 @@ namespace WebApp.Controllers
         /// <returns>Retorna mensagem de exclusão através do parametro crud</returns>
         //[ClaimsAuthorize("Usuario", "Excluir")]
         public ActionResult Delete(int id)
-		{
-			try
-			{
-				ApiClientFactory.Instance.DeleteDisciplina(id);
-				return RedirectToAction(nameof(Index), new { crud = (int)EnumCrud.Deleted });
-			}
-			catch
-			{
-				return RedirectToAction(nameof(Index));
-			}
-		}
+        {
+            try
+            {
+                ApiClientFactory.Instance.DeleteDisciplina(id);
+                return RedirectToAction(nameof(Index), new { crud = (int)EnumCrud.Deleted });
+            }
+            catch
+            {
+                return RedirectToAction(nameof(Index));
+            }
+        }
 
         #endregion
 

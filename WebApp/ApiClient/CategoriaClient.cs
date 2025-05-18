@@ -8,7 +8,7 @@ namespace WebApp.ApiClient
     /// </summary>
     public partial class DnaApiClient
     {
-	    private const string ResourceCategoria = "Categorias";
+        private const string ResourceCategoria = "Categorias";
 
         #region Main Methods
 
@@ -17,10 +17,10 @@ namespace WebApp.ApiClient
         /// </summary>
         /// <param name="command">Objeto para inclusão de Categoria</param>
         /// <returns>Id de Categoria inserido</returns>
-        public Task<long> CreateCategoria (CategoriaModel.CreateUpdateCategoriaCommand command)
+        public Task<long> CreateCategoria(CategoriaModel.CreateUpdateCategoriaCommand command)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceCategoria }"));
+                $"{ResourceCategoria}"));
             return Post(requestUrl, command);
         }
 
@@ -30,10 +30,10 @@ namespace WebApp.ApiClient
         /// <param name="id">Id de alteração de Categoria</param>
         /// <param name="command">Objeto de alteração de Categoria</param>
         /// <returns>Retorna true ou false</returns>
-        public Task<bool> UpdateCategoria (int id, CategoriaModel.CreateUpdateCategoriaCommand command)
+        public Task<bool> UpdateCategoria(int id, CategoriaModel.CreateUpdateCategoriaCommand command)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceCategoria }/{id}"));
+                $"{ResourceCategoria}/{id}"));
             return Put(requestUrl, command);
         }
 
@@ -42,10 +42,10 @@ namespace WebApp.ApiClient
         /// </summary>
         /// <param name="id">Id de exclusão de Categoria</param>
         /// <returns>Retorna true ou false</returns>
-        public Task<bool> DeleteCategoria (int id)
+        public Task<bool> DeleteCategoria(int id)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceCategoria }/{id}"));
+                $"{ResourceCategoria}/{id}"));
             return Delete<bool>(requestUrl);
         }
 

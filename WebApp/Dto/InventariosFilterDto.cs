@@ -1,6 +1,4 @@
-﻿using DocumentFormat.OpenXml.Office2010.ExcelAc;
-
-namespace WebApp.Dto
+﻿namespace WebApp.Dto
 {
     public class InventariosFilterDto
     {

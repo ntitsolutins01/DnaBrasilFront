@@ -8,7 +8,7 @@ namespace WebApp.ApiClient
     /// </summary>
     public partial class DnaApiClient
     {
-	    private const string ResourceCurso = "Cursos";
+        private const string ResourceCurso = "Cursos";
 
         #region Main Methods
         /// <summary>
@@ -16,10 +16,10 @@ namespace WebApp.ApiClient
         /// </summary>
         /// <param name="command">Objeto para inclusão do Curso</param>
         /// <returns>Id do curso inserido</returns>
-        public Task<long> CreateCurso (CursoModel.CreateUpdateCursoCommand command)
+        public Task<long> CreateCurso(CursoModel.CreateUpdateCursoCommand command)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceCurso }"));
+                $"{ResourceCurso}"));
             return Post(requestUrl, command);
         }
 
@@ -29,10 +29,10 @@ namespace WebApp.ApiClient
         /// <param name="id">Id de alteração de Curso</param>
         /// <param name="command">Objeto de alteração de Curso</param>
         /// <returns>Retorna true ou false</returns>
-        public Task<bool> UpdateCurso (int id, CursoModel.CreateUpdateCursoCommand command)
+        public Task<bool> UpdateCurso(int id, CursoModel.CreateUpdateCursoCommand command)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceCurso }/{id}"));
+                $"{ResourceCurso}/{id}"));
             return Put(requestUrl, command);
         }
 
@@ -41,10 +41,10 @@ namespace WebApp.ApiClient
         /// </summary>
         /// <param name="id">Id de exclusão de Curso</param>
         /// <returns>Retorna true ou false</returns>
-        public Task<bool> DeleteCurso (int id)
+        public Task<bool> DeleteCurso(int id)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceCurso }/{id}"));
+                $"{ResourceCurso}/{id}"));
             return Delete<bool>(requestUrl);
         }
 
@@ -86,7 +86,7 @@ namespace WebApp.ApiClient
                 $"{ResourceCurso}/TipoCurso/{tipoCursoId}"));
             return Get<List<CursoDto>>(requestUrl);
         }
-        
+
         /// <summary>
         /// Busca todos os Cursos por AlunoId 
         /// </summary>

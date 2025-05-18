@@ -3,9 +3,9 @@
 //using SendGrid;
 //using SendGrid.Helpers.Mail;
 using MailKit.Net.Smtp;
-using MimeKit;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Options;
+using MimeKit;
 using WebApp.Configuration;
 
 namespace WebApp.Services

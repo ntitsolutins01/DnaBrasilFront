@@ -110,10 +110,10 @@ public class NotaController : BaseController
 
             //if (possuiNota==null)
             //{
-	           // return RedirectToAction(nameof(Create), new { notify = (int)EnumNotify.Warning, message = "Já existe nota cadastrada para este aluno na disciplina informada." });
+            // return RedirectToAction(nameof(Create), new { notify = (int)EnumNotify.Warning, message = "Já existe nota cadastrada para este aluno na disciplina informada." });
             //}
 
-			await ApiClientFactory.Instance.CreateNota(command);
+            await ApiClientFactory.Instance.CreateNota(command);
 
             return RedirectToAction(nameof(Index), new { crud = (int)EnumCrud.Created });
         }

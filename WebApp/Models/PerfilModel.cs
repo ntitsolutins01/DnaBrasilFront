@@ -1,8 +1,6 @@
 ﻿using System.Collections.Specialized;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using WebApp.Data;
 using WebApp.Dto;
 
 namespace WebApp.Models
@@ -23,6 +21,8 @@ namespace WebApp.Models
             public ListDictionary Claims { get; set; }
             public string Descricao { get; set; }
             public string AspNetRoleId { get; set; }
+            public bool Status { get; set; }
+            public bool Ead { get; set; }
         }
     }
 

@@ -1,20 +1,20 @@
 using System.Security.Claims;
+using System.Text;
+using System.Text.Encodings.Web;
+using System.Text.RegularExpressions;
+using log4net;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
-using System.Text.Encodings.Web;
+using WebApp.Authorization;
+using WebApp.Configuration;
 using WebApp.Enumerators;
 using WebApp.Factory;
+using WebApp.Identity;
 using WebApp.Models;
 using WebApp.Utility;
-using System.Text;
-using System.Text.RegularExpressions;
-using WebApp.Configuration;
-using WebApp.Identity;
-using WebApp.Authorization;
-using log4net;
 
 namespace WebApp.Controllers
 {

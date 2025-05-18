@@ -8,7 +8,7 @@ namespace WebApp.ApiClient
     /// </summary>
     public partial class DnaApiClient
     {
-	    private const string ResourceLinhaAcao = "LinhasAcoes";
+        private const string ResourceLinhaAcao = "LinhasAcoes";
 
         #region Main Methods
 
