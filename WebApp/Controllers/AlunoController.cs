@@ -1,4 +1,5 @@
 using System.Drawing;
+using System.Text.RegularExpressions;
 using iText.IO.Image;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
@@ -221,13 +222,31 @@ namespace WebApp.Controllers
         /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
         /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
         [ClaimsAuthorize(ClaimType.Aluno, Claim.Incluir)]
-        public ActionResult Create(int? crud, int? notify, string message = null)
+        public async Task<ActionResult> Create(int? crud, int? notify, string message = null)
         {
             SetNotifyMessage(notify, message);
             SetCrudMessage(crud);
 
+            var usuario = User.Identity.Name;
+
+            var usu = await ApiClientFactory.Instance.GetUsuarioByEmail(usuario);
+
             var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentosAll(), "Id", "Nome");
-            var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome");
+            var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome", usu.Uf);
+            SelectList municipios = null;
+
+            if (!string.IsNullOrEmpty(usu.Uf))
+            {
+                municipios = new SelectList(ApiClientFactory.Instance.GetMunicipiosByUf(usu.Uf), "Id", "Nome", usu.MunicipioId);
+            }
+            SelectList localidades = null;
+
+            if (usu.MunicipioId != null)
+            {
+                var resultLocalidades = ApiClientFactory.Instance.GetLocalidadeByMunicipioId(usu.MunicipioId.ToString());
+
+                localidades = new SelectList(resultLocalidades, "Id", "Nome", usu.LocalidadeId);
+            }
             var deficiencias = new SelectList(ApiClientFactory.Instance.GetDeficienciaAll().Where(x => x.Status), "Id", "Nome");
             var modalidades = new SelectList(ApiClientFactory.Instance.GetModalidadeAll(), "Id", "Nome");
             var etapas = new SelectList(ApiClientFactory.Instance.GetEtapasEnsinoAll(), "Id", "Nome");
@@ -246,11 +265,14 @@ namespace WebApp.Controllers
             return View(new AlunoModel()
             {
                 ListEstados = estados,
+                ListMunicipios = municipios!,
+                ListLocalidades = localidades!,
                 ListDeficiencias = deficiencias,
                 ListModalidades = modalidades,
                 ListEtnias = etnias,
                 ListFomentos = fomentos,
-                ListEtapas = etapas
+                ListEtapas = etapas,
+                UsuarioLogado = usu
             });
         }
 
@@ -1619,6 +1641,27 @@ namespace WebApp.Controllers
         {
             var modeloCarteirinha = await ApiClientFactory.Instance.GetModeloCarteirinhaByFomentoId(fomentoId);
             return Json(modeloCarteirinha);
+        }
+
+        /// <summary>
+        /// Método de busca de Aluno por cpf
+        /// </summary>
+        /// <param name="cpf">cpf do Aluno</param>
+        /// <returns>retorna true ou false</returns>
+        [ClaimsAuthorize(ClaimType.Usuario, Identity.Claim.Consultar)]
+        public Task<JsonResult> GetAlunoByCpf(string cpf)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(cpf)) throw new Exception("Cpf não informado.");
+                var result = ApiClientFactory.Instance.GetAlunoByCpf(Regex.Replace(cpf, "[^0-9a-zA-Z]+", ""));
+                
+                return Task.FromResult(Json(result));
+            }
+            catch (Exception ex)
+            {
+                return Task.FromResult(Json(ex.Message));
+            }
         }
 
         #endregion

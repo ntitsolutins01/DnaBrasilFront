@@ -1,3 +1,4 @@
+@using WebApp.Enumerators
 @model AlunoModel
 
 @{
@@ -99,7 +100,7 @@
                             <label class="col-sm-1 control-label text-sm-right pt-2">Estado <span class="required">*</span></label>
                             <div class="col-md-2">
                                 <select class="form-control populate select2" name="ddlEstado" id="ddlEstado"
-                                        title="Por favor informe um Estado." required style="width:100%"
+                                        title="Por favor informe um Estado." required style="width:100%" @(Model.UsuarioLogado.Perfil.Id != (int)EnumPerfil.Administrador ? "disabled" : "")
                                         asp-for="EstadoId" asp-items="Model.ListEstados">
                                     <option value="">Selecionar Estado</option>
                                 </select>
@@ -107,7 +108,7 @@
                             <label class="col-sm-1 control-label text-sm-right pt-2">Município <span class="required">*</span></label>
                             <div class="col-md-3">
                                 <select class="form-control populate select2" name="ddlMunicipio" id="ddlMunicipio"
-                                        title="Por favor informe um Municipio." required style="width:100%"
+                                        title="Por favor informe um Municipio." required style="width:100%" 
                                         asp-for="MunicipioId" asp-items="Model.ListMunicipios">
                                     <option value="">Selecionar Município</option>
                                 </select>
