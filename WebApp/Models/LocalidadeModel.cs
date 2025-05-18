@@ -13,14 +13,14 @@ namespace WebApp.Models
         public SelectList ListEstados { get; set; }
         public string MunicipioId { get; set; }
         public SelectList ListMunicipios { get; set; }
-        
+
         public class CreateUpdateLocalidadeCommand
         {
-	        public int Id { get; set; }
-	        public string Nome { get; set; }
-	        public string Descricao { get; set; }
-	        public bool Status { get; set; }
-			public int MunicipioId { get; set; }
+            public int Id { get; set; }
+            public string Nome { get; set; }
+            public string Descricao { get; set; }
+            public bool Status { get; set; }
+            public int MunicipioId { get; set; }
         }
     }
 

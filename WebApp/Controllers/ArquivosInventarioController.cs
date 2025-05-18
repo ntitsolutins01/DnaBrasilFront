@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using log4net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Options;
 using WebApp.Authorization;
 using WebApp.Configuration;
@@ -8,12 +10,7 @@ using WebApp.Dto;
 using WebApp.Enumerators;
 using WebApp.Factory;
 using WebApp.Identity;
-using WebApp.Models;
 using WebApp.Utility;
-using Microsoft.AspNetCore.Hosting;
-using log4net;
-using Microsoft.AspNetCore.StaticFiles;
-using Microsoft.CodeAnalysis;
 
 namespace WebApp.Controllers;
 

@@ -1,6 +1,5 @@
 ﻿using WebApp.Dto;
 using WebApp.Models;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace WebApp.ApiClient
 {
@@ -9,8 +8,8 @@ namespace WebApp.ApiClient
     /// </summary>
     public partial class DnaApiClient
     {
-	    private const string ResourceEvento = "Eventos";
-	    private const string ResourceFotoEvento = "FotosEvento";
+        private const string ResourceEvento = "Eventos";
+        private const string ResourceFotoEvento = "FotosEvento";
 
         #region Main Methods
 
@@ -19,7 +18,7 @@ namespace WebApp.ApiClient
         /// </summary>
         /// <param name="command">Objeto para inclusão de Evento</param>
         /// <returns>Id de Evento inserido</returns>
-        public Task<long> CreateEvento (EventoModel.CreateUpdateEventoCommand command)
+        public Task<long> CreateEvento(EventoModel.CreateUpdateEventoCommand command)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
                 $"{ResourceEvento}"));
@@ -32,7 +31,7 @@ namespace WebApp.ApiClient
         /// <param name="id">Id de alteração de Evento</param>
         /// <param name="command">Objeto de alteração da Evento</param>
         /// <returns>Retorna true ou false</returns>
-        public Task<bool> UpdateEvento (int id, EventoModel.CreateUpdateEventoCommand command)
+        public Task<bool> UpdateEvento(int id, EventoModel.CreateUpdateEventoCommand command)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
                 $"{ResourceEvento}/{id}"));
@@ -44,12 +43,12 @@ namespace WebApp.ApiClient
         /// </summary>
         /// <param name="id">Id de exclusão de Evento</param>
         /// <returns>Retorna true ou false</returns>
-        public Task<bool> DeleteEvento (int id)
+        public Task<bool> DeleteEvento(int id)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
                 $"{ResourceEvento}/{id}"));
             return Delete<bool>(requestUrl);
-		}
+        }
 
         /// <summary>
         /// Inclusão de Foto e Evento 
@@ -57,11 +56,11 @@ namespace WebApp.ApiClient
         /// <param name="list">list</param>
         /// <returns>Id de Foto e Evento inserido</returns>
         public Task<long> CreateFotoEvento(List<CreateFotoEventoDto> list)
-		{
-			var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-				$"{ResourceFotoEvento}"));
-			return Post(requestUrl, list);
-		}
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceFotoEvento}"));
+            return Post(requestUrl, list);
+        }
 
         #endregion
 
@@ -86,10 +85,10 @@ namespace WebApp.ApiClient
         /// <returns>>Retorna o objeto de Fotos por Evento Id</returns>
         public List<FotoEventoDto> GetFotosAllByEventoId(int eventoId)
         {
-			var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-				$"{ResourceFotoEvento}/Fotos/{eventoId}"));
-			return Get<List<FotoEventoDto>>(requestUrl);
-		}
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceFotoEvento}/Fotos/{eventoId}"));
+            return Get<List<FotoEventoDto>>(requestUrl);
+        }
 
         /// <summary>
         /// Busca todos os Eventos cadastrados
@@ -97,11 +96,11 @@ namespace WebApp.ApiClient
         /// <returns>Retorna a lista de Eventos</returns>
         public List<EventoDto> GetEventosAll()
         {
-	        var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-		        $"{ResourceEvento}"));
-	        return Get<List<EventoDto>>(requestUrl);
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceEvento}"));
+            return Get<List<EventoDto>>(requestUrl);
         }
-		#endregion
+        #endregion
 
-	}
+    }
 }

@@ -8,7 +8,7 @@ namespace WebApp.ApiClient
     /// </summary>
     public partial class DnaApiClient
     {
-	    private const string ResourceTextoLaudo = "TextosLaudos";
+        private const string ResourceTextoLaudo = "TextosLaudos";
 
         #region Main Methods
 

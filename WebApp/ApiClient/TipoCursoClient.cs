@@ -8,7 +8,7 @@ namespace WebApp.ApiClient
     /// </summary>
     public partial class DnaApiClient
     {
-	    private const string ResourceTipoCurso = "TiposCursos";
+        private const string ResourceTipoCurso = "TiposCursos";
 
         #region Main Methods
 
@@ -17,10 +17,10 @@ namespace WebApp.ApiClient
         /// </summary>
         /// <param name="command">>Objeto de inclusão de Tipo de Curso</param>
         /// <returns>Retorna o objeto de Tipoo de curso</returns>
-        public Task<long> CreateTipoCurso (TipoCursoModel.CreateUpdateTipoCursoCommand command)
+        public Task<long> CreateTipoCurso(TipoCursoModel.CreateUpdateTipoCursoCommand command)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceTipoCurso }"));
+                $"{ResourceTipoCurso}"));
             return Post(requestUrl, command);
         }
 
@@ -30,10 +30,10 @@ namespace WebApp.ApiClient
         /// <param name="id">Id de alteração de Tipo de Curso</param>
         /// <param name="command">Objeto de alteração de Tipo de Curso</param>
         /// <returns>Retorna true ou false</returns>
-        public Task<bool> UpdateTipoCurso (int id, TipoCursoModel.CreateUpdateTipoCursoCommand command)
+        public Task<bool> UpdateTipoCurso(int id, TipoCursoModel.CreateUpdateTipoCursoCommand command)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceTipoCurso }/{id}"));
+                $"{ResourceTipoCurso}/{id}"));
             return Put(requestUrl, command);
         }
 
@@ -42,10 +42,10 @@ namespace WebApp.ApiClient
         /// </summary>
         /// <param name="id">Id de exclusão de Tipo de Curso</param>
         /// <returns>Retorna true ou false</returns>
-        public Task<bool> DeleteTipoCurso (int id)
+        public Task<bool> DeleteTipoCurso(int id)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceTipoCurso }/{id}"));
+                $"{ResourceTipoCurso}/{id}"));
             return Delete<bool>(requestUrl);
         }
 

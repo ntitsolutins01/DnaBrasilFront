@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using WebApp.Dto;
+﻿using WebApp.Dto;
 
 namespace WebApp.Models
 {

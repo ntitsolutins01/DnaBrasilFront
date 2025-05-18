@@ -1,20 +1,18 @@
+using ClosedXML.Excel;
+using log4net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
+using WebApp.Authorization;
 using WebApp.Configuration;
+using WebApp.Dto;
 using WebApp.Enumerators;
 using WebApp.Factory;
+using WebApp.Identity;
 using WebApp.Models;
 using WebApp.Utility;
-using WebApp.Authorization;
 using Claim = WebApp.Identity.Claim;
-using WebApp.Identity;
-using Microsoft.AspNetCore.Authorization;
-using WebApp.Dto;
-using ClosedXML.Excel;
-using System.Diagnostics;
-using DocumentFormat.OpenXml.Presentation;
-using log4net;
 
 namespace WebApp.Controllers
 {

@@ -121,12 +121,12 @@ public class CategoriaController : BaseController
             var command = new CategoriaModel.CreateUpdateCategoriaCommand
             {
                 Id = Convert.ToInt32(collection["editCategoriaId"]),
-				Codigo = collection["codigo"].ToString(),
-				Nome = collection["nome"].ToString(),
-				IdadeFinal = Convert.ToInt32(collection["idadeFinal"]),
-				IdadeInicial = Convert.ToInt32(collection["idadeInicial"]),
-				Descricao = collection["descricao"].ToString(),
-				Status = collection["editStatus"].ToString() == "" ? false : true,
+                Codigo = collection["codigo"].ToString(),
+                Nome = collection["nome"].ToString(),
+                IdadeFinal = Convert.ToInt32(collection["idadeFinal"]),
+                IdadeInicial = Convert.ToInt32(collection["idadeInicial"]),
+                Descricao = collection["descricao"].ToString(),
+                Status = collection["editStatus"].ToString() == "" ? false : true,
             };
 
             await ApiClientFactory.Instance.UpdateCategoria(command.Id, command);

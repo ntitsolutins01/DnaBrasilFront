@@ -1,6 +1,6 @@
 ﻿namespace WebApp.Dto
 {
-	public class GraficoControlePresencasDto
+    public class GraficoControlePresencasDto
     {
         public int[]? ListPresencasAnual { get; set; }
         public int[]? ListFaltasAnual { get; set; }

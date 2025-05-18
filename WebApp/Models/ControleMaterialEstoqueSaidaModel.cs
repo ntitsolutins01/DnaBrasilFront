@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Extensions.Primitives;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using WebApp.Dto;
 
 namespace WebApp.Models
@@ -37,7 +35,7 @@ namespace WebApp.Models
             public int MunicipioId { get; set; }
             public int LocalidadeId { get; set; }
             public int InventarioId { get; set; }
-            public  int Quantidade { get; set; }
+            public int Quantidade { get; set; }
             public int ProfissionalId { get; set; }
         }
     }

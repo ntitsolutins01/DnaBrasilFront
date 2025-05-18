@@ -3,11 +3,11 @@
     public class EstudanteDto
     {
         public int Id { get; set; }
-        public  int AspNetUserId { get; set; }
-        public  string Nome { get; set; }
-        public  string Email { get; set; }
-        public  string Sexo { get; set; }
-        public  DateTime DtNascimento { get; set; }
+        public int AspNetUserId { get; set; }
+        public string Nome { get; set; }
+        public string Email { get; set; }
+        public string Sexo { get; set; }
+        public DateTime DtNascimento { get; set; }
         public string NomeMae { get; set; }
         public string NomePai { get; set; }
         public string Cpf { get; set; }

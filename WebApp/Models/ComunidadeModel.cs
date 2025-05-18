@@ -1,21 +1,18 @@
-﻿using System.Collections;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Extensions.Primitives;
-using WebApp.Dto;
+﻿using WebApp.Dto;
 
 namespace WebApp.Models
 {
-	public class ComunidadeModel
-	{
-		public ComunidadeDto Comunidade { get; set; }
-		public List<ComunidadeDto> MetricasImc { get; set; }
+    public class ComunidadeModel
+    {
+        public ComunidadeDto Comunidade { get; set; }
+        public List<ComunidadeDto> MetricasImc { get; set; }
 
-		public class CreateUpdateComunidadeCommand
-		{
-			public int Id { get; set; }
-			public string? NomeComunidade { get; set; }
-			public bool Status { get; set; } = true;
-		}
-	}
+        public class CreateUpdateComunidadeCommand
+        {
+            public int Id { get; set; }
+            public string? NomeComunidade { get; set; }
+            public bool Status { get; set; } = true;
+        }
+    }
 
 }

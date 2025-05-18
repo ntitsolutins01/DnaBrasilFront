@@ -50,7 +50,7 @@ public class MaterialController : BaseController
 
         var gruposMateriais = new SelectList(ApiClientFactory.Instance.GetGruposMateriaisAll(), "Id", "Nome");
         //var tiposMateriais = new SelectList(ApiClientFactory.Instance.GetTiposMateriaisAll(), "Id", "Nome");
-        
+
         List<SelectListDto> list = new List<SelectListDto>
         {
             new() { IdNome = "CAIXA", Nome = "CAIXA" },

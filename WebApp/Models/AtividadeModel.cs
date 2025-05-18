@@ -1,11 +1,10 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using WebApp.Dto;
-using WebApp.Views;
 
 namespace WebApp.Models
 {
-	public class AtividadeModel
-	{
+    public class AtividadeModel
+    {
         public AtividadeDto Atividade { get; set; }
         public List<AtividadeDto> Atividades { get; set; }
         public string EstadoId { get; set; }
@@ -25,9 +24,9 @@ namespace WebApp.Models
         public int ProfessorProfissionalId { get; set; }
         public SelectList ListProfessoresProfissionais { get; set; }
 
-		public class CreateUpdateAtividadeCommand
-		{
-			public int Id { get; set; }
+        public class CreateUpdateAtividadeCommand
+        {
+            public int Id { get; set; }
             public required int EstruturaId { get; set; }
             public required int LinhaAcaoId { get; set; }
             public required int CategoriaId { get; set; }

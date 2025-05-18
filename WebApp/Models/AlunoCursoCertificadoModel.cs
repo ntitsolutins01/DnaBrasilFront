@@ -3,7 +3,7 @@ using WebApp.Dto;
 
 namespace WebApp.Models
 {
-	public class AlunoCursoCertificadoModel
+    public class AlunoCursoCertificadoModel
     {
         public AlunoCursoDto AlunoCurso { get; set; }
         public AlunoDto Aluno { get; set; }
@@ -28,9 +28,9 @@ namespace WebApp.Models
         public List<AlunoAulaDto> AlunosAulas { get; set; }
 
         public class CreateUpdateAlunoCursoCommand
-		{
+        {
             public required int AlunoId { get; set; }
-			public required string CursosId { get; set; }
+            public required string CursosId { get; set; }
         }
 
         public class CreateUpdateAlunoCertificadoCommand
