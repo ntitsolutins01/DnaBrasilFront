@@ -1,225 +1,164 @@
 var vm = new Vue({
-    el: "#vCertificado ",
+    el: "#vCertificado",
     data: {
         loading: false,
-        editDto: { Id: "", TipoCurso: "", Curso: "", ImagemFrente: "", HtmlFrente: "", ImagemVerso: "", HtmlVerso: "", NomeImagemFrente: "", NomeImagemVerso: "", Status: true }
+        editDto: {
+            Id: "", TipoCurso: "", Curso: "",
+            ImagemFrente: "", HtmlFrente: "",
+            ImagemVerso: "", HtmlVerso: "",
+            NomeImagemFrente: "", NomeImagemVerso: "",
+            Status: true
+        }
     },
     mounted: function () {
-        var self = this;
-        (function ($) {
-            'use strict';
+        $('.select2').select2({ allowClear: true });
 
-            //skin select
-            var $select = $(".select2").select2({
-                allowClear: true
-            });
+        $('[data-plugin-ios-switch]').each(function () {
+            var $this = $(this);
+            $this.themePluginIOS7Switch();
+        });
 
-            $(".select2").each(function () {
-                var $this = $(this),
-                    opts = {};
-
-                var pluginOptions = $this.data('plugin-options');
-                if (pluginOptions)
-                    opts = pluginOptions;
-
-                $this.themePluginSelect2(opts);
-            });
-
-            /*
-             * When you change the value the select via select2, it triggers
-             * a 'change' event, but the jquery validation plugin
-             * only re-validates on 'blur'*/
-
-            $select.on('change', function () {
-                $(this).trigger('blur');
-            });
-
-            //skin checkbox
-            if (typeof Switch !== 'undefined' && $.isFunction(Switch)) {
-
-                $(function () {
-                    $('[data-plugin-ios-switch]').each(function () {
-                        var $this = $(this);
-
-                        $this.themePluginIOS7Switch();
-                    });
-                });
+        $('#formCertificado').validate({
+            highlight: function (label) {
+                $(label).closest('.form-group').removeClass('has-success').addClass('has-error');
+            },
+            success: function (label) {
+                $(label).closest('.form-group').removeClass('has-error');
+                label.remove();
+            },
+            errorPlacement: function (error, element) {
+                var placement = element.closest('.input-group');
+                if (!placement.get(0)) placement = element;
+                if (error.text() !== '') placement.after(error);
             }
-
-            var formid = $('form')[0].id;
-
-            if (formid === "formEditCertificado") {
-
-                $("#formEditCertificado ").validate({
-                    highlight: function (label) {
-                        $(label).closest('.form-group').removeClass('has-success').addClass('has-error');
-                    },
-                    success: function (label) {
-                        $(label).closest('.form-group').removeClass('has-error');
-                        label.remove();
-                    },
-                    errorPlacement: function (error, element) {
-                        var placement = element.closest('.input-group');
-                        if (!placement.get(0)) {
-                            placement = element;
-                        }
-                        if (error.text() !== '') {
-                            placement.after(error);
-                        }
-                    }
-                });
-            }
-
-            if (formid === "formCertificado") {
-
-
-                $("#formCertificado").validate({
-                    highlight: function (label) {
-                        $(label).closest('.form-group').removeClass('has-success').addClass('has-error');
-                    },
-                    success: function (label) {
-                        $(label).closest('.form-group').removeClass('has-error');
-                        label.remove();
-                    },
-                    errorPlacement: function (error, element) {
-                        var placement = element.closest('.input-group');
-                        if (!placement.get(0)) {
-                            placement = element;
-                        }
-                        if (error.text() !== '') {
-                            placement.after(error);
-                        }
-                    }
-                });
-            }
-        }).apply(this, [jQuery]);
+        });
     },
     methods: {
-        ShowLoad: function (flag, el) {
-            var self = this;
-
-            self.isLoading = flag;
-            $("#" + el).loadingOverlay({
-                "startShowing": flag
-            });
-            self.loading = flag;
-
-            if (!flag) {
-                self.isLoading = flag;
-                $("#" + el).removeClass("loading-overlay-showing");
-                self.loading = flag;
-            } else {
-                self.isLoading = flag;
-                $("#" + el).addClass("loading-overlay-showing");
-                self.loading = flag;
-            }
-        },
-        DeleteCertificado: function (id) {
-            var url = "Certificado/Delete/" + id;
-            $("#deleteCertificadoHref").prop("href", url);
-        },
-        EditCertificado: function (id) {
-            var self = this;
-
-            axios.get("Certificado/GetCertificadoById/?id=" + id).then(result => {
-
-                self.editDto.Id = result.data.id;
-                self.editDto.TipoCurso = result.data.tipoCurso;
-                self.editDto.Curso = result.data.curso;
-                self.editDto.HtmlFrente = result.data.htmlFrente;
-                self.editDto.HtmlVerso= result.data.htmlVerso;
-                self.editDto.Status = result.data.status;
-
-                self.editDto.ImagemFrente = "\\Certificados\\" + result.data.imagemFrente;
-                if (result.data.imagemVerso && result.data.imagemVerso.includes("\Certificados")) {
-                    self.editDto.ImagemVerso = "\\Certificados\\" + result.data.imagemVerso;
-                } else {
-                    self.editDto.ImagemVerso = null;
-                }
-
-
-            }).catch(error => {
-                Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
-            });
-        },
         Certificado: function (id) {
             var self = this;
+            return axios.get("/Certificado/GetCertificadoById/?id=" + id).then(result => {
+                var data = result.data;
+                self.editDto.Id = data.id;
+                self.editDto.TipoCurso = data.tipoCurso;
+                self.editDto.Curso = data.curso;
+                self.editDto.HtmlFrente = data.htmlFrente;
+                self.editDto.HtmlVerso = data.htmlVerso;
+                self.editDto.Status = data.status;
+                self.editDto.ImagemFrente = "/Certificados/" + data.imagemFrente;
+                self.editDto.ImagemVerso = data.imagemVerso ? "/Certificados/" + data.imagemVerso : null;
 
-            axios.get("Certificado/GetCertificadoById/?id=" + id).then(result => {
-
-                self.editDto.Id = result.data.id;
-                self.editDto.TipoCurso = result.data.tipoCurso;
-                self.editDto.Curso = result.data.curso;
-                self.editDto.HtmlFrente = result.data.htmlFrente;
-                self.editDto.HtmlVerso = result.data.htmlVerso;
-                self.editDto.Status = result.data.status;
-
-                self.editDto.ImagemFrente = "\\Certificados\\" + result.data.imagemFrente;
-                if (result.data.imagemVerso && result.data.imagemVerso.includes("\Certificados")) {
-                    self.editDto.ImagemVerso = "\\Certificados\\" + result.data.imagemVerso;
-                } else {
-                    self.editDto.ImagemVerso = null;
+                if (self.editDto.ImagemFrente) {
+                    applyBackgroundImage('summernoteFrente', self.editDto.ImagemFrente);
                 }
-
-
-                //if (result.data.celular === "0" || result.data.celular === "" || result.data.celular === null) {
-                //    self.editDto.Telefone = "Não informado";
-                //}
-                //else {
-                //    self.editDto.Telefone = result.data.celular;
-                //}
-                //if (result.data.image == null && result.data.sexo == "Feminino") {
-                //    self.editDto.Image = 'assets/images/menina.jpg';
-                //} else if (result.data.image == null && result.data.sexo == "Masculino") {
-                //    self.editDto.Image = 'assets/images/menino.jpg';
-                //} else {
-                //    self.editDto.Image = 'data:image/jpeg;base64,' + result.data.image;
-                //}
-                //if (result.data.cpf === "0" || result.data.cpf === "" || result.data.cpf === null) {
-                //    self.editDto.Cpf = "Não informado";
-                //}
-                //else {
-                //    self.editDto.Cpf = result.data.cpf;
-                //}
-                //if (result.data.modalidadeLinhaAcao === "0" || result.data.modalidadeLinhaAcao === "" || result.data.modalidadeLinhaAcao === null) {
-                //    self.editDto.ModalidadeLinhaAcao = "Modalidade / Linha de Ação (não informado)";
-                //}
-                //else {
-                //    self.editDto.ModalidadeLinhaAcao = result.data.modalidadeLinhaAcao;
-                //}
-                //self.editDto.QRCode = 'data:image/jpeg;base64,' + result.data.qrCode;
-
-
-
-                //var text = 'http://front.hml.dnadobrasil.org.br/Identity/Account/ControlePresenca?alunoId=' + self.editDto.Id;
-
-                //$('#qr').ClassyQR({
-                //    create: true,// signals the library to create the image tag inside the container div.
-                //    type: 'text',// text/url/sms/email/call/locatithe text to encode in the QR. on/wifi/contact, default is TEXT
-                //    text: text// the text to encode in the QR.
-                //});
-
+                if (self.editDto.ImagemVerso) {
+                    applyBackgroundImage('summernoteVerso', self.editDto.ImagemVerso);
+                }
             }).catch(error => {
-                Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
+                alert("Erro ao carregar certificado: " + error.message);
             });
-        },
+        }
     }
 });
 
-var crud = {
-    DeleteModal: function (id) {
-        $('input[name="deleteCertificadoId"]').attr('value', id);
-        $('#mdDeleteCertificado').modal('show');
-        vm.DeleteCertificado(id)
-    },
-    EditModal: function (id) {
-        $('input[name="editCertificadoId"]').attr('value', id);
-        $('#mdEditCertificado').modal('show');
-        vm.EditCertificado(id)
-    },
-    CertificadoModal: function (id) {
-        $('input[name="certificadoId"]').attr('value', id);
-        $('#mdCertificado').modal('show');
+function applyBackgroundImage(editorId, imageUrl) {
+    $('#' + editorId).next('.note-editor').find('.note-editable').css({
+        'background-image': 'url(' + imageUrl + ')',
+        'background-size': 'contain',
+        'background-repeat': 'no-repeat',
+        'background-position': 'center center'
+    });
+}
+
+$(document).ready(function () {
+    var id = $('#certificadoId').val();
+
+    if (id) {
         vm.Certificado(id);
+    }
+
+    function initializeSummernote(elementId) {
+        $('#' + elementId).summernote({
+            lang: 'pt-BR',
+            height: 813,
+            width: 1140,
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'italic', 'underline', 'clear']],
+                ['fontname', ['fontname']],
+                ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture']],
+                ['view', ['fullscreen', 'codeview']]
+            ],
+            fontSizes: ['8', '9', '10', '11', '12', '14', '18', '24', '36'],
+            callbacks: {
+                onInit: function () {
+                    $(this).next('.note-editor').find('.note-editing-area').css({
+                        'width': '1140px',
+                        'height': '813px'
+                    });
+                },
+                onEnterFullscreen: function () {
+                    const $editor = $(this).next('.note-editor');
+                    $editor.find('.note-editable').css({
+                        'background-color': 'white',
+                        'margin': '20px auto'
+                    });
+                },
+                onExitFullscreen: function () {
+                    const $editor = $(this).next('.note-editor');
+                    $editor.find('.note-editable').css({ 'margin-top': '0' });
+                }
+            }
+        });
+    }
+
+    initializeSummernote('summernoteFrente');
+    initializeSummernote('summernoteVerso');
+
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        var target = $(e.target).attr("href");
+        if (target === "#tabFrente" && vm.editDto.ImagemFrente) {
+            applyBackgroundImage('summernoteFrente', vm.editDto.ImagemFrente);
+        } else if (target === "#tabVerso") {
+            if (vm.editDto.ImagemVerso) {
+                applyBackgroundImage('summernoteVerso', vm.editDto.ImagemVerso);
+            } else {
+                $('#summernoteVerso').next('.note-editor').find('.note-editable').css('background-image', 'none');
+            }
+        }
+    });
+
+    $("#ddlTipoFomento").change(function () {
+        var tipoFomentoId = $(this).val();
+        $("#ddlFomento").empty().append('<option value="">Selecionar Fomento</option>');
+        if (tipoFomentoId) {
+            $.getJSON(`/Certificado/GetFomentosByTipoFomentoId/${tipoFomentoId}`, function (data) {
+                $.each(data, function (i, item) {
+                    $("#ddlFomento").append(`<option value="${item.id}">${item.titulo}</option>`);
+                });
+            });
+        }
+    });
+
+    $('#formCertificado').on('submit', function () {
+        var htmlFrente = $('#summernoteFrente').summernote('code');
+        var htmlVerso = $('#summernoteVerso').summernote('code');
+        $('<input>').attr({ type: 'hidden', name: 'HtmlFrente', value: htmlFrente }).appendTo(this);
+        $('<input>').attr({ type: 'hidden', name: 'HtmlVerso', value: htmlVerso }).appendTo(this);
+    });
+});
+
+var crud = {
+    CertificadoModal: function (id) {
+        $('input[name="certificadoId"]').val(id);
+        $('#mdCertificado').modal('show');
+        vm.Certificado(id); // chama a função para carregar dados do certificado
+    },
+    DeleteModal: function (id) {
+        $('input[name="deleteCertificadoId"]').val(id);
+        $('#mdDeleteCertificado').modal('show');
     }
 };

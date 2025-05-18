@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
+using WebApp.Authorization;
 using WebApp.Configuration;
 using WebApp.Dto;
 using WebApp.Enumerators;
 using WebApp.Factory;
+using WebApp.Identity;
 using WebApp.Models;
 using WebApp.Utility;
 
@@ -43,6 +45,7 @@ namespace WebApp.Controllers
         /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
         /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
         /// <returns></returns>
+        [ClaimsAuthorize(ClaimType.Certificado, Identity.Claim.Consultar)]
         public IActionResult Index(int? crud, int? notify, string message = null)
         {
             ViewBag.Status = true;
@@ -63,6 +66,7 @@ namespace WebApp.Controllers
         /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
         /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
         /// <returns></returns>
+        [ClaimsAuthorize(ClaimType.Certificado, Identity.Claim.Incluir)]
         public ActionResult Create(int? crud, int? notify, string message = null)
         {
             try
@@ -87,12 +91,13 @@ namespace WebApp.Controllers
         /// </summary>
         /// <param name="collection">Coleção de dados para inclusao de Curso</param>
         /// <returns>Retorna mensagem de inclusao através do parametro crud</returns>
+        [ClaimsAuthorize(ClaimType.Certificado, Identity.Claim.Consultar)]
         [HttpPost]
         public async Task<ActionResult> Create(IFormCollection collection)
         {
             try
             {
-                var command = new CertificadoModel.CreateUpdateCertificadoCommand
+                var command = new CertificadoModel.CreateCertificadoCommand
                 {
                     FomentoId = Convert.ToInt32(collection["ddlFomento"].ToString()),
                     HtmlFrente = collection["HtmlFrente"].ToString(),
@@ -156,16 +161,19 @@ namespace WebApp.Controllers
         /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
         /// <param name="message">Retorna mensagem de alteração através do parametro crud</param>
         /// <returns></returns>
+        [ClaimsAuthorize(ClaimType.Certificado, Identity.Claim.Alterar)]
         public ActionResult Edit(int id, int? crud, int? notify, string message = null)
         {
             SetNotifyMessage(notify, message);
             SetCrudMessage(crud);
 
             var certificado = ApiClientFactory.Instance.GetCertificadoById(id);
+            var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentosAll(), "Id", "Nome", certificado.FomentoId);
 
             var model = new CertificadoModel
             {
-                Certificado = certificado
+                Certificado = certificado,
+                ListFomentos = fomentos
             };
             return View(model);
         }
@@ -176,15 +184,14 @@ namespace WebApp.Controllers
         /// <param name="id">Identificador de Certificado</param>
         /// <param name="collection">Coleção de dados para Alteração de Certificado</param>
         /// <returns>Retorna mensagem de alteração através do parametro crud</returns>
+        [ClaimsAuthorize(ClaimType.Certificado, Identity.Claim.Alterar)]
         [HttpPost]
         public async Task<ActionResult> Edit(int id, IFormCollection collection)
         {
-            var command = new CertificadoModel.CreateUpdateCertificadoCommand
+            var command = new CertificadoModel.UpdateCertificadoCommand
             {
                 Id = id,
-                FomentoId = Convert.ToInt32(collection["FomentoId"].ToString()),
-                ImagemFrente = collection["ImagemFrente"].ToString(),
-                ImagemVerso = collection["ImagemVerso"].ToString(),
+                FomentoId = Convert.ToInt32(collection["ddlFomento"].ToString()),
                 HtmlFrente = collection["HtmlFrente"].ToString(),
                 HtmlVerso = collection["HtmlVerso"].ToString(),
                 Status = collection["Status"].ToString() == "" ? false : true
@@ -200,6 +207,7 @@ namespace WebApp.Controllers
         /// </summary>
         /// <param name="id">Identificador do Certificado</param>
         /// <returns>Retorna mensagem de exclusão através do parametro crud</returns>
+        [ClaimsAuthorize(ClaimType.Certificado, Identity.Claim.Excluir)]
         public ActionResult Delete(int id)
         {
             try
@@ -222,6 +230,8 @@ namespace WebApp.Controllers
         /// </summary>
         /// <param name="id">Identificador de Certificado</param>
         /// <returns>Retorna o Certificado</returns>
+        [HttpGet]
+        [Route("Certificado/GetCertificadoById")]
         public Task<CertificadoDto> GetCertificadoById(int id)
         {
             var result = ApiClientFactory.Instance.GetCertificadoById(id);

@@ -17,7 +17,7 @@ namespace WebApp.ApiClient
         /// </summary>
         /// <param name="command">Objeto para inclusão de Certificado</param>
         /// <returns>Id de Certificado inserido</returns>
-        public Task<long> CreateCertificado (CertificadoModel.CreateUpdateCertificadoCommand command)
+        public Task<long> CreateCertificado (CertificadoModel.CreateCertificadoCommand command)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
                 $"{ResourceCertificado }"));
@@ -30,7 +30,7 @@ namespace WebApp.ApiClient
         /// <param name="id">Id de alteração de Certificado</param>
         /// <param name="command">Objeto de alteração de Certificado</param>
         /// <returns>Retorna true ou false</returns>
-        public Task<bool> UpdateCertificado (int id, CertificadoModel.CreateUpdateCertificadoCommand command)
+        public Task<bool> UpdateCertificado (int id, CertificadoModel.UpdateCertificadoCommand command)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
                 $"{ResourceCertificado }/{id}"));
