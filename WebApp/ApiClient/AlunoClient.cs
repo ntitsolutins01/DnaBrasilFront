@@ -232,6 +232,17 @@ namespace WebApp.ApiClient
             return Get<List<AlunoAulaDto>>(requestUrl);
         }
 
+        /// <summary>
+        /// Busca Aluno por Cpf
+        /// </summary>
+        /// <param name="cpf">cpf do aluno</param>
+        /// <returns>retona true ou false</returns>
+        public async Task<bool> GetAlunoByCpf(string cpf)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceUsuario}/Cpf/{cpf}"));
+            return Get<bool>(requestUrl);
+        }
         #endregion
     }
 }

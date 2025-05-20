@@ -3,6 +3,7 @@
     data: {
         params: {
             cpf: "",
+            email: "",
             deficiencias: [],
             modalidadeAlunos: [],
             possuiDeficiencia: false
@@ -511,21 +512,53 @@
             var self = this;
             self.ShowLoad(true, "pAluno");
 
-            axios.get("GetUsuarioByCpf/?cpf=" + self.params.cpf).then(result => {
+            axios.get("GetAlunoByCpf",
+                {
+                    params: {
+                        cpf: self.params.cpf
+                    }
+                })
+                .then(result => {
 
-                if (result.data === false) {
-                    Site.Notification("Aluno", "Já existe um aluno cadastrado com esse cpf.", "warning", 2);
-                } else if (result.data !== true) {
-                    Site.Notification("Aluno", result.data, "warning", 2);
+                    if (result.data === false) {
+                        Site.Notification("Aluno", "Já existe um aluno cadastrado com esse cpf.", "warning", 2);
+                    } else if (result.data !== true) {
+                        Site.Notification("Aluno", result.data, "warning", 2);
+                        self.ShowLoad(false, "pAluno");
+                    }
+
                     self.ShowLoad(false, "pAluno");
-                }
 
-                self.ShowLoad(false, "pAluno");
+                }).catch(error => {
+                    Site.Notification("Erro ao buscar e analisar dados", error.response.data, "error", 2);
+                    self.ShowLoad(false, "pAluno");
+                });
+        },
+        ExisteEmail: function () {
+            var self = this;
+            self.ShowLoad(true, "pAluno");
 
-            }).catch(error => {
-                Site.Notification("Erro ao buscar e analisar dados", error.response.data, "error", 2);
-                self.ShowLoad(false, "pAluno");
-            });
+            axios.get("GetAlunoByEmail",
+                {
+                    params: {
+                        email: self.params.email
+                    }
+                })
+                .then(result => {
+
+                    if (result.data === false) {
+                        Site.Notification("Aluno", "Já existe um aluno cadastrado com esse email.", "warning", 2);
+                    } else if (result.data !== true) {
+                        Site.Notification("Aluno", result.data, "warning", 2);
+                        self.ShowLoad(false, "pAluno");
+                    }
+
+                    self.ShowLoad(false, "pAluno");
+
+                }).catch(error => {
+                    Site.Notification("Erro ao buscar e analisar dados", error.response.data, "error", 2);
+                    self.ShowLoad(false, "pAluno");
+                });
         },
         AddDeficiencia: function () {
             var self = this;
