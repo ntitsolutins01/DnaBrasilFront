@@ -478,22 +478,22 @@
 
             'use strict';
 
-            var crub = @ViewBag.CrudMessage;
+            var crud = @ViewBag.CrudMessage;
 
-            if (crub === 1) {
+            if (crud === 1) {
                 new PNotify({
                     title: 'Aluno',
                     text: 'Cadastro realizado com sucesso!',
                     type: 'success'
                 });
-            } else if (crub === 2) {
+            } else if (crud === 2) {
                 new PNotify({
                     title: 'Aluno',
                     text: 'Dados alterados com sucesso.',
                     type: 'warning',
                     icon: 'fa fa-pencil'
                 });
-            } else if (crub === 3) {
+            } else if (crud === 3) {
                 new PNotify({
                     title: 'Aluno',
                     text: 'Registro excluído com sucesso.',
@@ -512,21 +512,21 @@
                     text: messagem,
                     type: 'success'
                 });
-                crub = 0;
+                crud = 0;
             } else if (notify === 1) {
                 new PNotify({
                     title: 'Aluno',
                     text: messagem,
                     type: 'warning'
                 });
-                crub = 0;
+                crud = 0;
             } else if (notify === 2) {
                 new PNotify({
                     title: 'Aluno',
                     text: messagem,
                     type: 'error'
                 });
-                crub = 0;
+                crud = 0;
             }
 
             if ($.isFunction($.fn['tooltip'])) {

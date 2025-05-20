@@ -231,8 +231,10 @@ namespace WebApp.Controllers
 
             var usu = await ApiClientFactory.Instance.GetUsuarioByEmail(usuario);
 
-            var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentosAll(), "Id", "Nome");
             var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome", usu.Uf);
+
+
+
             SelectList municipios = null;
 
             if (!string.IsNullOrEmpty(usu.Uf))
@@ -247,7 +249,56 @@ namespace WebApp.Controllers
 
                 localidades = new SelectList(resultLocalidades, "Id", "Nome", usu.LocalidadeId);
             }
-            var deficiencias = new SelectList(ApiClientFactory.Instance.GetDeficienciaAll().Where(x => x.Status), "Id", "Nome");
+
+            SelectList fomentos = null;
+            SelectList profissionais = null;
+
+            if (usu.LocalidadeId != null)
+            {
+                var resultFomento = ApiClientFactory.Instance.GetFomentoByLocalidadeId(Convert.ToInt32(usu.LocalidadeId));
+                fomentos = new SelectList(new List<FomentoDto>(){ resultFomento }, "Id", "Nome", resultFomento.Id);
+
+                if (usu.Perfil.Id == (int)EnumPerfil.Profissional)
+                {
+                    var profissionalId = ApiClientFactory.Instance.GetProfissionalByEmail(usu.Email).Result.Id;
+
+                    profissionais =
+                        new SelectList(
+                            ApiClientFactory.Instance.GetProfissionaisByLocalidade(Convert.ToInt32(usu.LocalidadeId)), "Id",
+                            "Nome", profissionalId);
+                }
+                else
+                {
+                    profissionais =
+                        new SelectList(
+                            ApiClientFactory.Instance.GetProfissionaisByLocalidade(Convert.ToInt32(usu.LocalidadeId)), "Id",
+                            "Nome");
+                }
+            }
+            else
+            {
+                fomentos = new SelectList(ApiClientFactory.Instance.GetFomentosAll(), "Id", "Nome");
+
+                if (usu.Perfil.Id == (int)EnumPerfil.Profissional)
+                {
+                    var profissionalId = ApiClientFactory.Instance.GetProfissionalByEmail(usu.Email).Result.Id;
+
+                    profissionais =
+                        new SelectList(
+                            ApiClientFactory.Instance.GetProfissionaisByLocalidade(Convert.ToInt32(usu.LocalidadeId)), "Id",
+                            "Nome", profissionalId);
+                }
+                else
+                {
+                    profissionais =
+                        new SelectList(
+                            ApiClientFactory.Instance.GetProfissionaisByLocalidade(Convert.ToInt32(usu.LocalidadeId)), "Id",
+                            "Nome");
+                }
+            }
+
+
+                var deficiencias = new SelectList(ApiClientFactory.Instance.GetDeficienciaAll().Where(x => x.Status), "Id", "Nome");
             var modalidades = new SelectList(ApiClientFactory.Instance.GetModalidadeAll(), "Id", "Nome");
             var etapas = new SelectList(ApiClientFactory.Instance.GetEtapasEnsinoAll(), "Id", "Nome");
 
@@ -272,6 +323,7 @@ namespace WebApp.Controllers
                 ListEtnias = etnias,
                 ListFomentos = fomentos,
                 ListEtapas = etapas,
+                ListProfissionais = profissionais,
                 UsuarioLogado = usu
             });
         }
@@ -293,20 +345,61 @@ namespace WebApp.Controllers
                 SetNotifyMessage(notify, message);
                 SetCrudMessage(crud);
 
+
                 var aluno = await ApiClientFactory.Instance.GetAlunoById(id);
+
                 var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome", aluno.Estado);
-                var municipios = new SelectList(ApiClientFactory.Instance.GetMunicipiosByUf(aluno.Estado!), "Id", "Nome", aluno.MunicipioId);
-                var localidades = new SelectList(ApiClientFactory.Instance.GetLocalidadeByMunicipioId(aluno.MunicipioId.ToString()), "Id", "Nome", aluno.LocalidadeId);
+
+                SelectList municipios = null;
+
+                if (!string.IsNullOrEmpty(aluno.Estado))
+                {
+                    municipios = new SelectList(ApiClientFactory.Instance.GetMunicipiosByUf(aluno.Estado), "Id", "Nome", aluno.MunicipioId);
+                }
+                SelectList localidades = null;
+
+                if (aluno.MunicipioId != null)
+                {
+                    var resultLocalidades = ApiClientFactory.Instance.GetLocalidadeByMunicipioId(aluno.MunicipioId.ToString());
+
+                    localidades = new SelectList(resultLocalidades, "Id", "Nome", aluno.LocalidadeId);
+                }
+
+                SelectList fomentos = null;
+
+                if (aluno.LocalidadeId != null)
+                {
+                    var resultFomento = ApiClientFactory.Instance.GetFomentoByLocalidadeId(Convert.ToInt32(aluno.LocalidadeId));
+                    fomentos = new SelectList(new List<FomentoDto>() { resultFomento }, "Id", "Nome", resultFomento.Id);
+                }
+                else
+                {
+                    fomentos = new SelectList(ApiClientFactory.Instance.GetFomentosAll(), "Id", "Nome");
+                }
+
                 var profissionais = new SelectList(ApiClientFactory.Instance.GetProfissionaisByLocalidade(Convert.ToInt32(aluno.LocalidadeId)), "Id", "Nome", aluno.ProfissionalId);
-                var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentosAll(), "Id", "Nome", aluno.FomentoId);
                 var deficiencias = new SelectList(ApiClientFactory.Instance.GetDeficienciaAll(), "Id", "Nome", aluno.DeficienciaId);
                 var listModalidades = new SelectList(ApiClientFactory.Instance.GetModalidadeAll(), "Id", "Nome", aluno.ModalidadesIds);
                 var etapas = new SelectList(ApiClientFactory.Instance.GetEtapasEnsinoAll(), "Id", "Nome", aluno.EtapaId);
+                
                 var series = new SelectList(
                     ApiClientFactory.Instance
                         .GetSeriesByLocalidadeIdEtapaId(Convert.ToInt32(aluno.LocalidadeId),
                             Convert.ToInt32(aluno.EtapaId)).Select(s => new { Id = s.Nome, Nome = s.Nome }).Distinct()
                         .ToList(), "Nome", "Nome", aluno.SerieNome);
+
+
+                if (aluno.EtapaId == null)
+                {
+                    var resultTurmas =
+                        ApiClientFactory.Instance.GetTurmasByLocalidadeId(Convert.ToInt32(aluno.LocalidadeId));
+                    if (resultTurmas.Count == 0)
+                    {
+                        return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = "Não existem séries/turmas cadastradas para a localidade deste aluno." });
+                    }
+
+                }
+
                 var turmas = new SelectList(
                     ApiClientFactory.Instance
                         .GetTurmasByLocalidadeIdEtapaIdSerie(Convert.ToInt32(aluno.LocalidadeId), Convert.ToInt32(aluno.EtapaId), aluno.SerieNome)
@@ -1657,6 +1750,27 @@ namespace WebApp.Controllers
                 var result = ApiClientFactory.Instance.GetAlunoByCpf(Regex.Replace(cpf, "[^0-9a-zA-Z]+", ""));
                 
                 return Task.FromResult(Json(result));
+            }
+            catch (Exception ex)
+            {
+                return Task.FromResult(Json(ex.Message));
+            }
+        }
+
+        /// <summary>
+        /// Método de busca de Aluno por email
+        /// </summary>
+        /// <param name="email">email do Aluno</param>
+        /// <returns>retorna true ou false</returns>
+        [ClaimsAuthorize(ClaimType.Usuario, Identity.Claim.Consultar)]
+        public Task<JsonResult> GetAlunoByEmail(string email)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(email)) throw new Exception("Email não informado.");
+                var result = ApiClientFactory.Instance.GetAlunoByEmail(email);
+
+                return Task.FromResult(result == null ? Json(true) : Json(false));
             }
             catch (Exception ex)
             {

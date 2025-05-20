@@ -146,22 +146,22 @@
 		(function ($) {
 
 			'use strict';
-			var crub = @ViewBag.CrudMessage;
+			var crud = @ViewBag.CrudMessage;
 
-			if (crub === 1) {
+			if (crud === 1) {
 				new PNotify({
 					title: 'Estudante',
 					text: 'Cadastro realizado com sucesso!',
 					type: 'success'
 				});
-			} else if (crub === 2) {
+			} else if (crud === 2) {
 				new PNotify({
 					title: 'Estudante',
 					text: 'Dados alterados com sucesso.',
 					type: 'warning',
 					icon: 'fa fa-pencil'
 				});
-			} else if (crub === 3) {
+			} else if (crud === 3) {
 				new PNotify({
 					title: 'Estudante',
 					text: 'Registro excluído com sucesso.',
