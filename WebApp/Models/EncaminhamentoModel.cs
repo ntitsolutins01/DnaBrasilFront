@@ -31,6 +31,7 @@ namespace WebApp.Models
             public string? Descricao { get; set; }
             public bool Status { get; set; } = true;
             public byte[]? ByteImage { get; set; }
+            public string? NomeImagem { get; set; }
 
         }
     }

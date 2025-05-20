@@ -10,5 +10,6 @@
         public bool Status { get; set; }
         public byte[]? ByteImage { get; set; }
         public string? EncaminhamentoTexto { get; set; }
+        public string? NomeImagem { get; set; }
     }
 }

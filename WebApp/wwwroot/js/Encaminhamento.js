@@ -2,7 +2,8 @@ var vm = new Vue({
     el: "#vEncaminhamento",
     data: {
         loading: false,
-        editDto: { Id: "", Nome: "", Parametro: "", Descricao: "", Status: true }
+        editDto: {
+            Id: "", Nome: "", Parametro: "", Descricao: "", Status: true, NomeImagem: "" }
     },
     mounted: function () {
         var self = this;
@@ -214,11 +215,22 @@ var vm = new Vue({
                 self.editDto.Parametro = result.data.parametro;
                 self.editDto.Descricao = result.data.descricao;
                 self.editDto.Status = result.data.status;
-                
+                self.editDto.NomeImagem = result.data.nomeImagem;
 
             }).catch(error => {
                 Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
             });
+        },
+        ValidateFileType: function () {
+            var fileName = document.getElementById("arquivo").value;
+            var idxDot = fileName.lastIndexOf(".") + 1;
+            var extFile = fileName.substr(idxDot, fileName.length).toLowerCase();
+            if (extFile === "png") {
+                //TO DO
+            } else {
+                Site.Notification("Erro ao realizar Upload", "Somente arquivos jpg/jpeg e png são permitidos.", "error", 2);
+
+            }
         }
     }
 });

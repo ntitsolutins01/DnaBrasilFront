@@ -100,9 +100,14 @@ public class EncaminhamentoController : BaseController
                 Descricao = collection["descricao"].ToString(),
             };
 
+            string? fileName;
+
             foreach (var file in collection.Files)
             {
                 if (file.Length <= 0) continue;
+                fileName = Path.GetFileName(collection.Files[0].FileName);
+
+                command.NomeImagem = fileName;
 
                 using (var ms = new MemoryStream())
                 {
@@ -143,14 +148,18 @@ public class EncaminhamentoController : BaseController
 
             };
 
+            string? fileName;
+
             foreach (var file in collection.Files)
             {
                 if (file.Length <= 0) continue;
+                fileName = Path.GetFileName(collection.Files[0].FileName);
 
                 using var ms = new MemoryStream();
                 await file.CopyToAsync(ms);
                 var byteIMage = ms.ToArray();
                 command.ByteImage = byteIMage;
+                command.NomeImagem = fileName;
             }
 
             await ApiClientFactory.Instance.UpdateEncaminhamento(command.Id, command);
