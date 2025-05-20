@@ -110,7 +110,7 @@ namespace WebApp.Controllers
                     RespostaQuestionario = collection["resposta"].ToString(),
                     QuestionarioId = Convert.ToInt32(collection["ddlQuestionario"].ToString()),
                     ValorPesoResposta = Convert.ToDecimal(collection["valorPeso"].ToString()),
-
+                    Descricao = collection["descricao"].ToString()
                 };
 
                 await ApiClientFactory.Instance.CreateResposta(command);
@@ -138,7 +138,8 @@ namespace WebApp.Controllers
                 {
                     Id = Convert.ToInt32(collection["editRespostaId"]),
                     RespostaQuestionario = collection["resposta"].ToString(),
-                    ValorPesoResposta = Convert.ToDecimal(collection["valorPeso"].ToString())
+                    ValorPesoResposta = Convert.ToDecimal(collection["valorPeso"].ToString()),
+                    Descricao = collection["descricao"].ToString()
                 };
 
                 await ApiClientFactory.Instance.UpdateResposta(command.Id, command);

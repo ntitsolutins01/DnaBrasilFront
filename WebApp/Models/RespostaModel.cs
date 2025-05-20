@@ -19,6 +19,7 @@ namespace WebApp.Models
             public string RespostaQuestionario { get; set; }
             public int QuestionarioId { get; set; }
             public decimal? ValorPesoResposta { get; set; }
+            public string? Descricao { get; set; }
         }
     }
 
