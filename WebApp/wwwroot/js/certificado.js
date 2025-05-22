@@ -34,6 +34,19 @@ var vm = new Vue({
         });
     },
     methods: {
+        //ShowLoad: function (flag, el) {
+        //    this.loading = flag;
+        //    $("#" + el).loadingOverlay({ "startShowing": flag });
+        //    if (!flag) {
+        //        $("#" + el).removeClass("loading-overlay-showing");
+        //    } else {
+        //        $("#" + el).addClass("loading-overlay-showing");
+        //    }
+        //},
+        DeleteCertificado: function (id) {
+            var url = "Certificado/Delete/" + id;
+            $("#deleteCertificadoHref").prop("href", url);
+        },
         Certificado: function (id) {
             var self = this;
             return axios.get("/Certificado/GetCertificadoById/?id=" + id).then(result => {
@@ -155,10 +168,11 @@ var crud = {
     CertificadoModal: function (id) {
         $('input[name="certificadoId"]').val(id);
         $('#mdCertificado').modal('show');
-        vm.Certificado(id); // chama a função para carregar dados do certificado
+        vm.Certificado(id);
     },
     DeleteModal: function (id) {
         $('input[name="deleteCertificadoId"]').val(id);
         $('#mdDeleteCertificado').modal('show');
+        vm.DeleteCertificado(id);
     }
 };
