@@ -89,6 +89,47 @@ $(document).ready(function () {
         vm.Certificado(id);
     }
 
+    $('#btnImprimirCertificado').on('click', function () {
+        // Seleciona a aba ativa (Frente ou Verso)
+        var abaAtiva = $('#mdCertificado .tab-pane.active');
+        if (!abaAtiva.length) {
+            alert("Erro ao localizar o conteúdo do certificado para impressão.");
+            return;
+        }
+
+        // Clona o conteúdo da aba ativa
+        var conteudo = $('#mdCertificado #frente').html() + '<div style="height:40px;"></div>' + $('#mdCertificado #verso').html();
+
+        // Monta um HTML limpo para impressão
+        var printWindow = window.open('', '_blank', 'width=1200,height=900');
+        printWindow.document.write(`
+            <html>
+            <head>
+                <title>Impressão do Certificado</title>
+                <style>
+                    body { background: white; margin: 0; padding: 0; }
+                    .student-photo, img { width: 100%; max-height: 100%; object-fit: contain; }
+                    .student-info, [style*="position: absolute"] { position: absolute; top: 0; left: 0; width: 100%; pointer-events: none; }
+                    /* Garante que a camada de sobreposição HTML fique alinhada */
+                    [style*="position: relative"] { position: relative !important; width: 1754px; height: 1240px; margin: 0 auto; }
+                </style>
+            </head>
+            <body>
+                <div style="position:relative;width:1140px;height:813px;margin:40px auto;">
+                    ${conteudo}
+                </div>
+            </body>
+            </html>
+        `);
+        printWindow.document.close();
+        printWindow.focus();
+        // Aguarda carregamento de imagens antes de imprimir
+        setTimeout(function () {
+            printWindow.print();
+            printWindow.close();
+        }, 800);
+    });
+
     function initializeSummernote(elementId) {
         $('#' + elementId).summernote({
             lang: 'pt-BR',
