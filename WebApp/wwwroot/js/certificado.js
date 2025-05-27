@@ -90,44 +90,174 @@ $(document).ready(function () {
     }
 
     $('#btnImprimirCertificado').on('click', function () {
-        // Seleciona a aba ativa (Frente ou Verso)
-        var abaAtiva = $('#mdCertificado .tab-pane.active');
-        if (!abaAtiva.length) {
+
+        // Função para extrair os dados essenciais de cada lado do certificado
+        function extractCertificateData(side) {
+            var container = $('#mdCertificado #' + side);
+            if (!container.length) return null;
+
+            var data = {
+                imagem: '',
+                html: ''
+            };
+
+            // Pega a URL da imagem
+            var img = container.find('img');
+            if (img.length) {
+                data.imagem = img.attr('src') || '';
+            }
+
+            // Pega o HTML overlay (conteúdo dinâmico)
+            var htmlOverlay = container.find('[v-html]');
+            if (htmlOverlay.length) {
+                data.html = htmlOverlay.html() || '';
+            } else {
+                // Fallback: pega diretamente do Vue.js
+                if (side === 'frente' && vm.editDto.HtmlFrente) {
+                    data.html = vm.editDto.HtmlFrente;
+                } else if (side === 'verso' && vm.editDto.HtmlVerso) {
+                    data.html = vm.editDto.HtmlVerso;
+                }
+            }
+
+            return data;
+        }
+
+        // Extrai os dados de ambos os lados
+        var dadosFrente = extractCertificateData('frente');
+        var dadosVerso = extractCertificateData('verso');
+
+        // Debug
+        console.log('Dados Frente:', dadosFrente);
+        console.log('Dados Verso:', dadosVerso);
+
+        // Verifica se tem conteúdo para imprimir
+        if (!dadosFrente && !dadosVerso) {
             alert("Erro ao localizar o conteúdo do certificado para impressão.");
             return;
         }
 
-        // Clona o conteúdo da aba ativa
-        var conteudo = $('#mdCertificado #frente').html() + '<div style="height:40px;"></div>' + $('#mdCertificado #verso').html();
+        // Função para criar o HTML de uma página de certificado
+        function createCertificatePage(dados, pageId) {
+            if (!dados || (!dados.imagem && !dados.html)) return '';
 
-        // Monta um HTML limpo para impressão
+            return `
+            <div class="certificate-page" id="${pageId}">
+                <div class="certificate-container">
+                    ${dados.imagem ? `<img src="${dados.imagem}" class="certificate-bg" alt="Certificado" />` : ''}
+                    ${dados.html ? `<div class="certificate-overlay">${dados.html}</div>` : ''}
+                </div>
+            </div>
+        `;
+        }
+
+        // Cria as páginas
+        var paginaFrente = createCertificatePage(dadosFrente, 'pagina-frente');
+        var paginaVerso = createCertificatePage(dadosVerso, 'pagina-verso');
+
+        // Conta quantas páginas serão criadas
+        var totalPaginas = (paginaFrente ? 1 : 0) + (paginaVerso ? 1 : 0);
+        console.log('Total de páginas que serão criadas:', totalPaginas);
+
+        if (totalPaginas === 0) {
+            alert("Nenhum conteúdo encontrado para impressão.");
+            return;
+        }
+
+        // Monta o HTML final para impressão
         var printWindow = window.open('', '_blank', 'width=1200,height=900');
         printWindow.document.write(`
-            <html>
-            <head>
-                <title>Impressão do Certificado</title>
-                <style>
-                    body { background: white; margin: 0; padding: 0; }
-                    .student-photo, img { width: 100%; max-height: 100%; object-fit: contain; }
-                    .student-info, [style*="position: absolute"] { position: absolute; top: 0; left: 0; width: 100%; pointer-events: none; }
-                    /* Garante que a camada de sobreposição HTML fique alinhada */
-                    [style*="position: relative"] { position: relative !important; width: 1754px; height: 1240px; margin: 0 auto; }
-                </style>
-            </head>
-            <body>
-                <div style="position:relative;width:1140px;height:813px;margin:40px auto;">
-                    ${conteudo}
-                </div>
-            </body>
-            </html>
-        `);
+        <html>
+        <head>
+            <title>Impressao-Certificado</title>
+            <style>
+                @page {
+                    size: A4 landscape;
+                    margin: 0;
+                }
+                
+                * {
+                    margin: 0;
+                    padding: 0;
+                    box-sizing: border-box;
+                }
+                
+                body { 
+                    background: white; 
+                    font-family: Arial, sans-serif;
+                    -webkit-print-color-adjust: exact;
+                    print-color-adjust: exact;
+                }
+                
+                .certificate-page {
+                    width: 100vw;
+                    height: 100vh;
+                    page-break-after: always;
+                    page-break-inside: avoid;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    position: relative;
+                }
+                
+                .certificate-page:last-child {
+                    page-break-after: avoid;
+                }
+                
+                .certificate-container {
+                    position: relative;
+                    width: 1140px;
+                    height: 813px;
+                    max-width: 90vw;
+                    max-height: 90vh;
+                }
+                
+                .certificate-bg {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: contain;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    z-index: 1;
+                }
+                
+                .certificate-overlay {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    z-index: 2;
+                    pointer-events: none;
+                    color: black;
+                }
+                
+                /* Remove qualquer elemento que possa causar quebra de página */
+                .certificate-overlay * {
+                    page-break-before: avoid !important;
+                    page-break-after: avoid !important;
+                    page-break-inside: avoid !important;
+                }
+            </style>
+        </head>
+        <body>
+            ${paginaFrente}
+            ${paginaVerso}
+        </body>
+        </html>
+    `);
+
         printWindow.document.close();
         printWindow.focus();
-        // Aguarda carregamento de imagens antes de imprimir
+
+        // Aguarda carregamento das imagens
         setTimeout(function () {
             printWindow.print();
-            printWindow.close();
-        }, 800);
+            setTimeout(function () {
+                printWindow.close();
+            }, 100);
+        }, 1500);
     });
 
     function initializeSummernote(elementId) {
