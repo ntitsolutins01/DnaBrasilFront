@@ -230,7 +230,7 @@
                         </div>
                         <div class="row-info">
                             <span class="label-info">Estatura</span>
-                            <span class="value-info">@Model.Laudo.Estatura cm</span>
+                            <span class="value-info">@Math.Round(Model.Laudo.Estatura ?? 0) cm</span>
                         </div>
                         <div class="row-info">
                             <span class="label-info">Massa Corporal</span>
@@ -461,7 +461,7 @@
                             </div>
                             <div class="bar-title">
                                 <span>seg</span>
-                                <span style="color: #000000;">@Model.TalentoEsportivo.Velocidade</span>
+                                <span style="color: #000000;">@Math.Round(Model.TalentoEsportivo.Velocidade ?? 0)</span>
                             </div>
                             <div class="bar-div">
                                 <div style="display: none;"></div>
@@ -492,7 +492,7 @@
                             </div>
                             <div class="bar-title">
                                 <span>cm</span>
-                                <span style="color: #e44971;">@Model.TalentoEsportivo.ImpulsaoHorizontal</span>
+                                <span style="color: #e44971;">@Math.Round(Model.TalentoEsportivo.ImpulsaoHorizontal ?? 0)</span>
                             </div>
                             <div class="bar-div">
                                 <div style="background-color: #f7d1db;"></div>
