@@ -136,7 +136,7 @@
                                 <a href="@Url.Action("Create", "Laudo")" id="addToTable" class="btn btn-block btn-primary pull-right"><i class="fa fa-plus"></i> Novo Laudo </a>
                             </div>
                         </div>
-                        <table class="table table-bordered table-striped mb-0" id="datatable-default">
+                        <table class="table  table-bordered" id="datatable-default">
                             <thead>
                                 <tr>
                                     <th class="text-center">Id</th>
@@ -281,19 +281,23 @@
 @section CssSpecificVendor {
     <link rel="stylesheet" href="~/assets/vendor/select2/css/select2.css" />
     <link rel="stylesheet" href="~/assets/vendor/select2-bootstrap-theme/select2-bootstrap.min.css" />
-    <link rel="stylesheet" href="~/assets/vendor/datatables/media/css/dataTables.bootstrap4.css" />
+@* <link rel="stylesheet" href="~/assets/vendor/datatables/media/css/dataTables.bootstrap4.css" /> *@
+	<link href="~/assets/vendor/datatables2023/datatables.css" rel="stylesheet" />
 }
 @section Scripts {
     <script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
     <script src="~/assets/vendor/select2/js/select2.js"></script>
     <script src="~/assets/vendor/ios7-switch/ios7-switch.js"></script>
-    <script src="~/assets/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
+    @*    <script src="~/assets/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
     <script src="~/assets/vendor/datatables/media/js/dataTables.bootstrap4.min.js"></script>
+     <script src="https://cdn.datatables.net/rowgroup/1.5.1/js/dataTables.rowGroup.js"></script>
+    <script src="https://cdn.datatables.net/rowgroup/1.5.1/js/rowGroup.dataTables.js"></script> *@
+    <script src="~/assets/vendor/datatables2023/datatables.js"></script>
     <script src="~/js/Laudo.js"></script>
 
     <script>
 
-        $(document).ready(function () {
+
             $('#btnImprimirLaudo').click(function (e) {
                 e.preventDefault();
 

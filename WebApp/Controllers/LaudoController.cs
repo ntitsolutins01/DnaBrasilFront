@@ -219,6 +219,8 @@ namespace WebApp.Controllers
                     ApiClientFactory.Instance.GetQuestionarioByTipoLaudo((int)EnumTipoLaudo.ConsumoAlimentar).OrderBy(o => o.Questao).ToList();
                 var questionarioSaudeBucal =
                     ApiClientFactory.Instance.GetQuestionarioByTipoLaudo((int)EnumTipoLaudo.SaudeBucal).OrderBy(o => o.Questao).ToList();
+                var questionarioEducacional3Lp =
+                    ApiClientFactory.Instance.GetQuestionarioByTipoLaudo((int)EnumTipoLaudo.Educacional3Lp).OrderBy(o => o.Questao).ToList();
 
                 var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome", usu.Uf);
 
@@ -244,7 +246,9 @@ namespace WebApp.Controllers
 
                 if (usu.LocalidadeId != null)
                 {
-                    var resultAlunos = ApiClientFactory.Instance.GetAlunosByLocalidadeId(Convert.ToInt32(usu.LocalidadeId)).Where(x => x.PossuiLaudo == false);
+                    var resultAlunos = ApiClientFactory.Instance
+                        .GetAlunosByLocalidadeId(Convert.ToInt32(usu.LocalidadeId))
+                        .Where(x => x.PossuiLaudoFinalizado);
 
                     alunos = new SelectList(resultAlunos, "Id", "Nome");
 
@@ -260,6 +264,7 @@ namespace WebApp.Controllers
                     ListQuestionarioQualidadeVida = questionarioQualidadeVida,
                     ListQuestionarioConsumoAlimentar = questionarioConsumoAlimentar,
                     ListQuestionarioSaudeBucal = questionarioSaudeBucal,
+                    ListQuestionarioEducacional3Lp = questionarioEducacional3Lp,
                     ListEstados = estados,
                     ListMunicipios = municipios!,
                     ListLocalidades = localidades!,

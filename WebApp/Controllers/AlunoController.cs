@@ -256,7 +256,7 @@ namespace WebApp.Controllers
             if (usu.LocalidadeId != null)
             {
                 var resultFomento = ApiClientFactory.Instance.GetFomentoByLocalidadeId(Convert.ToInt32(usu.LocalidadeId));
-                fomentos = new SelectList(new List<FomentoDto>(){ resultFomento }, "Id", "Nome", resultFomento.Id);
+                fomentos = new SelectList(new List<FomentoDto>() { resultFomento }, "Id", "Nome", resultFomento.Id);
 
                 if (usu.Perfil.Id == (int)EnumPerfil.Profissional)
                 {
@@ -298,7 +298,7 @@ namespace WebApp.Controllers
             }
 
 
-                var deficiencias = new SelectList(ApiClientFactory.Instance.GetDeficienciaAll().Where(x => x.Status), "Id", "Nome");
+            var deficiencias = new SelectList(ApiClientFactory.Instance.GetDeficienciaAll().Where(x => x.Status), "Id", "Nome");
             var modalidades = new SelectList(ApiClientFactory.Instance.GetModalidadeAll(), "Id", "Nome");
             var etapas = new SelectList(ApiClientFactory.Instance.GetEtapasEnsinoAll(), "Id", "Nome");
 
@@ -381,13 +381,15 @@ namespace WebApp.Controllers
                 var deficiencias = new SelectList(ApiClientFactory.Instance.GetDeficienciaAll(), "Id", "Nome", aluno.DeficienciaId);
                 var listModalidades = new SelectList(ApiClientFactory.Instance.GetModalidadeAll(), "Id", "Nome", aluno.ModalidadesIds);
                 var etapas = new SelectList(ApiClientFactory.Instance.GetEtapasEnsinoAll(), "Id", "Nome", aluno.EtapaId);
-                
+
                 var series = new SelectList(
                     ApiClientFactory.Instance
                         .GetSeriesByLocalidadeIdEtapaId(Convert.ToInt32(aluno.LocalidadeId),
                             Convert.ToInt32(aluno.EtapaId)).Select(s => new { Id = s.Nome, Nome = s.Nome }).Distinct()
                         .ToList(), "Nome", "Nome", aluno.SerieNome);
 
+
+                SelectList turmas = null;
 
                 if (aluno.EtapaId == null)
                 {
@@ -399,11 +401,14 @@ namespace WebApp.Controllers
                     }
 
                 }
+                else
+                {
+                    turmas = new SelectList(
+                       ApiClientFactory.Instance
+                           .GetTurmasByLocalidadeIdEtapaIdSerie(Convert.ToInt32(aluno.LocalidadeId), Convert.ToInt32(aluno.EtapaId), aluno.SerieNome)
+                           .Select(s => new { Id = s.Id, Turma = s.Turma }).ToList(), "Id", "Turma", aluno.SerieId);
+                }
 
-                var turmas = new SelectList(
-                    ApiClientFactory.Instance
-                        .GetTurmasByLocalidadeIdEtapaIdSerie(Convert.ToInt32(aluno.LocalidadeId), Convert.ToInt32(aluno.EtapaId), aluno.SerieNome)
-                        .Select(s => new { Id = s.Id, Turma = s.Turma }).ToList(), "Id", "Turma", aluno.SerieId);
 
                 List<SelectListDto> list = new List<SelectListDto>
                 {
@@ -1661,6 +1666,31 @@ namespace WebApp.Controllers
         }
 
         /// <summary>
+        /// Busca de Alunos por Localidade
+        /// </summary>
+        /// <param name="id">Identificador da localidade</param>
+        /// <returns>Retorna a lista de alunos</returns>
+        [ClaimsAuthorize(ClaimType.Aluno, Claim.Consultar)]
+        public async Task<JsonResult> GetFomentoByLocalidadeId(string id)
+        {
+            try
+            {
+                _logger.Info($"Busca de fomento por localidade GetFomentoByLocalidadeId: {id}");
+
+                if (string.IsNullOrEmpty(id)) throw new Exception("Localidade não informada.");
+                var resultFomento = ApiClientFactory.Instance.GetFomentoByLocalidadeId(Convert.ToInt32(id));
+
+                return new JsonResult(new SelectList(new List<FomentoDto>() { resultFomento }, "Id", "Nome"));
+
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"Busca de alunos por localidade GetFomentoByLocalidadeId: {ex.StackTrace}");
+                return new JsonResult(ex.StackTrace);
+            }
+        }
+
+        /// <summary>
         /// Busca de Idade do Aluno por Id
         /// </summary>
         /// <param name="id">Identificador do aluno</param>
@@ -1748,7 +1778,7 @@ namespace WebApp.Controllers
             {
                 if (string.IsNullOrEmpty(cpf)) throw new Exception("Cpf não informado.");
                 var result = ApiClientFactory.Instance.GetAlunoByCpf(Regex.Replace(cpf, "[^0-9a-zA-Z]+", ""));
-                
+
                 return Task.FromResult(Json(result));
             }
             catch (Exception ex)

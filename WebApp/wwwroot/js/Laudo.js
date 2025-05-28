@@ -37,8 +37,13 @@ var vm = new Vue({
 
                     var datatableInit = function () {
 
+                        $('#datatable-default').DataTable().destroy();
+
                         $('#datatable-default').dataTable({
-                            order: [[0, 'desc']],
+                            order: [[2, 'asc']],
+                            rowGroup: {
+                                dataSrc: 2
+                            },
                             dom: '<"row"<"col-lg-6"l><"col-lg-6"f>><"table-responsive"t>p',
                             "language": {
                                 "sEmptyTable": "Nenhum registro encontrado",

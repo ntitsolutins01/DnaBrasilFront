@@ -21,6 +21,7 @@ namespace WebApp.Models
         public List<QuestionarioDto> ListQuestionarioConsumoAlimentar { get; set; }
         public List<QuestionarioDto> ListQuestionarioQualidadeVida { get; set; }
         public List<QuestionarioDto> ListQuestionarioSaudeBucal { get; set; }
+        public List<QuestionarioDto> ListQuestionarioEducacional3Lp { get; set; }
         public string FomentoId { get; set; }
         public SelectList ListFomentos { get; set; }
         public string LocalidadeId { get; set; }
@@ -54,20 +55,9 @@ namespace WebApp.Models
             public int? QualidadeDeVidaId { get; set; }
             public int? SaudeBucalId { get; set; }
             public int? TalentoEsportivoId { get; set; }
+            public int? Educacional3LpId { get; set; }
             public string? StatusLaudo { get; set; }
             public int? ModalidadeId { get; set; }
-
-
         }
-    }
-    public class SearchFilterDto
-    {
-        public string MunicipioId { get; set; }
-        public string FomentoId { get; set; }
-        public string LocalidadeId { get; set; }
-        public string Sexo { get; set; }
-        public string DeficienciaId { get; set; }
-        public string Estado { get; set; }
-        public string Etnia { get; set; }
     }
 }

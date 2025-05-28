@@ -228,6 +228,41 @@
                                 });
                             }
                         });
+
+                    var urlLocalidadeFomento = "../../Aluno/GetFomentoByLocalidadeId/";
+
+                    axios.get(urlLocalidadeFomento, {
+                        params: {
+                            id: id
+                        }
+                    }).then(result => {
+                        console.log('Dados retornados:', result.data);
+
+                        if (result.data && result.data.length > 0) {
+                            var items = '<option value="">Selecionar o Fomento</option>';
+                            $("#ddlFomento").empty();
+                            $.each(result.data,
+                                function (i, row) {
+                                    if (row.selected) {
+                                        items += "<option selected value='" + row.value + "'>" + row.text + "</option>";
+                                    } else {
+                                        items += "<option value='" + row.value + "'>" + row.text + "</option>";
+                                    }
+                                });
+                            $("#ddlFomento").html(items);
+                        } else {
+                            new PNotify({
+                                title: 'Fomento',
+                                text: 'Fomento não encontrado.',
+                                type: 'warning'
+                            });
+                        }
+                    }).catch(error => {
+                        console.error('Erro ao carregar dados:', error);
+                        Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
+                    }).finally(function () {
+                        // sempre será executado
+                    });
                 });
 
                 //clique de escolha do select
