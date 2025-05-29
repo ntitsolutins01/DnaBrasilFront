@@ -447,7 +447,7 @@ namespace WebApp.Controllers
                         .Encaminhamento;
 
                     var modalidade = ApiClientFactory.Instance.GetModalidadeAll()
-                        .FirstOrDefault(x => x.Nome.Contains(encaminhamento.Nome));
+                        .FirstOrDefault(x => encaminhamento.Nome.Contains(x.Nome));
 
                     command.ModalidadeId = modalidade!.Id;
 
