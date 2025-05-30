@@ -58,6 +58,7 @@ namespace WebApp.Models
             public int? Educacional3LpId { get; set; }
             public string? StatusLaudo { get; set; }
             public int? ModalidadeId { get; set; }
+            public int? Ordem { get; set; }
         }
     }
 }
