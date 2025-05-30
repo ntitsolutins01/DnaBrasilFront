@@ -607,17 +607,18 @@ var vm = new Vue({
                             $("#spanIdade").text(data + " anos");
                             if (data >= 12) {
                                 $("#liQualidade").show();
+                                $("#liVocacional").hide();
                             }
-                            else if (data >= 14) {
+                            if (data >= 14) {
+                                $("#liQualidade").show();
                                 $("#liVocacional").show();
                             }
-                            else if (data === 10) {
-                                $("#liEducacional3Lp").show();
-                            } else {
+                            if (data <= 11) {
                                 $("#liQualidade").hide();
                                 $("#liVocacional").hide();
                                 $("#liEducacional3Lp").hide();
                             }
+                                $("#liEducacional3Lp").show();
                         });
                 });
 

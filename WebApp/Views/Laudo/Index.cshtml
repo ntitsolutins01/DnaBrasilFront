@@ -77,11 +77,11 @@
 						<div class="row">
 							@{
 								bool nenhumFiltroSelecionado = string.IsNullOrEmpty(Model.FomentoId) &&
-								string.IsNullOrEmpty(Model.EstadoId) &&
-								string.IsNullOrEmpty(Model.MunicipioId) &&
-								string.IsNullOrEmpty(Model.LocalidadeId) &&
-								string.IsNullOrEmpty(Model.AlunoId) &&
-								string.IsNullOrEmpty(Model.TipoLaudoId);
+								                               string.IsNullOrEmpty(Model.EstadoId) &&
+								                               string.IsNullOrEmpty(Model.MunicipioId) &&
+								                               string.IsNullOrEmpty(Model.LocalidadeId) &&
+								                               string.IsNullOrEmpty(Model.AlunoId) &&
+								                               string.IsNullOrEmpty(Model.TipoLaudoId);
 
 								bool semResultados = Model.Laudos?.Items == null || !Model.Laudos.Items.Any();
 
@@ -98,6 +98,7 @@
 									</div>
 								}
 							}
+							
 							<div class="col-sm-2 pull-right">
 								<button type="submit" class="btn btn-block btn-primary pull-right"><i class="fa fa-search"></i> &nbsp;&nbsp;Pesquisar</button>
 							</div>
@@ -112,6 +113,7 @@
 								</a>
 							</div>
 						</div>
+						
 					</footer>
 				</section>
 			</div>
@@ -135,12 +137,18 @@
 							<div class="col-sm-2 pull-right">
 								<a href="@Url.Action("Create", "Laudo")" id="addToTable" class="btn btn-block btn-primary pull-right"><i class="fa fa-plus"></i> Novo Laudo </a>
 							</div>
+							<div class="col-sm-2 pull-right">
+								<a href="#" id="btnImprimirGabarito" data-toggle="modal" data-target="#mdPrintGabarito" class="btn btn-block btn-default pull-right">
+									<i class="fa fa-print"></i> &nbsp;&nbsp;Imprimir Gabaritos
+								</a>
+							</div>
 						</div>
 						<table class="table  table-bordered" id="datatable-default">
 							<thead>
 								<tr>
 									<th class="text-center">Id</th>
 									<th class="text-center">Idade</th>
+									<th class="text-center">Número do Laudo</th>
 									<th class="text-center">Matrícula - Nome Aluno</th>
 									<th class="text-center">Dimensões Realizadas</th>
 									<th class="text-center">Localidade - Município / Uf</th>
@@ -155,6 +163,7 @@
 									<tr>
 										<td class="text-center">@Html.DisplayFor(modelItem => item.Id)</td>
 										<td class="text-center">@Html.DisplayFor(modelItem => item.Idade)</td>
+										<td class="text-center">@Html.DisplayFor(modelItem => item.Ordem)</td>
 										<td class="text-center">@Html.DisplayFor(modelItem => item.AlunoId) - @Html.DisplayFor(modelItem => item.NomeAluno)</td>
 										<td class="text-center">
 											@if (item.SaudeId != null)
@@ -278,6 +287,98 @@
 		</div>
 	</div>
 </div>
+<!-- Modal -->
+<div class="modal fade" id="mdPrintGabarito" tabindex="-1" role="dialog" aria-labelledby="mdmdPrintGabaritoLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="mdmdPrintGabaritoLabel">
+					<i class="fa fa-print"></i> &nbsp;&nbsp;<strong>Impressão Gabarito de Questionário avaliativo SAEB</strong>
+				</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			@using (@Html.BeginForm("PrintGabarito", "Laudo", FormMethod.Post, new { id = "formImprimirGabarito", @class = "form-horizontal" }))
+			{
+				<div class="modal-body">
+					
+					<div class="form-group">
+
+						<label class="col-sm-2 control-label">Gabarito <span class="required text-danger">*</span></label>
+						<div class="col-md-9">
+							<select class="form-control populate select2"
+									name="ddlGabarito"
+									id="ddlGabarito"
+									style="width:100%"
+									title="Por favor selecione o gabarito."
+									required>
+								<option value="">Selecionar Gabarito</option>
+								<option value="3LP">LÍNGUA PORTUGUESA 3º Ano do Ensino Médio</option>
+								<option value="3MT">MATEMÁTICA 3º Ano do Ensino Médio</option>
+								<option value="5LP">LÍNGUA PORTUGUESA 5º Ano do Ensino Fundamental</option>
+								<option value="5MT">MATEMÁTICA 5º Ano do Ensino Fundamental</option>
+								<option value="9LP">LÍNGUA PORTUGUESA 9º Ano do Ensino Fundamental</option>
+								<option value="9MT">MATEMÁTICA 9º Ano do Ensino Fundamental</option>
+							</select>
+						</div>
+						
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">Estado:</label>
+						<div class="col-md-4">
+							<select class="form-control populate select2" name="ddlEstadoGabarito" id="ddlEstadoGabarito" style="width: 100%"
+							        asp-for="EstadoId" asp-items="Model.ListEstados">
+								<option value="">Selecionar Estado</option>
+							</select>
+						</div>
+						<label class="col-sm-1 control-label">Municipio:</label>
+						<div class="col-md-4">
+							<select class="form-control populate select2" name="ddlMunicipioGabarito" id="ddlMunicipioGabarito" style="width: 100%"
+							        asp-for="MunicipioId" asp-items="Model.ListMunicipios">
+								<option value="">Selecionar Municipio</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+
+						<label class="col-sm-2 control-label">Localidade:</label>
+						<div class="col-md-4">
+							<select class="form-control populate select2" name="ddlLocalidadeGabarito" id="ddlLocalidadeGabarito" style="width: 100%"
+									asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
+								<option value="">Selecionar Localidade</option>
+							</select>
+						</div>
+						<label class="col-sm-1 control-label">Aluno:</label>
+						<div class="col-md-4">
+							<select class="form-control populate select2" name="ddlAlunoGabarito" id="ddlAlunoGabarito" style="width: 100%"
+									asp-for="AlunoId" asp-items="Model.ListAlunos">
+								<option value="">Selecionar Aluno</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer" style="border-top: 1px solid #dee2e6; padding: 1rem;">
+					<div class="w-100">
+						<div class="col-12 text-right">
+							<button type="button"
+									class="btn btn-success"
+									onclick="submitForm()">
+								<i class="fa fa-print"></i> &nbsp;Imprimir
+							</button>
+							<button type="reset"
+									class="btn btn-danger"
+									data-dismiss="modal"
+									style="margin-right: 10px;">
+								<i class="fa fa-times"></i> &nbsp;Cancelar
+							</button>
+						</div>
+					</div>
+				</div>
+			}
+		</div>
+	</div>
+</div>
 @section CssSpecificVendor {
 	<link rel="stylesheet" href="~/assets/vendor/select2/css/select2.css" />
 	<link rel="stylesheet" href="~/assets/vendor/select2-bootstrap-theme/select2-bootstrap.min.css" />
@@ -290,9 +391,9 @@
 	<script src="~/assets/vendor/ios7-switch/ios7-switch.js"></script>
 	<script src="~/assets/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
 	<script src="~/assets/vendor/datatables/media/js/dataTables.bootstrap4.min.js"></script>
-	@*  <script src="https://cdn.datatables.net/rowgroup/1.5.1/js/dataTables.rowGroup.js"></script>
+	  <script src="https://cdn.datatables.net/rowgroup/1.5.1/js/dataTables.rowGroup.js"></script>
     <script src="https://cdn.datatables.net/rowgroup/1.5.1/js/rowGroup.dataTables.js"></script> 
-    <script src="~/assets/vendor/datatables2023/datatables.js"></script>*@
+    @*<script src="~/assets/vendor/datatables2023/datatables.js"></script>*@
 	<script src="~/js/Laudo.js"></script>
 
 	<script>

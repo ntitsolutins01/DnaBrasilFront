@@ -15,6 +15,8 @@
         public string? Nome { get; set; }
         public string? Matricula { get; set; }
         public bool PossuiFoto { get; set; }
+        public string? AlunoId { get; set; }
+
 
         #endregion
 
