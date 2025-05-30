@@ -259,7 +259,7 @@
                                 {
                                 <p>This paragraph is displayed because you fulfilled PolicyName.</p>
                                 } *@
-                                @if ((await AuthorizationService.AuthorizeAsync(User, ModuloAccess.DashboardEad)).Succeeded)
+                                @* @if ((await AuthorizationService.AuthorizeAsync(User, ModuloAccess.DashboardEad)).Succeeded)
                                 {
                                     <li>
                                         <a href="@Url.Action("Index", "DashboardEad")">
@@ -267,7 +267,7 @@
                                             <span>Dashboard EAD</span>
                                         </a>
                                     </li>
-                                }
+                                } *@
                                 @if ((await AuthorizationService.AuthorizeAsync(User, ModuloAccess.Dashboard)).Succeeded)
                                 {
                                     <li>
