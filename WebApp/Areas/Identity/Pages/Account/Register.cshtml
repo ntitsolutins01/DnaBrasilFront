@@ -4,7 +4,7 @@
     ViewData["Title"] = "Registrar";
 }
 
-<section class="body-sign">
+<section class="body-sign" id="vRegister">
     <div class="center-sign">
         <a href="/" class="logo pull-left">
             <img src="~/assets/images/logo.png" height="94" alt="Dna do Brasil" />
@@ -20,14 +20,6 @@
                     {
                         <div asp-validation-summary="All" class="alert alert-mini alert-danger margin-bottom-30"></div>
                     }
-                    <div class="form-group mb-lg">
-                        <label>Fomento</label>
-                        <select class="form-control populate select2" name="ddlFomento" id="ddlFomento"
-                                title="Por favor informe um Fomento." required
-                                asp-for="FomentoId" asp-items="Model.ListFomentos">
-                            <option value="">Selecionar Fomento</option>
-                        </select>
-                    </div>
                     <div class="form-group mb-lg">
                         <label>Estado</label>
                         <select class="form-control populate select2" name="ddlEstado" id="ddlEstado"
@@ -53,23 +45,15 @@
                         </select>
                     </div>
                     <div class="form-group mb-lg">
-                        <label>Profissional</label>
-                        <select class="form-control populate select2" name="ddlProfissional" id="ddlProfissional"
-                                title="Por favor informe o profissional." required 
-                                asp-for="ProfissionalId" asp-items="Model.ListProfissionais">
-                            <option value="">Selecionar Profissional</option>
-                        </select>
-                    </div>
-                    <div class="form-group mb-lg">
                         <label>Endereço</label>
                         <input name="endereco" id="endereco" type="text" class="form-control" required
                                title="Por favor informe o endereço." />
                     </div>
                     <div class="form-group mb-lg">
-                        <label>Áreas desejadas</label><br/>
+                        <label>Modalidade</label><br/>
                         <select class="form-control populate select2" name="ddlAreaDesejada" id="ddlAreaDesejada" style="width:100%"
                                 title="Por favor selecione a área desejada."
-                                asp-for="AreaId" asp-items="Model.ListAreas">
+                                asp-for="ModalidadeId" asp-items="Model.ListModalidades">
                             <option value="">Selecionar Áreda Desejada</option>
                         </select>
                     </div>
@@ -85,9 +69,6 @@
                         <label>CPF</label>
                         <input name="cpf" id="cpf" type="text" class="form-control" required
                                title="Por favor informe o cpf." />
-                        <p>
-                            <code>Caso o aluno não possua, digite onze vezes o numero 0</code>
-                        </p>
                     </div>
                     <div class="form-group mb-lg">
                         <label>Sexo</label>
@@ -155,21 +136,7 @@
                             <code>Sem abreviações</code>
                         </p>
                     </div>
-                    <div class="form-group mb-lg">
-                        <label>Aluno está autorizado a sair sozinho?</label><br/>
-                        <div class="radio-custom radio-success">
-                            <input type="radio" id="autorizadoSim" name="autorizado" value="true" required title="Por favor selecione uma opção">
-                            <label>Sim</label>
-                        </div>
-                        <div class="radio-custom radio-danger">
-                            <input type="radio" id="autorizadoNao" name="autorizado" value="false" required title="Por favor selecione uma opção">
-                            <label>Não</label>
-                        </div>
-                        <label class="error" for="autorizado"></label>
-                        <p>
-                            <code>O estudante pode deixar o local desacompanhado do responsável.</code>
-                        </p>
-                    </div>
+                    
                     <div class="form-group mb-lg">
                         <label>Participação no programa DNA DO BRASIL TALENTOS e compartilhamento dos dados pessoais do estudante.</label><br />
                         <div class="radio-custom radio-success">
@@ -195,21 +162,6 @@
                         <label class="error" for="utilizacaoImagem"></label>
                         <p>
                             <code>O Idecace, a título gratuito e não oneroso, para fins de divulgação/publicação em qualquer material de foto, vídeo, documentos em geral, relatórios bem como em todo e qualquer veículo de comunicação</code>
-                        </p>
-                    </div>
-                    <div class="form-group mb-lg">
-                        <label>Todos os alunos que estiver apto a participar das atividades no Ceu das Artes, Documentação exigida no primeiro dia de aula.</label><br />
-                        <div class="radio-custom radio-success">
-                            <input type="radio" id="copiaDocImagemSim" name="copiaDoc" value="true" required title="Por favor selecione uma opção">
-                            <label>Sim</label>
-                        </div>
-                        <div class="radio-custom radio-danger">
-                            <input type="radio" id="copiaDocImagemNao" name="copiaDoc" value="false" required title="Por favor selecione uma opção">
-                            <label>Não</label>
-                        </div>
-                        <label class="error" for="copiaDoc"></label>
-                        <p>
-                            <code>Cópia do documento de indentidade do aluno. Cópia do documento de identidade do responsável legal.</code>
                         </p>
                     </div>
                     <div class="row">

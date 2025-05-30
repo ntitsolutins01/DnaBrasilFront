@@ -1,22 +1,23 @@
 @model AulaModel
 @{
-	ViewData["Title"] = "Inclusão de Aula";
-	Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Inclusão de Aula";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div id="vAula">
 	<div class="row">
 		<div class="col-md-12">
-			@using (@Html.BeginForm("Create", "Aula", FormMethod.Post, new { id = "formAula", @class = "form-horizontal" }))
-			{
-				<section class="panel">
-					<header class="panel-heading">
-						<div class="panel-actions">
-							<a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
-						</div>
-						<h2 class="panel-title">Cadastro de Aula</h2>
-					</header>
-					<div class="panel-body">
+            @using (Html.BeginForm("Create", "Aula", FormMethod.Post, new { id = "formAula", @class = "form-horizontal", 
+	                    @enctype = "multipart/form-data" }))
+            {
+                <section class="panel">
+                    <header class="panel-heading">
+                        <div class="panel-actions">
+                            <a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
+                        </div>
+                        <h2 class="panel-title">Cadastro de Aula</h2>
+                    </header>
+                    <div class="panel-body">
                         <div class="form-group row">
                             <label class="col-sm-3 control-label text-sm-right pt-2">Tipo de Curso <span class="required">*</span></label>
                             <div class="col-sm-4">
@@ -57,99 +58,135 @@
                             <label class="col-sm-3 control-label text-sm-right pt-2">Titulo da Aula <span class="required">*</span></label>
                             <div class="col-sm-9">
                                 <input type="text" name="titulo" id="titulo" class="form-control"
-                                       maxlength="100" 
+                                       maxlength="100"
                                        title="Por favor informe o titulo da aula." required />
                             </div>
                         </div>
-						<div class="form-group row">
-							<label class="col-sm-3 control-label text-sm-right pt-2">Descrição</label>
-							<div class="col-sm-9">
-								<textarea class="form-control" rows="3" maxlength="500" name="descricao" id="descricao"></textarea>
-							</div>
-						</div>
-						<div class="form-group row">
-							<label class="col-sm-3 control-label text-sm-right pt-2">Carga Horária <span class="required">*</span></label>
-							<div class="col-sm-2">
-								<input type="text" id="cargaHoraria" name="cargaHoraria" class="form-control" maxlength="6" required />
-							</div>
-						</div>
-
-					</div>
-					<footer class="panel-footer">
-						<div class="row">
-							<div class="col-md-9 col-md-offset-3">
-								<a href="@Url.Action("Index", "Aula")" class="btn btn-dark pull-right" style="margin-left: 5px;margin-right: 5px;"><i class="fa fa-reply"></i> &nbsp;&nbsp;Voltar</a>
-								<button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;"><i class="fa fa-remove"></i> &nbsp;&nbsp;Cancelar</button>
-								<button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
-							</div>
-						</div>
-					</footer>
-				</section>
-
-			}
+                        <div class="form-group row">
+                            <label class="col-sm-3 control-label text-sm-right pt-2">Descrição</label>
+                            <div class="col-sm-9">
+                                <textarea class="form-control" rows="3" maxlength="500" name="descricao" id="descricao"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-3 control-label">Video</label>
+                            <div class="col-sm-5">
+                                <div class="fileupload fileupload-new" data-provides="fileupload" id="videoFileUpload">
+                                    <div class="input-append">
+                                        <div class="uneditable-input">
+                                            <i class="fa fa-file fileupload-exists"></i>
+                                            <span class="fileupload-preview"></span>
+                                        </div>
+                                        <span class="btn btn-default btn-file">
+                                            <span class="fileupload-exists">Alterar</span>
+                                            <span class="fileupload-new">Selecionar Arquivo</span>
+                                            <input type="file" id="video" name="video" accept="video/*" />
+                                        </span>
+                                        <a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload">Remover</a>
+                                    </div>
+                                </div>
+                            </div>
+                            @* <label class="col-sm-3 control-label">Material Didático</label>
+                            <div class="col-sm-3">
+                                <div class="fileupload fileupload-new" data-provides="fileupload" id="materialFileUpload">
+                                    <div class="input-append">
+                                        <div class="uneditable-input">
+                                            <i class="fa fa-file fileupload-exists"></i>
+                                            <span class="fileupload-preview"></span>
+                                        </div>
+                                        <span class="btn btn-default btn-file">
+                                            <span class="fileupload-exists">Alterar</span>
+                                            <span class="fileupload-new">Selecionar Arquivo</span>
+                                            <input type="file" id="arquivo" name="arquivo" />
+                                        </span>
+                                        <a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload">Remover</a>
+                                    </div>
+                                </div>
+                            </div> *@
+                        </div>
+                    </div>
+                    <footer class="panel-footer">
+                        <div class="row">
+                            <div class="col-md-9 col-md-offset-3">
+                                <a href="@Url.Action("Index", "Aula")" class="btn btn-dark pull-right" style="margin: 0 5px;">
+                                    <i class="fa fa-reply"></i> Voltar
+                                </a>
+                                <button type="reset" class="btn btn-danger pull-right" style="margin: 0 5px;">
+                                    <i class="fa fa-remove"></i> Cancelar
+                                </button>
+                                <button type="submit" class="btn btn-success pull-right" style="margin: 0 5px;">
+                                    <i class="fa fa-save"></i> Salvar
+                                </button>
+                            </div>
+                        </div>
+                    </footer>
+                </section>
+            }
 		</div>
 	</div>
 </div>
 @section CssSpecificVendor {
-	<link rel="stylesheet" href="~/assets/vendor/select2/css/select2.css" />
-	<link rel="stylesheet" href="~/assets/vendor/select2-bootstrap-theme/select2-bootstrap.min.css" />
+    <link rel="stylesheet" href="~/assets/vendor/bootstrap-fileupload/bootstrap-fileupload.min.css" />
+    <link rel="stylesheet" href="~/assets/vendor/select2/css/select2.css" />
+    <link rel="stylesheet" href="~/assets/vendor/select2-bootstrap-theme/select2-bootstrap.min.css" />
 }
 @section Scripts {
-	<script src="~/assets/vendor/select2/js/select2.js"></script>
-	<script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
-	<script src="~/assets/vendor/jquery-mask/jquery.mask.js"></script>
-	<script src="~/js/Aula.js"></script>
-	<script>
+    <script src="~/assets/vendor/bootstrap-fileupload/bootstrap-fileupload.min.js"></script>
+    <script src="~/assets/vendor/select2/js/select2.js"></script>
+    <script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
+    <script src="~/assets/vendor/jquery-mask/jquery.mask.js"></script>
+    <script src="~/js/Aula.js"></script>
+    <script>
 
-		(function ($) {
+        (function ($) {
 
-			'use strict';
-			var crud = @ViewBag.CrudMessage;
+            'use strict';
+            var crud = @ViewBag.CrudMessage;
 
-			if (crud === 1) {
-				new PNotify({
-					title: 'Aula',
-					text: 'Cadastro realizado com sucesso!',
-					type: 'success'
-				});
-			} else if (crud === 2) {
-				new PNotify({
-					title: 'Aula',
-					text: 'Dados alterados com sucesso.',
-					type: 'warning'
-				});
-			} else if (crud === 3) {
-				new PNotify({
-					title: 'Aula',
-					text: 'Registro excluído com sucesso.',
-					type: 'error'
-				});
-			}
+            if (crud === 1) {
+                new PNotify({
+                    title: 'Aula',
+                    text: 'Cadastro realizado com sucesso!',
+                    type: 'success'
+                });
+            } else if (crud === 2) {
+                new PNotify({
+                    title: 'Aula',
+                    text: 'Dados alterados com sucesso.',
+                    type: 'warning'
+                });
+            } else if (crud === 3) {
+                new PNotify({
+                    title: 'Aula',
+                    text: 'Registro excluído com sucesso.',
+                    type: 'error'
+                });
+            }
 
-			var notify = @ViewBag.NotifyMessage;
-			var messagem = '@ViewBag.Notify';
+            var notify = @ViewBag.NotifyMessage;
+            var messagem = '@ViewBag.Notify';
 
-			if (notify === 0) {
-				new PNotify({
-					title: 'Aula',
-					text: messagem,
-					type: 'success'
-				});
-			} else if (notify === 1) {
-				new PNotify({
-					title: 'Aula',
-					text: messagem,
-					type: 'warning'
-				});
-			} else if (notify === 2) {
-				new PNotify({
-					title: 'Aula',
-					text: messagem,
-					type: 'error'
-				});
-			}
+            if (notify === 0) {
+                new PNotify({
+                    title: 'Aula',
+                    text: messagem,
+                    type: 'success'
+                });
+            } else if (notify === 1) {
+                new PNotify({
+                    title: 'Aula',
+                    text: messagem,
+                    type: 'warning'
+                });
+            } else if (notify === 2) {
+                new PNotify({
+                    title: 'Aula',
+                    text: messagem,
+                    type: 'error'
+                });
+            }
 
-		}).apply(this, [jQuery]);
+        }).apply(this, [jQuery]);
 
-	</script>
+    </script>
 }

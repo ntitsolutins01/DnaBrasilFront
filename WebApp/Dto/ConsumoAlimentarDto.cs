@@ -2,9 +2,10 @@
 {
     public class ConsumoAlimentarDto
     {
-        public string Id { get; set; }
-        public required int ProfissionalId { get; set; }
-        public required int QuestionarioId { get; set; }
-        public required string Resposta { get; set; }
+        public int Id { get; set; }
+        public ProfissionalDto Profissional { get; set; }
+        public EncaminhamentoDto? Encaminhamento { get; set; }
+        public string Respostas { get; set; }
+        public string? StatusConsumoAlimentar { get; set; }
     }
 }

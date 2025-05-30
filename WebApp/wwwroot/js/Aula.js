@@ -1,8 +1,26 @@
 var vm = new Vue({
-    el: "#vAula ",
+    el: "#vAula",
     data: {
         loading: false,
-        editDto: { Id: "", Titulo: "", Descricao: "", CargaHoraria: "", Status: true }
+        editDto: {
+            Id: "",
+            Titulo: "",
+            Descricao: "",
+            Status: true,
+            Video: "",
+            Material: "",
+            NomeMaterial: "",
+            Video: "",
+            NomeVideo: ""
+        }
+    },
+    watch: {
+        'editDto': {
+            deep: true,
+            handler: function (newVal, oldVal) {
+                console.log('editDto mudou:', newVal);
+            }
+        }
     },
     mounted: function () {
         var self = this;
@@ -25,27 +43,15 @@ var vm = new Vue({
                 $this.themePluginSelect2(opts);
             });
 
-            /*
-             * When you change the value the select via select2, it triggers
-             * a 'change' event, but the jquery validation plugin
-             * only re-validates on 'blur'*/
-
             $select.on('change', function () {
                 $(this).trigger('blur');
             });
 
-            //mascara dos inputs
-            var cargaHoraria = $("#cargaHoraria");
-            cargaHoraria.mask('000', { reverse: false });
-
-
             //skin checkbox
             if (typeof Switch !== 'undefined' && $.isFunction(Switch)) {
-
                 $(function () {
                     $('[data-plugin-ios-switch]').each(function () {
                         var $this = $(this);
-
                         $this.themePluginIOS7Switch();
                     });
                 });
@@ -54,8 +60,7 @@ var vm = new Vue({
             var formid = $('form')[1].id;
 
             if (formid === "formEditAula") {
-
-                $("#formEditAula ").validate({
+                $("#formEditAula").validate({
                     highlight: function (label) {
                         $(label).closest('.form-group').removeClass('has-success').addClass('has-error');
                     },
@@ -76,12 +81,8 @@ var vm = new Vue({
             }
 
             if (formid === "formAula") {
-
                 $("#ddlTipoCurso").change(function () {
                     var tipoCursoId = $("#ddlTipoCurso").val();
-
-                    var sigla = $("#ddlTipoCurso").val();
-
                     var url = "../Curso/GetCursosAllByTipoCursoId";
 
                     $.getJSON(url,
@@ -89,7 +90,7 @@ var vm = new Vue({
                         function (data) {
                             if (data.length > 0) {
                                 var items = '<option value="">Selecionar Curso</option>';
-                                $("#ddlCurso").empty;
+                                $("#ddlCurso").empty();
                                 $.each(data,
                                     function (i, row) {
                                         items += "<option value='" + row.value + "'>" + row.text + "</option>";
@@ -99,7 +100,7 @@ var vm = new Vue({
                             else {
                                 new PNotify({
                                     title: 'Curso',
-                                    text: 'Curso n�o encontrados.',
+                                    text: 'Cursos não encontrados.',
                                     type: 'warning'
                                 });
                             }
@@ -108,9 +109,6 @@ var vm = new Vue({
 
                 $("#ddlCurso").change(function () {
                     var cursoId = $("#ddlCurso").val();
-
-                    var sigla = $("#ddlCurso").val();
-
                     var url = "../ModuloEad/GetModulosEadAllByCursoId";
 
                     $.getJSON(url,
@@ -118,7 +116,7 @@ var vm = new Vue({
                         function (data) {
                             if (data.length > 0) {
                                 var items = '<option value="">Selecionar Modulo</option>';
-                                $("#ddlModuloEad").empty;
+                                $("#ddlModuloEad").empty();
                                 $.each(data,
                                     function (i, row) {
                                         items += "<option value='" + row.value + "'>" + row.text + "</option>";
@@ -128,7 +126,7 @@ var vm = new Vue({
                             else {
                                 new PNotify({
                                     title: 'Modulo',
-                                    text: 'Modulo n�o encontrados.',
+                                    text: 'Modulos não encontrados.',
                                     type: 'warning'
                                 });
                             }
@@ -136,7 +134,6 @@ var vm = new Vue({
                 });
 
                 $("#formAula").validate({
-
                     highlight: function (label) {
                         $(label).closest('.form-group').removeClass('has-success').addClass('has-error');
                     },
@@ -154,15 +151,12 @@ var vm = new Vue({
                         }
                     }
                 });
-
-
             }
         }).apply(this, [jQuery]);
     },
     methods: {
         ShowLoad: function (flag, el) {
             var self = this;
-
             self.isLoading = flag;
             $("#" + el).loadingOverlay({
                 "startShowing": flag
@@ -186,17 +180,47 @@ var vm = new Vue({
         EditAula: function (id) {
             var self = this;
 
+            self.editDto = {
+                Id: "",
+                Titulo: "",
+                Descricao: "",
+                Status: true,
+                Video: "",
+                Material: "",
+                NomeMaterial: ""
+            };
+
             axios.get("Aula/GetAulaById/?id=" + id).then(result => {
+                //console.log('Dados retornados:', result.data);
 
-                self.editDto.Id = result.data.id;
-                self.editDto.Titulo = result.data.titulo;
-                self.editDto.Descricao = result.data.descricao;
-                self.editDto.CargaHoraria = result.data.cargaHoraria;
-                self.editDto.Status = result.data.status;
+                self.$nextTick(() => {
+                    self.editDto = {
+                        Id: result.data.id,
+                        Titulo: result.data.titulo,
+                        Descricao: result.data.descricao,
+                        Status: result.data.status,
+                        Material: result.data.material && result.data.material.includes("\\Aulas")
+                            ? "\\Aulas" + result.data.imagem.split("\\Aulas")[1]
+                            : null,
+                        NomeMaterial: result.data.nomeMaterial,
+                        Video: result.data.video && result.data.video.includes("\\Aulas")
+                            ? "\\Aulas" + result.data.video.split("\\Aulas")[1]
+                            : null,
+                        NomeVideo: result.data.nomeVideo
+                    };
 
-                if (result.data.listProfessores.length > 0) {
+                    self.$nextTick(() => {
+                        $("#descricao").val(result.data.descricao || '');
+                        $("#video").val(result.data.video || '');
+
+                        $("#video")[0].dispatchEvent(new Event('input'));
+                        $("#descricao")[0].dispatchEvent(new Event('input'));
+                    });
+                });
+
+                if (result.data.listProfessores && result.data.listProfessores.length > 0) {
                     var items = '<option value="">Selecionar o Professor</option>';
-                    $("#ddlProfessor").empty;
+                    $("#ddlProfessor").empty();
                     $.each(result.data.listProfessores,
                         function (i, row) {
                             if (row.selected) {
@@ -206,17 +230,15 @@ var vm = new Vue({
                             }
                         });
                     $("#ddlProfessor").html(items);
-                }
-                else {
+                } else {
                     new PNotify({
                         title: 'Professor',
                         text: 'Professores não encontrados.',
                         type: 'warning'
                     });
                 }
-
-
             }).catch(error => {
+                console.error('Erro ao carregar dados:', error);
                 Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
             });
         }

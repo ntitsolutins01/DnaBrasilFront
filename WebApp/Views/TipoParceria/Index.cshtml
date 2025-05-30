@@ -106,7 +106,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="mdEditTipoParceriaLabel">
-                        <i class="fa fa-trash"></i> &nbsp;&nbsp;<strong>Alterar Tipo Parceria</strong>
+                        <i class="fa fa-pencil"></i> &nbsp;&nbsp;<strong>Alterar Tipo Parceria</strong>
                     </h5>
                 </div>
                 @using (@Html.BeginForm("Edit", "TipoParceria", FormMethod.Post, new { id = "formEditTipoParceria", @class = "form-horizontal" }))
@@ -169,31 +169,31 @@
         (function ($) {
 
             'use strict';
-            var crub = @ViewBag.CrudMessage;
+            var crud = @ViewBag.CrudMessage;
 
-            if (crub === 1) {
+            if (crud === 1) {
                 new PNotify({
                     title: 'Tipo Parceria',
                     text: 'Cadastro realizado com sucesso!',
                     type: 'success'
                 });
-                crub = 0;
-            } else if (crub === 2) {
+                crud = 0;
+            } else if (crud === 2) {
                 new PNotify({
                     title: 'Tipo Parceria',
                     text: 'Dados alterados com sucesso.',
                     type: 'warning',
                     icon: 'fa fa-pencil'
                 });
-                crub = 0;
-            } else if (crub === 3) {
+                crud = 0;
+            } else if (crud === 3) {
                 new PNotify({
                     title: 'Tipo Parceria',
                     text: 'Registro excluído com sucesso.',
                     type: 'error',
                     icon: 'fa fa-trash-o'
                 });
-                crub = 0;
+                crud = 0;
             }
 
 
@@ -206,21 +206,21 @@
                     text: messagem,
                     type: 'success'
                 });
-                crub = 0;
+                crud = 0;
             } else if (notify === 1) {
                 new PNotify({
                     title: 'Tipo Parceria',
                     text: messagem,
                     type: 'warning'
                 });
-                crub = 0;
+                crud = 0;
             } else if (notify === 2) {
                 new PNotify({
                     title: 'Tipo Parceria',
                     text: messagem,
                     type: 'error'
                 });
-                crub = 0;
+                crud = 0;
             }
 
             if ($.isFunction($.fn['tooltip'])) {

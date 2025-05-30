@@ -93,7 +93,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="mdEditLinhaAcaoLabel">
-                        <i class="fa fa-trash"></i> &nbsp;&nbsp;<strong>Alterar Linha Ação</strong>
+                        <i class="fa fa-pencil"></i> &nbsp;&nbsp;<strong>Alterar Linha Ação</strong>
                     </h5>
                 </div>
                 @using (@Html.BeginForm("Edit", "LinhaAcao", FormMethod.Post, new { id = "formEditLinhaAcao", @class = "form-horizontal" }))
@@ -149,31 +149,31 @@
         (function ($) {
 
             'use strict';
-            var crub = @ViewBag.CrudMessage;
+            var crud = @ViewBag.CrudMessage;
 
-            if (crub === 1) {
+            if (crud === 1) {
                 new PNotify({
                     title: 'Linha Ação',
                     text: 'Cadastro realizado com sucesso!',
                     type: 'success'
                 });
-                crub = 0;
-            } else if (crub === 2) {
+                crud = 0;
+            } else if (crud === 2) {
                 new PNotify({
                     title: 'Linha Ação',
                     text: 'Dados alterados com sucesso.',
                     type: 'warning',
                     icon: 'fa fa-pencil'
                 });
-                crub = 0;
-            } else if (crub === 3) {
+                crud = 0;
+            } else if (crud === 3) {
                 new PNotify({
                     title: 'Linha Ação',
                     text: 'Registro excluído com sucesso.',
                     type: 'error',
                     icon: 'fa fa-trash-o'
                 });
-                crub = 0;
+                crud = 0;
             }
 
 
@@ -186,21 +186,21 @@
                     text: messagem,
                     type: 'success'
                 });
-                crub = 0;
+                crud = 0;
             } else if (notify === 1) {
                 new PNotify({
                     title: 'Linha Ação',
                     text: messagem,
                     type: 'warning'
                 });
-                crub = 0;
+                crud = 0;
             } else if (notify === 2) {
                 new PNotify({
                     title: 'Linha Ação',
                     text: messagem,
                     type: 'error'
                 });
-                crub = 0;
+                crud = 0;
             }
 
             if ($.isFunction($.fn['tooltip'])) {

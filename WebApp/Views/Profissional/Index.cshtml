@@ -1,4 +1,7 @@
-﻿@model WebApp.Models.ProfissionalModel
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<IdentityUser> _userManager
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model WebApp.Models.ProfissionalModel
 @{
     ViewData["Title"] = "Listagem de Profissionais";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -12,7 +15,7 @@
                     <div class="panel-actions">
                         <a href="#" class="card-action card-action-toggle" data-card-toggle></a>
                     </div>
-                    <h2 class="panel-title">Listagem de Profissionals</h2>
+                    <h2 class="panel-title">Listagem de Profissionais</h2>
                 </header>
                 <div class="panel-body">
                     <div class="form-group row">
@@ -26,7 +29,8 @@
                                 <th class="text-center">Id</th>
                                 <th class="text-center">Nome</th>
                                 <th class="text-center">Email</th>
-                                <th class="text-center">Perfil</th>
+                                <th class="text-center">Cargo</th>
+                                <th class="text-center">Localidade</th>
                                 <th class="text-center" style="width: 10%;">Status</th>
                                 <th class="text-center" style="width: 10%;">Habilitado</th>
                                 <th class="text-center">Ações</th>
@@ -39,7 +43,8 @@
                                     <td class="text-center" style="width:20px;">@Html.DisplayFor(modelItem => item.Id)</td>
                                     <td class="text-center">@Html.DisplayFor(modelItem => item.Nome)</td>
                                     <td class="text-center">@Html.DisplayFor(modelItem => item.Email)</td>
-                                    <td class="text-center">@Html.DisplayFor(modelItem => item.Perfil)</td>
+                                    <td class="text-center">@Html.DisplayFor(modelItem => item.Cargo)</td>
+                                    <td class="text-center">@Html.DisplayFor(modelItem => item.Localidade)</td>
                                     @if (item.Status)
                                     {
                                         <td class="text-center"><span class="label label-success" style="display: block;">ATIVO</span></td>
@@ -59,9 +64,16 @@
                                     <td class="actions text-center">
                                         <a data-toggle="tooltip" data-placement="top" title="Editar" asp-action="Edit" asp-controller="Profissional" asp-route-Id="@item.Id" class="on-default edit-row" style='color: #FF9800'><i class="fa fa-pencil"></i></a>
                                         <a data-toggle="tooltip" data-placement="top" title="Habilitar Profissional" href='javascript:(crud.HabilitarModal(@item.Id))'
-                                           class="on-default remove-row" style="cursor: pointer;color: #7B1FA2"><i class="fa fa-check-circle"></i></a>
-                                        <a data-toggle="tooltip" data-placement="top" title="Excluir" href='javascript:(crud.DeleteModal(@item.Id))'
-                                           class="on-default remove-row" style="cursor: pointer;color: #F44336"><i class="fa fa-trash"></i></a>
+                                    class="on-default remove-row" style="cursor: pointer;color: #7B1FA2"><i class="fa fa-check-circle"></i></a>
+                                        @{
+                                            if (item.PossuiAlunosVinculados)
+                                            {
+                                                <a data-toggle="tooltip" data-placement="top" title="Desvincular Alunos" href='javascript:(crud.DesvincularAlunoModal(@item.Id))'
+                                                   class="on-default remove-row" style="cursor: pointer;color: #7B1FA2"><i class="fa fa-unlink"></i></a>
+                                            }
+                                            <a data-toggle="tooltip" data-placement="top" title="Excluir" href='javascript:(crud.DeleteModal(@item.Id))'
+                                               class="on-default remove-row" style="cursor: pointer;color: #F44336"><i class="fa fa-trash"></i></a>
+                                        }
                                     </td>
                                 </tr>
                             }
@@ -99,30 +111,83 @@
         </div>
     </div>
     <!-- Modal -->
+    <div class="modal fade" id="mdDesvincularAlunos" tabindex="-1" role="dialog" aria-labelledby="mdDesvincularAlunosLabel" aria-hidden="true">
+	    <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+			    <div class="modal-header">
+				    <h5 class="modal-title" id="mdDesvincularAlunosLabel">
+					    <i class="fa fa-check-circle"></i> &nbsp;&nbsp;<strong>DesvincularAlunos</strong>&nbsp;&nbsp;<strong style="color: #f44336">EM DESENVOLVIMENTO</strong>
+				    </h5>
+			    </div>
+			    @using (@Html.BeginForm("DesvincularAlunos", "Profissional", FormMethod.Post, new { id = "formDesvincularAlunos", @class = "form-horizontal" }))
+			    {
+				    <input type="hidden" name="profissionalId" :value="editDto.ProfissionaId" />
+
+				    <div class="modal-body">
+					    <div class="form-group row">
+						    <label class="col-sm-3 control-label text-sm-right pt-2">Novo Profissional <span class="required">*</span></label>
+						    <div class="col-sm-9">
+							    <select class="form-control populate select2" name="ddlNovoProfissional" id="ddlNovoProfissional" style="width:100%"
+							            required title="Por favor selecione o coordenador"
+							            asp-for="ProfissionalId" asp-items="Model.ListProfissionals">
+								    <option value="">Selecionar Profissional</option>
+							    </select>
+						    </div>
+					    </div>
+					    <div class="form-group row">
+						    <div class="col-sm-12">
+							    <div class="alert alert-success">
+								    <strong>Quantidade de alunos</strong> {{editDto.QuantidadeAlunos}}.
+							    </div>
+						    </div>
+					    </div>
+				    </div>
+				    <div class="modal-footer">
+					    <button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-remove"></i> &nbsp;&nbsp;Cancelar</button>
+					    <button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
+				    </div>
+			    }
+		    </div>
+	    </div>
+    </div>
+    <!-- Modal -->
     <div class="modal fade" id="mdHabilitarProfissional" tabindex="-1" role="dialog" aria-labelledby="mdHabilitarProfissionalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-md" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="mdHabilitarProfissionalLabel">
                         <i class="fa fa-check-circle"></i> &nbsp;&nbsp;<strong>Habilitar Profissional</strong>
                     </h5>
                 </div>
-                @using (@Html.BeginForm("Habilitar", "Profissional", FormMethod.Post, new { id = "formHabilitarProfissional", @class = "form-horizontal" }))
+                @using (@Html.BeginForm("Habilitar", "SistemaSocioeconomico", FormMethod.Post, new { id = "formHabilitarProfissional", @class = "form-horizontal" }))
                 {
                     <input type="hidden" name="habilitarProfissionalId" :value="editDto.Id" />
 
                     <div class="modal-body">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Nome</label>
+                            <div class="col-sm-6">
+                                <input type="text" id="nome" name="nome" class="form-control" readonly
+                                       :value="editDto.Nome" />
+                            </div>
+                            <label v-show="editDto.Pf" class="col-sm-1 control-label">CPF</label>
+                            <label v-show="!editDto.Pf" class="col-sm-1 control-label">CNPJ</label>
+                            <div class="col-sm-3">
+                                <input type="text" id="cpfCnpj" name="cpfCnpj" class="form-control" readonly
+                                       :value="editDto.Cpf" />
+                            </div>
+                        </div>
                         <div class="form-group row">
                             <label class="col-sm-2 control-label text-sm-right pt-2">Email <span class="required">*</span></label>
-                            <div class="col-sm-10">
+                            <div class="col-sm-6">
                                 <div class="input-group">
                                     <span class="input-group-addon">
                                         <i class="fa fa-envelope"></i>
                                     </span>
                                     <input type="text" id="email" name="email"
                                            class="form-control"
-                                           maxlength="100"
-                                           title="Por favor informe um Email válido do profissional." required />
+                                           maxlength="100" :value="editDto.Email"
+                                           title="Por favor informe um Email válido do Profissional." required />
                                 </div>
                             </div>
                         </div>
@@ -138,9 +203,12 @@
 </div>
 
 @section CssSpecificVendor {
+    <link rel="stylesheet" href="~/assets/vendor/select2/css/select2.css" />
+    <link rel="stylesheet" href="~/assets/vendor/select2-bootstrap-theme/select2-bootstrap.min.css" />
     <link rel="stylesheet" href="~/assets/vendor/datatables/media/css/dataTables.bootstrap4.css" />
 }
 @section Scripts {
+    <script src="~/assets/vendor/select2/js/select2.js"></script>
     <script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
     <script src="~/assets/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
     <script src="~/assets/vendor/ios7-switch/ios7-switch.js"></script>
@@ -153,31 +221,31 @@
         (function ($) {
 
             'use strict';
-            var crub = @ViewBag.CrudMessage;
+            var crud = @ViewBag.CrudMessage;
 
-            if (crub === 1) {
+            if (crud === 1) {
                 new PNotify({
                     title: 'Profissional',
                     text: 'Cadastro realizado com sucesso!',
                     type: 'success'
                 });
-                crub = 0;
-            } else if (crub === 2) {
+                crud = 0;
+            } else if (crud === 2) {
                 new PNotify({
                     title: 'Profissional',
                     text: 'Dados alterados com sucesso.',
                     type: 'warning',
                     icon: 'fa fa-pencil'
                 });
-                crub = 0;
-            } else if (crub === 3) {
+                crud = 0;
+            } else if (crud === 3) {
                 new PNotify({
                     title: 'Profissional',
                     text: 'Registro excluído com sucesso.',
                     type: 'error',
                     icon: 'fa fa-trash-o'
                 });
-                crub = 0;
+                crud = 0;
             }
 
 
@@ -190,21 +258,21 @@
                     text: messagem,
                     type: 'success'
                 });
-                crub = 0;
+                crud = 0;
             } else if (notify === 1) {
                 new PNotify({
                     title: 'Profissional',
                     text: messagem,
                     type: 'warning'
                 });
-                crub = 0;
+                crud = 0;
             } else if (notify === 2) {
                 new PNotify({
                     title: 'Profissional',
                     text: messagem,
                     type: 'error'
                 });
-                crub = 0;
+                crud = 0;
             }
 
             if ($.isFunction($.fn['tooltip'])) {

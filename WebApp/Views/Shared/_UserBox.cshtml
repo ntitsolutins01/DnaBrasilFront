@@ -6,8 +6,14 @@
             <img src="~/assets/images/logo.png" alt="Joseph Doe" class="img-circle" data-lock-picture="~/assets/images/!logged-user.jpg" />
         </figure>
         <div class="profile-info" >
-            <span class="name">@User.Identity.Name</span>
-            <span class="role">@(((ClaimsIdentity)User.Identity).FindFirst(ClaimTypes.Role).Value)</span>
+            <span class="name">
+                @if (User.Identity != null)
+                {
+                    @User.Identity.Name@:</span>
+                    @:<span class="role">@(((ClaimsIdentity)User.Identity).FindFirst(ClaimTypes.Role)?.Value)
+                }
+
+            </span>
         </div>
 
         <i class="fa custom-caret"></i>

@@ -3,8 +3,8 @@ using WebApp.Dto;
 
 namespace WebApp.Models
 {
-	public class QuestionarioModel
-	{
+    public class QuestionarioModel
+    {
         public List<QuestionarioDto> Questionarios { get; set; }
         public SelectList ListTiposLaudos { get; set; }
         public int TipoLaudoId { get; set; }
@@ -17,6 +17,6 @@ namespace WebApp.Models
             public int Quadrante { get; set; }
             public int Questao { get; set; }
         }
-	}
+    }
 
 }

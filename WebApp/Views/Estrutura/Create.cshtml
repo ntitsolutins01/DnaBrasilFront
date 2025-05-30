@@ -1,0 +1,140 @@
+@model EstruturaModel
+@{
+	ViewData["Title"] = "Inclusão de Estrutura";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="vEstrutura">
+	<div class="row">
+		<div class="col-md-12">
+			@using (@Html.BeginForm("Create", "Estrutura", FormMethod.Post, new { id = "formEstrutura", @class = "form-horizontal" }))
+			{
+				<section class="panel">
+					<header class="panel-heading">
+						<div class="panel-actions">
+							<a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
+						</div>
+						<h2 class="panel-title">Cadastro de Estrutura</h2>
+					</header>
+					<div class="panel-body">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Estado <span class="required">*</span></label>
+                            <div class="col-md-4">
+                                <select class="form-control populate select2" name="ddlEstado" id="ddlEstado"
+                                        title="Por favor informe um Estado." required
+                                        asp-for="EstadoId" asp-items="Model.ListEstados">
+                                    <option value="">Selecionar Estado</option>
+                                </select>
+                            </div>
+                            <label class="col-sm-1 control-label">Município <span class="required">*</span></label>
+                            <div class="col-md-4">
+                                <select class="form-control populate select2" name="ddlMunicipio" id="ddlMunicipio"
+                                        title="Por favor informe um Municipio." required
+                                        asp-for="MunicipioId" asp-items="Model.ListMunicipios">
+                                    <option value="">Selecionar Município</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 control-label">Localidade <span class="required">*</span></label>
+                            <div class="col-md-4">
+                                <select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade"
+                                        title="Por favor informe a localidade." required
+                                        asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
+                                    <option value="">Selecionar Localidade</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 control-label">Nome da Estrutura <span class="required">*</span></label>
+                            <div class="col-sm-9">
+                                <input type="text" name="nome" id="nome" class="form-control" 
+                                       maxlength="50" oninput="this.value = this.value.toUpperCase()"
+                                       title="Por favor informe o nome da Estrutura." required />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 control-label">Descrição</label>
+                            <div class="col-sm-9">
+                                <textarea class="form-control" rows="3" maxlength="500" name="descricao" id="descricao"></textarea>
+                            </div>
+                        </div>
+					</div>
+					<footer class="panel-footer">
+						<div class="row">
+							<div class="col-md-9 col-md-offset-3">
+								<a href="@Url.Action("Index", "Estrutura")" class="btn btn-dark pull-right" style="margin-left: 5px;margin-right: 5px;"><i class="fa fa-reply"></i> &nbsp;&nbsp;Voltar</a>
+								<button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;"><i class="fa fa-remove"></i> &nbsp;&nbsp;Cancelar</button>
+								<button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
+							</div>
+						</div>
+					</footer>
+				</section>
+
+			}
+		</div>
+	</div>
+</div>
+@section CssSpecificVendor {
+	<link rel="stylesheet" href="~/assets/vendor/select2/css/select2.css" />
+	<link rel="stylesheet" href="~/assets/vendor/select2-bootstrap-theme/select2-bootstrap.min.css" />
+}
+@section Scripts {
+	<script src="~/assets/vendor/select2/js/select2.js"></script>
+	<script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
+	<script src="~/assets/vendor/jquery-mask/jquery.mask.js"></script>
+	<script src="~/js/Estrutura.js"></script>
+	<script>
+
+		(function ($) {
+
+			'use strict';
+			var crud = @ViewBag.CrudMessage;
+
+			if (crud === 1) {
+				new PNotify({
+					title: 'Estrutura',
+					text: 'Cadastro realizado com sucesso!',
+					type: 'success'
+				});
+			} else if (crud === 2) {
+				new PNotify({
+					title: 'Estrutura',
+					text: 'Dados alterados com sucesso.',
+					type: 'warning'
+				});
+			} else if (crud === 3) {
+				new PNotify({
+					title: 'Estrutura',
+					text: 'Registro excluído com sucesso.',
+					type: 'error'
+				});
+			}
+
+			var notify = @ViewBag.NotifyMessage;
+			var messagem = '@ViewBag.Notify';
+
+			if (notify === 0) {
+				new PNotify({
+					title: 'Estrutura',
+					text: messagem,
+					type: 'success'
+				});
+			} else if (notify === 1) {
+				new PNotify({
+					title: 'Estrutura',
+					text: messagem,
+					type: 'warning'
+				});
+			} else if (notify === 2) {
+				new PNotify({
+					title: 'Estrutura',
+					text: messagem,
+					type: 'error'
+				});
+			}
+
+		}).apply(this, [jQuery]);
+
+	</script>
+}

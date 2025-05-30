@@ -1,0 +1,165 @@
+﻿@model QuestaoEadModel
+@{
+    ViewData["Title"] = "Inclusão de Questão";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="vQuestaoEad">
+    <div class="row">
+        <div class="col-md-12">
+            @using (@Html.BeginForm("Create", "QuestaoEad", FormMethod.Post, new { id = "formQuestaoEad", @class = "form-horizontal", @enctype = "multipart/form-data" }))
+            {
+                <section class="panel">
+                    <!-- Header -->
+                    <header class="panel-heading">
+                        <div class="panel-actions">
+                            <a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
+                        </div>
+                        <h2 class="panel-title">Cadastro de Questão</h2>
+                    </header>
+
+                    <!-- Body -->
+                    <div class="panel-body">
+                        <div class="form-group row">
+                            <label class="col-sm-3 control-label text-sm-right pt-2">Tipo de Curso <span class="required">*</span></label>
+                            <div class="col-sm-4">
+                                <select class="form-control populate select2" name="ddlTipoCurso" id="ddlTipoCurso" style="width:100%"
+                                        required title="Por favor selecione o tipo de curso"
+                                        asp-for="TipoCursosId" asp-items="Model.ListTipoCursos">
+                                    <option value="">Selecionar Tipo de Curso</option>
+                                </select>
+                            </div>
+                            <label class="col-sm-1 control-label text-sm-right pt-2">Curso <span class="required">*</span></label>
+                            <div class="col-sm-4">
+                                <select class="form-control populate select2" name="ddlCurso" id="ddlCurso" style="width:100%"
+                                        required title="Por favor selecione o curso"
+                                        asp-for="CursoId" asp-items="Model.ListCursos">
+                                    <option value="">Selecionar Curso</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-3 control-label text-sm-right pt-2">Módulo <span class="required">*</span></label>
+                            <div class="col-sm-4">
+                                <select class="form-control populate select2" name="ddlModuloEad" id="ddlModuloEad" style="width:100%"
+                                        required title="Por favor selecione o modulo"
+                                        asp-for="ModuloEadId" asp-items="Model.ListModulosEad">
+                                    <option value="">Selecionar Módulo</option>
+                                </select>
+                            </div>
+                            <label class="col-sm-1 control-label text-sm-right pt-2">Aula <span class="required">*</span></label>
+                            <div class="col-sm-4">
+                                <select class="form-control populate select2" name="ddlAula" id="ddlAula" style="width:100%"
+                                        required title="Por favor selecione a aula"
+                                        asp-for="AulaId" asp-items="Model.ListAulas">
+                                    <option value="">Selecionar Aula</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Texto/Imagem Section -->
+                        <div class="form-group row">
+                            <label class="col-sm-3 control-label text-sm-right pt-2">
+                                <a href="#" v-on:click="addTextoImagem()" id="addToTable" class="btn btn-block btn-primary pull-left"><i class="fa fa-plus"></i> &nbsp;&nbsp;Adicionar Texto/Imagem </a>
+                            </label>
+                            <div class="col-sm-9 wrapper">
+                                <!-- Dynamic inputs will be added here -->
+                            </div>
+                        </div>
+
+
+                        <!-- Questao Field -->
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label text-sm-right pt-2">Questao <span class="required">*</span></label>
+                            <div class="col-sm-1">
+                                <input type="text" name="questao" id="questao" class="form-control" maxlength="150" title="Por favor informe a questao." required />
+                            </div>
+                            <label class="col-sm-2 control-label text-sm-right pt-2">Pergunta/Enunciado <span class="required">*</span></label>
+                            <div class="col-sm-6">
+                                <textarea class="form-control" rows="3" maxlength="500" name="pergunta" id="pergunta" required></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Respostas Section -->
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label text-sm-right pt-2">Respostas <span class="required">*</span></label>
+                            <div class="col-md-9">
+                                <section class="panel panel-featured panel-featured-success">
+                                    <header class="panel-heading" style="padding: 13px;">
+                                        <p class="panel-subtitle">Cadastre os tipos de respostas referente à questão</p>
+                                    </header>
+                                    <div class="panel-body" style="background: #f6f6f6;">
+                                        <div class="col-sm-4" style="padding-bottom: 15px;">
+                                            <select class="form-control populate select2" name="ddlTipoResposta" id="ddlTipoResposta"
+                                                    title="Por favor selecione um sexo." required style="width:100%">
+                                                <option value="">Selecionar tipo de resposta</option>
+                                                <option value="A">Alternativa</option>
+                                                <option value="D">Dissertativa</option>
+                                                <option value="M">Multipla Escolha</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-1">
+                                            <a type="button" class="ml-xs btn btn-success" v-on:click="addTipoResposta()">
+                                                <i class="fa fa-plus"></i>
+                                            </a>
+                                        </div>
+                                        <div class="col-sm-1">
+                                            <a type="button" class="ml-xs btn btn-danger" v-on:click="delTipoResposta()">
+                                                <i class="fa fa-minus"></i>
+                                            </a>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="col-sm-12 wrapperRespostaInfo">
+                                                <!-- Dynamic inputs will be added here -->
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12 wrapperResposta">
+                                            <!-- Dynamic inputs will be added here -->
+                                        </div>
+                                    </div>
+                                </section>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label text-sm-right pt-2">Referência</label>
+                            <div class="col-sm-9">
+                                <textarea class="form-control" rows="3" maxlength="300" name="referencia" id="referencia"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Footer -->
+                    <footer class="panel-footer">
+                        <div class="row">
+                            <div class="col-md-9 col-md-offset-3">
+                                <a href="@Url.Action("Index", "QuestaoEad")" class="btn btn-dark pull-right" style="margin-left: 5px; margin-right: 5px;">
+                                    <i class="fa fa-reply"></i> &nbsp;&nbsp;Voltar
+                                </a>
+                                <button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;">
+                                    <i class="fa fa-remove"></i> &nbsp;&nbsp;Cancelar
+                                </button>
+                                <button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;">
+                                    <i class="fa fa-save"></i> &nbsp;&nbsp;Salvar
+                                </button>
+                                <button type="submit" class="btn btn-info pull-right" style="margin-left: 5px;">
+                                    <i class="fa fa-eye"></i> &nbsp;&nbsp;Pré-Visualizar
+                                </button>
+                            </div>
+                        </div>
+                    </footer>
+                </section>
+            }
+        </div>
+    </div>
+</div>
+@section CssSpecificVendor {
+    <link rel="stylesheet" href="~/assets/vendor/bootstrap-fileupload/bootstrap-fileupload.min.css" />
+    <link rel="stylesheet" href="~/assets/vendor/select2/css/select2.css" />
+    <link rel="stylesheet" href="~/assets/vendor/select2-bootstrap-theme/select2-bootstrap.min.css" />
+}
+@section Scripts {
+    <script src="~/assets/vendor/bootstrap-fileupload/bootstrap-fileupload.min.js"></script>
+    <script src="~/assets/vendor/ios7-switch/ios7-switch.js"></script>
+    <script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
+    <script src="~/assets/vendor/select2/js/select2.js"></script>
+    <script src="~/js/QuestaoEad.js"></script>
+}

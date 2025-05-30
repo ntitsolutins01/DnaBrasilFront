@@ -3,10 +3,10 @@
     public class AlunoDto
     {
         public int Id { get; set; }
-        public  string? AspNetUserId { get; set; }
-        public  string Nome { get; set; }
-        public  string Email { get; set; }
-        public  string DtNascimento { get; set; }
+        public string? AspNetUserId { get; set; }
+        public string Nome { get; set; }
+        public string Email { get; set; }
+        public string DtNascimento { get; set; }
         public string NomeMae { get; set; }
         public string NomePai { get; set; }
         public string Cpf { get; set; }
@@ -22,7 +22,7 @@
         public bool Status { get; set; }
         public bool Habilitado { get; set; }
         public int Idade { get; set; }
-        public List<ModalidadeDto>? Modalidades { get; set; }
+        public List<ModalidadeDto>? ListModalidades { get; set; }
         public string? NomeMunicipio { get; set; }
         public int? DependenciaId { get; set; }
         public int? MatriculaId { get; set; }
@@ -45,6 +45,15 @@
         public string ProfissionalId { get; set; }
         public string ModalidadeLinhaAcao { get; set; }
         public string LinhaAcaoId { get; set; }
+        public string NomePerfil { get; set; }
+        public string DescricaoPerfil { get; set; }
+        public string? ModalidadesIds { get; set; }
+        public string? Modalidades { get; set; }
+        public string? SerieTurma { get; init; }
+        public string? SerieId { get; set; }
+        public string? EtapaId { get; set; }
+        public string? SerieNome { get; set; }
+
         #endregion
     }
 }

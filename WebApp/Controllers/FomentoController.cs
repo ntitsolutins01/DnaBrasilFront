@@ -10,23 +10,48 @@ using WebApp.Utility;
 
 namespace WebApp.Controllers
 {
+    /// <summary>
+    /// Controle de Fomento
+    /// </summary>
     public class FomentoController : BaseController
     {
+
+        #region Parametros
+
         private readonly IOptions<UrlSettings> _appSettings;
 
+        #endregion
+
+        #region Constructor
+
+        /// <summary>
+        /// Construtor da página
+        /// </summary>
+        /// <param name="appSettings">configurações de urls do sistema</param>
         public FomentoController(IOptions<UrlSettings> appSettings)
         {
             _appSettings = appSettings;
             ApplicationSettings.WebApiUrl = _appSettings.Value.WebApiBaseUrl;
         }
 
+        #endregion
+
+        #region Main Methods
+
+        /// <summary>
+        ///  Listagem de Fomento
+        /// </summary>
+        /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
+        /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
+        /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+        /// <returns></returns>
         public IActionResult Index(int? crud, int? notify, string message = null)
         {
 
             ViewBag.Status = true;
             SetNotifyMessage(notify, message);
             SetCrudMessage(crud);
-            var response = ApiClientFactory.Instance.GetFomentoAll();
+            var response = ApiClientFactory.Instance.GetFomentosAll();
             var localidades = new SelectList(ApiClientFactory.Instance.GetLocalidadeAll(), "Id", "Nome");
             var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome");
 
@@ -38,6 +63,13 @@ namespace WebApp.Controllers
             });
         }
 
+        /// <summary>
+        /// Tela para Inclusão de Fomento
+        /// </summary>
+        /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
+        /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
+        /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+        /// <returns></returns>
         public ActionResult Create(int? crud, int? notify, string message = null)
         {
             SetNotifyMessage(notify, message);
@@ -54,7 +86,12 @@ namespace WebApp.Controllers
             };
             return View(model);
         }
-        //[ClaimsAuthorize("Usuario", "Incluir")]
+
+        /// <summary>
+        /// Ação de Inclusão de Fomento
+        /// </summary>
+        /// <param name="collection">coleção de dados para Inclusao de Fomento</param>
+        /// <returns>retorna mensagem de inclusao através do parametro crud</returns>
         [HttpPost]
         public async Task<ActionResult> Create(IFormCollection collection)
         {
@@ -62,14 +99,15 @@ namespace WebApp.Controllers
             {
                 var command = new FomentoModel.CreateUpdateFomentoCommand
                 {
-                    LocalidadeId = Convert.ToInt32(collection["ddlLocalidade"].ToString()),
+                    LocalidadesIds = collection["ddlLocalidade"].ToString(),
+                    LinhasAcoesIds = collection["ddlLinhaAcao"].ToString(),
+                    LocalidadeId = 53,
                     MunicipioId = Convert.ToInt32(collection["ddlMunicipio"].ToString()),
                     Codigo = collection["codigo"].ToString(),
                     DtIni = collection["dtIni"].ToString(),
                     DtFim = collection["dtFim"].ToString(),
-					Nome = collection["Nome"].ToString(),
-					LinhaAcoes = collection["ddlLinhaAcao"].ToString()
-				};
+                    Nome = collection["Nome"].ToString()
+                };
 
                 await ApiClientFactory.Instance.CreateFomento(command);
 
@@ -81,25 +119,71 @@ namespace WebApp.Controllers
             }
         }
 
-        //[ClaimsAuthorize("Usuario", "Alterar")]
-        public async Task<ActionResult> Edit(IFormCollection collection)
+        /// <summary>
+        /// Ação de Alteração de Fomento
+        /// </summary>
+        /// <param name="id">Identificador de Fomento</param>
+        /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
+        /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
+        /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+        /// <returns></returns>
+        public ActionResult Edit(int id, int? crud, int? notify, string message = null)
+        {
+            SetNotifyMessage(notify, message);
+            SetCrudMessage(crud);
+
+            var fomento = ApiClientFactory.Instance.GetFomentoById(id);
+
+            var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome", fomento.Sigla);
+            var municipios = new SelectList(ApiClientFactory.Instance.GetMunicipiosByUf(fomento.Sigla), "Id", "Nome", fomento.MunicipioId);
+            var localidades = new SelectList(ApiClientFactory.Instance.GetLocalidadeByMunicipioId(fomento.MunicipioId.ToString()), "Id", "Nome", fomento.LocalidadeId);
+            var linhasAcoes = new SelectList(ApiClientFactory.Instance.GetLinhasAcoesAll(), "Id", "Nome", fomento.LinhasAcoesIds);
+
+            var model = new FomentoModel
+            {
+                ListEstados = estados,
+                ListLinhasAcoes = linhasAcoes,
+                ListMunicipios = municipios,
+                ListLocalidades = localidades,
+                Fomento = fomento
+
+            };
+            return View(model);
+        }
+
+        /// <summary>
+        /// Ação de Alteração de Fomento
+        /// </summary>
+        /// <param name="id">Identificador de Fomento</param>
+        /// <param name="collection">coleção de dados para Alteração de Fomento</param>
+        /// <returns>retorna mensagem de alteração através do parametro crud</returns>
+        [HttpPost]
+        public async Task<ActionResult> Edit(int id, IFormCollection collection)
         {
             var command = new FomentoModel.CreateUpdateFomentoCommand
             {
-                Id = Convert.ToInt32(collection["editFomentoId"]),
+                Id = id,
                 Codigo = collection["codigo"].ToString(),
                 Nome = collection["Nome"].ToString(),
                 DtIni = collection["dtIni"].ToString(),
                 DtFim = collection["dtFim"].ToString(),
-				Status = collection["editStatus"].ToString() == "" ? false : true
-			};
+                LinhasAcoesIds = collection["ddlLinhaAcao"].ToString(),
+                LocalidadesIds = collection["ddlLocalidade"].ToString(),
+                LocalidadeId = 53,
+                MunicipioId = Convert.ToInt32(collection["ddlMunicipio"].ToString()),
+                Status = collection["status"].ToString() == "" ? false : true
+            };
 
             await ApiClientFactory.Instance.UpdateFomento(command.Id, command);
 
             return RedirectToAction(nameof(Index), new { crud = (int)EnumCrud.Updated });
         }
 
-        //[ClaimsAuthorize("Usuario", "Excluir")]
+        /// <summary>
+        /// Ação de Exclusão de Fomento
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public ActionResult Delete(int id)
         {
             try
@@ -107,20 +191,33 @@ namespace WebApp.Controllers
                 ApiClientFactory.Instance.DeleteFomento(id);
                 return RedirectToAction(nameof(Index), new { crud = (int)EnumCrud.Deleted });
             }
-            catch
+            catch (Exception e)
             {
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = $"ATENÇÃO. {e.Message}" });
             }
         }
 
+        #endregion
+
+        #region Get Methods
+
+        /// <summary>
+        /// Busca Fomento por Id
+        /// </summary>
+        /// <param name="id">Identificador de Fomento</param>
+        /// <returns>Retorna a Fomento</returns>
         public Task<FomentoDto> GetFomentoById(int id)
         {
             var result = ApiClientFactory.Instance.GetFomentoById(id);
-            
+
             return Task.FromResult(result);
         }
 
-
+        /// <summary>
+        /// Busca municipio por id de Fomento
+        /// </summary>
+        /// <param name="id">Identificador de Fomento</param>
+        /// <returns>Retorna a um Fomento</returns>
         public Task<JsonResult> GetMunicipioIdByFomento(string id)
         {
             try
@@ -137,4 +234,6 @@ namespace WebApp.Controllers
             }
         }
     }
+
+    #endregion
 }

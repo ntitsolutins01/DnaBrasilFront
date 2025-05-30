@@ -6,10 +6,10 @@ using Newtonsoft.Json.Linq;
 namespace WebApp.ApiClient
 {
     public partial class DnaApiClient
-	{
-		private readonly HttpClient _httpClient;
+    {
+        private readonly HttpClient _httpClient;
         private Uri BaseEndpoint { get; }
-        
+
         public DnaApiClient(Uri baseEndpoint)
         {
             BaseEndpoint = baseEndpoint ?? throw new ArgumentNullException(nameof(baseEndpoint));
@@ -21,16 +21,21 @@ namespace WebApp.ApiClient
             addHeaders();
             var response = _httpClient.GetAsync(requestUrl, HttpCompletionOption.ResponseHeadersRead);
             var data = response.Result.Content.ReadAsStringAsync();
+            //if (data.Exception == null) return JsonConvert.DeserializeObject<T>(data.Result)!;
+            //dynamic dataResult = JObject.Parse(data.Result);
+            //if (dataResult.status == 409)
+            //{
+            //    throw new ApplicationException(dataResult.detail.Value);
+            //}
             return JsonConvert.DeserializeObject<T>(data.Result)!;
         }
+
         public Task<T?> GetFiltro<T>(Uri requestUrl, T content)
         {
             addHeaders();
             var response = _httpClient.PostAsync(requestUrl, CreateHttpContent<T>(content));
             var data = response.Result.Content.ReadAsStringAsync();
             return Task.FromResult(JsonConvert.DeserializeObject<T>(data.Result));
-
-
         }
 
 
@@ -40,7 +45,7 @@ namespace WebApp.ApiClient
         public Task<long> Post<T>(Uri requestUrl, T content)
         {
             addHeaders();
-             var response = _httpClient.PostAsync(requestUrl.ToString(), CreateHttpContent<T>(content));
+            var response = _httpClient.PostAsync(requestUrl.ToString(), CreateHttpContent<T>(content));
             var data = response.Result.Content.ReadAsStringAsync();
             return Task.FromResult(JsonConvert.DeserializeObject<long>(data.Result));
         }
@@ -48,7 +53,7 @@ namespace WebApp.ApiClient
         public Task<T?> PostWithResponseBody<T>(Uri requestUrl, T content)
         {
             addHeaders();
-             var response = _httpClient.PostAsync(requestUrl.ToString(), CreateHttpContent<T>(content));
+            var response = _httpClient.PostAsync(requestUrl.ToString(), CreateHttpContent<T>(content));
             var data = response.Result.Content.ReadAsStringAsync();
             return Task.FromResult(JsonConvert.DeserializeObject<T>(data.Result));
         }
@@ -77,7 +82,7 @@ namespace WebApp.ApiClient
         public Task<T> Delete<T>(Uri requestUrl)
         {
             addHeaders();
-             var response = _httpClient.DeleteAsync(requestUrl);
+            var response = _httpClient.DeleteAsync(requestUrl);
 
             var data = response.Result.Content.ReadAsStringAsync();
 
@@ -95,8 +100,8 @@ namespace WebApp.ApiClient
             {
                 throw new ApplicationException("Erro ao executar esta ação. Favor entrar em contato com o administrador do sistema.");
 
-            } 
-            
+            }
+
             return Task.FromResult(JsonConvert.DeserializeObject<T>(data.Result));
         }
 
@@ -127,16 +132,16 @@ namespace WebApp.ApiClient
 
         private void addHeaders()
         {
-            _httpClient.DefaultRequestHeaders.Remove("userIP");
-            _httpClient.DefaultRequestHeaders.Add("userIP", "192.168.1.1");
+            _httpClient.DefaultRequestHeaders.Accept
+                .Add(new MediaTypeWithQualityHeaderValue("application/json"));//ACCEPT header
 
             //_httpClient.DefaultRequestHeaders.Authorization =
             //    new AuthenticationHeaderValue("Bearer", "Your Oauth token");
         }
 
-        
-        
-       
+
+
+
 
     }
 }

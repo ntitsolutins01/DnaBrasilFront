@@ -20,6 +20,9 @@
 
         public MunicipioDto Municipio { get; set; }
         public LocalidadeDto Localidade { get; set; }
+        public bool Convidado { get; set; }
+        public bool PossuiLaudoFinalizado { get; set; }
+        public string? Modalidades { get; set; }
 
         #region SearchFilter
         public string Sexo { get; set; }
@@ -30,6 +33,7 @@
         public string DeficienciaId { get; set; }
         public string Etnia { get; set; }
         public string ProfissionalId { get; set; }
+
         #endregion
     }
 }

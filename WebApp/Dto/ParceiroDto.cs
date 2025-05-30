@@ -22,5 +22,7 @@
         public int EstadoId { get; set; }
         public string Uf { get; set; }
         public string TipoParceriaNome { get; set; }
+        public string RazaoSocial { get; set; }
+        public string NomeContato { get; set; }
     }
 }

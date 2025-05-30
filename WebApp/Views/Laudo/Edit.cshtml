@@ -3,7 +3,7 @@
     ViewData["Title"] = "Alteração de Laudo";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<div class="row">
+<div class="row" id="vLaudo">
     <div class="col-md-12">
         @using (@Html.BeginForm("Edit", "Laudo", FormMethod.Post, new { id = "formEditLaudo", @class = "form-horizontal" }))
         {
@@ -21,16 +21,16 @@
                             <label class="col-sm-2 control-label text-sm-right pt-2">Estado <span class="required">*</span></label>
                             <div class="col-md-4">
                                 <select class="form-control populate select2" name="ddlEstado" id="ddlEstado"
-                                        title="Por favor informe um Estado." required
-                                        asp-for="EstadoId" asp-items="Model.ListEstados">
+                                title="Por favor informe um Estado." required disabled
+                                asp-for="EstadoId" asp-items="Model.ListEstados">
                                     <option value="">Selecionar Estado</option>
                                 </select>
                             </div>
                             <label class="col-sm-2 control-label text-sm-right pt-2">Município <span class="required">*</span></label>
                             <div class="col-md-4">
                                 <select class="form-control populate select2" name="ddlMunicipio" id="ddlMunicipio"
-                                        title="Por favor informe um Municipio." required
-                                        asp-for="MunicipioId" asp-items="Model.ListMunicipios">
+                                title="Por favor informe um Municipio." required disabled
+                                asp-for="MunicipioId" asp-items="Model.ListMunicipios">
                                     <option value="">Selecionar Município</option>
                                 </select>
                             </div>
@@ -39,16 +39,16 @@
                             <label class="col-sm-2 control-label text-sm-right pt-2">Localidade <span class="required">*</span></label>
                             <div class="col-md-4">
                                 <select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade"
-                                        title="Por favor informe a localidade." required
-                                        asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
+                                title="Por favor informe a localidade." required disabled
+                                asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
                                     <option value="">Selecionar Localidade</option>
                                 </select>
                             </div>
                             <label class="col-sm-2 control-label text-sm-right pt-2">Profissional <span class="required">*</span></label>
                             <div class="col-md-4">
                                 <select class="form-control populate select2" name="ddlProfissional" id="ddlProfissional"
-                                        title="Por favor informe o profissional." required
-                                        asp-for="ProfissionalId" asp-items="Model.ListProfissionais">
+                                title="Por favor informe o profissional." required
+                                asp-for="ProfissionalId" asp-items="Model.ListProfissionais">
                                     <option value="">Selecionar Profissional</option>
                                 </select>
                             </div>
@@ -57,10 +57,16 @@
                             <label class="col-sm-2 control-label text-sm-right pt-2">Aluno <span class="required">*</span></label>
                             <div class="col-md-4">
                                 <select class="form-control populate select2" name="ddlAluno" id="ddlAluno"
-                                        title="Por favor informe um Aluno." required
-                                        asp-for="AlunoId" asp-items="Model.ListAlunos">
+                                title="Por favor informe um Aluno." required disabled
+                                asp-for="AlunoId" asp-items="Model.ListAlunos">
                                     <option value="">Selecionar Aluno</option>
                                 </select>
+                            </div>
+                            <div id="divIdade">
+                                <label class="col-sm-2 control-label text-sm-right pt-2">Idade </label>
+                                <div class="col-md-4" style="padding-top: 6px;">
+                                    <code style="font-size: 140%;"><span id="spanIdade">@Model.Aluno.Idade anos</span></code>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -88,130 +94,211 @@
                                 </li>
                                 <li class="">
                                     <a href="#saude-bucal"
-                                       data-toggle="tab" aria-expanded="false">
+                                    data-toggle="tab" aria-expanded="false">
                                         <i class="fa fa-medkit" style="color: #5bc0de;"></i>
                                         <span style="color: #5bc0de;">Saúde Bucal</span>
                                     </a>
                                 </li>
-                                <li class="">
-                                    <a href="#qualidade-vida" data-toggle="tab" aria-expanded="false">
-                                        <i class="fa fa-star-o" style="color: #00a4a9;"></i>
-                                        <span style="color: #00a4a9;">Qualidade de Vida</span>
-                                    </a>
-                                </li>
-                                <li class="">
-                                    <a href="#vocacional"
-                                       data-toggle="tab" aria-expanded="false">
-                                        <i class="fa fa-star-half-o" style="color: #a787c0;"></i>
-                                        <span style="color: #a787c0;">Vocacional</span>
-                                    </a>
-                                </li>
+                                @if (Model.Aluno.Idade >= 12)
+                                {
+                                    <li class="">
+                                        <a href="#qualidade-vida" data-toggle="tab" aria-expanded="false">
+                                            <i class="fa fa-thumbs-up" style="color: #00a4a9;"></i>
+                                            <span style="color: #00a4a9;">Qualidade de Vida</span>
+                                        </a>
+                                    </li>
+                                }
+                                @if (Model.Aluno.Idade >= 14)
+                                {
+                                    <li class="">
+                                        <a href="#vocacional"
+                                        data-toggle="tab" aria-expanded="false">
+                                            <i class="fa fa-star" style="color: #a787c0;"></i>
+                                            <span style="color: #a787c0;">Vocacional</span>
+                                        </a>
+                                    </li>
+                                }
                             </ul>
                             <div class="tab-content">
+                                <!-- CAMPO DE SAÚDE -->
                                 <div id="saude" class="tab-pane active">
                                     <div class="row form-group">
                                         <div>
-                                            <label class="col-sm-2 control-label"><strong>Altura (cm) </strong></label>
+                                            <label class="col-sm-2 control-label"><strong>Altura (cm) </strong> <span class="required">*</span></label>
                                             <div class="col-sm-4">
-                                                <input type="text" class="form-control" id="alturaSaude" name="alturaSaude" maxlength="3" />
+                                                @if (Model.Saude.Altura == null)
+                                                {
+                                                    var altura = Model.TalentoEsportivo.Altura;
+                                                    var alturaFormatada = altura != null ? Math.Round((decimal)altura, 0) : 0;
+                                                    <input type="text" class="form-control altura-mask" id="alturaSaude" name="alturaSaude" 
+                                                           maxlength="3" placeholder="000"
+                                                    required value="@alturaFormatada" title="Por favor informe a Altura (cm)" />
+                                                }
+                                                else
+                                                {
+                                                    var altura = Model.Saude.Altura;
+                                                    var alturaFormatada = altura != null ? Math.Round((decimal)altura, 0): 0;
+                                                    <input type="text" class="form-control altura-mask" id="alturaSaude" name="alturaSaude" maxlength="3" placeholder="000"
+                                                    required value="@alturaFormatada" title="Por favor informe a Altura (cm)" />
+                                                }
+
                                             </div>
                                         </div>
                                         <div>
-                                            <label class="col-sm-3 control-label"><strong>Massa Corporal (kg) </strong></label>
+                                            <label class="col-sm-3 control-label"><strong>Massa Corporal (kg) </strong> <span class="required">*</span></label>
                                             <div class="col-sm-3">
-                                                <input type="text" class="form-control" id="massaCorporalSaude" name="massaCorporalSaude" maxlength="3" />
+                                                @if (Model.Saude.Massa != null)
+                                                {
+                                                    var peso = Model.Saude.Massa;
+                                                    <input type="text" class="form-control numeric" id="massaCorporalSaude" name="massaCorporalSaude" 
+                                                           maxlength="6" placeholder="000.00" required value="@peso.ToString().Replace(",", ".")" 
+                                                           title="Por favor informe a Massa Corporal (kg)" />
+                                                }
+                                                else
+                                                {
+                                                    var peso = Model.TalentoEsportivo.Peso;
+                                                    <input type="text" class="form-control numeric" id="massaCorporalSaude" name="massaCorporalSaude" 
+                                                           maxlength="6" placeholder="000.00" required value="@(peso != null ? peso.ToString().Replace(",", ".") : "")" 
+                                                           title="Por favor informe a Massa Corporal (kg)" />
+                                                }
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row form-group">
                                         <div>
-                                            <label class="col-sm-2 control-label"><strong>Envergadura (cm)</strong></label>
+                                            <label class="col-sm-2 control-label"><strong>Envergadura (cm)</strong> <span class="required">*</span></label>
                                             <div class="col-sm-4">
-                                                <input type="text" class="form-control" id="envergaduraSaude" name="envergaduraSaude" maxlength="3" />
+
+                                                @if (Model.Saude.Envergadura == null)
+                                                {
+                                                    var envergadura = Model.TalentoEsportivo.Envergadura;
+                                                    var envergaduraFormatado = envergadura != null ? Math.Round((decimal)envergadura, 0) : 0;
+                                                    <input type="text" class="form-control altura-mask" id="envergaduraSaude" name="envergaduraSaude" maxlength="3" placeholder="000" required value="@envergaduraFormatado" title="Por favor informe a Envergadura (cm)" />
+                                                }
+                                                else
+                                                {
+                                                    var envergadura = Model.Saude.Envergadura;
+                                                    var envergaduraFormatado = Math.Round((decimal)envergadura, 0);
+                                                    <input type="text" class="form-control altura-mask" id="envergaduraSaude" name="envergaduraSaude" maxlength="3" placeholder="000" required value="@envergaduraFormatado" title="Por favor informe a Envergadura (cm)" />
+                                                }
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                <!-- CAMPO TALENTO ESPORTIVO -->
                                 <div id="talento-esportivo" class="tab-pane">
                                     <div class="row form-group">
                                         <div>
-                                            <label class="col-sm-2 control-label"><strong>Altura (cm) </strong></label>
+                                            @{
+                                                var alturaTalentoEsportivo = Model.TalentoEsportivo.Altura;
+                                                var alturaFormatadaTalentoEsportivo = alturaTalentoEsportivo != null ? Math.Round((decimal)alturaTalentoEsportivo, 0) : 0; 
+                                            }
+                                            <label class="col-sm-2 control-label"><strong>Altura (cm) </strong> <span class="required">*</span></label>
                                             <div class="col-sm-3">
-                                                <input type="text" class="form-control" id="altura" name="altura" maxlength="3" value="@Model.TalentoEsportivo.Altura" />
+                                                <input type="text" class="form-control altura-mask" id="altura" name="altura" maxlength="3" placeholder="000" value="@alturaFormatadaTalentoEsportivo"
+                                                       required title="Favor informe Altura (cm)" />
                                             </div>
                                         </div>
                                         <div>
-                                            <label class="col-sm-3 control-label"><strong>Massa Corporal (kg)</strong></label>
+                                            @{
+                                                var pesoTalentoEsportivo = Model.TalentoEsportivo.Peso;
+                                                var pesoFormatadoTalentoEsportivo = pesoTalentoEsportivo != null ? (decimal)pesoTalentoEsportivo : 0;
+                                            }
+                                            <label class="col-sm-3 control-label"><strong>Massa Corporal (kg)</strong> <span class="required">*</span></label>
                                             <div class="col-sm-3">
-                                                <input type="text" class="form-control" id="massaCorporal" name="massaCorporal" maxlength="3" value="@Model.TalentoEsportivo.Peso" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row form-group">
-                                        <div>
-                                            <label class="col-sm-2 control-label"><strong>Preensão Manual (kg)</strong></label>
-                                            <div class="col-sm-3">
-                                                <input type="text" class="form-control" id="preensaoManual" name="preensaoManual" maxlength="3" value="@Model.TalentoEsportivo.PreensaoManual" />
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <label class="col-sm-3 control-label"><strong>Flexibilidade (cm)</strong></label>
-                                            <div class="col-sm-3">
-                                                <input type="text" class="form-control" id="flexibilidade" name="flexibilidade" maxlength="3" value="@Model.TalentoEsportivo.Flexibilidade" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row form-group">
-                                        <div>
-                                            <label class="col-sm-2 control-label"><strong>Impulsão Horizontal (cm)</strong></label>
-                                            <div class="col-sm-3">
-                                                <input type="text" class="form-control" id="impulsaoHorizontal" name="impulsaoHorizontal" maxlength="3" value="@Model.TalentoEsportivo.ImpulsaoHorizontal" />
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <label class="col-sm-3 control-label"><strong>Teste de Velocidade 20m (seg)</strong></label>
-                                            <div class="col-sm-3">
-                                                <div class="input-group">
-                                                    <span class="input-group-addon">
-                                                        <i class="fa fa-clock-o"></i>
-                                                    </span>
-                                                    <input type="text" class="form-control" id="testeVelocidade" name="testeVelocidade" maxlength="3" value="@Model.TalentoEsportivo.Velocidade" />
-                                                </div>
+                                                <input type="text" class="form-control numeric-peso" id="massaCorporal" name="massaCorporal" 
+                                                       maxlength="6" placeholder="000.00" required 
+                                                       value="@pesoFormatadoTalentoEsportivo.ToString().Replace(",", ".")" 
+                                                       title="Favor informe Massa Corporal (kg)" />
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row form-group">
                                         <div>
-                                            <label class="col-sm-2 control-label"><strong>Aptidão Física (mLO2/min)</strong></label>
+                                            @{
+                                                var preesaoManualTalentoEsportivo = Model.TalentoEsportivo.PreensaoManual;
+                                                var preesaoManualFormatadoTalentoEsportivo = preesaoManualTalentoEsportivo != null ? Math.Round((decimal)preesaoManualTalentoEsportivo, 0) : 0;
+                                            }
+                                            <label class="col-sm-2 control-label"><strong>Preensão Manual (kg)</strong> <span class="required">*</span></label>
                                             <div class="col-sm-3">
-                                                <input type="text" class="form-control" id="aptidaoFisica" name="aptidaoFisica" maxlength="3" value="@Model.TalentoEsportivo.Vo2Max" />
+                                                <input type="text" class="form-control preensao-mask" id="preensaoManual" name="preensaoManual" maxlength="2" placeholder="00" value="@preesaoManualFormatadoTalentoEsportivo" required title="Favor informe Preensão Manual (kg)" />
                                             </div>
                                         </div>
                                         <div>
-                                            <label class="col-sm-3 control-label"><strong>Agilidade (seg)</strong></label>
+                                            @{
+                                                var flexibilidadeTalentoEsportivo = Model.TalentoEsportivo.Flexibilidade;
+                                                var flexibilidadeFormatadaTalentoEsportivo = flexibilidadeTalentoEsportivo != null ? Math.Round((decimal)flexibilidadeTalentoEsportivo!, 0) : 0;
+                                            }
+                                            <label class="col-sm-3 control-label"><strong>Flexibilidade (cm)</strong> <span class="required">*</span></label>
                                             <div class="col-sm-3">
-                                                <div class="input-group">
-                                                    <span class="input-group-addon">
-                                                        <i class="fa fa-clock-o"></i>
-                                                    </span>
-                                                    <input type="text" class="form-control" id="agilidade" name="agilidade" maxlength="3" value="@Model.TalentoEsportivo.ShuttleRun" />
+                                                <input type="text" class="form-control flexibilidade-mask" id="flexibilidade" name="flexibilidade" maxlength="3" placeholder="000" value="@flexibilidadeFormatadaTalentoEsportivo" required title="Favor informe Flexibilidade (cm)" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div>
 
+                                            @{
+                                                var impulsaoHorizontalTalentoEsportivo = Model.TalentoEsportivo.ImpulsaoHorizontal;
+                                                var impulsaoHorizontalFormatadaTalentoEsportivo = impulsaoHorizontalTalentoEsportivo != null ? Math.Round((decimal)impulsaoHorizontalTalentoEsportivo, 0) : 0;
+                                            }
+                                            <label class="col-sm-2 control-label"><strong>Impulsão Horizontal (cm)</strong> <span class="required">*</span></label>
+                                            <div class="col-sm-3">
+                                                <input type="text" class="form-control altura-mask" id="impulsaoHorizontal" name="impulsaoHorizontal" maxlength="3" placeholder="000" value="@impulsaoHorizontalFormatadaTalentoEsportivo" required title="Favor informe Impulsão Horizontal (cm)" />
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label class="col-sm-3 control-label"><strong>Teste de Velocidade 20m (seg)</strong> <span class="required">*</span></label>
+                                            <div class="col-sm-3">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">
+                                                        <i class="fa fa-clock-o"></i>
+                                                    </span>
+                                                    <input type="text" class="form-control numeric-tempo" id="testeVelocidade" name="testeVelocidade" 
+                                                           maxlength="5" placeholder="00.00" 
+                                                           value="@(Model.TalentoEsportivo.Velocidade != null ? Model.TalentoEsportivo.Velocidade.ToString().Replace(",", ".") : "")" 
+                                                           required title="Favor informe Teste de Velocidade 20m (seg)" />
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row form-group">
                                         <div>
-                                            <label class="col-sm-2 control-label"><strong>Abdominal</strong></label>
+                                            <label class="col-sm-2 control-label"><strong>Aptidão Física (mLO2/min)</strong> <span class="required">*</span></label>
+                                            <div class="col-sm-3">
+                                                <input type="text" class="form-control numeric-tempo" id="aptidaoFisica" name="aptidaoFisica" 
+                                                       maxlength="5" placeholder="00.00" 
+                                                       value="@(Model.TalentoEsportivo.Vo2Max != null ? Model.TalentoEsportivo.Vo2Max.ToString().Replace(",", ".") : "")" 
+                                                       required title="Favor informe Aptidão Física (mLO2/min)" />
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label class="col-sm-3 control-label"><strong>Agilidade (seg)</strong> <span class="required">*</span></label>
+                                            <div class="col-sm-3">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">
+                                                        <i class="fa fa-clock-o"></i>
+                                                    </span>
+                                                    <input type="text" class="form-control numeric-tempo" id="agilidade" name="agilidade" 
+                                                           maxlength="5" placeholder="00.00" 
+                                                           value="@(Model.TalentoEsportivo.ShuttleRun != null ? Model.TalentoEsportivo.ShuttleRun.ToString().Replace(",", ".") : "")" 
+                                                           required title="Favor informe Agilidade (seg)" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div>
+                                            <label class="col-sm-2 control-label"><strong>Abdominal</strong> <span class="required">*</span></label>
                                             <div class="col-sm-3">
                                                 @if (Model.TalentoEsportivo.Abdominal == 30)
                                                 {
                                                     <div class="radio-custom radio-success">
-                                                        <input id="abdominalSim" name="rdbAbdominal" checked type="radio" value="true" required title="Por favor selecione uma opção."/>
+                                                        <input id="abdominalSim" name="rdbAbdominal" checked type="radio" value="true" required title="Por favor selecione uma opção." />
                                                         <label for="abdominalSim">Sim</label>
                                                     </div>
                                                     <div class="radio-custom radio-danger">
-                                                        <input id="abdominalNao" name="rdbAbdominal" type="radio" value="false" required title="Por favor selecione uma opção."/>
+                                                        <input id="abdominalNao" name="rdbAbdominal" type="radio" value="false" required title="Por favor selecione uma opção." />
                                                         <label for="abdominalNao">Não</label>
                                                     </div>
                                                 }
@@ -227,67 +314,73 @@
                                                         <label for="abdominalNao">Não</label>
                                                     </div>
                                                 }
-                                                
+
                                                 <label class="error" for="rdbAbdominal"></label>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div id="vocacional" class="tab-pane">
-                                    @for (var index = 0; index < Model.QuestionarioVocacional.Count; index++)
-                                    {
-                                        var item = Model.QuestionarioVocacional[index];
-                                        <div class="form-group">
-                                            <div class="col-sm-12">
-                                                <label class="control-label">
-                                                    <strong>@item.Questao - @item.Pergunta</strong>
-                                                </label>
-                                                <input type="hidden" id="perguntaVocacional_@item.Id" />
+                                @if (Model.Aluno.Idade >= 14)
+                                {
+                                    <div id="vocacional" class="tab-pane">
+                                        @for (var index = 0; index < Model.ListQuestionarioVocacional.Count; index++)
+                                        {
+                                            var item = Model.ListQuestionarioVocacional[index];
+                                            <div class="form-group">
+                                                <div class="col-sm-12">
+                                                    <label class="control-label">
+                                                        <strong>@item.Questao - @item.Pergunta</strong>
+                                                    </label>
+                                                    <input type="hidden" id="perguntaVocacional_@item.Id" />
+                                                </div>
+                                                <div class="col-sm-12">
+                                                    @foreach (var resp in @item.Respostas)
+                                                    {
+                                                        <div class="radio-custom radio-danger col-sm-3">
+                                                            <input id="respVocacional_@resp.Id" name="nomeRespVocacional_@index" type="radio" value="@resp.Id"
+                                                            @(Model.Vocacional.Id != 0 && Model.Vocacional.Respostas.Contains(resp.Id.ToString()) ? "checked" : "") required title="Por favor selecione uma opção." />
+                                                            <label for="respVocacional_@resp.Id">@resp.RespostaQuestionario</label>
+                                                        </div>
+                                                    }
+                                                    <label class="error" for="nomeRespVocacional_@index"></label>
+                                                </div>
                                             </div>
-                                            <div class="col-sm-12">
-                                                @foreach (var resp in @item.Respostas)
-                                                {
-                                                    <div class="radio-custom radio-default col-sm-3">
-                                                        <input id="respVocacional_@resp.Id" name="nomeRespVocacional_@index" type="radio" value="@resp.Id"
-                                                               required title="Por favor selecione uma opção." />
-                                                        <label for="respVocacional_@resp.Id">@resp.RespostaQuestionario</label>
-                                                    </div>
-                                                }
-                                                <label class="error" for="nomeRespVocacional_@index"></label>
+                                        }
+                                    </div>
+                                }
+                                @if (Model.Aluno.Idade >= 12)
+                                {
+                                    <div id="qualidade-vida" class="tab-pane">
+                                        @for (var index = 0; index < Model.ListQuestionarioQualidadeVida.Count; index++)
+                                        {
+                                            var item = Model.ListQuestionarioQualidadeVida[index];
+                                            <div class="form-group">
+                                                <div class="col-sm-12">
+                                                    <label class="control-label">
+                                                        <strong>@item.Questao - @item.Pergunta</strong>
+                                                    </label>
+                                                    <input type="hidden" id="perguntaQualidadeVida_@item.Id" />
+                                                </div>
+                                                <div class="col-sm-12">
+                                                    @foreach (var resp in @item.Respostas)
+                                                    {
+                                                        <div class="radio-custom radio-danger col-sm-2">
+                                                            <input id="respQualidadeVida_@resp.Id" name="nomeRespQualidadeVida_@index" type="radio" value="@resp.Id"
+                                                            @(Model.QualidadeVida.Id != 0 && Model.QualidadeVida.Respostas.Contains(resp.Id.ToString()) ? "checked" : "") required title="Por favor selecione uma opção." />
+                                                            <label for="respQualidadeVida_@resp.Id">@resp.RespostaQuestionario</label>
+                                                        </div>
+                                                    }
+                                                    <label class="error" for="nomeRespQualidadeVida_@index"></label>
+                                                </div>
                                             </div>
-                                        </div>
-                                    }
+                                        }
+                                    </div>
+                                }
 
-                                </div>
-                                <div id="qualidade-vida" class="tab-pane">
-                                    @for (var index = 0; index < Model.QuestionarioQualidadeVida.Count; index++)
-                                    {
-                                        var item = Model.QuestionarioQualidadeVida[index];
-                                        <div class="form-group">
-                                            <div class="col-sm-12">
-                                                <label class="control-label">
-                                                    <strong>@item.Questao - @item.Pergunta</strong>
-                                                </label>
-                                                <input type="hidden" id="perguntaQualidadeVida_@item.Id" />
-                                            </div>
-                                            <div class="col-sm-12">
-                                                @foreach (var resp in @item.Respostas)
-                                                {
-                                                    <div class="radio-custom radio-default col-sm-2">
-                                                        <input id="respQualidadeVida_@resp.Id" name="nomeRespQualidadeVida_@index" type="radio" value="@resp.Id"
-                                                               required title="Por favor selecione uma opção." />
-                                                        <label for="respQualidadeVida_@resp.Id">@resp.RespostaQuestionario</label>
-                                                    </div>
-                                                }
-                                                <label class="error" for="nomeRespQualidadeVida_@index"></label>
-                                            </div>
-                                        </div>
-                                    }
-                                </div>
                                 <div id="consumo-alimentar" class="tab-pane">
-                                    @for (var index = 0; index < Model.QuestionarioConsumoAlimentar.Count; index++)
+                                    @for (var index = 0; index < Model.ListQuestionarioConsumoAlimentar.Count; index++)
                                     {
-                                        var item = Model.QuestionarioConsumoAlimentar[index];
+                                        var item = Model.ListQuestionarioConsumoAlimentar[index];
                                         <div class="form-group">
                                             <div class="col-sm-12">
                                                 <label class="control-label">
@@ -298,9 +391,9 @@
                                             <div class="col-sm-12">
                                                 @foreach (var resp in @item.Respostas)
                                                 {
-                                                    <div class="radio-custom radio-default col-sm-3">
+                                                    <div class="radio-custom radio-danger col-sm-3">
                                                         <input id="respConsumoAlimentar_@resp.Id" name="nomeRespConsumoAlimentar_@index" type="radio" value="@resp.Id"
-                                                               required title="Por favor selecione uma opção." />
+                                                        @(Model.ConsumoAlimentar.Id != 0 && Model.ConsumoAlimentar.Respostas.Contains(resp.Id.ToString()) ? "checked" : "") required title="Por favor selecione uma opção." />
                                                         <label for="respConsumoAlimentar_@resp.Id">@resp.RespostaQuestionario</label>
                                                     </div>
                                                 }
@@ -310,9 +403,9 @@
                                     }
                                 </div>
                                 <div id="saude-bucal" class="tab-pane">
-                                    @for (var index = 0; index < Model.QuestionarioSaudeBucal.Count; index++)
+                                    @for (var index = 0; index < Model.ListQuestionarioSaudeBucal.Count; index++)
                                     {
-                                        var item = Model.QuestionarioSaudeBucal[index];
+                                        var item = Model.ListQuestionarioSaudeBucal[index];
                                         <div class="form-group">
                                             <div class="col-sm-12">
                                                 <label class="control-label">
@@ -322,9 +415,9 @@
                                             <div class="col-sm-12">
                                                 @foreach (var resp in @item.Respostas)
                                                 {
-                                                    <div class="radio-custom radio-default col-sm-3">
+                                                    <div class="radio-custom radio-danger col-sm-3">
                                                         <input id="respSaudeBucal_@resp.Id" name="nomeRespSaudeBucal_@index" type="radio" value="@resp.Id"
-                                                               required title="Por favor selecione uma opção." />
+                                                        @(Model.SaudeBucal.Id != 0 && Model.SaudeBucal.Respostas.Contains(resp.Id.ToString()) ? "checked" : "") required title="Por favor selecione uma opção." />
                                                         <label for="respSaudeBucal_@resp.Id">@resp.RespostaQuestionario</label>
                                                     </div>
                                                 }
@@ -364,6 +457,7 @@
     <script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
     <script src="~/assets/vendor/select2/js/select2.js"></script>
     <script src="~/assets/vendor/jquery-mask/jquery.mask.js"></script>
+    <script src="~/assets/vendor/jquery-mask/jquery.maskMoney.js"></script>
     <script src="~/assets/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
     <script src="~/assets/vendor/datatables/media/js/dataTables.bootstrap4.min.js"></script>
     <script src="~/assets/vendor/bootstrap-datepicker/locales/bootstrap-datepicker.pt-BR.min.js"></script>
@@ -371,6 +465,58 @@
     <script src="~/assets/vendor/fuelux/js/spinner.js"></script>
     <script src="~/js/formatTable.js"></script>
     <script src="~/js/laudo.js"></script>
+    <script>
+
+        (function ($) {
+
+            'use strict';
+            var crud = @ViewBag.CrudMessage;
+
+            if (crud === 1) {
+                new PNotify({
+                    title: 'Laudo',
+                    text: 'Cadastro realizado com sucesso!',
+                    type: 'success'
+                });
+            } else if (crud === 2) {
+                new PNotify({
+                    title: 'Laudo',
+                    text: 'Dados alterados com sucesso.',
+                    type: 'warning'
+                });
+            } else if (crud === 3) {
+                new PNotify({
+                    title: 'Laudo',
+                    text: 'Registro excluído com sucesso.',
+                    type: 'error'
+                });
+            }
+
+            var notify = @ViewBag.NotifyMessage;
+            var messagem = '@ViewBag.Notify';
+
+            if (notify === 0) {
+                new PNotify({
+                    title: 'Laudo',
+                    text: messagem,
+                    type: 'success'
+                });
+            } else if (notify === 1) {
+                new PNotify({
+                    title: 'Laudo',
+                    text: messagem,
+                    type: 'warning'
+                });
+            } else if (notify === 2) {
+                new PNotify({
+                    title: 'Laudo',
+                    text: messagem,
+                    type: 'error'
+                });
+            }
+
+        }).apply(this, [jQuery]);
+    </script>
 }
 
 

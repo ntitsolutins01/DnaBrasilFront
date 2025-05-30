@@ -5,6 +5,7 @@
 @using WebApp.Identity
 @using WebApp.Services
 @inject IAuthorizationService AuthorizationService
+
 <!doctype html>
 <html class="sidebar-light sidebar-left-big-icons">
 <head>
@@ -56,8 +57,8 @@
         <!-- start: header -->
         <header class="header">
             <div class="logo-container">
-                <a href="../1.7.0" class="logo">
-                    <img src="~/assets/images/logo.png" width="75" height="35" alt="Dna do Brasil" />
+                <a href="/" class="logo">
+                    <img src="~/assets/images/logo.png" height="50" alt="Dna do Brasil" />
                 </a>
                 <div class="visible-xs toggle-sidebar-left" data-toggle-class="sidebar-left-opened" data-target="html" data-fire-event="sidebar-left-opened">
                     <i class="fa fa-bars" aria-label="Toggle sidebar"></i>
@@ -285,8 +286,28 @@
                                         </a>
                                         <ul class="nav nav-children">
                                             <li>
-                                                <a href="@Url.Action("Index", "TiposLaudo")">
-                                                    Tipos de Laudo
+                                                <a href="@Url.Action("Index", "Deficiencia")">
+                                                    Deficiencia
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="@Url.Action("Index", "Disciplina")">
+                                                    Disciplinas
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="@Url.Action("Index", "Encaminhamento")">
+                                                    Encaminhamento
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="@Url.Action("Index", "Fomento")">
+                                                    Fomento /Contrato
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="@Url.Action("Index", "Funcionalidade")">
+                                                    Funcionalidade
                                                 </a>
                                             </li>
                                             <li>
@@ -295,28 +316,23 @@
                                                 </a>
                                             </li>
                                             <li>
-                                                <a href="@Url.Action("Index", "Modalidade")">
-                                                    Modalidade
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="@Url.Action("Index", "Deficiencia")">
-                                                    Deficiencia
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="@Url.Action("Index", "Fomento")">
-                                                    Fomento
-                                                </a>
-                                            </li>
-                                            <li>
                                                 <a href="@Url.Action("Index", "Localidade")">
                                                     Localidade
                                                 </a>
                                             </li>
                                             <li>
-                                                <a href="@Url.Action("Index", "TipoParceria")">
-                                                    Tipo Parceria
+                                                <a href="@Url.Action("Index", "MetricaImc")">
+                                                    Métrica Imc
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="@Url.Action("Index", "Modalidade")">
+                                                    Modalidade
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="@Url.Action("Index", "Modulo")">
+                                                    Módulo
                                                 </a>
                                             </li>
                                             <li>
@@ -330,34 +346,33 @@
                                                 </a>
                                             </li>
                                             <li>
+                                                <a href="@Url.Action("Index", "Serie")">
+                                                    Série
+                                                </a>
+                                            </li>
+                                            <li>
                                                 <a href="@Url.Action("Index", "TextoLaudo")">
                                                     Texto Laudo
                                                 </a>
                                             </li>
                                             <li>
-                                                <a href="@Url.Action("Index", "MetricaImc")">
-                                                    Métrica Imc
-                                                </a>
-                                            </li>
-
-                                            <li>
-                                                <a href="@Url.Action("Index", "Disciplina")">
-                                                    Disciplinas
+                                                <a href="@Url.Action("Index", "TiposLaudo")">
+                                                    Tipos de Laudo
                                                 </a>
                                             </li>
                                             <li>
-                                                <a href="@Url.Action("Index", "Modulo")">
-                                                    Módulo
+                                                <a href="@Url.Action("Index", "TipoParceria")">
+                                                    Tipo Parceria
                                                 </a>
                                             </li>
                                             <li>
-                                                <a href="@Url.Action("Index", "Funcionalidade")">
-                                                    Funcionalidade
+                                                <a href="@Url.Action("Index", "Estrutura")">
+                                                    Estrutura
                                                 </a>
                                             </li>
                                             <li>
-                                                <a href="@Url.Action("Index", "Encaminhamento")">
-                                                    Encaminhamento
+                                                <a href="@Url.Action("Index", "Categoria")">
+                                                    Categoria
                                                 </a>
                                             </li>
                                         </ul>
@@ -377,6 +392,11 @@
                                                 </a>
                                             </li>
                                             <li>
+                                                <a href="@Url.Action("Index", "Certificado")">
+                                                    Certificados
+                                                </a>
+                                            </li>
+                                            <li>
                                                 <a href="@Url.Action("Index", "Curso")">
                                                     Curso
                                                 </a>
@@ -391,11 +411,11 @@
                                                     Aula
                                                 </a>
                                             </li>
-                                            @* <li>
-                                                <a href="@Url.Action("Index", "QuestoesEad")">
+                                            <li>
+                                                <a href="@Url.Action("Index", "QuestaoEad")">
                                                     Questões
                                                 </a>
-                                            </li> *@
+                                            </li>
                                         </ul>
                                     </li>
                                 }
@@ -405,6 +425,16 @@
                                         <a href="@Url.Action("Index", "Aluno")">
                                             <i class="fa fa-graduation-cap" aria-hidden="true"></i>
                                             <span>Alunos</span>
+                                        </a>
+                                    </li>
+                                }
+                                
+                                @if ((await AuthorizationService.AuthorizeAsync(User, ModuloAccess.MeusCursos)).Succeeded)
+                                {
+                                    <li class="nav-parent nav-expanded">
+                                        <a href="@Url.Action("Index", "AlunoCursoCertificado")">
+                                            <i class="fa fa-tasks" aria-hidden="true"></i>
+                                            <span>Meus Cursos</span>
                                         </a>
                                     </li>
                                 }
@@ -419,12 +449,59 @@
                                     </li>
                                 }
 
-                                @if ((await AuthorizationService.AuthorizeAsync(User, ModuloAccess.ControleMaterial)).Succeeded)
+                                @* @if ((await AuthorizationService.AuthorizeAsync(User, ModuloAccess.ControleFrequenciaEscolar)).Succeeded)
                                 {
                                     <li class="nav-parent nav-expanded">
-                                        <a href="@Url.Action("Index", "ControleMaterial")">
+                                        <a href="@Url.Action("Index", "ControleFrequenciaEscolar")">
+                                            <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                                            <span>Frequência Escolar</span>
+                                        </a>
+                                    </li>
+                                } *@
+
+                                @if ((await AuthorizationService.AuthorizeAsync(User, ModuloAccess.ControleMaterial)).Succeeded)
+                                {
+                                    <li class="nav-parent">
+                                        <a href="#">
                                             <i class="fa fa-file-text" aria-hidden="true"></i>
-                                            <span>Controle Materiais</span>
+                                            <span>Controle de Materiais</span>
+                                        </a>
+                                        <ul class="nav nav-children">
+                                            <li>
+                                                <a href="@Url.Action("Index", "GrupoMaterial")">
+                                                    Grupos de Materiais
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="@Url.Action("Index", "TipoMaterial")">
+                                                    Tipos de Materiais
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="@Url.Action("Index", "Material")">
+                                                    Materiais
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="@Url.Action("Index", "Inventario")">
+                                                    Inventários
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="@Url.Action("Index", "ControleMaterialEstoqueSaida")">
+                                                    Registro de Entrada/Saída
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                }
+
+                                @if ((await AuthorizationService.AuthorizeAsync(User, ModuloAccess.Atividade)).Succeeded)
+                                {
+                                    <li class="nav-parent nav-expanded">
+                                        <a href="@Url.Action("Index", "Atividade")">
+                                            <i class="fa fa-soccer-ball-o" aria-hidden="true"></i>
+                                            <span>Atividades</span>
                                         </a>
                                     </li>
                                 }
@@ -470,11 +547,11 @@
                                                     Parceiros
                                                 </a>
                                             </li>
-                                            <li>
+                                            @* <li>
                                                 <a href="@Url.Action("SolicitacaoContato", "SistemaSocioeconomico")">
                                                     Solicitações de contato
                                                 </a>
-                                            </li>
+                                            </li> *@
                                         </ul>
                                     </li>
                                 }
@@ -524,7 +601,7 @@
             <section role="main" class="content-body">
                 <header class="page-header">
                     @{
-                        var userRole = ((ClaimsIdentity)User.Identity).FindFirst(ClaimTypes.Role).Value;
+                        var userRole = (User.Identity as ClaimsIdentity)?.FindFirst(ClaimTypes.Role)?.Value;
 
                         if (userRole == UserRoles.AdministradorEad)
                         {

@@ -1,7 +1,4 @@
-﻿using System.Security;
-using System.Text;
-
-namespace WebApp.Configuration
+﻿namespace WebApp.Configuration
 {
     public class SmtpClientSettings
     {

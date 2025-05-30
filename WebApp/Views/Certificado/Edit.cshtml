@@ -1,0 +1,297 @@
+﻿@model CertificadoModel
+@{
+    ViewData["Title"] = "Edição de Certificado";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="vCertificado">
+    <div class="row">
+        <div class="col-md-12">
+            <input type="hidden" id="certificadoId" value="@Model.Certificado.Id" />
+            @using (@Html.BeginForm("Edit", "Certificado", FormMethod.Post, new { id = "formCertificado", @class = "form-horizontal", enctype = "multipart/form-data" }))
+            {
+                <section class="panel">
+                    <header class="panel-heading">
+                        <div class="panel-actions">
+                            <a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
+                        </div>
+                        <h2 class="panel-title">Edição de Certificado</h2>
+                    </header>
+
+                    <div class="panel-body">
+                        <div class="form-group row">
+                            <label class="col-sm-2 control-label text-sm-right pt-2">Fomento <span class="required">*</span></label>
+                            <div class="col-sm-4">
+                                <select class="form-control populate select2" name="ddlFomento" id="ddlFomento" style="width:100%"
+                                        required title="Por favor selecione o fomento"
+                                        asp-for="FomentoId" asp-items="Model.ListFomentos">
+                                    <option value="">Selecionar Fomento</option>
+                                </select>
+                            </div>
+                            <label class="col-sm-1 control-label text-sm-right pt-2">Status</label>
+                            <div class="col-sm-5">
+                                <div class="switch switch-sm switch-primary">
+                                    <input type="checkbox" name="Status" id="Status" data-plugin-ios-switch checked="checked"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 control-label text-sm-right pt-2">Certificado</label>
+                            <div class="col-sm-10">
+                                <!-- Tabs de navegação -->
+                                <div class="tabs">
+                                    <ul class="nav nav-tabs">
+                                        <li class="nav-item active">
+                                            <a class="nav-link" href="#tabFrente" data-toggle="tab">Frente do Certificado</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="#tabVerso" data-toggle="tab">Verso do Certificado</a>
+                                        </li>
+                                    </ul>
+                                    <div class="tab-content">
+                                        <!-- Tab Frente -->
+                                        <div id="tabFrente" class="tab-pane active">
+                                            <div class="form-group mt-3">
+                                                <div class="certificate-container">
+                                                    @{
+                                                        var imagemFrente = Url.Content("/Certificados/" + Model.Certificado.ImagemFrente);
+                                                    }
+                                                    <div class="summernote" id="summernoteFrente" name="HtmlFrente" data-plugin-summernote
+                                                         data-background="@imagemFrente">
+                                                        @Html.Raw(Model.Certificado.HtmlFrente ?? "Digite o conteúdo da frente do certificado...")
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Tab Verso -->
+                                        <div id="tabVerso" class="tab-pane">
+                                            <div class="form-group mt-3">
+                                                <div class="certificate-container">
+                                                    <div class="summernote" id="summernoteVerso" name="HtmlVerso" data-plugin-summernote>
+                                                        @Html.Raw(Model.Certificado.HtmlVerso ?? "Digite o conteúdo da frente do certificado...")
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <footer class="panel-footer">
+                        <div class="row">
+                            <div class="col-md-9 col-md-offset-3">
+                                <a href="@Url.Action("Index", "Certificado")" class="btn btn-dark pull-right" style="margin-left: 5px;margin-right: 5px;"><i class="fa fa-reply"></i> &nbsp;&nbsp;Voltar</a>
+                                <button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;"><i class="fa fa-remove"></i> &nbsp;&nbsp;Cancelar</button>
+                                <button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
+                            </div>
+                        </div>
+                    </footer>
+                </section>
+            }
+        </div>
+    </div>
+</div>
+
+@section CssSpecificVendor {
+    <link rel="stylesheet" href="~/assets/vendor/select2/css/select2.css" />
+    <link rel="stylesheet" href="~/assets/vendor/select2-bootstrap-theme/select2-bootstrap.min.css" />
+    <link rel="stylesheet" href="~/assets/vendor/summernote/summernote.css" />
+
+    <style>
+        /* Estilos do Editor */
+        .note-editor {
+            margin-bottom: 0;
+            width: 1754px !important; /* Largura fixa do certificado */
+        }
+
+        .note-editable {
+            background-size: cover !important;
+            background-repeat: no-repeat !important;
+            background-position: center center !important;
+            min-height: 1240px !important;
+            height: 1240px !important;
+            width: 1754px !important;
+        }
+
+        .note-editing-area {
+            position: relative !important;
+            height: 1240px !important;
+            width: 1754px !important;
+        }
+
+        .background-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 0;
+            pointer-events: none;
+            width: 1140px !important;
+            height: 813px !important;
+        }
+
+        /* Container para o editor */
+        .certificate-container {
+            width: 100%;
+            overflow-x: auto;
+            padding: 20px 0;
+        }
+
+        /* Ajuste para as tabs */
+        .tab-content {
+            background: #FFF;
+            padding: 15px;
+            border: 1px solid #DDD;
+            border-top: none;
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .note-btn-group {
+            position: relative;
+        }
+
+        .note-dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            z-index: 1000;
+        }
+
+        .nav-tabs {
+            margin-bottom: 15px;
+        }
+
+        /* Estilos para o modo fullscreen */
+        .note-editor.note-frame.fullscreen {
+            background-color: rgba(0, 0, 0, 0.85) !important; /* Fundo escuro com transparência */
+            display: flex !important;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .note-editor.fullscreen .note-editing-area {
+            background-color: white;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            margin: 20px auto !important;
+        }
+
+        .note-editor.fullscreen .note-toolbar {
+            background-color: #f5f5f5 !important;
+            border-bottom: 1px solid #ddd;
+            width: 100%;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+            .note-editor.fullscreen .note-toolbar .note-btn-group {
+                background-color: white;
+                border-radius: 4px;
+            }
+
+        .note-editor.fullscreen .note-statusbar {
+            background-color: #f5f5f5;
+            border-top: 1px solid #ddd;
+            width: 100%;
+        }
+
+        /* Ajuste para a área de edição em tela cheia */
+        .note-editor.fullscreen .note-editable {
+            margin: 0 auto !important;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .note-editor.fullscreen .note-editing-area .background-overlay {
+            width: 1140px !important;
+            height: 813px !important;
+            margin: 0 auto;
+        }
+
+        /* Estilos do popover de ajuda */
+        .popover {
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            max-width: 500px;
+            transition: none !important;
+            animation: none !important;
+        }
+
+        .note-editor.fullscreen .popover {
+            z-index: 1050;
+        }
+
+        .popover-content {
+            padding: 0;
+        }
+
+        .help-category {
+            border-bottom: 1px solid #eee;
+        }
+
+            .help-category:last-child {
+                border-bottom: none;
+            }
+
+            .help-category h6 {
+                background-color: #f8f9fa;
+                padding: 8px;
+                margin: 0;
+                font-weight: bold;
+            }
+
+            .help-category code {
+                background-color: #f8f9fa;
+                color: #e83e8c;
+                padding: 2px 4px;
+                border-radius: 3px;
+                font-family: monospace;
+            }
+
+        .table-sm td {
+            padding: 4px 8px;
+            border-top: 1px solid #eee;
+        }
+
+        /* Estilização dos botões do editor */
+        .note-btn {
+            border: 1px solid #ddd;
+            background-color: #fff;
+            border-radius: 3px;
+            padding: 5px 10px;
+            margin: 2px;
+        }
+
+            .note-btn:hover {
+                background-color: #f8f9fa;
+            }
+
+            .note-btn i {
+                font-size: 14px;
+                color: #666;
+            }
+    </style>
+}
+
+@section Scripts {
+    <!-- Form plugins -->
+    <script src="~/assets/vendor/select2/js/select2.js"></script>
+    <script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
+    <script src="~/assets/vendor/jquery-mask/jquery.mask.js"></script>
+    <script src="~/assets/vendor/ios7-switch/ios7-switch.js"></script>
+
+    <!-- Summernote -->
+    <script src="~/assets/vendor/summernote/summernote.js"></script>
+    <script src="~/assets/vendor/summernote/lang/summernote-pt-BR.js"></script>
+
+    <script src="~/assets/javascripts/theme.init.js"></script>
+    <script src="~/js/Certificado.js"></script>
+
+    
+}

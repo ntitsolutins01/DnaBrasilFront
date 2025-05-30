@@ -1,9 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.IO.Compression;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System.IO.Compression;
-using Microsoft.CodeAnalysis;
 using WebApp.Authorization;
 using WebApp.Configuration;
 using WebApp.Dto;
@@ -13,8 +12,6 @@ using WebApp.Identity;
 using WebApp.Models;
 using WebApp.Utility;
 using IWebHostEnvironment = Microsoft.AspNetCore.Hosting.IWebHostEnvironment;
-using Microsoft.AspNetCore.Authorization;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace WebApp.Controllers;
 
@@ -28,19 +25,19 @@ public class EventoController : BaseController
 
     private readonly IWebHostEnvironment _host;
 
-	/// <summary>
-	/// Construtor da página
-	/// </summary>
-	/// <param name="app">configurações de urls do sistema</param>
-	/// <param name="host">informações da aplicação em execução</param>
-	public EventoController(IOptions<UrlSettings> appSettings, IWebHostEnvironment host)
+    /// <summary>
+    /// Construtor da página
+    /// </summary>
+    /// <param name="app">configurações de urls do sistema</param>
+    /// <param name="host">informações da aplicação em execução</param>
+    public EventoController(IOptions<UrlSettings> appSettings, IWebHostEnvironment host)
     {
-	    _host = host;
+        _host = host;
         ApplicationSettings.WebApiUrl = appSettings.Value.WebApiBaseUrl;
     }
     #endregion
 
-    #region Crud Methods
+    #region Main Methods
 
     /// <summary>
     /// Listagem de Evento
@@ -59,7 +56,7 @@ public class EventoController : BaseController
     }
 
     /// <summary>
-    /// Tela para inclusão de Evento
+    /// Tela para Inclusão de Evento
     /// </summary>
     /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
     /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
@@ -89,9 +86,9 @@ public class EventoController : BaseController
     }
 
     /// <summary>
-    /// Ação de inclusão do Evento
+    /// Ação de Inclusão do Evento
     /// </summary>
-    /// <param name="collection">coleção de dados para inclusao de Evento</param>
+    /// <param name="collection">coleção de dados para Inclusao de Evento</param>
     /// <returns>retorna mensagem de inclusao através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.Evento, Identity.Claim.Incluir)]
     [HttpPost]
@@ -148,9 +145,9 @@ public class EventoController : BaseController
     }
 
     /// <summary>
-    /// Ação de exclusão do Evento
+    /// Ação de Exclusão do Evento
     /// </summary>
-    /// <param name="id">identificador do Evento</param>
+    /// <param name="id">Identificador do Evento</param>
     /// <returns>retorna mensagem de exclusão através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.Evento, Identity.Claim.Excluir)]
     public ActionResult Delete(int id)
@@ -169,112 +166,112 @@ public class EventoController : BaseController
             return RedirectToAction(nameof(Index));
         }
     }
-	#endregion
+    #endregion
 
-	#region Methods
-	/// <summary>
-	/// Ação de upload de fotos do evento
-	/// </summary>
-	/// <param name="collection">arquivo de upload realizado</param>
-	/// <returns>retorna mensagem de upload realizado através do parametro notfy e message</returns>
-	[HttpPost]
-	[ClaimsAuthorize(ClaimType.Evento, Claim.Incluir)]
-	public async Task<ActionResult> Upload(IFormCollection collection)
-	{
-		try
-		{
-			string filePath = null;
-			string fileName = null;
-            
-			var list = new List<CreateFotoEventoDto>();
+    #region Methods
+    /// <summary>
+    /// Ação de Upload de fotos do Evento
+    /// </summary>
+    /// <param name="collection">arquivo de Upload realizado</param>
+    /// <returns>retorna mensagem de Upload realizado através do parametro notfy e message</returns>
+    [HttpPost]
+    [ClaimsAuthorize(ClaimType.Evento, Claim.Incluir)]
+    public async Task<ActionResult> Upload(IFormCollection collection)
+    {
+        try
+        {
+            string filePath = null;
+            string fileName = null;
 
-			foreach (var t in collection.Files)
-			{
-				var file = t;
-				if (file.Length <= 0) continue;
-				fileName = $"{collection["eventoId"]}-{Guid.NewGuid()}.jpg";
-				filePath = Path.Combine(_host.WebRootPath, $"Eventos\\{fileName}");
+            var list = new List<CreateFotoEventoDto>();
 
-				if (!Directory.Exists(Path.Combine(_host.WebRootPath, $"Eventos")))
-					Directory.CreateDirectory(Path.Combine(_host.WebRootPath, $"Eventos"));
+            foreach (var t in collection.Files)
+            {
+                var file = t;
+                if (file.Length <= 0) continue;
+                fileName = $"{collection["eventoId"]}-{Guid.NewGuid()}.jpg";
+                filePath = Path.Combine(_host.WebRootPath, $"Eventos\\{fileName}");
 
-				using Stream fileStream = new FileStream(filePath, FileMode.Create);
-				await file.CopyToAsync(fileStream);
+                if (!Directory.Exists(Path.Combine(_host.WebRootPath, $"Eventos")))
+                    Directory.CreateDirectory(Path.Combine(_host.WebRootPath, $"Eventos"));
 
-				list.Add(new CreateFotoEventoDto()
-				{
-					EventoId = Convert.ToInt32(collection["eventoId"]),
-					NomeArquivo = fileName,
-					Url = filePath
-				});
-			}
+                using Stream fileStream = new FileStream(filePath, FileMode.Create);
+                await file.CopyToAsync(fileStream);
+
+                list.Add(new CreateFotoEventoDto()
+                {
+                    EventoId = Convert.ToInt32(collection["eventoId"]),
+                    NomeArquivo = fileName,
+                    Url = filePath
+                });
+            }
             await ApiClientFactory.Instance.CreateFotoEvento(list);
 
-			return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Success, message = "Upload de foto realizado com sucesso." });
-		}
-		catch (Exception e)
-		{
-			Console.Write(e.StackTrace);
-			return RedirectToAction(nameof(Index), new { notify = EnumNotify.Error, mesage = e.Message });
-		}
-	}
+            return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Success, message = "Upload de foto realizado com sucesso." });
+        }
+        catch (Exception e)
+        {
+            Console.Write(e.StackTrace);
+            return RedirectToAction(nameof(Index), new { notify = EnumNotify.Error, mesage = e.Message });
+        }
+    }
 
-	/// <summary>
-	/// Ação de download de fotos do evento
-	/// </summary>
-	/// <param name="id">Id do evento</param>
-	/// <returns>retorna fotos para download</returns>
-	[ClaimsAuthorize(ClaimType.Evento, Claim.Incluir)]
-	public ActionResult Download(int id)
-	{
-		var list = new List<FileContentResult>();
+    /// <summary>
+    /// Ação de Download de Fotos do Evento
+    /// </summary>
+    /// <param name="id">Id do Evento</param>
+    /// <returns>retorna Fotos para Download</returns>
+    [ClaimsAuthorize(ClaimType.Evento, Claim.Incluir)]
+    public ActionResult Download(int id)
+    {
+        var list = new List<FileContentResult>();
 
-		var files = ApiClientFactory.Instance.GetFotosAllByEventoId(id);
+        var files = ApiClientFactory.Instance.GetFotosAllByEventoId(id);
 
-		MemoryStream outms = new MemoryStream();
+        MemoryStream outms = new MemoryStream();
 
-		using (ZipArchive zar = new ZipArchive(outms, ZipArchiveMode.Create, false))
-		{
-			foreach (var file in files)
-			{
-				var filePath = Path.Combine(_host.WebRootPath, $"Eventos\\{file.NomeArquivo}");
+        using (ZipArchive zar = new ZipArchive(outms, ZipArchiveMode.Create, false))
+        {
+            foreach (var file in files)
+            {
+                var filePath = Path.Combine(_host.WebRootPath, $"Eventos\\{file.NomeArquivo}");
 
-				if (!System.IO.File.Exists(filePath))
-				{
-					return RedirectToAction(nameof(Index),
-						new { notify = (int)EnumNotify.Warning, message = "Arquivo não encontrado." });
-				}
+                if (!System.IO.File.Exists(filePath))
+                {
+                    return RedirectToAction(nameof(Index),
+                        new { notify = (int)EnumNotify.Warning, message = "Arquivo não encontrado." });
+                }
 
-				var fileBytes = System.IO.File.ReadAllBytes(filePath);
+                var fileBytes = System.IO.File.ReadAllBytes(filePath);
 
-				var fileName = file.NomeArquivo;
+                var fileName = file.NomeArquivo;
 
-				byte[] unzipped = fileBytes;
-				ZipArchiveEntry entry = zar.CreateEntry(fileName);
-				using (Stream str = entry.Open())
-				{
-					str.Write(unzipped);
-				}
-			}
-		}
+                byte[] unzipped = fileBytes;
+                ZipArchiveEntry entry = zar.CreateEntry(fileName);
+                using (Stream str = entry.Open())
+                {
+                    str.Write(unzipped);
+                }
+            }
+        }
 
-		var outdata = outms.ToArray();
+        var outdata = outms.ToArray();
 
-		var result = File(outdata, "application/zip", $"evento-{id}.zip");
-		return result;
-	}
-	#endregion
+        var result = File(outdata, "application/zip", $"evento-{id}.zip");
+        return result;
+    }
+    #endregion
 
-	#region Crud Controle Presenca Evento Methods
+    #region Crud Controle Presenca Evento Methods
 
-	/// <summary>
-	/// Listagem de Controle de Presença de Evento
-	/// </summary>
-	/// <param name="eventoId">Id do Evento</param>
-	/// <param name="crud">paramentro que indica o tipo de ação realizado</param>
-	/// <param name="notify">parametro que indica o tipo de notificação realizada</param>
-	/// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
-	[ClaimsAuthorize(ClaimType.Evento, Identity.Claim.Consultar)]
+    /// <summary>
+    /// Listagem de Controle de Presença de Evento
+    /// </summary>
+    /// <param name="eventoId">Id do Evento</param>
+    /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
+    /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
+    /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+    [ClaimsAuthorize(ClaimType.Evento, Identity.Claim.Consultar)]
     public IActionResult IndexControlePresenca(int eventoId, int? crud, int? notify, string message = null)
     {
         SetNotifyMessage(notify, message);
@@ -286,24 +283,53 @@ public class EventoController : BaseController
     }
 
     /// <summary>
-    /// Tela para inclusão de Controle de Presença do Evento
+    /// Tela para Inclusão de Controle de Presença do Evento
     /// </summary>
     /// <param name="eventoId">Id do Evento </param>
     /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
     /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
     /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
     [ClaimsAuthorize(ClaimType.Evento, Identity.Claim.Incluir)]
-    public ActionResult CreateControlePresenca(int eventoId, int? crud, int? notify, string message = null)
+    public async Task<ActionResult> CreateControlePresenca(int eventoId, int? crud, int? notify, string message = null)
     {
         try
         {
             SetNotifyMessage(notify, message);
             SetCrudMessage(crud);
-            var evento = ApiClientFactory.Instance.GetEventoById(eventoId);
-            var listAlunos = ApiClientFactory.Instance.GetAlunosByLocalidade(Convert.ToInt32(evento.LocalidadeId));
 
-            var alunos = new SelectList(listAlunos, "Id", "Nome"); ;
-            var convidado = listAlunos.First(x => x.Nome.Contains("Convidado"));
+            long alunoId = 0;
+
+            var evento = ApiClientFactory.Instance.GetEventoById(eventoId);
+
+            var listAlunos = ApiClientFactory.Instance.GetAlunosByLocalidadeId(Convert.ToInt32(evento.LocalidadeId));
+
+            var alunos = new SelectList(listAlunos, "Id", "Nome");
+
+            var convidado = listAlunos.FirstOrDefault(x => x.Convidado);
+
+
+            if (convidado == null)
+            {
+                var command = new AlunoModel.CreateUpdateDadosAlunoCommand
+                {
+                    MunicipioId = Convert.ToInt32(evento.MunicipioId),
+                    Nome = $"Convidado-{evento.LocalidadeId}",
+                    Email = $"convidado{evento.LocalidadeId}@convidado.com",
+                    Sexo = "G",
+                    DtNascimento = DateTime.Now.ToString("dd/MM/yyyy"),
+                    LocalidadeId = Convert.ToInt32(evento.LocalidadeId),
+                    FomentoId = Convert.ToInt32(ApiClientFactory.Instance.GetFomentoByLocalidadeId(Convert.ToInt32(evento.LocalidadeId)).Id),
+                    Etnia = "NA",
+                    Convidado = true
+
+
+                };
+
+                await ApiClientFactory.Instance.CreateDados(command);
+
+                convidado = ApiClientFactory.Instance.GetAlunosByLocalidadeId(Convert.ToInt32(evento.LocalidadeId))
+                    .FirstOrDefault(x => x.Convidado);
+            }
 
             return View(new EventoModel()
             {
@@ -321,9 +347,9 @@ public class EventoController : BaseController
     }
 
     /// <summary>
-    /// Ação para inclusão de Controle de Presença do Evento
+    /// Ação para Inclusão de Controle de Presença do Evento
     /// </summary>
-    /// <param name="collection">coleção de dados para inclusao de Controle de Presença do Evento</param>
+    /// <param name="collection">coleção de dados para Inclusao de Controle de Presença do Evento</param>
     /// <returns>retorna mensagem de inclusao através do parametro crud</returns>
     [HttpPost]
     [ClaimsAuthorize(ClaimType.Evento, Identity.Claim.Alterar)]
@@ -343,7 +369,7 @@ public class EventoController : BaseController
 
             if (collection["alunoConvidadoEvento"] == "A")
             {
-                var possuiPrecensa = ApiClientFactory.Instance.GetControlePresencaByAlunoId(Convert.ToInt32(command.AlunoId)).Where(x => x.Data == DateTime.Now.ToString("dd/MM/yyyy"));
+                var possuiPrecensa = ApiClientFactory.Instance.GetControlePresencaByAlunoId(Convert.ToInt32(command.AlunoId)).Where(x => x.ControlesPresencas.FirstOrDefault()?.Data == DateTime.Now.ToString("dd/MM/yyyy"));
 
                 if (possuiPrecensa.Any())
                 {
@@ -362,7 +388,7 @@ public class EventoController : BaseController
     }
 
     /// <summary>
-    /// Ação de alteração do Controle de Presença do Evento
+    /// Ação de Alteração do Controle de Presença do Evento
     /// </summary>
     /// <param name="collection">coleção de dados para alteração de controle de presença do Evento</param>
     /// <returns>retorna mensagem de alteração através do parametro crud</returns>
@@ -405,10 +431,10 @@ public class EventoController : BaseController
 
     #region Get Methods
     /// <summary>
-    /// Busca um evento por Id
+    /// Busca um Evento por Id
     /// </summary>
-    /// <param name="id">Id do evento</param>
-    /// <returns>Entidade evento</returns>
+    /// <param name="id">Id do Evento</param>
+    /// <returns>Entidade Evento</returns>
     public Task<EventoDto> GetEventoById(int id)
     {
         var result = ApiClientFactory.Instance.GetEventoById(id);

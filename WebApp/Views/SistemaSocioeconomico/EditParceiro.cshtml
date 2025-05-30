@@ -1,4 +1,4 @@
-﻿@model ParceiroModel
+@model ParceiroModel
 @{
     ViewData["Title"] = "Alteração de Parceiro";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -9,6 +9,7 @@
         <div class="col-md-12">
             @using (@Html.BeginForm("EditParceiro", "SistemaSocioeconomico", FormMethod.Post, new { id = "formEditParceiro", @class = "form-horizontal" }))
             {
+                <input type="hidden" name="tipoPessoa" value="@Model.Parceiro.TipoPessoa" />
                 <section class="panel">
                     <header class="panel-heading">
                         <div class="panel-actions">
@@ -70,6 +71,13 @@
                             }
                         </div>
                         <div class="form-group">
+                            <label class="col-sm-2 control-label">Razão Social</label>
+                            <div class="col-sm-4">
+                                <input type="text" id="razaoSocial" name="razaoSocial" class="form-control" readonly
+                                       title="Por favor informe a razão social" value="@Model.Parceiro.RazaoSocial" />
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="col-sm-2 control-label">Telefone </label>
                             <div class="col-sm-3">
                                 <div class="input-group">
@@ -88,8 +96,8 @@
                                         <i class="fa fa-phone"></i>
                                     </span>
                                     <input id="numCelular" name="numCelular" placeholder="eg.: (00) 00000-0000" class="form-control"
-                                           maxlength="14" value="@Model.Parceiro.Celular"
-                                           title="Por favor informe o celular">
+                                           maxlength="15" value="@Model.Parceiro.Celular"
+                                           title="Por favor informe o celular" />
                                 </div>
                             </div>
                         </div>
@@ -138,34 +146,35 @@
                                 <div class="switch switch-sm switch-success">
                                     @if (Model.Parceiro.Status)
                                     {
-                                        <input type="checkbox" id="status" name="status" data-plugin-ios-switch checked="checked" />
+                                        <input type="checkbox" id="status" name="status" data-plugin-ios-switch checked="checked" value="true" />
                                     }
                                     else
                                     {
-                                        <input type="checkbox" id="status" name="status" data-plugin-ios-switch />
-
+                                        <input type="checkbox" id="status" name="status" data-plugin-ios-switch value="true" />
                                     }
                                 </div>
                             </div>
-
-                            @* <label class="col-sm-2 control-label">Cadastro habilitado?</label>
+    
+                            <label class="col-sm-2 control-label pull-left">Cadastro Habilitado?</label>
                             <div class="col-sm-1">
                                 <div class="switch switch-sm switch-success">
                                     @if (Model.Parceiro.Habilitado)
                                     {
-                                        <input type="checkbox" id="habilitado" name="habilitado" data-plugin-ios-switch checked="checked"/>
-                                    }else{
-                                        <input type="checkbox" id="habilitado" name="habilitado" data-plugin-ios-switch/>
+                                        <input type="checkbox" id="habilitado" name="habilitado" data-plugin-ios-switch checked="checked" value="true" />
+                                    }
+                                    else
+                                    {
+                                        <input type="checkbox" id="habilitado" name="habilitado" data-plugin-ios-switch value="true" />
                                     }
                                 </div>
-                            </div> *@
+                            </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-1 control-label pull-left">&nbsp;&nbsp;</label>
                             <div class="col-sm-10">
                                 <div class="checkbox-custom chekbox-success">
                                     <input id="for-project" value="project" type="checkbox" id="comprometimento" name="comprometimento" required title="Campo obrigatorio" />
-                                    <label for="for-project">Me comprometo que todas as informações prestadas são verdadeiras.</label>
+                                    <label for="for-project">Me comprometo que todas as informações prestadas são verdadeiras. <span class="required">*</span></label>
                                 </div>
                                 <label class="error" for="comprometimento"></label>
                             </div>
@@ -175,7 +184,7 @@
                         <div class="row">
                             <div class="col-md-9 col-md-offset-3">
                                 <a href="@Url.Action("Parceiro", "SistemaSocioeconomico")" class="btn btn-dark pull-right" style="margin-left: 5px;margin-right: 5px;"><i class="fa fa-reply"></i> &nbsp;&nbsp;Voltar</a>
-                                <button type="submit" class="btn btn-danger pull-right" style="margin-left: 5px;"><i class="fa fa-remove"></i> &nbsp;&nbsp;Cancelar</button>
+                                <a href="@Url.Action("Parceiro", "SistemaSocioeconomico")" class="btn btn-danger pull-right" style="margin-left: 5px;"><i class="fa fa-remove"></i> &nbsp;&nbsp;Cancelar</a>
                                 <button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
                             </div>
                         </div>
@@ -253,8 +262,3 @@
 
     </script>
 }
-
-
-
-
-

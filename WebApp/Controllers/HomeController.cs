@@ -1,40 +1,39 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Extensions.Options;
-using System.Diagnostics;
-using WebApp.Factory;
+﻿using System.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
 using WebApp.Models;
-using WebApp.Utility;
 
 namespace WebApp.Controllers
 {
-	public class HomeController : Controller
-	{
-		public IActionResult Index()
+    public class HomeController : Controller
+    {
+        public IActionResult Index()
         {
-            //return Redirect("/Identity/Account/Login");
-            //return RedirectToPage("/Identity/Account/Login");
-            return View();
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "index.html");
+            return PhysicalFile(path, "text/html");
         }
-		public IActionResult EmpresaParceira()
-        {
-            return View();
-        }
-		public IActionResult Index2()
+
+        public IActionResult Index2()
         {
             return Redirect("/Identity/Account/Login");
-            //return RedirectToPage("/Identity/Account/Login");
-            //return View();
         }
-		public IActionResult Privacy()
-		{
-			return View();
-		}
 
-		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-		public IActionResult Error()
-		{
-			return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-		}
-	}
+        public IActionResult Privacy()
+        {
+            return View();
+        }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        // Novo route catch-all para qualquer rota desconhecida cair no index.html e a landing page react funcionar corretamente
+        [Route("{*url}", Order = 999)]
+        public IActionResult CatchAll()
+        {
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "index.html");
+            return PhysicalFile(path, "text/html");
+        }
+    }
 }

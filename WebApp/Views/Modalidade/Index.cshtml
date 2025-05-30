@@ -36,7 +36,7 @@
                                 <tr>
                                     <td class="text-center" style="width:20px;">@Html.DisplayFor(modelItem => item.Id)</td>
                                     <td class="text-center">@Html.DisplayFor(modelItem => item.Nome)</td>
-                                    <td class="text-center">@Html.DisplayFor(modelItem => item.LinhaAcao.Nome)</td>
+                                    <td class="text-center">@Html.DisplayFor(modelItem => item.LinhaAcao)</td>
                                     @if (item.Status)
                                     {
                                         <td class="text-center" style="width:10%;"><span class="label label-success" style="display: block;">ATIVO</span></td>
@@ -95,7 +95,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="mdEditModalidadeLabel">
-                        <i class="fa fa-trash"></i> &nbsp;&nbsp;<strong>Alterar Modalidade</strong>
+                        <i class="fa fa-pencil"></i> &nbsp;&nbsp;<strong>Alterar Modalidade</strong>
                     </h5>
                 </div>
                 @using (@Html.BeginForm("Edit", "Modalidade", FormMethod.Post, new { id = "formEditModalidade", @class = "form-horizontal", @enctype = "multipart/form-data" }))
@@ -117,6 +117,9 @@
                                             <input type="file" id="arquivo" name="arquivo" />
                                         </span>
                                         <a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload">Remover</a>
+                                    </div>
+                                    <div v-if="editDto.ByteImage" class="mt-2">
+                                        <code>Imagem atual: Arquivo carregado</code>
                                     </div>
                                 </div>
                             </div>
@@ -305,31 +308,31 @@
         (function ($) {
 
             'use strict';
-            var crub = @ViewBag.CrudMessage;
+            var crud = @ViewBag.CrudMessage;
 
-            if (crub === 1) {
+            if (crud === 1) {
                 new PNotify({
                     title: 'Modalidade',
                     text: 'Cadastro realizado com sucesso!',
                     type: 'success'
                 });
-                crub = 0;
-            } else if (crub === 2) {
+                crud = 0;
+            } else if (crud === 2) {
                 new PNotify({
                     title: 'Modalidade',
                     text: 'Dados alterados com sucesso.',
                     type: 'warning',
                     icon: 'fa fa-pencil'
                 });
-                crub = 0;
-            } else if (crub === 3) {
+                crud = 0;
+            } else if (crud === 3) {
                 new PNotify({
                     title: 'Modalidade',
                     text: 'Registro excluído com sucesso.',
                     type: 'error',
                     icon: 'fa fa-trash-o'
                 });
-                crub = 0;
+                crud = 0;
             }
 
 
@@ -342,21 +345,21 @@
                     text: messagem,
                     type: 'success'
                 });
-                crub = 0;
+                crud = 0;
             } else if (notify === 1) {
                 new PNotify({
                     title: 'Modalidade',
                     text: messagem,
                     type: 'warning'
                 });
-                crub = 0;
+                crud = 0;
             } else if (notify === 2) {
                 new PNotify({
                     title: 'Modalidade',
                     text: messagem,
                     type: 'error'
                 });
-                crub = 0;
+                crud = 0;
             }
 
             if ($.isFunction($.fn['tooltip'])) {

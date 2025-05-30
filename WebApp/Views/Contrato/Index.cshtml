@@ -101,7 +101,7 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<h5 class="modal-title" id="mdEditContratoLabel">
-						<i class="fa fa-trash"></i> &nbsp;&nbsp;<strong>Alterar Contrato</strong>
+						<i class="fa fa-pencil"></i> &nbsp;&nbsp;<strong>Alterar Contrato</strong>
 					</h5>
 				</div>
 				@using (@Html.BeginForm("Edit", "Contrato", FormMethod.Post, new { id = "formEditContrato", @class = "form-horizontal" }))
@@ -200,22 +200,22 @@
 		(function ($) {
 
 			'use strict';
-			var crub = @ViewBag.CrudMessage;
+			var crud = @ViewBag.CrudMessage;
 
-			if (crub === 1) {
+			if (crud === 1) {
 				new PNotify({
 					title: 'Contrato',
 					text: 'Cadastro realizado com sucesso!',
 					type: 'success'
 				});
-			} else if (crub === 2) {
+			} else if (crud === 2) {
 				new PNotify({
 					title: 'Contrato',
 					text: 'Dados alterados com sucesso.',
 					type: 'warning',
 					icon: 'fa fa-pencil'
 				});
-			} else if (crub === 3) {
+			} else if (crud === 3) {
 				new PNotify({
 					title: 'Contrato',
 					text: 'Registro excluído com sucesso.',

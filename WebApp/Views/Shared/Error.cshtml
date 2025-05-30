@@ -3,8 +3,8 @@
     ViewData["Title"] = "Error";
 }
 
-<h1 class="text-danger">Error.</h1>
-<h2 class="text-danger">An error occurred while processing your request.</h2>
+ <h1 class="text-danger">Algo deu Errado.</h1>
+<h2 class="text-danger">Ocorreu um erro ao processar sua solicitação.</h2>
 
 @if (Model.ShowRequestId)
 {
@@ -13,8 +13,9 @@
     </p>
 }
 
-<h3>Development Mode</h3>
-<p>
+<h3>Development Mode</h3> 
+@*<img src="~/assets/images/error-500.jpg" />*@
+ <p>
     Swapping to <strong>Development</strong> environment will display more detailed information about the error that occurred.
 </p>
 <p>
@@ -22,4 +23,32 @@
     It can result in displaying sensitive information from exceptions to end users.
     For local debugging, enable the <strong>Development</strong> environment by setting the <strong>ASPNETCORE_ENVIRONMENT</strong> environment variable to <strong>Development</strong>
     and restarting the app.
+</p>  @**@
+
+<p>
+    @Model.
 </p>
+
+@*  <section class="body-sign">
+    <div class="center-sign">
+        <a href="/" class="logo pull-left">
+            <img src="~/assets/images/logo.png" height="94" alt="Dna do Brasil" />
+        </a>
+        <div class="panel panel-sign">
+            <div class="panel-title-sign mt-xl text-right">
+                <h2 class="title text-uppercase text-weight-bold m-none"><i class="fa fa-user mr-xs"></i>Não Autorizado</h2>
+            </div>
+            <div class="panel-body">
+                <section class="card mb-4">
+                    <div class="card-body  text-center">
+                        <img src="~/assets/images/erro-401.jpg" />
+                    </div>
+                </section>
+                <div class="alert alert-danger">
+                    <p class="m-0">Não Autorizado. Por favor <a asp-page="./Login">Clique aqui para efetuar login</a>.</p>
+                </div>
+            </div>
+        </div>
+        <p class="text-center text-muted mt-md mb-md">&copy; Copyright 2024. Todos os direitos reservados.</p>
+    </div>
+</section>*@

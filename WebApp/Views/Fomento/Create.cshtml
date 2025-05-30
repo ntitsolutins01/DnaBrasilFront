@@ -4,7 +4,7 @@
 	Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="row">
+<div class="row" id="vFomento">
 	<div class="col-md-12">
 		@using (@Html.BeginForm("Create", "Fomento", FormMethod.Post, new { id = "formFomento", @class = "form-horizontal" }))
 		{
@@ -13,11 +13,9 @@
 					<div class="panel-actions">
 						<a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
 					</div>
-
 					<h2 class="panel-title">Cadastro de Fomento</h2>
 				</header>
 				<div class="panel-body">
-
 					<div class="form-group row">
 						<label class="col-sm-2 control-label text-sm-right pt-2">Código <span class="required">*</span></label>
 						<div class="col-sm-3">
@@ -25,14 +23,12 @@
 								   maxlength="50" :value="editDto.Codigo"
 								   title="Por favor informe o código do fomento." required />
 						</div>
-					</div>
-					<div class="form-group row">
-						<label class="col-sm-2 control-label text-sm-right pt-2">Fomento <span class="required">*</span></label>
-						<div class="col-sm-10">
-							<input type="text" name="nome" class="form-control"
-								   maxlength="80"
-								   title="Por favor informe o fomento." required />
-						</div>
+                        <label class="col-sm-1 control-label text-sm-right pt-2">Fomento <span class="required">*</span></label>
+                        <div class="col-sm-6">
+                            <input type="text" name="nome" class="form-control"
+                                   maxlength="80"
+                                   title="Por favor informe o fomento." required />
+                        </div>
 					</div>
 					<div class="form-group row">
 						<label class="col-sm-2 control-label text-sm-right pt-2">Estado <span class="required">*</span></label>
@@ -54,24 +50,21 @@
 					</div>
 					<div class="form-group row">
 						<label class="col-sm-2 control-label text-sm-right pt-2">Localidade <span class="required">*</span></label>
-						<div class="col-md-3">
-							<select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade"
-									title="Por favor informe o localidade." required
-									asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
-								<option value="">Selecionar Localidade</option>
-							</select>
+						<div class="col-md-4">
+                            <select class="form-control" multiple="multiple" data-plugin-multiselect data-plugin-options='{ "maxHeight": 300, "enableCaseInsensitiveFiltering": true }'
+									name="ddlLocalidade" id="ddlLocalidade"
+                                    title="Por favor informe a linha de ação." required style="width:100%"
+                                    asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
+                            </select>
 						</div>
-                        <label class="col-sm-2 control-label text-sm-right pt-2">Linha de Ação<span class="required">*</span></label>
+                        <label class="col-sm-1 control-label text-sm-right pt-2">Linha de Ação<span class="required">*</span></label>
                         <div class="col-md-5">
-							<select class="form-control" multiple="multiple" data-plugin-multiselect data-plugin-options='{ "maxHeight": 200, "enableCaseInsensitiveFiltering": true }'
+							<select class="form-control" multiple="multiple" data-plugin-multiselect data-plugin-options='{ "maxHeight": 300, "enableCaseInsensitiveFiltering": true }'
                                     name="ddlLinhaAcao" id="ddlLinhaAcao"
                                     title="Por favor informe a linha de ação." required style="width:100%"
                                     asp-for="LinhaAcaoId" asp-items="Model.ListLinhasAcoes">
                             </select>
                         </div>
-
-						
-
                     </div>
 					<div class="form-group row">
 						<label class="col-sm-2 control-label text-sm-right pt-2">Data de Início <span class="required">*</span></label>
@@ -107,29 +100,6 @@
 							</div>
 						</div>
 					</div>
-
-					<div class="form-group">
-						<label class="col-sm-1 control-label">&nbsp;&nbsp; </label>
-						<div class="col-sm-12">
-							<blockquote class="info">
-								<strong>Listagem de profissionais</strong>
-							</blockquote>
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="col-sm-2 control-label">Vinculados</label>
-						<div class="col-sm-10">
-							<table class="table table-bordered table-striped mb-0" id="datatable-default">
-								<thead>
-									<tr>
-										<th>Id</th>
-										<th>Nome Profissional</th>
-									</tr>
-								</thead>
-							</table>
-
-						</div>
-					</div>
 				</div>
 				<footer class="panel-footer">
 					<div class="row">
@@ -151,18 +121,14 @@
 	<link rel="stylesheet" href="~/assets/vendor/select2/css/select2.css" />
 	<link rel="stylesheet" href="~/assets/vendor/select2-bootstrap-theme/select2-bootstrap.min.css" />
 	<link rel="stylesheet" href="~/assets/vendor/bootstrap-multiselect/bootstrap-multiselect.css" />
-	<link rel="stylesheet" href="~/assets/vendor/datatables/media/css/dataTables.bootstrap4.css" />
 	<link href="~/assets/vendor/bootstrap-datepicker/css/bootstrap-datepicker3.css" rel="stylesheet" />
 }
 @section Scripts {
+    <script src="~/assets/vendor/select2/js/select2.js"></script>
 	<script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
-	<script src="~/assets/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
-	<script src="~/assets/vendor/datatables/media/js/dataTables.bootstrap4.min.js"></script>
 	<script src="~/assets/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
 	<script src="~/assets/vendor/bootstrap-datepicker/locales/bootstrap-datepicker.pt-BR.min.js"></script>
     <script src="~/assets/vendor/jquery-mask/jquery.mask.js"></script>
-	<script src="~/assets/vendor/select2/js/select2.js"></script>
-	<script src="~/js/formatTable.js"></script>
 	<script src="~/js/fomento.js"></script>
 	<script>
 

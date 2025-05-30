@@ -95,7 +95,7 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<h5 class="modal-title" id="mdEditLocalidadeLabel">
-						<i class="fa fa-trash"></i> &nbsp;&nbsp;<strong>Alterar Localidade</strong>
+						<i class="fa fa-pencil"></i> &nbsp;&nbsp;<strong>Alterar Localidade</strong>
 					</h5>
 				</div>
 				@using (@Html.BeginForm("Edit", "Localidade", FormMethod.Post, new { id = "formEditLocalidade", @class = "form-horizontal" }))
@@ -177,22 +177,22 @@
 		(function ($) {
 
 			'use strict';
-			var crub = @ViewBag.CrudMessage;
+			var crud = @ViewBag.CrudMessage;
 
-			if (crub === 1) {
+			if (crud === 1) {
 				new PNotify({
 					title: 'Localidade',
 					text: 'Cadastro realizado com sucesso!',
 					type: 'success'
 				});
-			} else if (crub === 2) {
+			} else if (crud === 2) {
 				new PNotify({
 					title: 'Localidade',
 					text: 'Dados alterados com sucesso.',
 					type: 'warning',
 					icon: 'fa fa-pencil'
 				});
-			} else if (crub === 3) {
+			} else if (crud === 3) {
 				new PNotify({
 					title: 'Localidade',
 					text: 'Registro excluído com sucesso.',
@@ -200,6 +200,33 @@
 					icon: 'fa fa-trash-o'
 				});
 			}
+
+			var notify = @ViewBag.NotifyMessage;
+			var messagem = '@ViewBag.Notify';
+
+			if (notify === 0) {
+				new PNotify({
+					title: 'Localidade',
+					text: messagem,
+					type: 'success'
+				});
+				crud = 0;
+			} else if (notify === 1) {
+				new PNotify({
+					title: 'Localidade',
+					text: messagem,
+					type: 'warning'
+				});
+				crud = 0;
+			} else if (notify === 2) {
+				new PNotify({
+					title: 'Localidade',
+					text: messagem,
+					type: 'error'
+				});
+				crud = 0;
+			}
+
 			if ($.isFunction($.fn['tooltip'])) {
 				$('[data-toggle=tooltip],[rel=tooltip]').tooltip({ container: 'body' });
 			}

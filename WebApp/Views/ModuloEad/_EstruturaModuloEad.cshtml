@@ -1,0 +1,39 @@
+﻿@model WebApp.Models.EstruturaModuloEadModel
+
+<div class="dd" id="nestable">
+    <ol class="dd-list">
+
+        @{
+            int posicaoAula = 1;
+        }
+        @foreach (var aula in Model.Aulas.OrderBy(a => a.Ordem))
+        {
+            <li class="dd-item" data-id="aula_@aula.Id">
+                <div class="dd-handle">
+                    <span class="position-badge">@posicaoAula</span>
+                    @aula.Titulo
+                </div>
+            </li>
+            posicaoAula++;
+        }
+    </ol>
+</div>
+
+<style>
+    .position-badge {
+        background: #007bff;
+        color: white;
+        border-radius: 50%;
+        width: 25px;
+        height: 25px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 10px;
+    }
+</style>
+
+@if (!Model.Aulas.Any())
+{
+    <div class="alert alert-warning">Nenhuma aula encontrada para este módulo</div>
+}

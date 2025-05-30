@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using System.Security.Claims;
 using WebApp.Configuration;
 using WebApp.Factory;
 using WebApp.Models;
@@ -25,7 +25,7 @@ namespace WebApp.Controllers
         {
             var user = User.Identity.Name;
 
-            var usuario = ApiClientFactory.Instance.GetUsuarioByEmail(user);
+            var usuario = await ApiClientFactory.Instance.GetUsuarioByEmail(user);
 
             var result = ApiClientFactory.Instance.GetAlunoByEmail(usuario.Email);
 

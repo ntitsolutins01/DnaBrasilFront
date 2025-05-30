@@ -9,4 +9,3 @@
         public Dictionary<string, decimal>? PercentualConsumoAlimentar { get; set; }
     }
 }
-    

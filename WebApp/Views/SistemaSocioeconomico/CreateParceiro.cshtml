@@ -21,9 +21,9 @@
                     <div class="panel-body">
 
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">Nome <span class="required">*</span></label>
+                            <label class="col-sm-2 control-label">Nome Fantasia<span class="required">*</span></label>
                             <div class="col-sm-4">
-                                <input type="text" id="nome" name="nome" class="form-control" required title="Por favor informe o Nome" />
+                                <input type="text" id="nome" name="nome" class="form-control" required title="Por favor informe o nome fantasia" />
                             </div>
                             <label class="col-sm-1 control-label">Email <span class="required">*</span></label>
                             <div class="col-sm-5">
@@ -37,22 +37,28 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label class="col-sm-2 control-label">Razão Social<span class="required">*</span></label>
+                            <div class="col-sm-4">
+                                <input type="text" id="razaoSocial" name="razaoSocial" class="form-control" required title="Por favor informe a razão social" maxlength="150" />
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="col-sm-2 control-label">Selecione a Parceria <span class="required">*</span></label>
                             <div class="col-sm-2">
                                 <div class="radio-custom radio-danger">
-                                    <input id="empresas" name="parceria" type="radio" value="1" required title="Por favor selecione a parceiria." checked />
+                                    <input id="empresas" name="parceria" type="radio" value="1" required title="Por favor selecione a parceria." checked />
                                     <label>Empresas parceiras</label>
                                 </div>
                                 <div class="radio-custom radio-warning">
-                                    <input id="clubesFederacoes" name="parceria" type="radio" value="2" required title="Por favor selecione a parceiria." />
+                                    <input id="clubesFederacoes" name="parceria" type="radio" value="2" required title="Por favor selecione a parceria." />
                                     <label>Clubes e Federações</label>
                                 </div>
                                 <div class="radio-custom radio-success">
-                                    <input id="assistenciaSocial" name="parceria" type="radio" value="3" required title="Por favor selecione a parceiria." />
+                                    <input id="assistenciaSocial" name="parceria" type="radio" value="3" required title="Por favor selecione a parceria." />
                                     <label>Assistência Social</label>
                                 </div>
                                 <div class="radio-custom radio-primary">
-                                    <input id="educacional" name="parceria" type="radio" value="4" required title="Por favor selecione a parceiria." />
+                                    <input id="educacional" name="parceria" type="radio" value="4" required title="Por favor selecione a parceria." />
                                     <label>Educacional</label>
                                 </div>
                                 <label class="error" for="tipoParceria"></label>
@@ -109,7 +115,7 @@
                                     </span>
                                     <input id="numTelefone" name="numTelefone" class="form-control"
                                            maxlength="14"
-                                           title="Por favor informe o telefone ">
+                                           title="Por favor informe o telefone " />
                                 </div>
                             </div>
                             <label class="col-sm-1 control-label">Celular </label>
@@ -119,9 +125,15 @@
                                         <i class="fa fa-phone"></i>
                                     </span>
                                     <input id="numCelular" name="numCelular" class="form-control"
-                                           maxlength="14"
-                                           title="Por favor informe o celular">
+                                           maxlength="15"
+                                           title="Por favor informe o celular"/>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Nome de Contato</label>
+                            <div class="col-sm-7">
+                                <input type="text" id="nomeContato" name="nomeContato" class="form-control" maxlength="150"/>
                             </div>
                         </div>
                         <div class="form-group">
@@ -182,7 +194,7 @@
                             <div class="col-sm-10">
                                 <div class="checkbox-custom chekbox-success">
                                     <input id="for-project" value="project" type="checkbox" id="comprometimento" name="comprometimento" required title="Campo obrigatorio" />
-                                    <label for="for-project">Me comprometo que todas as informações prestadas são verdadeiras.</label>
+                                    <label for="for-project">Me comprometo que todas as informações prestadas são verdadeiras. <span class="required">*</span></label>
                                 </div>
                                 <label class="error" for="comprometimento"></label>
                             </div>
@@ -192,7 +204,7 @@
                         <div class="row">
                             <div class="col-md-9 col-md-offset-3">
                                 <a href="@Url.Action("Parceiro", "SistemaSocioeconomico")" class="btn btn-dark pull-right" style="margin-left: 5px;margin-right: 5px;"><i class="fa fa-reply"></i> &nbsp;&nbsp;Voltar</a>
-                                <button type="submit" class="btn btn-danger pull-right" style="margin-left: 5px;"><i class="fa fa-remove"></i> &nbsp;&nbsp;Cancelar</button>
+                                <a href="@Url.Action("Parceiro", "SistemaSocioeconomico")" class="btn btn-danger pull-right" style="margin-left: 5px;"><i class="fa fa-remove"></i> &nbsp;&nbsp;Cancelar</a>
                                 <button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
                             </div>
                         </div>

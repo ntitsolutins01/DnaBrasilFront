@@ -339,28 +339,35 @@
 }).apply(this, [jQuery]);
 
 // SummerNote
-(function($) {
+//(function($) {
 
-	'use strict';
+//	'use strict';
 
-	if ( $.isFunction($.fn[ 'summernote' ]) ) {
+//	if ( $.isFunction($.fn[ 'summernote' ]) ) {
 
-		$(function() {
-			$('[data-plugin-summernote]').each(function() {
-				var $this = $( this ),
-					opts = {};
+//		$(function() {
+//			$('[data-plugin-summernote]').each(function() {
+//				var $this = $( this ),
+//					opts = {};
 
-				var pluginOptions = $this.data('plugin-options');
-				if (pluginOptions)
-					opts = pluginOptions;
+//				var pluginOptions = $this.data('plugin-options');
+//				if (pluginOptions)
+//					opts = pluginOptions;
 
-				$this.themePluginSummerNote(opts);
-			});
-		});
+//				$this.themePluginSummerNote(opts);
+//			});
+//		});
 
-	}
-
-}).apply(this, [jQuery]);
+//	}
+//	$(document).ready(function () {
+//		$('.summernote').summernote({
+//			height: 180,
+//			codemirror: {
+//				theme: 'ambiance'
+//			}
+//		});
+//	});
+//}).apply(this, [jQuery]);
 
 // TextArea AutoSize
 (function($) {

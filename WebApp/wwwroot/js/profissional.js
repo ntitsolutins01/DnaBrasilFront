@@ -3,11 +3,14 @@
     data: {
         params: {
             cpf: "",
-            ambientes: [],
-            modalidadeProfissional: [],
+            alunos: [],
+            visible: false
         },
         loading: false,
-        editDto: { Id: "", Nome: "", DtNascimento: "", Email: "", AspNetUserId: "", Sexo: "", Cpf: "", Telefone: "", Celular: "", Endereco: "", Numero: "", Cep: "", Bairro: "", Municipio: "", Ambientes: "", Contratos: "", Status: true }
+        editDto: {
+            Categoria: "", Estrutura: "", DiasSemana: "", Horario: "", Update: true,
+            Email: "", Cpf: ""
+        }
     },
     mounted: function () {
         var self = this;
@@ -15,12 +18,11 @@
 
             'use strict';
 
-
             var formid = $('form')[1].id;
 
             //Inclusao
             if (formid === "formInclusaoProfissional") {
-
+                //skin iosSwitcher
                 if (typeof Switch !== 'undefined' && $.isFunction(Switch)) {
 
                     $(function () {
@@ -33,6 +35,79 @@
                 }
 
                 //skin select
+                // MultiSelect
+                (function (theme, $) {
+
+                    theme = theme || {};
+
+                    var instanceName = '__multiselect';
+
+                    var PluginMultiSelect = function ($el, opts) {
+                        return this.initialize($el, opts);
+                    };
+
+                    PluginMultiSelect.defaults = {
+                        templates: {
+                            filter: '<div class="input-group"><span class="input-group-addon"><i class="fa fa-search"></i></span><input class="form-control multiselect-search" type="text"></div>'
+                        }
+                    };
+
+                    PluginMultiSelect.prototype = {
+                        initialize: function ($el, opts) {
+                            if ($el.data(instanceName)) {
+                                return this;
+                            }
+
+                            this.$el = $el;
+
+                            this
+                                .setData()
+                                .setOptions(opts)
+                                .build();
+
+                            return this;
+                        },
+
+                        setData: function () {
+                            this.$el.data(instanceName, this);
+
+                            return this;
+                        },
+
+                        setOptions: function (opts) {
+                            this.options = $.extend(true, {}, PluginMultiSelect.defaults, opts);
+
+                            return this;
+                        },
+
+                        build: function () {
+                            this.$el.multiselect(this.options);
+
+                            return this;
+                        }
+                    };
+
+                    // expose to scope
+                    $.extend(theme, {
+                        PluginMultiSelect: PluginMultiSelect
+                    });
+
+                    // jquery plugin
+                    $.fn.themePluginMultiSelect = function (opts) {
+                        return this.each(function () {
+                            var $this = $(this);
+
+                            if ($this.data(instanceName)) {
+                                return $this.data(instanceName);
+                            } else {
+                                return new PluginMultiSelect($this, opts);
+                            }
+
+                        });
+                    }
+
+                }).apply(this, [window.theme, jQuery]);
+
                 var $select = $(".select2").select2({
                     allowClear: true
                 });
@@ -221,6 +296,79 @@
                 }
 
                 //skin select
+                // MultiSelect
+                (function (theme, $) {
+
+                    theme = theme || {};
+
+                    var instanceName = '__multiselect';
+
+                    var PluginMultiSelect = function ($el, opts) {
+                        return this.initialize($el, opts);
+                    };
+
+                    PluginMultiSelect.defaults = {
+                        templates: {
+                            filter: '<div class="input-group"><span class="input-group-addon"><i class="fa fa-search"></i></span><input class="form-control multiselect-search" type="text"></div>'
+                        }
+                    };
+
+                    PluginMultiSelect.prototype = {
+                        initialize: function ($el, opts) {
+                            if ($el.data(instanceName)) {
+                                return this;
+                            }
+
+                            this.$el = $el;
+
+                            this
+                                .setData()
+                                .setOptions(opts)
+                                .build();
+
+                            return this;
+                        },
+
+                        setData: function () {
+                            this.$el.data(instanceName, this);
+
+                            return this;
+                        },
+
+                        setOptions: function (opts) {
+                            this.options = $.extend(true, {}, PluginMultiSelect.defaults, opts);
+
+                            return this;
+                        },
+
+                        build: function () {
+                            this.$el.multiselect(this.options);
+
+                            return this;
+                        }
+                    };
+
+                    // expose to scope
+                    $.extend(theme, {
+                        PluginMultiSelect: PluginMultiSelect
+                    });
+
+                    // jquery plugin
+                    $.fn.themePluginMultiSelect = function (opts) {
+                        return this.each(function () {
+                            var $this = $(this);
+
+                            if ($this.data(instanceName)) {
+                                return $this.data(instanceName);
+                            } else {
+                                return new PluginMultiSelect($this, opts);
+                            }
+
+                        });
+                    }
+
+                }).apply(this, [window.theme, jQuery]);
+
                 var $select = $(".select2").select2({
                     allowClear: true
                 });
@@ -393,6 +541,221 @@
                     }
                 });
             }
+            //Profile
+            if (formid === "formProfile") {
+
+                //skin select
+                var $select = $(".select2").select2({
+                    allowClear: true
+                });
+
+                $(".select2").each(function () {
+                    var $this = $(this),
+                        opts = {};
+
+                    var pluginOptions = $this.data('plugin-options');
+                    if (pluginOptions)
+                        opts = pluginOptions;
+
+                    $this.themePluginSelect2(opts);
+                });
+
+                /*
+                 * When you change the value the select via select2, it triggers
+                 * a 'change' event, but the jquery validation plugin
+                 * only re-validates on 'blur'*/
+
+                $select.on('change', function () {
+                    $(this).trigger('blur');
+                });
+
+                $("#divAlunos").hide();
+
+                //clique de escolha do select
+                $("#ddlModalidade").change(function () {
+                    var modalidadeId = $("#ddlModalidade").val();
+
+                    var profissionalId = $("#profissionalIdMinhasTurmas").val();
+
+                    var url = "../Profissional/GetTurmasByModalidadeIdProfissionalId";
+
+                    $.getJSON(url,
+                        { modalidadeId: modalidadeId, profissionalId: profissionalId },
+                        function (data) {
+                            if (data.length > 0) {
+                                var items = '<option value="">Selecionar Turma</option>';
+                                $("#ddlTurma").empty;
+                                $.each(data,
+                                    function (i, row) {
+                                        items += "<option value='" + row.value + "'>" + row.text + "</option>";
+                                    });
+                                $("#ddlTurma").html(items);
+                            }
+                            else {
+                                new PNotify({
+                                    title: 'Profissional',
+                                    text: "O Profissional logado não possui atividades e turmas cadastradas.",
+                                    type: 'warning'
+                                });
+                            }
+                        });
+                });
+
+                //clique de escolha do select
+                $("#ddlTurma").change(function () {
+
+                    var id = $("#ddlTurma").val();
+
+                    if (id === "") {
+                        Site.Notification("Profissional", "Por favor selecione uma turma", "warning");
+                    }
+
+                    var url = "../Atividade/GetAtividadeById";
+
+                    var urlDataTable = "../Atividade/GetAtividadeAlunosByAtividadeId";
+
+                    axios.get(url, {
+                        params: {
+                            id: id
+                        }
+                    }).then(result => {
+                        $("#divAlunos").show();
+                        self.editDto.Categoria = result.data.nomeCategoria;
+                        self.editDto.Estrutura = result.data.nomeEstrutura;
+                        self.editDto.DiasSemana = result.data.diasSemana;
+                        self.editDto.Horario = result.data.hrInicial + " - " + result.data.hrFinal;
+
+                        axios.get(urlDataTable, {
+                            params: {
+                                id: id
+                            }
+                        }).then(result => {
+                            if (result.data.length > 0) {
+
+                                self.editDto.Update = true;
+
+                                $.each(result.data,
+                                    function (i, item) {
+
+                                        $('#alunoDataTable').DataTable().destroy();
+
+                                        var table = $('#alunoDataTable').DataTable({
+                                            columnDefs: [
+                                                { "className": "text-center", "targets": "_all" }
+                                            ]
+                                        });
+
+                                        table.row.add([item.alunoId.toString(), item.alunoId + " - " + item.nome,
+                                        "<a style='color:#F44336' href='javascript:(crud.DeleteAluno(\"" + item.alunoId + "\"))'><i class='fa fa-trash'></i></a>"])
+                                            .draw();
+
+                                        self.params.alunos.push(item.alunoId.toString());
+
+                                    });
+
+                                $('input[name="arrAlunos"]').attr('value', self.params.alunos);
+                            } else {
+
+                                self.editDto.Update = false;
+                            }
+                        }).catch(error => {
+                            Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
+                        });
+
+                    }).catch(error => {
+                        Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
+                    });
+                });
+
+                //mascara dos inputs
+                var $numCpf = $("#cpf");
+                $numCpf.mask('000.000.000-00', { reverse: false });
+
+                var $numCnpj = $("#cnpj");
+                $numCnpj.mask('00.000.000/0000-00', { reverse: false });
+
+                var $numTel = $("#numTelefone");
+                $numTel.mask('(00) 0000-0000');
+
+                var $numTel = $("#numCelular");
+                $numTel.mask('(00) 00000-0000');
+
+                var $numCep = $("#cep");
+                $numCep.mask('00000-000');
+
+                var $numDtNasc = $("#DtNascimento");
+                $numDtNasc.mask('00/00/0000', { reverse: false });
+
+                jQuery.validator.addMethod("cpf", function (cpf, element) {
+                    var regex = /^\d{3}\.\d{3}\.\d{3}\-\d{2}$/;
+                    var add, rev, i;
+                    if (!regex.test(cpf))
+                        return false;
+
+                    cpf = cpf.replace(/[^\d]+/g, '');
+                    if (cpf == '') return false;
+                    // Elimina CPFs invalidos conhecidos	
+                    if (cpf.length != 11 ||
+                        cpf == "00000000000" ||
+                        cpf == "11111111111" ||
+                        cpf == "22222222222" ||
+                        cpf == "33333333333" ||
+                        cpf == "44444444444" ||
+                        cpf == "55555555555" ||
+                        cpf == "66666666666" ||
+                        cpf == "77777777777" ||
+                        cpf == "88888888888" ||
+                        cpf == "99999999999")
+                        return false;
+                    // Valida 1o digito	
+                    add = 0;
+                    for (i = 0; i < 9; i++)
+                        add += parseInt(cpf.charAt(i)) * (10 - i);
+                    rev = 11 - (add % 11);
+                    if (rev == 10 || rev == 11)
+                        rev = 0;
+                    if (rev != parseInt(cpf.charAt(9)))
+                        return false;
+                    // Valida 2o digito	
+                    add = 0;
+                    for (i = 0; i < 10; i++)
+                        add += parseInt(cpf.charAt(i)) * (11 - i);
+                    rev = 11 - (add % 11);
+                    if (rev == 10 || rev == 11)
+                        rev = 0;
+                    if (rev != parseInt(cpf.charAt(10)))
+                        return false;
+                    return true;
+
+
+                }, "Informe um CPF válido");
+
+
+                $("#formMinhasTurmas").validate({
+                    rules: {
+                        cpf: { cpf: true, required: true }
+                    },
+                    messages: {
+                        cpf: { cpf: 'Formato de CPF inválido', required: "Por favor informe o número do CPF do profissional." }
+                    },
+                    highlight: function (label) {
+                        $(label).closest('.form-group').removeClass('has-success').addClass('has-error');
+                    },
+                    success: function (label) {
+                        $(label).closest('.form-group').removeClass('has-error');
+                        label.remove();
+                    },
+                    errorPlacement: function (error, element) {
+                        var placement = element.closest('.input-group');
+                        if (!placement.get(0)) {
+                            placement = element;
+                        }
+                        if (error.text() !== '') {
+                            placement.after(error);
+                        }
+                    }
+                });
+            }
             //Habilitar
             if (formid === "formHabilitarProfissional") {
 
@@ -428,46 +791,6 @@
                 });
             }
 
-
-            var datatableInit = function () {
-
-                $('.adicionados').dataTable({
-                    columnDefs: [
-                        { "className": "text-center", "targets": "_all" }
-                    ],
-                    dom: '<"row"<"col-lg-6"l><"col-lg-6"f>><"table-responsive"t>p',
-                    "language": {
-                        "sEmptyTable": "Nenhum registro encontrado",
-                        "sInfo": "Mostrando de _START_ até _END_ de _TOTAL_ registros",
-                        "sInfoEmpty": "Mostrando 0 até 0 de 0 registros",
-                        "sInfoFiltered": "(Filtrados de _MAX_ registros)",
-                        "sInfoPostFix": "",
-                        "sInfoThousands": ".",
-                        "sLengthMenu": "_MENU_ resultados por página",
-                        "sLoadingRecords": "Carregando...",
-                        "sProcessing": "Processando...",
-                        "sZeroRecords": "Nenhum registro encontrado",
-                        "sSearch": "Pesquisar: ",
-                        "oPaginate": {
-                            "sNext": "Próximo →" +
-                                "" +
-                                "",
-                            "sPrevious": "← Anterior",
-                            "sFirst": "Primeiro",
-                            "sLast": "Último"
-                        },
-                        "oAria": {
-                            "sSortAscending": ": Ordenar colunas de forma ascendente",
-                            "sSortDescending": ": Ordenar colunas de forma descendente"
-                        }
-                    }
-                });
-
-            };
-
-            $(function () {
-                datatableInit();
-            });
         }).apply(this, [jQuery]);
     },
     methods: {
@@ -563,114 +886,132 @@
                 self.ShowLoad(false, "vUsuario");
             });
         },
-        AddAmbiente: function () {
+        DesvincularAlunos: function () {
+            axios.get("Curso/GetProfissionaisById/?id=" + id).then(result => {
+
+                if (result.data.listProfissionais.length > 0) {
+                    var items = '<option value="">Selecionar o Profissional</option>';
+                    $("#ddlProfissional").empty;
+                    $.each(result.data.listProfissionais,
+                        function (i, row) {
+                            if (row.selected) {
+                                items += "<option selected value='" + row.value + "'>" + row.text + "</option>";
+                            } else {
+                                items += "<option value='" + row.value + "'>" + row.text + "</option>";
+                            }
+                        });
+                    $("#ddlProfissional").html(items);
+                }
+                else {
+                    new PNotify({
+                        title: 'Profissional',
+                        text: 'Profissionais não encontrados.',
+                        type: 'warning'
+                    });
+                }
+
+            }).catch(error => {
+                console.error('Erro ao carregar dados:', error);
+                Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
+            });
+        },
+        AddAluno: function () {
             var self = this;
-            self.ShowLoad(true, "vProfissional");
+            self.ShowLoad(true, "divAlunos");
 
-            var mapped = $("#ddlAmbiente").select2('data');
+            var mapped = $("#ddlAluno").select2('data');
 
-            if (self.params.ambientes.indexOf(mapped[0].id) !== -1) {
-
+            if (self.params.alunos.indexOf(mapped[0].id) !== -1) {
+                self.ShowLoad(false, "divAlunos");
                 new PNotify({
-                    title: 'Ambiente',
-                    text: 'Ambiente já foi adicionado anteriormente.',
+                    title: 'Aluno',
+                    text: 'Aluno já foi adicionado anteriormente.',
                     type: 'warning'
                 });
                 return;
             }
 
-            $('#ambienteDataTable').DataTable().destroy();
+            $('#alunoDataTable').DataTable().destroy();
 
-            var table = $('#ambienteDataTable').DataTable({
+            var table = $('#alunoDataTable').DataTable({
                 columnDefs: [
                     { "className": "text-center", "targets": "_all" }
                 ]
             });
 
             table.row.add([mapped[0].id, mapped[0].text,
-            "<a style='color:#F44336' href='javascript:(crud.DeleteAmbiente(\"" + mapped[0].id + "\"))'><i class='fa fa-trash'></i></a>"])
+            "<a style='color:#F44336' href='javascript:(crud.DeleteAluno(\"" + mapped[0].id + "\"))'><i class='fa fa-trash'></i></a>"])
                 .draw();
 
-            self.params.ambientes.push(mapped[0].id);
+            self.params.alunos.push(mapped[0].id);
 
-            $('input[name="arrAmbientes"]').attr('value', self.params.ambientes);
+            $('input[name="arrAlunos"]').attr('value', self.params.alunos);
 
-            $("#ddlAmbiente").select2("val", "0");
+            $("#ddlAluno").select2("val", "0");
 
-            self.ShowLoad(false, "vProfissional");
+            self.ShowLoad(false, "divAlunos");
         },
-        DeleteAmbiente: function (index) {
-            var table = $('#ambienteDataTable').DataTable();
+        DeleteAluno: function (id) {
+            var self = this;
+            self.ShowLoad(true, "divAlunos");
+
+            var table = $('#alunoDataTable').DataTable();
             table.rows(function (idx, data, node) {
                 return data[0] === id;
             })
                 .remove()
                 .draw();
 
-            $("#ddlAmbiente").select2("val", "0");
+            var alunos = self.params.alunos;
+
+            var index = alunos.indexOf(id);
+
+            if (index !== -1) {
+                alunos.splice(index, 1);
+            }
+
+            self.params.alunos = alunos;
+
+            $('input[name="arrAlunos"]').attr('value', self.params.alunos);
+
+            $("#ddlAluno").select2("val", "0");
+            self.ShowLoad(false, "divAlunos");
+        },
+        HabilitarProfissional: function (id) {
+            var self = this;
+
+            axios.get("Profissional/GetProfissionalById/?id=" + id).then(result => {
+
+                self.editDto.Id = result.data.id;
+                self.editDto.Email = result.data.email;
+                self.editDto.Cpf = result.data.cpf;
+
+            }).catch(error => {
+                Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
+            });
         }
     }
 });
 var crud = {
+    AddAluno: function () {
+        vm.AddAluno();
+    },
+    DeleteAluno: function (index) {
+        vm.DeleteAluno(index.toString());
+    },
     DeleteModal: function (id) {
         $('input[name="deleteProfissionalId"]').attr('value', id);
         $('#mdDeleteProfissional').modal('show');
         vm.DeleteProfissional(id)
     },
+    DesvincularAlunoModal: function (id) {
+        $('input[name="profissionalId"]').attr('value', id);
+        $('#mdDesvincularAlunos').modal('show');
+        vm.DesvincularAlunos(id);
+    },
     HabilitarModal: function (id) {
         $('input[name="habilitarProfissionalId"]').attr('value', id);
         $('#mdHabilitarProfissional').modal('show');
-    },
-    AddAmbiente: function () {
-        vm.AddAmbiente()
-    },
-    DeleteAmbiente: function (index) {
-        vm.DeleteAmbiente(index)
-    },
-    DeleteModalidadeProfissional: function (id) {
-        var self = this;
-
-        var table = $('#modalidadeDataTable').DataTable();
-        table.rows(function (idx, data, node) {
-            return data[0] === id;
-        })
-            .remove()
-            .draw();
-
-        $("#ddlModalidade").select2("val", "0");
-    },
-    AddModalidade: function () {
-        var self = this;
-
-        var mapped = $("#ddlModalidade").select2('data');
-
-        if (self.params.modalidadeProfissional.indexOf(mapped[0].id) !== -1) {
-
-            new PNotify({
-                title: 'Modalidade',
-                text: 'Modalidade já foi adicionado anteriormente.',
-                type: 'warning'
-            });
-            return;
-        }
-
-        $('#modalidadeDataTable').DataTable().destroy();
-
-        var table = $('#modalidadeDataTable').DataTable({
-            columnDefs: [
-                { "className": "text-center", "targets": "_all" }
-            ]
-        });
-
-        table.row.add([mapped[0].id, mapped[0].text,
-        "<a style='color:#F44336' href='javascript:(crud.DeleteModalidadeProfissional(\"" + mapped[0].id + "\"))'><i class='fa fa-trash'></i></a>"])
-            .draw();
-
-        self.params.modalidadeProfissional.push(mapped[0].id);
-
-        $('input[name="arrModalidadeProfissional"]').attr('value', self.params.modalidadeProfissional);
-
-        $("#ddlModalidade").select2("val", "0");
-
+        vm.EditProfissional(id);
     }
 };

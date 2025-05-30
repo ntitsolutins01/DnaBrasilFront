@@ -1,0 +1,186 @@
+﻿@model WebApp.Models.AlunoModel
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Impressão de Carteirinhas em Formato A4</title>
+    <link rel="stylesheet" href="~/assets/vendor/font-awesome/css/font-awesome.css" />
+    <link rel="stylesheet" href="~/assets/styles_Carteirinha/impressao-carteirinha-a4.css" />
+</head>
+<body>
+    <div class="print-controls">
+        <button class="btn btn-primary" onclick="printCards()">
+            <i class="fa fa-print"></i> Imprimir Carteirinhas
+        </button>
+        <button class="btn btn-secondary" onclick="window.close()">
+            <i class="fa fa-times"></i> Fechar
+        </button>
+        <div class="pagination-controls">
+            <span id="total-info">Total de carteirinhas: @Model.Alunos.Count()</span>
+        </div>
+    </div>
+
+    @{
+        // Calcular número de páginas A4 necessárias (16 conjuntos por página - 8 linhas x 2 colunas)
+        var totalAlunos = Model.Alunos.Count();
+        var conjuntosPorPagina = 16;
+        var totalPaginas = Math.Ceiling((double)totalAlunos / conjuntosPorPagina);
+    }
+
+    @for (int pagina = 0; pagina < totalPaginas; pagina++)
+    {
+        <div class="a4-wrapper">
+            <div class="a4-page">
+                <div class="cards-container">
+                    @{
+                        // Índices para esta página
+                        var startIdx = pagina * conjuntosPorPagina;
+                        var endIdx = Math.Min(startIdx + conjuntosPorPagina, totalAlunos);
+                    }
+
+                    @for (int i = startIdx; i < endIdx; i++)
+                    {
+                        var aluno = Model.Alunos[i];
+                        var posicao = i - startIdx; // Posição relativa nesta página (0-15)
+
+                        <div class="card-set">
+                            <div class="card-inner">
+                                <!-- Frente da carteirinha -->
+                                <div class="page frente-page" style="background-image: url(/assets/styles_Carteirinha/modelos/carteirinha-frente.png);">
+                                    <div class="student-info">
+                                        <div class="info-row">
+                                            <label>NOME DO ESTUDANTE:</label>
+                                            <span>@aluno.Nome</span>
+                                        </div>
+                                        <div class="info-row">
+                                            <label>DATA DE NASCIMENTO:</label>
+                                            <span>@aluno.DtNascimento</span>
+                                        </div>
+                                        <div class="info-row">
+                                            <label>TELEFONE:</label>
+                                            <span>@aluno.Celular</span>
+                                        </div>
+                                        <div class="info-row">
+                                            <label>CPF:</label>
+                                            <span>@aluno.Cpf</span>
+                                        </div>
+                                        <div class="info-row">
+                                            <label>MATRÍCULA:</label>
+                                            <span>@aluno.Id</span>
+                                        </div>
+                                        <div class="activity-info">
+                                            @aluno.Modalidades
+                                        </div>
+                                    </div>
+                                    <div class="photo-container">
+                                        @if (aluno.ByteImage != null && aluno.ByteImage.Length > 0)
+                                        {
+                                            var base64 = Convert.ToBase64String(aluno.ByteImage);
+                                            var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+                                            <img src="@imgSrc" alt="Foto do estudante" class="student-photo">
+                                        }
+                                        else
+                                        {
+                                            <img src="@(aluno.Sexo == "Feminino" ? "/assets/images/menina.png" : "/assets/images/menino.png")"
+                                                 alt="Foto do estudante" class="student-photo" style="object-fit: inherit!important;">
+                                        }
+                                    </div>
+                                    <div class="qr-code-container">
+                                        @if (aluno.QrCode != null)
+                                        {
+                                            var base64QrCode = Convert.ToBase64String(aluno.QrCode);
+                                            var imgSrcQrCode = String.Format("data:image/gif;base64,{0}", base64QrCode);
+                                            <img src="@imgSrcQrCode" alt="QR Code" class="qr-code">
+                                        }
+                                    </div>
+                                </div>
+
+                                <!-- Verso da carteirinha -->
+                                <div class="page verso-page" style="background-image: url(/assets/styles_Carteirinha/modelos/@Model.ModeloCarteirinha?.NomeImagemVerso);">
+                                    <div class="main-content-verso">
+                                        <div class="info-row-verso">
+                                            <label>MUNICÍPIO/ESTADO:</label>
+                                            <span>@aluno.MunicipioEstado</span>
+                                        </div>
+                                        <div class="info-row-verso">
+                                            <label>UNIDADE ESCOLAR:</label>
+                                            <span>@aluno.NomeLocalidade</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    <!-- Número da página -->
+                    <div class="page-number">Página @(pagina + 1) de @totalPaginas</div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="pagination-info">
+        <span>Total de páginas: @totalPaginas</span>
+    </div>
+
+    <script>
+        // Configurações de impressão
+        function setupPrintConfig() {
+            if (window.matchMedia) {
+                const mediaQueryList = window.matchMedia('print');
+                mediaQueryList.addListener(function(mql) {
+                    if (mql.matches) {
+                        document.body.style.webkitPrintColorAdjust = 'exact';
+                        document.body.style.printColorAdjust = 'exact';
+                    }
+                });
+            }
+        }
+
+        // Aguardar carregamento de imagens
+        function waitForImages(callback) {
+            const images = document.getElementsByTagName('img');
+            let loadedImages = 0;
+            const totalImages = images.length;
+
+            function imageLoaded() {
+                loadedImages++;
+                if (loadedImages === totalImages) {
+                    callback();
+                }
+            }
+
+            Array.from(images).forEach(img => {
+                if (img.complete) {
+                    imageLoaded();
+                } else {
+                    img.addEventListener('load', imageLoaded);
+                    img.addEventListener('error', imageLoaded);
+                }
+            });
+
+            // Se não houver imagens, execute o callback imediatamente
+            if (totalImages === 0) {
+                callback();
+            }
+        }
+
+        // Imprimir carteirinhas
+        function printCards() {
+            setupPrintConfig();
+
+            waitForImages(() => {
+                setTimeout(() => {
+                    window.print();
+                }, 300);
+            });
+        }
+
+        // Configurar quando a página carregar
+        document.addEventListener('DOMContentLoaded', setupPrintConfig);
+    </script>
+</body>
+</html>

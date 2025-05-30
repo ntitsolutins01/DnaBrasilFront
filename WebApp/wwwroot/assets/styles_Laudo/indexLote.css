@@ -1,0 +1,159 @@
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
+
+/* Alterações Globais */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0 50px 0 0;
+    background-color: #9e9e9e;
+    font-size: 14px;
+    font-family: Ubuntu, sans-serif;
+}
+
+/* Barra de navegação fixa */
+.navigation-bar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 50px;
+    height: 100vh;
+    background-color: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 1000;
+    padding: 60px 0;
+    box-sizing: border-box;
+}
+/* Container para paginação */
+.page-navigation {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+/* Botões de navegação */
+.nav-button {
+    width: 30px;
+    height: 30px;
+    border: none;
+    background-color: #555;
+    color: white;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s;
+}
+.nav-button:hover {
+    background-color: #666;
+}
+/* Contador de páginas */
+.page-counter {
+    color: white;
+    font-size: 12px;
+    text-align: center;
+    margin: 5px 0;
+}
+/* Container para botões de ação */
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: auto;
+}
+/* Estilo para os ícones dos botões */
+.action-button {
+    width: 35px;
+    height: 35px;
+    border: none;
+    background-color: #555;
+    color: white;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s;
+}
+.action-button:hover {
+    background-color: #666;
+}
+.nav-button.disabled {
+    background-color: #444;
+    cursor: auto;
+    opacity: 0.5;
+}
+
+.nav-button.disabled:hover {
+    background-color: #444;
+}
+
+/* Parâmetros New Page*/
+.page-container {
+    width: 210mm;
+    height: 297mm;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: white;
+    margin: 20px auto;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+    page-break-after: always;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.page-date {
+  width: 100%;
+  text-align: center;
+  font-family: Ubuntu;
+  font-size: 12px;
+  font-weight: 500;
+  color: #666;
+  padding: 20px 0;
+  margin-top: auto;
+}
+
+/* Estilos específicos para impressão */
+@media print {
+    /* Reset do body para impressão */
+    body {
+        margin: 0;
+        padding: 0;
+        background-color: white;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    /* Ajustes do container para impressão */
+    .page-container {
+        width: 210mm;
+        height: 297mm;
+        margin: 0;
+        padding: 0;
+        box-shadow: none;
+        page-break-after: always;
+        page-break-inside: avoid;
+    }
+    .navigation-bar {
+        display: none;
+    }
+
+    /* Garante que as cores e imagens de fundo sejam impressas */
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    /* Esconde elementos desnecessários na impressão */
+    @page {
+        size: A4;
+        margin: 0;
+    }
+}

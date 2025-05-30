@@ -10,5 +10,6 @@
         public const string Habilitar = "Habilitar";
         public const string Detalhar = "Detalhar";
         public const string Download = "Download";
+        public const string AlterarProfile = "AlterarProfile";
     }
 }

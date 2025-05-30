@@ -10,5 +10,6 @@
         public int EstadoId { get; set; }
         public string? NomeMunicipio { get; set; }
         public string? NomeEstado { get; set; }
-	}
+        public int? CodigoInep { get; set; }
+    }
 }

@@ -2,14 +2,19 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using WebApp.Areas.Identity.Models;
+using WebApp.Configuration;
 using WebApp.Data;
+using WebApp.Identity;
 using WebApp.Models;
 using WebApp.Services;
-using WebApp.Configuration;
-using WebApp.Identity;
+using WebApp.Utility;
 
 var builder = WebApplication.CreateBuilder(args);
+
+//Configure Log4net
+builder.Services.AddLog4net();
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ??
@@ -92,43 +97,56 @@ builder.Services.AddAuthorization(o =>
 {
     #region Sistema DNA
 
+    o.AddPolicy(ModuloAccess.Atividade, policy =>
+        policy.RequireAssertion(context =>
+            context.User.IsInRole(UserRoles.Coordenador) ||
+            context.User.IsInRole(UserRoles.Gestor) ||
+            context.User.IsInRole(UserRoles.Administrador)));
+
     o.AddPolicy(ModuloAccess.ConfiguracaoSistema, policy =>
         policy.RequireAssertion(context =>
             context.User.IsInRole(UserRoles.Administrador)));
 
     o.AddPolicy(ModuloAccess.ControleAcesso, policy =>
         policy.RequireAssertion(context =>
-            context.User.IsInRole(UserRoles.Administrador) ||
-            context.User.IsInRole(UserRoles.AdministradorEad)));
+            context.User.IsInRole(UserRoles.Administrador)));
 
     o.AddPolicy(ModuloAccess.Dashboard, policy =>
         policy.RequireAssertion(context =>
+            context.User.IsInRole(UserRoles.Coordenador) ||
             context.User.IsInRole(UserRoles.Profissional) ||
             context.User.IsInRole(UserRoles.Gestor) ||
             context.User.IsInRole(UserRoles.Administrador)));
 
     o.AddPolicy(ModuloAccess.ControlePresenca, policy =>
         policy.RequireAssertion(context =>
+            context.User.IsInRole(UserRoles.Coordenador) ||
             context.User.IsInRole(UserRoles.Profissional) ||
             context.User.IsInRole(UserRoles.Gestor) ||
-            context.User.IsInRole(UserRoles.AdministradorEad) ||
+            context.User.IsInRole(UserRoles.Administrador)));
+
+    o.AddPolicy(ModuloAccess.ControleFrequenciaEscolar, policy =>
+        policy.RequireAssertion(context =>
+            context.User.IsInRole(UserRoles.Profissional) ||
             context.User.IsInRole(UserRoles.Administrador)));
 
     o.AddPolicy(ModuloAccess.Nota, policy =>
         policy.RequireAssertion(context =>
+            context.User.IsInRole(UserRoles.Coordenador) ||
             context.User.IsInRole(UserRoles.Profissional) ||
             context.User.IsInRole(UserRoles.Gestor) ||
-            context.User.IsInRole(UserRoles.AdministradorEad) ||
             context.User.IsInRole(UserRoles.Administrador)));
 
     o.AddPolicy(ModuloAccess.Profissional, policy =>
         policy.RequireAssertion(context =>
+            context.User.IsInRole(UserRoles.Coordenador) ||
             context.User.IsInRole(UserRoles.Profissional) ||
             context.User.IsInRole(UserRoles.Gestor) ||
             context.User.IsInRole(UserRoles.Administrador)));
 
     o.AddPolicy(ModuloAccess.SistemaSocioeconomico, policy =>
         policy.RequireAssertion(context =>
+            context.User.IsInRole(UserRoles.Coordenador) ||
             context.User.IsInRole(UserRoles.Profissional) ||
             context.User.IsInRole(UserRoles.Parceiro) ||
             context.User.IsInRole(UserRoles.Gestor) ||
@@ -136,52 +154,66 @@ builder.Services.AddAuthorization(o =>
 
     o.AddPolicy(ModuloAccess.PlanoAula, policy =>
         policy.RequireAssertion(context =>
+            context.User.IsInRole(UserRoles.Coordenador) ||
             context.User.IsInRole(UserRoles.Profissional) ||
             context.User.IsInRole(UserRoles.Gestor) ||
             context.User.IsInRole(UserRoles.Administrador)));
 
     o.AddPolicy(ModuloAccess.Aluno, policy =>
         policy.RequireAssertion(context =>
+            context.User.IsInRole(UserRoles.AdministradorEad) ||
+            context.User.IsInRole(UserRoles.Coordenador) ||
             context.User.IsInRole(UserRoles.Gestor) ||
             context.User.IsInRole(UserRoles.Profissional) ||
             context.User.IsInRole(UserRoles.Administrador)));
 
     o.AddPolicy(ModuloAccess.Laudo, policy =>
         policy.RequireAssertion(context =>
+            context.User.IsInRole(UserRoles.Coordenador) ||
             context.User.IsInRole(UserRoles.Gestor) ||
             context.User.IsInRole(UserRoles.Profissional) ||
             context.User.IsInRole(UserRoles.Parceiro) ||
-            context.User.IsInRole(UserRoles.AdministradorEad) ||
             context.User.IsInRole(UserRoles.Administrador)));
 
     o.AddPolicy(ModuloAccess.Evento, policy =>
          policy.RequireAssertion(context =>
+             context.User.IsInRole(UserRoles.Coordenador) ||
              context.User.IsInRole(UserRoles.Profissional) ||
              context.User.IsInRole(UserRoles.Gestor) ||
              context.User.IsInRole(UserRoles.Administrador)));
 
     o.AddPolicy(ModuloAccess.ControleMaterial, policy =>
         policy.RequireAssertion(context =>
+            context.User.IsInRole(UserRoles.Coordenador) ||
+            context.User.IsInRole(UserRoles.Gestor) ||
             context.User.IsInRole(UserRoles.Administrador)));
+
+
+
 
 
     #endregion
 
     #region Sistema EAD
 
-
     o.AddPolicy(ModuloAccess.DashboardEad, policy =>
         policy.RequireAssertion(context =>
             context.User.IsInRole(UserRoles.AdministradorEad) ||
-            context.User.IsInRole(UserRoles.Professor) ||
-            context.User.IsInRole(UserRoles.Coordenador) ||
+            context.User.IsInRole(UserRoles.ProfessorEad) ||
+            context.User.IsInRole(UserRoles.CoordenadorEad) ||
             context.User.IsInRole(UserRoles.Administrador)));
 
     o.AddPolicy(ModuloAccess.ConfiguracaoSistemaEad, policy =>
         policy.RequireAssertion(context =>
             context.User.IsInRole(UserRoles.AdministradorEad) ||
-            context.User.IsInRole(UserRoles.Professor) ||
-            context.User.IsInRole(UserRoles.Coordenador) ||
+            context.User.IsInRole(UserRoles.CoordenadorEad) ||
+            context.User.IsInRole(UserRoles.Administrador)));
+
+    o.AddPolicy(ModuloAccess.MeusCursos, policy =>
+        policy.RequireAssertion(context =>
+            context.User.IsInRole(UserRoles.AdministradorEad) ||
+            context.User.IsInRole(UserRoles.CoordenadorEad) ||
+            context.User.IsInRole(UserRoles.Aluno) ||
             context.User.IsInRole(UserRoles.Administrador)));
 
     #endregion
@@ -205,6 +237,13 @@ app.UseRouting();
 app.UseCookiePolicy();
 
 app.UseAuthorization();
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")),
+    RequestPath = ""
+});
 
 app.MapControllerRoute(
     name: "default",

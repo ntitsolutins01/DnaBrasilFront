@@ -1,0 +1,451 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.newContainer {
+    width: 100%;
+    height: 100%;
+    padding: 8px;
+    background: white;
+    overflow: hidden;
+}
+
+/* Header */
+.header {
+    width: 100%;
+    height: 120px;
+    background: linear-gradient(107deg, #455e9f 0%, #3ea7b4 100%);
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+}
+
+.logo-dna {
+    height: 81px;
+    display: block;
+    margin: auto 0;
+}
+
+.talent-info {
+    text-align: right;
+    color: white;
+    display: flex;
+    align-items: center;
+    height: 95px;
+}
+
+    .talent-info > div {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: 100%;
+    }
+
+.talent-label {
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 0.4;
+}
+
+.talent-name {
+    font-size: 35px;
+    font-weight: 700;
+}
+
+.sport-icon {
+    width: 69px;
+    height: 95px;
+    object-fit: contain;
+    display: block;
+    margin-left: 1rem;
+}
+
+/* Info Section */
+.info-section {
+    width: 100%;
+    background: #f4f4f4;
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    min-height: 150px;
+}
+
+.left-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    max-width: 400px;
+}
+
+.student-info {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.student-photo {
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+    background: #ddd;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+    .student-photo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+
+.student-basic-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.student-name {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.student-school {
+    font-size: 14px;
+    color: #444;
+}
+
+.student-email {
+    font-size: 13px;
+    text-decoration: underline;
+    color: #455e9f;
+}
+
+.student-details {
+    background-color: #ffffff;
+    border-radius: 6px;
+    padding: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.student-extra-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.detail-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+    .detail-row > div {
+        font-size: 13px;
+        flex: 1;
+        min-width: 150px;
+    }
+
+.info-label {
+    font-weight: 700;
+    color: #444;
+}
+
+/* DNA Score */
+.dna-score {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    height: 150px;
+}
+
+/* Gráficos Circulares */
+.circular-progress {
+    position: relative;
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    background: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.circular-progress-inner {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: white;
+}
+
+.circular-progress-inner::before {
+    content: '';
+    position: absolute;
+    inset: -10px; /* Aumenta a área do gradiente */
+    border-radius: 50%;
+    background: conic-gradient(
+        var(--color-main) 0deg calc(var(--progress) * 3.6deg),
+        var(--color-second) calc(var(--progress) * 3.6deg) 360deg
+    );
+    z-index: 1;
+}
+
+.circular-progress-inner::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: white;
+    z-index: 2;
+}
+
+.circular-progress-value {
+    font-size: 32px;
+    font-weight: 700;
+    position: relative;
+    z-index: 3;
+    color: var(--color-main);
+}
+
+.circular-progress-label {
+    color: #808080;
+    font-size: 20px;
+    font-weight: 300;
+    position: relative;
+    z-index: 3;
+}
+
+.score-info {
+    max-width: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Cards Grid */
+.cards-grid {
+    margin-top: 30px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.metric-card {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: 100%;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    width: 365px;
+}
+
+.card-header {
+    background: #f4f4f4;
+    border-radius: 8px;
+    padding: 5px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: inherit;
+}
+
+.card-score {
+    width: 60px;
+    height: 60px;
+    position: relative;
+}
+
+/* Card Score Circles */
+.card-score .circular-progress {
+    width: 60px;
+    height: 60px;
+    box-shadow: inset 0 0 0 5px #f4f4f4;
+}
+
+.card-score .circular-progress-inner {
+    width: 45px;
+    height: 45px;
+}
+
+.card-score .circular-progress-inner::before {
+    inset: -7.5px;
+}
+
+.card-score .circular-progress-value {
+    font-size: 24px;
+}
+
+/* Estilos para título e textos dentro dos cards */
+.metric-card h3 {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0;
+    color: #333;
+    padding: 0 12px;
+}
+
+.metric-card p {
+    font-size: 14px;
+    color: #666;
+    margin: 0;
+    padding: 0 12px;
+}
+
+.metric-card .imc-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+}
+
+/* Color Classes */
+.default {
+    color: #00eabc!important;
+}
+.health {
+    color: #efad57!important;
+}
+.dental {
+    color: #e96c52!important;
+}
+.food {
+    color: #73dc69!important;
+}
+.vocation {
+    color: #5b5c9c!important;
+}
+.life {
+    color: #23BFFF!important;
+}
+.sport {
+    color: #DF436C!important;
+}
+
+/* Progress Bar */
+.progress-bar {
+    width: 100%;
+    background-color: #c0faee;
+    border-radius: 5px;
+    overflow: hidden;
+    height: 10px;
+}
+
+.progress-bar-page1 {
+    width: calc(100% - 24px);
+    margin-left: 12px;
+}
+
+.progress {
+    height: 100%;
+    background-color: #00eabc;
+    width: 0;
+    transition: width 0.5s;
+}
+
+.progress-bar-sport {
+    background-color: #f9c1c1;
+}
+.progress-sport {
+    background-color: #DF436C;
+}
+
+.progress-bar-page1 span {
+    margin-bottom: -10px;
+}
+
+/* Page 2 */
+
+.section-header {
+    margin-bottom: 10px;
+}
+
+.quality-card {
+    display: grid;
+    margin-bottom: 10px;
+    background: #fff;
+    padding: 5px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 100%;
+}
+
+.quality-card h3, .sport-card h3 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.quality-card p, .sport-card p {
+    font-size: 12px;
+    line-height: 1.5;
+    color: #666;
+}
+
+.metric-value {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px 0;
+    padding: 5px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.metric-value span {
+    margin-bottom: -6px;
+}
+.metric-value span:last-child {
+    font-weight: bold;
+    color: var(--color-main);
+}
+ 
+.sport-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    padding: 0;
+}
+
+.sport-card {
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    height: auto;
+}
+.sport-card .description {
+    margin-top: 10px;
+}
+.sport-card .metric-value {
+    margin: 5px 0;
+    padding: 5px 0;
+}

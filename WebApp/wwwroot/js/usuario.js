@@ -81,6 +81,36 @@ var vm = new Vue({
                         });
                 });
 
+                //clique de escolha do select
+                $("#ddlMunicipio").change(function () {
+                    var id = $("#ddlMunicipio").val();
+
+                    var url = "../../Localidade/GetLocalidadeByMunicipio?id=" + id;
+
+                    var ddlSource = "#ddlLocalidade";
+
+                    $.getJSON(url,
+                        { id: $(ddlSource).val() },
+                        function (data) {
+                            if (data.length > 0) {
+                                var items = '<option value="">Selecionar Localidade</option>';
+                                $("#ddlLocalidade").empty;
+                                $.each(data,
+                                    function (i, row) {
+                                        items += "<option value='" + row.value + "'>" + row.text + "</option>";
+                                    });
+                                $("#ddlLocalidade").html(items);
+                            }
+                            else {
+                                new PNotify({
+                                    title: 'Localidades',
+                                    text: data,
+                                    type: 'warning'
+                                });
+                            }
+                        });
+                });
+
                 var $numCpf = $("#cpf");
                 $numCpf.mask('000.000.000-00', { reverse: false });
                 jQuery.validator.addMethod("cpf", function (cpf, element) {
@@ -194,40 +224,81 @@ var vm = new Vue({
                     }
                 });
 
-                $("#formUsuario").validate({
-                    rules: {
-                        "email": {
-                            required: true,
-                            email: true
+                if (formid === "formUsuario") {
+                    $("#formUsuario").validate({
+                        rules: {
+                            "email": {
+                                required: true,
+                                email: true
+                            },
+                            cpf: { cpf: true, required: true },
+                            cnpj: { cnpj: true, required: true }
                         },
-                        cpf: { cpf: true, required: true },
-                        cnpj: { cnpj: true, required: true }
-                    },
-                    messages: {
-                        "email": {
-                            required: "Por favor informe o endereço eletrônico válido do usuário.",
-                            email: "Formato de e-mail inválido."
+                        messages: {
+                            "email": {
+                                required: "Por favor informe o endereço eletrônico válido do usuário.",
+                                email: "Formato de e-mail inválido."
+                            },
+                            cpf: { cpf: 'Formato de CPF inválido', required: "Por favor informe o número do CPF do parceiro." },
+                            cnpj: { cnpj: 'Formato de CNPJ inválido', required: "Por favor informe o número do CNPJ do parceiro." }
                         },
-                        cpf: { cpf: 'Formato de CPF inválido', required: "Por favor informe o número do CPF do parceiro." },
-                        cnpj: { cnpj: 'Formato de CNPJ inválido', required: "Por favor informe o número do CNPJ do parceiro." }
-                    },
-                    highlight: function (label) {
-                        $(label).closest('.form-group').removeClass('has-success').addClass('has-error');
-                    },
-                    success: function (label) {
-                        $(label).closest('.form-group').removeClass('has-error');
-                        label.remove();
-                    },
-                    errorPlacement: function (error, element) {
-                        var placement = element.closest('.input-group');
-                        if (!placement.get(0)) {
-                            placement = element;
+                        highlight: function (label) {
+                            $(label).closest('.form-group').removeClass('has-success').addClass('has-error');
+                        },
+                        success: function (label) {
+                            $(label).closest('.form-group').removeClass('has-error');
+                            label.remove();
+                        },
+                        errorPlacement: function (error, element) {
+                            var placement = element.closest('.input-group');
+                            if (!placement.get(0)) {
+                                placement = element;
+                            }
+                            if (error.text() !== '') {
+                                placement.after(error);
+                            }
                         }
-                        if (error.text() !== '') {
-                            placement.after(error);
+                    });
+                }
+
+                if (formid === "formEditUsuario") {
+                    $("#formUsuario").validate({
+                        rules: {
+                            "email": {
+                                required: true,
+                                email: true
+                            },
+                            cpf: { cpf: true, required: true },
+                            cnpj: { cnpj: true, required: true }
+                        },
+                        messages: {
+                            "email": {
+                                required: "Por favor informe o endereço eletrônico válido do usuário.",
+                                email: "Formato de e-mail inválido."
+                            },
+                            cpf: { cpf: 'Formato de CPF inválido', required: "Por favor informe o número do CPF do parceiro." },
+                            cnpj: { cnpj: 'Formato de CNPJ inválido', required: "Por favor informe o número do CNPJ do parceiro." }
+                        },
+                        highlight: function (label) {
+                            $(label).closest('.form-group').removeClass('has-success').addClass('has-error');
+                        },
+                        success: function (label) {
+                            $(label).closest('.form-group').removeClass('has-error');
+                            label.remove();
+                        },
+                        errorPlacement: function (error, element) {
+                            var placement = element.closest('.input-group');
+                            if (!placement.get(0)) {
+                                placement = element;
+                            }
+                            if (error.text() !== '') {
+                                placement.after(error);
+                            }
                         }
-                    }
-                });
+                    });
+                }
+
+                
             }
 
             
@@ -293,6 +364,36 @@ var vm = new Vue({
                             else {
                                 new PNotify({
                                     title: 'Usuario',
+                                    text: data,
+                                    type: 'warning'
+                                });
+                            }
+                        });
+                });
+
+                //clique de escolha do select
+                $("#ddlMunicipio").change(function () {
+                    var id = $("#ddlMunicipio").val();
+
+                    var url = "../../Localidade/GetLocalidadeByMunicipio?id=" + id;
+
+                    var ddlSource = "#ddlLocalidade";
+
+                    $.getJSON(url,
+                        { id: $(ddlSource).val() },
+                        function (data) {
+                            if (data.length > 0) {
+                                var items = '<option value="">Selecionar Localidade</option>';
+                                $("#ddlLocalidade").empty;
+                                $.each(data,
+                                    function (i, row) {
+                                        items += "<option value='" + row.value + "'>" + row.text + "</option>";
+                                    });
+                                $("#ddlLocalidade").html(items);
+                            }
+                            else {
+                                new PNotify({
+                                    title: 'Localidades',
                                     text: data,
                                     type: 'warning'
                                 });

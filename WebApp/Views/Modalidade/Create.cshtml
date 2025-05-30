@@ -19,6 +19,21 @@
                         <h2 class="panel-title">Cadastro de Modalidade</h2>
                     </header>
                     <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-1"></div>
+                            <div class="col-md-5">
+                                <label>Utilização da imagem</label><br />
+                                <div class="radio-custom radio-dark">
+                                    <input type="radio" id="utilizacaoImagemSim" name="utilizacaoImagem" value="true" required title="Por favor selecione uma opção">
+                                    <label>Atividade</label>
+                                </div>
+                                <div class="radio-custom radio-primary">
+                                    <input type="radio" id="utilizacaoImagemNao" name="utilizacaoImagem" value="false" required title="Por favor selecione uma opção">
+                                    <label>Modalidade</label>
+                                </div>
+                                <label class="error" for="utilizacaoImagem"></label>
+                            </div>
+                        </div>
                         <div class="form-group row">
                             <label class="col-sm-3 control-label text-sm-right pt-2">Imagem </label>
                             <div class="col-sm-9">
@@ -41,7 +56,7 @@
                         <div class="form-group row">
                             <label class="col-sm-3 control-label text-sm-right pt-2">Linha de Ação <span class="required">*</span></label>
                             <div class="col-sm-4">
-                                <select class="form-control populate select2" name="ddlLinhaAcao" id="ddlLinhaAcao" style="width:100%"
+                                <select class="form-control populate select2" name="ddlLinhaAcao" id="ddlLinhaAcao" style="width: 100%"
                                         required title="Por favor selecione a linha de ação"
                                         asp-for="LinhaAcaoId" asp-items="Model.ListLinhasAcoes">
                                     <option value="">Selecionar Linha de Ação</option>

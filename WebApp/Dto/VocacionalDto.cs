@@ -3,8 +3,9 @@
     public class VocacionalDto
     {
         public int Id { get; set; }
-        public required ProfissionalDto Profissional { get; set; }
-        public required QuestionarioDto Questionario { get; set; }
-        public required string Resposta { get; set; }
+        public ProfissionalDto Profissional { get; set; }
+        public EncaminhamentoDto? Encaminhamento { get; set; }
+        public string Respostas { get; set; }
+        public string? StatusVocacional { get; set; }
     }
 }

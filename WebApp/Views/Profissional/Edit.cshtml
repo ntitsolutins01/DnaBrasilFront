@@ -1,11 +1,8 @@
 @model ProfissionalModel
-
 @{
     ViewData["Title"] = "Alteração de Profissionais";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-
 <div id="vProfissional">
     <div class="row">
         <div class="col-md-12">
@@ -22,12 +19,12 @@
                     <div class="panel-body">
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Nome <span class="required">*</span></label>
-                            <div class="col-sm-4">
+                            <div class="col-sm-5">
                                 <input type="text" name="nome" id="nome" value="@Model.Profissional.Nome"
                                        maxlength="200" class="form-control" required title="Por favor informe o nome."/>
                             </div>
                             <label class="col-sm-1 control-label">Email <span class="required">*</span></label>
-                            <div class="col-sm-5">
+                            <div class="col-sm-4">
                                 <div class="input-group">
                                     <span class="input-group-addon">
                                         <i class="fa fa-envelope"></i>
@@ -51,8 +48,8 @@
                                     <option value="">Selecionar Estado</option>
                                 </select>
                             </div>
-                            <label class="col-sm-2 control-label text-sm-right pt-2">Município <span class="required">*</span></label>
-                            <div class="col-md-3">
+                            <label class="col-sm-1 control-label text-sm-right pt-2">Município <span class="required">*</span></label>
+                            <div class="col-md-4">
                                 <select class="form-control populate select2" name="ddlMunicipio" id="ddlMunicipio"
                                         title="Por favor informe um Municipio." required
                                         asp-for="MunicipioId" asp-items="Model.ListMunicipios">
@@ -62,26 +59,29 @@
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label text-sm-right pt-2">Localidade <span class="required">*</span></label>
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade"
                                         title="Por favor informe a localidade." required
                                         asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
                                     <option value="">Selecionar Localidade</option>
                                 </select>
                             </div>
-                            <label class="col-sm-1 control-label text-sm-right pt-2">Perfil</label>
-                            <div class="col-md-3">
-                                <input id="perfil" name="perfil" type="text" class="form-control" value="@Model.Profissional.Perfil" readonly />
+                            <label class="col-sm-1 control-label text-sm-right pt-2">Modalidades<span class="required">*</span></label>
+                            <div class="col-md-5">
+                                <select class="form-control populate" multiple="multiple" multiple="multiple" data-plugin-multiselect data-plugin-options='{ "maxHeight": 200, "enableCaseInsensitiveFiltering": true }' 
+                                        id="ddlModalidades" name="ddlModalidades" style="width:100%" asp-for="ModalidadeId" asp-items="Model.ListModalidades" required
+                                        title="Por favor selecione ao menos uma modalidade.">
+                                </select>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">Data Nascimento </label>
-                            <div class="col-sm-3">
+                            <label class="col-sm-2 control-label">Data Nascimento <span class="required">*</span> </label>
+                            <div class="col-sm-2">
                                 <div class="input-group">
                                     <span class="input-group-addon">
                                         <i class="fa fa-calendar"></i>
                                     </span>
-                                    <input id="DtNascimento" name="DtNascimento"
+                                    <input id="DtNascimento" name="DtNascimento" required
                                            title="Por favor informe a data de nascimento."
                                            style="z-index: auto;" value="@Model.Profissional.DtNascimento"
                                            data-plugin-datepicker data-date-format="dd/mm/yyyy" data-plugin-options='{"language": "pt-BR"}'
@@ -89,9 +89,9 @@
                                            class="form-control">
                                 </div>
                             </div>
-                            <label class="col-sm-1 control-label">Sexo</label>
-                            <div class="col-sm-3">
-                                <select class="form-control populate select2" name="ddlSexo" id="ddlSexo"
+                            <label class="col-sm-1 control-label">Sexo <span class="required">*</span></label>
+                            <div class="col-sm-2">
+                                <select class="form-control populate select2" name="ddlSexo" id="ddlSexo" required
                                         title="Por favor selecione um sexo.">
                                     <option value="">Selecionar Sexo</option>
                                     @if (Model.Profissional.Sexo == "M")
@@ -106,6 +106,14 @@
                                         <option value="F" selected>FEMININO</option>
 
                                     }
+                                </select>
+                            </div>
+                            <label class="col-sm-1 control-label">Cargo</label>
+                            <div class="col-sm-4">
+                                <select class="form-control populate select2" name="ddlCargo" id="ddlCargo" style="width:100%"
+                                        title="Por favor selecione um cargo." required
+                                        asp-for="CargoId" asp-items="Model.ListCargos">
+                                    <option value="">Selecionar Cargo</option>
                                 </select>
                             </div>
                         </div>
@@ -170,8 +178,8 @@
                     <footer class="panel-footer">
                         <div class="row">
                             <div class="col-md-9 col-md-offset-3">
-                                <button type="submit" class="btn btn-dark pull-right" style="margin-left: 5px;margin-right: 5px;"><i class="fa fa-reply"></i> &nbsp;&nbsp;Voltar</button>
-                                <button type="submit" class="btn btn-danger pull-right" style="margin-left: 5px;"><i class="fa fa-remove"></i> &nbsp;&nbsp;Cancelar</button>
+                                <a href="@Url.Action("Index", "Profissional")" class="btn btn-dark pull-right" style="margin-left: 5px;margin-right: 5px;"><i class="fa fa-reply"></i> &nbsp;&nbsp;Voltar</a>
+                                <button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;"><i class="fa fa-remove"></i> &nbsp;&nbsp;Cancelar</button>
                                 <button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
                             </div>
                         </div>
@@ -180,34 +188,12 @@
             }
         </div>
     </div>
-    <!-- Modal -->
-    <div class="modal fade" id="mdModalidade" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title"><i class="fa fa-plus"></i> &nbsp;&nbsp;<strong>Novo Modalidade</strong></h5>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">Nome Modalidade<span class="required">*</span></label>
-                        <div class="col-sm-9">
-
-                            <input type="email" name="email" class="form-control" required />
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-remove"></i> &nbsp;&nbsp;Cancelar</button>
-                    <button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    
 </div>
 @section CssSpecificVendor {
     <link rel="stylesheet" href="~/assets/vendor/select2/css/select2.css" />
     <link rel="stylesheet" href="~/assets/vendor/select2-bootstrap-theme/select2-bootstrap.min.css" />
-    <link rel="stylesheet" href="~/assets/vendor/datatables/media/css/dataTables.bootstrap4.css" />
+    <link rel="stylesheet" href="~/assets/vendor/bootstrap-multiselect/bootstrap-multiselect.css" />
     <link href="~/assets/vendor/bootstrap-datepicker/css/bootstrap-datepicker3.css" rel="stylesheet" />
 }
 @section Scripts {
@@ -215,13 +201,85 @@
     <script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
     <script src="~/assets/vendor/select2/js/select2.js"></script>
     <script src="~/assets/vendor/jquery-mask/jquery.mask.js"></script>
-    <script src="~/assets/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
-    <script src="~/assets/vendor/datatables/media/js/dataTables.bootstrap4.min.js"></script>
     <script src="~/assets/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
     <script src="~/assets/vendor/bootstrap-datepicker/locales/bootstrap-datepicker.pt-BR.min.js"></script>
-    <script src="~/js/formatTable.js"></script>
     <script src="~/js/profissional.js"></script>
+    <script>
 
+        (function ($) {
+
+            'use strict';
+
+            // Set the value
+            var data = "@Model.Profissional.ModalidadesIds";
+
+            //Make an array
+            var dataarray = data.split(",");
+
+            // Set the value
+            $("#ddlModalidades").val(dataarray);
+
+            //set filter
+            $("#ddlModalidades").multiselect({
+                enableFiltering: true,
+                    enableCaseInsensitiveFiltering: true,
+                    maxHeight: 200,
+                    dropUp: true
+            });
+
+            // Then refresh
+            $("#ddlModalidades").multiselect("refresh");
+
+            //========================================================
+
+            var crud = @ViewBag.CrudMessage;
+
+            if (crud === 1) {
+                new PNotify({
+                    title: 'Profissional',
+                    text: 'Cadastro realizado com sucesso!',
+                    type: 'success'
+                });
+            } else if (crud === 2) {
+                new PNotify({
+                    title: 'Profissional',
+                    text: 'Dados alterados com sucesso.',
+                    type: 'warning'
+                });
+            } else if (crud === 3) {
+                new PNotify({
+                    title: 'Profissional',
+                    text: 'Registro excluído com sucesso.',
+                    type: 'error'
+                });
+            }
+
+            var notify = @ViewBag.NotifyMessage;
+            var messagem = '@ViewBag.Notify';
+
+            if (notify === 0) {
+                new PNotify({
+                    title: 'Profissional',
+                    text: messagem,
+                    type: 'success'
+                });
+            } else if (notify === 1) {
+                new PNotify({
+                    title: 'Profissional',
+                    text: messagem,
+                    type: 'warning'
+                });
+            } else if (notify === 2) {
+                new PNotify({
+                    title: 'Profissional',
+                    text: messagem,
+                    type: 'error'
+                });
+            }
+
+        }).apply(this, [jQuery]);
+
+    </script>
 }
 
 

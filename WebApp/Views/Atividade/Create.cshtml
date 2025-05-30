@@ -1,0 +1,266 @@
+@model AtividadeModel
+@{
+    ViewData["Title"] = "Inclusão de Atividade";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="vAtividade">
+    <div class="row">
+        <div class="col-md-12">
+            @using (@Html.BeginForm("Create", "Atividade", FormMethod.Post, new { id = "formAtividade", @class = "form-horizontal" }))
+            {
+                <section class="panel">
+                    <header class="panel-heading">
+                        <div class="panel-actions">
+                            <a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
+                        </div>
+                        <h2 class="panel-title">Cadastro de Atividade</h2>
+                    </header>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Estado <span class="required">*</span></label>
+                            <div class="col-md-4">
+                                <select class="form-control populate select2" name="ddlEstado" id="ddlEstado"
+                                        title="Por favor informe um Estado." required
+                                        asp-for="EstadoId" asp-items="Model.ListEstados">
+                                    <option value="">Selecionar Estado</option>
+                                </select>
+                            </div>
+                            <label class="col-sm-2 control-label">Município <span class="required">*</span></label>
+                            <div class="col-md-4">
+                                <select class="form-control populate select2" name="ddlMunicipio" id="ddlMunicipio"
+                                        title="Por favor informe um Municipio." required
+                                        asp-for="MunicipioId" asp-items="Model.ListMunicipios">
+                                    <option value="">Selecionar Município</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 control-label">Localidade <span class="required">*</span></label>
+                            <div class="col-md-4">
+                                <select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade"
+                                        title="Por favor informe a localidade." required
+                                        asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
+                                    <option value="">Selecionar Localidade</option>
+                                </select>
+                            </div>
+                            <label class="col-sm-2 control-label">Professor / Profissional <span class="required">*</span></label>
+                            <div class="col-md-4">
+                                <select class="form-control populate select2" name="ddlProfessorProfissional" id="ddlProfessorProfissional"
+                                        title="Por favor informe a Professor / Profissional." required
+                                        asp-for="ProfessorProfissionalId" asp-items="Model.ListProfessoresProfissionais">
+                                    <option value="">Selecionar Professor / Profissional</option>
+                                </select>
+                            </div>
+                            
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 control-label">LinhaAcao <span class="required">*</span></label>
+                            <div class="col-md-4">
+                                <select class="form-control populate select2" name="ddlLinhaAcao" id="ddlLinhaAcao"
+                                        title="Por favor informe a LinhaAcao." required
+                                        asp-for="LinhaAcaoId" asp-items="Model.ListLinhasAcoes">
+                                    <option value="">Selecionar LinhaAcao</option>
+                                </select>
+                            </div>
+                            <label class="col-sm-2 control-label">Atividade / Modalidade <span class="required">*</span></label>
+                            <div class="col-md-4">
+                                <select class="form-control populate select2" name="ddlModalidade" id="ddlModalidade"
+                                        title="Por favor informe a Atividade / Modalidade." required
+                                        asp-for="AtividadeModalidadeId" asp-items="Model.ListAtividadesModalidades">
+                                    <option value="">Selecionar Modalidade</option>
+                                </select>
+                            </div>
+                            @*<label class="col-sm-2 control-label">Estrutura <span class="required">*</span></label>
+                            <div class="col-md-4">
+                                 <select class="form-control" multiple="multiple" data-plugin-multiselect data-plugin-options='{ "maxHeight": 300, "enableCaseInsensitiveFiltering": true }'
+                                        name="ddlModalidade" id="ddlModalidade"
+                                        title="Por favor informe a Modalidade." required style="width:100%"
+                                        asp-for="AtividadeModalidadeId" asp-items="Model.ListAtividadesModalidades">
+                                </select> 
+                                <select class="form-control populate select2" name="ddlEstrutura" id="ddlEstrutura"
+                                        title="Por favor informe a Estrutura." required
+                                        asp-for="EstruturaId" asp-items="Model.ListEstruturas">
+                                    <option value="">Selecionar Estrutura</option>
+                                </select>
+                            </div>*@
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 control-label">Estrutura <span class="required">*</span></label>
+                            <div class="col-md-4">
+                                <select class="form-control populate select2" name="ddlEstrutura" id="ddlEstrutura"
+                                        title="Por favor informe a Estrutura." required
+                                        asp-for="EstruturaId" asp-items="Model.ListEstruturas">
+                                    <option value="">Selecionar Estrutura</option>
+                                </select>
+                            </div>
+                            <label class="col-sm-2 control-label">Categoria <span class="required">*</span></label>
+                            <div class="col-md-4">
+                                <select class="form-control populate select2" name="ddlCategoria" id="ddlCategoria"
+                                        title="Por favor informe a Categoria." required
+                                        asp-for="CategoriaId" asp-items="Model.ListCategorias">
+                                    <option value="">Selecionar Categoria</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 control-label">Dias da Semana</label>
+						
+                            <div class="col-sm-2">
+                                <div class="checkbox-custom checkbox-default">
+                                    <input type="checkbox" id="segunda" name="segunda">
+                                    <label for="segunda">Segunda-Feira</label>
+                                </div>
+						
+                                <div class="checkbox-custom checkbox-primary">
+                                    <input type="checkbox" id="terca" name="terca">
+                                    <label for="terca">Terça-Feira</label>
+                                </div>
+						
+                                <div class="checkbox-custom checkbox-success">
+                                    <input type="checkbox" id="quarta" name="quarta">
+                                    <label for="quarta">Quarta-Feira</label>
+                                </div>
+						
+                                <div class="checkbox-custom checkbox-warning">
+                                    <input type="checkbox" id="quinta" name="quinta">
+                                    <label for="quinta">Quinta-Feira</label>
+                                </div>
+						
+                                <div class="checkbox-custom checkbox-danger">
+                                    <input type="checkbox" id="sexta" name="sexta">
+                                    <label for="sexta">Sexta-Feira</label>
+                                </div>
+						
+                                <div class="checkbox-custom checkbox-dark">
+                                    <input type="checkbox" id="sabado" name="sabado">
+                                    <label for="sabado">Sábado</label>
+                                </div>
+                            </div>
+                            <label class="col-sm-2 control-label">Horário Início<span class="required">*</span></label>
+                            <div class="col-md-2">
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <i class="fa fa-clock-o"></i>
+                                    </span>
+                                    <input type="text" id="hrInicial" name="hrInicial" data-plugin-timepicker class="form-control" data-plugin-options='{ "showMeridian": false }'>
+                                </div>
+                            </div>
+                            <label class="col-sm-2 control-label">Horário Fim <span class="required">*</span></label>
+                            <div class="col-md-2">
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <i class="fa fa-clock-o"></i>
+                                    </span>
+                                    <input type="text" id="hrFinal" name="hrFinal" data-plugin-timepicker class="form-control" data-plugin-options='{ "showMeridian": false }'>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+
+                            <label class="col-sm-2 control-label">Turma <span class="required">*</span></label>
+                            <div class="col-sm-2">
+                                <select class="form-control populate select2" name="ddlTurma" id="ddlTurma"
+                                        title="Por favor selecione uma turma." required style="width:100%">
+                                    <option value="">Selecionar Turma</option>
+                                    <option value="T1">T1</option>
+                                    <option value="T2">T2</option>
+                                    <option value="T3">T3</option>
+                                    <option value="T4">T4</option>
+                                    <option value="T5">T5</option>
+                                    <option value="T6">T6</option>
+                                    <option value="T7">T7</option>
+                                    <option value="T8">T8</option>
+                                    <option value="T9">T9</option>
+                                    <option value="T10">T10</option>
+                                </select>
+                            </div>
+                            <label class="col-sm-2 control-label">Quantidade Alunos <span class="required">*</span></label>
+                            <div class="col-sm-1">
+	                            <input type="number" id="qtAluno" name="qtAluno" maxlength="2" class="form-control" min="0"
+	                                   title="Por favor informe a Quantidade de Alunos." required
+                                       oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" />
+                            </div>
+                        </div>
+                    </div>
+                    <footer class="panel-footer">
+                        <div class="row">
+                            <div class="col-md-9 col-md-offset-3">
+                                <a href="@Url.Action("Index", "Atividade")" class="btn btn-dark pull-right" style="margin-left: 5px;margin-right: 5px;"><i class="fa fa-reply"></i> &nbsp;&nbsp;Voltar</a>
+                                <button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;"><i class="fa fa-remove"></i> &nbsp;&nbsp;Cancelar</button>
+                                <button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
+                            </div>
+                        </div>
+                    </footer>
+                </section>
+
+            }
+        </div>
+    </div>
+</div>
+@section CssSpecificVendor {
+    <link rel="stylesheet" href="~/assets/vendor/select2/css/select2.css" />
+    <link rel="stylesheet" href="~/assets/vendor/select2-bootstrap-theme/select2-bootstrap.min.css" />
+    <link rel="stylesheet" href="~/assets/vendor/bootstrap-multiselect/bootstrap-multiselect.css" />
+    <link rel="stylesheet" href="~/assets/vendor/bootstrap-timepicker/css/bootstrap-timepicker.css" />
+}
+@section Scripts {
+    <script src="~/assets/vendor/bootstrap-timepicker/bootstrap-timepicker.js"></script>
+    <script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
+    <script src="~/assets/vendor/select2/js/select2.js"></script>
+    <script src="~/assets/vendor/jquery-mask/jquery.mask.js"></script>
+    <script src="~/js/Atividade.js"></script>
+    <script>
+
+        (function ($) {
+
+            'use strict';
+            var crud = @ViewBag.CrudMessage;
+
+            if (crud === 1) {
+                new PNotify({
+                    title: 'Atividade',
+                    text: 'Cadastro realizado com sucesso!',
+                    type: 'success'
+                });
+            } else if (crud === 2) {
+                new PNotify({
+                    title: 'Atividade',
+                    text: 'Dados alterados com sucesso.',
+                    type: 'warning'
+                });
+            } else if (crud === 3) {
+                new PNotify({
+                    title: 'Atividade',
+                    text: 'Registro excluído com sucesso.',
+                    type: 'error'
+                });
+            }
+
+            var notify = @ViewBag.NotifyMessage;
+            var messagem = '@ViewBag.Notify';
+
+            if (notify === 0) {
+                new PNotify({
+                    title: 'Atividade',
+                    text: messagem,
+                    type: 'success'
+                });
+            } else if (notify === 1) {
+                new PNotify({
+                    title: 'Atividade',
+                    text: messagem,
+                    type: 'warning'
+                });
+            } else if (notify === 2) {
+                new PNotify({
+                    title: 'Atividade',
+                    text: messagem,
+                    type: 'error'
+                });
+            }
+
+        }).apply(this, [jQuery]);
+
+    </script>
+}

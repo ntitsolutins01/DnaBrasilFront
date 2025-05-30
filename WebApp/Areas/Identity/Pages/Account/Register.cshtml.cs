@@ -7,9 +7,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Options;
-using WebApp.Areas.Identity.Models;
 using WebApp.Configuration;
 using WebApp.Data;
 using WebApp.Dto;
@@ -37,8 +35,8 @@ namespace WebApp.Areas.Identity.Pages.Account
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender, 
-            RoleManager<IdentityRole> roleManager, 
+            IEmailSender emailSender,
+            RoleManager<IdentityRole> roleManager,
             ApplicationDbContext db,
             IHostingEnvironment host)
         {
@@ -59,17 +57,15 @@ namespace WebApp.Areas.Identity.Pages.Account
         public int EstadoId { get; set; }
         public int MunicipioId { get; set; }
         public int LocalidadeId { get; set; }
-        public int ProfissionalId { get; set; }
         public int EtniaId { get; set; }
-        public int AreaId { get; set; }
+        public int ModalidadeId { get; set; }
         public int DeficienciaId { get; set; }
         public SelectList ListEstados { get; set; }
         public SelectList ListMunicipios { get; set; }
         public SelectList ListLocalidades { get; set; }
         public SelectList ListEtnias { get; set; }
-        public SelectList ListAreas { get; set; }
+        public SelectList ListModalidades { get; set; }
         public SelectList ListDeficiencia { get; set; }
-        public SelectList ListProfissionais { get; set; }
         public int NotifyMessage { get; set; }
         public string Notify { get; set; }
         public string FomentoId { get; set; }
@@ -100,7 +96,7 @@ namespace WebApp.Areas.Identity.Pages.Account
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             ListEstados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome");
-            ListFomentos = new SelectList(ApiClientFactory.Instance.GetFomentoAll(), "Id", "Nome");
+            ListFomentos = new SelectList(ApiClientFactory.Instance.GetFomentosAll(), "Id", "Nome");
 
             List<SelectListDto> list = new List<SelectListDto>
             {
@@ -115,7 +111,7 @@ namespace WebApp.Areas.Identity.Pages.Account
             ListEtnias = etnias;
 
             var linhasAcoes = new SelectList(ApiClientFactory.Instance.GetLinhasAcoesAll(), "Id", "Nome");
-            ListAreas = linhasAcoes;
+            ListModalidades = linhasAcoes;
 
             var deficiencias = new SelectList(ApiClientFactory.Instance.GetDeficienciaAll().Where(x => x.Status), "Id", "Nome");
             ListDeficiencia = deficiencias;
@@ -129,10 +125,8 @@ namespace WebApp.Areas.Identity.Pages.Account
                 MunicipioId = collection["ddlMunicipio"] == "" ? null : Convert.ToInt32(collection["ddlMunicipio"].ToString()),
                 FomentoId = collection["ddlFomento"] == "" ? null : Convert.ToInt32(collection["ddlFomento"].ToString()),
                 LocalidadeId = collection["ddlLocalidade"] == "" ? null : Convert.ToInt32(collection["ddlLocalidade"].ToString()),
-                LinhaAcaoId = collection["ddlAreaDesejada"] == "" ? null : Convert.ToInt32(collection["ddlAreaDesejada"].ToString()),
                 DeficienciaId = collection["ddlDeficiencia"] == "" ? null : Convert.ToInt32(collection["ddlDeficiencia"].ToString()),
                 Endereco = collection["endereco"] == "" ? null : collection["endereco"].ToString(),
-                AreasDesejadas = collection["ddlAreaDesejada"] == "" ? null : collection["ddlAreaDesejada"].ToString(),
                 Nome = collection["nome"] == "" ? null : collection["nome"].ToString(),
                 Cpf = collection["cpf"] == "" ? null : collection["cpf"].ToString(),
                 Sexo = collection["ddlSexo"] == "" ? null : collection["ddlSexo"].ToString(),
@@ -184,8 +178,8 @@ namespace WebApp.Areas.Identity.Pages.Account
                 PerfilId = perfil.Id,
                 MunicipioId = (int)commandAluno.MunicipioId,
                 TipoPessoa = "pf"
-			};
-            
+            };
+
             var usu = await ApiClientFactory.Instance.CreateUsuario(command);
 
             var userRole = _roleManager.Roles.FirstOrDefault(x => x.Id == perfil.AspNetRoleId).Name;
@@ -194,8 +188,8 @@ namespace WebApp.Areas.Identity.Pages.Account
 
             commandAluno.AspNetUserId = command.AspNetUserId;
 
-			var alunoId = await ApiClientFactory.Instance.CreateDados(commandAluno);
-            
+            var alunoId = await ApiClientFactory.Instance.CreateDados(commandAluno);
+
             SendNewUserEmail(newUser, command.Email, command.Nome);
 
             string returnUrl = null;

@@ -110,7 +110,7 @@
                 $("#ddlLocalidade").change(function () {
                     var id = $("#ddlLocalidade").val();
 
-                    var url = "../../Localidade/GetProfissionaisByLocalidade/?id=" + id;
+                    var url = "../../Modalidade/GetModalidadesByLocalidade/?id=" + id;
 
                     var ddlSource = "#ddlProfissional";
 

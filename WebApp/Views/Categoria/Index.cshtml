@@ -1,0 +1,250 @@
+﻿@model WebApp.Models.CategoriaModel
+@{
+	ViewData["Title"] = "Listagem de Categorias";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="vCategoria">
+	<div class="row">
+		<div class="col-lg-12">
+			<section class="panel">
+				<header class="panel-heading">
+					<div class="panel-actions">
+						<a href="#" class="card-action card-action-toggle" data-card-toggle></a>
+					</div>
+					<h2 class="panel-title">Listagem de Categorias</h2>
+				</header>
+				<div class="panel-body">
+					<div class="form-group row">
+						<div class="col-sm-12 pull-right">
+							<a href="@Url.Action("Create", "Categoria")" id="addToTable" class="btn btn-primary pull-right"><i class="fa fa-plus"></i>&nbsp;&nbsp;Nova Categoria </a>
+						</div>
+					</div>
+					<table class="table table-bordered table-striped mb-0" id="datatable-default">
+						<thead>
+							<tr>
+								<th class="text-center">Id</th>
+								<th class="text-center">Código</th>
+								<th class="text-center">Nome</th>
+								<th class="text-center">Descrição</th>
+								<th class="text-center">Idade Inicial</th>
+								<th class="text-center">Idade Final</th>
+								<th class="text-center">Status</th>
+								<th class="text-center">Ações</th>
+							</tr>
+						</thead>
+                        <tbody>
+                        @foreach (var item in Model.Categorias)
+							{ 
+								<tr>
+									<td class="text-center" style="width:20px;">@Html.DisplayFor(modelItem => item.Id)</td>
+									<td class="text-center">@Html.DisplayFor(modelItem => item.Codigo)</td>
+									<td class="text-center">@Html.DisplayFor(modelItem => item.Nome)</td>
+                                    <td class="text-center">@Html.DisplayFor(modelItem => item.Descricao)</td>
+                                    <td class="text-center">@Html.DisplayFor(modelItem => item.IdadeInicial)</td>
+                                    <td class="text-center">@Html.DisplayFor(modelItem => item.IdadeFinal)</td>
+									@if (item.Status)
+									{
+										<td class="text-center"><span class="label label-success" style="display: block;">ATIVO</span></td>
+									}
+									else
+									{
+										<td class="text-center"><span class="label label-danger" style="display: block;">INATIVO</span></td>
+									}
+									<td class="actions text-center">
+										<a data-toggle="tooltip" data-placement="top" title="Editar"
+										   href='javascript:(crud.EditModal(@item.Id))'
+										   class="on-default edit-row" style='color: #FF9800'>
+											<i class="fa fa-pencil"></i>
+										</a>
+										<a data-toggle="tooltip" data-placement="top" title="Excluir" href='javascript:(crud.DeleteModal(@item.Id))'
+										   class="on-default remove-row" style="cursor: pointer;color: #F44336"><i class="fa fa-trash"></i></a>
+									</td>
+								</tr>
+								}
+                        </tbody>
+					</table>
+				</div>
+			</section>
+		</div>
+	</div>
+	<!-- Modal -->
+	<div class="modal fade" id="mdDeleteCategoria" tabindex="-1" role="dialog" aria-labelledby="mdDeleteCategoriaLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="mdDeleteCategoriaLabel">
+						<i class="fa fa-trash"></i> &nbsp;&nbsp;<strong>Exclusão de Categoria</strong>
+					</h5>
+				</div>
+				<div class="modal-body">
+					<div class="modal-icon">
+						<i class="fa fa-question-circle"></i>
+					</div>
+					<div class="modal-text">
+						<input type="hidden" id="deleteCategoriaId" />
+						<p class="mb-0">Tem certeza que deseja <b>excluir</b> esse registro?</p>
+					</div>
+					<div class="modal-wrapper">
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-thumbs-o-down"></i> &nbsp;&nbsp;Não</button>
+					<a id="deleteCategoriaHref" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-thumbs-o-up"></i> &nbsp;&nbsp;Sim</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Modal -->
+	<div class="modal fade" id="mdEditCategoria" tabindex="-1" role="dialog" aria-labelledby="mdEditCategoriaLabel" aria-hidden="true">
+		<div class="modal-dialog modal-md" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="mdEditCategoriaLabel">
+						<i class="fa fa-pencil"></i> &nbsp;&nbsp;<strong>Alterar Categoria</strong>
+					</h5>
+				</div>
+				@using (@Html.BeginForm("Edit", "Categoria", FormMethod.Post, new { id = "formEditCategoria", @class = "form-horizontal", @enctype = "multipart/form-data" }))
+				{
+                    <div class="modal-body">
+                        <input type="hidden" name="editCategoriaId" :value="editDto.Id"/>
+                        
+                        <div class="form-group row">
+                            <label class="col-sm-2 control-label text-sm-right pt-2">Código da Categoria <span class="required">*</span></label>
+                            <div class="col-sm-4">
+                                <input type="text" name="codigo" :value="editDto.Codigo" class="form-control"
+                                       maxlength="10" 
+                                       title="Por favor informe o código da Categoria." required />
+                            </div>
+                            <label class="col-sm-2 control-label text-sm-right pt-2">Nome da Categoria <span class="required">*</span></label>
+                            <div class="col-sm-4">
+                                <input type="text" name="nome" :value="editDto.Nome" class="form-control"
+                                       maxlength="50" oninput="this.value = this.value.toUpperCase()"
+                                       title="Por favor informe o Nome da Categoria." required />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 control-label">Idade Inicial <span class="required">*</span></label>
+                            <div class="col-sm-4">
+								<input type="number" name="idadeInicial" id="idadeInicial" class="form-control"
+									   maxlength="3" :value="editDto.IdadeInicial"
+                                       title="Por favor informe o nome da idade inicial." required />
+                            </div>
+                            <label class="col-sm-2 control-label">Idade Final <span class="required">*</span></label>
+                            <div class="col-sm-4">
+								<input type="number" name="idadeFinal" id="idadeFinal" class="form-control"
+									   maxlength="3" :value="editDto.IdadeFinal"
+                                       title="Por favor informe o nome da idade final." required />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label text-sm-right pt-2">Descrição </label>
+                            <div class="col-sm-10">
+                                <textarea class="form-control" rows="3" maxlength="500" :value="editDto.Descricao" name="descricao"></textarea>
+                            </div>
+                        </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 control-label text-sm-right pt-2">Status</label>
+                                <div class="col-md-9">
+                                    <div class="switch switch-sm switch-primary">
+                                        <div v-show="editDto.Status">
+                                            <input type="checkbox" id="editStatus" name="editStatus" data-plugin-ios-switch checked="checked"/>
+                                        </div>
+                                        <div v-show="!editDto.Status">
+                                            <input type="checkbox" id="editStatus" name="editStatus" data-plugin-ios-switch/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+					<div class="modal-footer">
+						<button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-remove"></i> &nbsp;&nbsp;Cancelar</button>
+						<button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
+					</div>
+				}
+			</div>
+		</div>
+	</div>
+</div>
+
+@section CssSpecificVendor {
+	<link rel="stylesheet" href="~/assets/vendor/datatables/media/css/dataTables.bootstrap4.css" />
+}
+@section Scripts {
+	<script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
+	<script src="~/assets/vendor/jquery-mask/jquery.mask.js"></script>
+	<script src="~/assets/vendor/ios7-switch/ios7-switch.js"></script>
+	<script src="~/assets/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
+	<script src="~/assets/vendor/datatables/media/js/dataTables.bootstrap4.min.js"></script>
+	<script src="~/js/formatTable.js"></script>
+	<script src="~/js/Categoria.js"></script>
+
+	<script>
+
+		(function ($) {
+
+			'use strict';
+			var crud = @ViewBag.CrudMessage;
+
+			if (crud === 1) {
+				new PNotify({
+					title: 'Categoria',
+					text: 'Cadastro realizado com sucesso!',
+					type: 'success'
+				});
+				crud = 0;
+			} else if (crud === 2) {
+				new PNotify({
+					title: 'Categoria',
+					text: 'Dados alterados com sucesso.',
+					type: 'warning',
+					icon: 'fa fa-pencil'
+				});
+				crud = 0;
+			} else if (crud === 3) {
+				new PNotify({
+					title: 'Categoria',
+					text: 'Registro excluído com sucesso.',
+					type: 'error',
+					icon: 'fa fa-trash-o'
+				});
+				crud = 0;
+			}
+
+
+			var notify = @ViewBag.NotifyMessage;
+			var messagem = '@ViewBag.Notify';
+
+			if (notify === 0) {
+				new PNotify({
+					title: 'Categoria',
+					text: messagem,
+					type: 'success'
+				});
+				crud = 0;
+			} else if (notify === 1) {
+				new PNotify({
+					title: 'Categoria',
+					text: messagem,
+					type: 'warning'
+				});
+				crud = 0;
+			} else if (notify === 2) {
+				new PNotify({
+					title: 'Categoria',
+					text: messagem,
+					type: 'error'
+				});
+				crud = 0;
+			}
+
+			if ($.isFunction($.fn['tooltip'])) {
+				$('[data-toggle=tooltip],[rel=tooltip]').tooltip({ container: 'body' });
+			}
+
+		}).apply(this, [jQuery]);
+	</script>
+}
+
+
+
