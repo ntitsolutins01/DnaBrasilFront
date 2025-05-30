@@ -302,11 +302,11 @@
 			@using (@Html.BeginForm("PrintGabarito", "Laudo", FormMethod.Post, new { id = "formImprimirGabarito", @class = "form-horizontal" }))
 			{
 				<div class="modal-body">
+					
 					<div class="form-group">
-						<label class="col-sm-2 control-label">
-							Gabarito <span class="required text-danger">*</span>
-						</label>
-						<div class="col-md-6 form-group">
+
+						<label class="col-sm-2 control-label">Gabarito <span class="required text-danger">*</span></label>
+						<div class="col-md-9">
 							<select class="form-control populate select2"
 									name="ddlGabarito"
 									id="ddlGabarito"
@@ -322,17 +322,18 @@
 								<option value="9MT">MATEMÁTICA 9º Ano do Ensino Fundamental</option>
 							</select>
 						</div>
+						
 					</div>
 					<div class="form-group">
 						<label class="col-sm-2 control-label">Estado:</label>
-						<div class="col-md-4 form-group">
+						<div class="col-md-4">
 							<select class="form-control populate select2" name="ddlEstadoGabarito" id="ddlEstadoGabarito" style="width: 100%"
 							        asp-for="EstadoId" asp-items="Model.ListEstados">
 								<option value="">Selecionar Estado</option>
 							</select>
 						</div>
-						<label class="col-sm-2 control-label">Municipio:</label>
-						<div class="col-md-4 form-group">
+						<label class="col-sm-1 control-label">Municipio:</label>
+						<div class="col-md-4">
 							<select class="form-control populate select2" name="ddlMunicipioGabarito" id="ddlMunicipioGabarito" style="width: 100%"
 							        asp-for="MunicipioId" asp-items="Model.ListMunicipios">
 								<option value="">Selecionar Municipio</option>
@@ -342,14 +343,14 @@
 					<div class="form-group">
 
 						<label class="col-sm-2 control-label">Localidade:</label>
-						<div class="col-md-4 form-group">
+						<div class="col-md-4">
 							<select class="form-control populate select2" name="ddlLocalidadeGabarito" id="ddlLocalidadeGabarito" style="width: 100%"
 									asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
 								<option value="">Selecionar Localidade</option>
 							</select>
 						</div>
-						<label class="col-sm-2 control-label">Aluno:</label>
-						<div class="col-md-4 form-group">
+						<label class="col-sm-1 control-label">Aluno:</label>
+						<div class="col-md-4">
 							<select class="form-control populate select2" name="ddlAlunoGabarito" id="ddlAlunoGabarito" style="width: 100%"
 									asp-for="AlunoId" asp-items="Model.ListAlunos">
 								<option value="">Selecionar Aluno</option>
