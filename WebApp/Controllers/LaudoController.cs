@@ -292,10 +292,17 @@ namespace WebApp.Controllers
                     return RedirectToAction(nameof(Create), new { notify = (int)EnumNotify.Error, message = "Favor Informar o Aluno." });
                 }
 
+                int ordem;
+
+                var existLaudo = ApiClientFactory.Instance.GetLaudoByAluno(Convert.ToInt32(collection["ddlAluno"].ToString()));
+
+                ordem = existLaudo == null ? 1 : (int)(existLaudo.Ordem + 1)!;
+
                 var command = new LaudoModel.CreateUpdateLaudoCommand
-                {
-                    AlunoId = Convert.ToInt32(collection["ddlAluno"].ToString())
-                };
+                    {
+                        AlunoId = Convert.ToInt32(collection["ddlAluno"].ToString()),
+                        Ordem = ordem
+                    };
 
                 var listVocacional = (from item in collection where item.Key.Contains("nomeRespVocacional") select item.Value).Select(v => (string)v).ToList();
 
@@ -1066,5 +1073,44 @@ namespace WebApp.Controllers
             }
         }
 
+
+
+        /// <summary>
+        /// Impreção de Gabaritos do SAEB para Alunos de uma certa localidade
+        /// </summary>
+        /// <param name="ddlEstadoGabarito">Gabarito do SAEB</param>
+        /// <param name="ddlMunicipioGabarito">Id do município</param>
+        /// <param name="ddlLocalidadeGabarito">Id da localidade</param>
+        /// <param name="ddlAlunoGabarito">Id do Aluno</param>
+        /// <returns>Retorna a lista de Alunos</returns>
+        [ClaimsAuthorize(ClaimType.Laudo, Claim.Consultar)]
+        public async Task<IActionResult> PrintGabarito([FromQuery] string ddlEstadoGabarito,
+            [FromQuery] string ddlMunicipioGabarito, [FromQuery] string ddlLocalidadeGabarito,
+            [FromQuery] string ddlAlunoGabarito)
+        {
+            try
+            {
+                var searchFilter = new AlunosFilterDto()
+                {
+                    Estado = ddlEstadoGabarito,
+                    MunicipioId = ddlMunicipioGabarito,
+                    LocalidadeId = ddlLocalidadeGabarito,
+                    AlunoId = ddlAlunoGabarito,
+                };
+
+                var result = await ApiClientFactory.Instance.GetAlunosByFilter(searchFilter);
+
+                var model = new AlunoModel()
+                {
+                    Alunos = result.Alunos.ToList()
+                };
+
+                return View(model);
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = e.Message });
+            }
+        }
     }
 }
