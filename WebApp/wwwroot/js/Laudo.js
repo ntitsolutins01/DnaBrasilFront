@@ -618,7 +618,7 @@ var vm = new Vue({
                                 $("#liVocacional").hide();
                                 $("#liEducacional3Lp").hide();
                             }
-                                $("#liEducacional3Lp").show();
+                                //$("#liEducacional3Lp").show();
                         });
                 });
 
