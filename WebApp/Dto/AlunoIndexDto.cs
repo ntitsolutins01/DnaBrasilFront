@@ -14,7 +14,7 @@
         public byte[] ByteImage { get; set; }
         public byte[] QrCode { get; set; }
         public string ModalidadeLinhaAcao { get; set; }
-
+        public string? SerieTurma { get; init; }
         public string MunicipioEstado { get; set; }
         public string NomeLocalidade { get; set; }
 
