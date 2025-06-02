@@ -90,14 +90,90 @@
                                 if (mostrarAlerta)
                                 {
 
-                                    <div class="col-sm-6 pull-left">
-                                        <div class="alert alert-info" style="padding-bottom: 6px;padding-top: 6px; !important; margin-bottom: 0px; !important">
-                                            <strong>Info:</strong> Para exportação / impressão de laudos selecione o filtro e clique em
-                                            <a href="" class="alert-link">Exportar / Imprimir</a>.
-                                        </div>
-                                    </div>
-                                }
-                            }
+									<div class="col-sm-6 pull-left">
+										<div class="alert alert-info" style="padding-bottom: 6px;padding-top: 6px; !important; margin-bottom: 0px; !important">
+											<strong>Info:</strong> Para exportação / impressão de laudos selecione o filtro e clique em
+											<a href="" class="alert-link">Exportar / Imprimir</a>.
+										</div>
+									</div>
+								}
+							}
+							
+							<div class="col-sm-2 pull-right">
+								<button type="submit" class="btn btn-block btn-primary pull-right"><i class="fa fa-search"></i> &nbsp;&nbsp;Pesquisar</button>
+							</div>
+							<div class="col-sm-2 pull-right">
+								<a href="@Url.Action("ExportLaudo", "Laudo")" id="btnExportarLaudo" class="btn btn-block btn-danger pull-right">
+									<i class="fa fa-download"></i> &nbsp;&nbsp;Exportar Laudos
+								</a>
+							</div>
+							<div class="col-sm-2 pull-right">
+								<a href="@Url.Action("Print", "Laudo")" id="btnImprimirLaudo" class="btn btn-block btn-purple pull-right" target="_blank">
+									<i class="fa fa-print"></i> &nbsp;&nbsp;Imprimir Laudos
+								</a>
+							</div>
+						</div>
+						
+					</footer>
+				</section>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-12">
+				<section class="panel">
+					<header class="panel-heading">
+						<div class="panel-actions">
+							<a href="#" class="card-action card-action-toggle" data-card-toggle></a>
+						</div>
+						<h2 class="panel-title">Listagem de Laudos</h2>
+					</header>
+					<div class="panel-body">
+						<div class="form-group row">
+							<div class="col-sm-6 pull-left">
+								<div class="alert alert-warning" style="padding-bottom: 6px;padding-top: 6px; !important; margin-bottom: 0px; !important">
+									<strong>Atenção!</strong> Os laudos listados são referentes ao seu <a href="" class="alert-link">Estado/Município/Localidade</a> de cadastro.
+								</div>
+							</div>
+							<div class="col-sm-2 pull-right">
+								<a href="@Url.Action("Create", "Laudo")" id="addToTable" class="btn btn-block btn-primary pull-right"><i class="fa fa-plus"></i> Novo Laudo </a>
+							</div>
+							@* <div class="col-sm-2 pull-right">
+								<a href="#" id="btnImprimirGabarito" data-toggle="modal" data-target="#mdPrintGabarito" class="btn btn-block btn-default pull-right">
+									<i class="fa fa-print"></i> &nbsp;&nbsp;Imprimir Gabaritos
+								</a>
+							</div> *@
+						</div>
+						<table class="table  table-bordered" id="datatable-default">
+							<thead>
+								<tr>
+									<th class="text-center">Id</th>
+									<th class="text-center">Idade</th>
+									<th class="text-center">Número do Laudo</th>
+									<th class="text-center">Matrícula - Nome Aluno</th>
+									<th class="text-center">Dimensões Realizadas</th>
+									<th class="text-center">Localidade - Município / Uf</th>
+									@* <th class="text-center">Encaminhamento</th> *@
+									<th class="text-center">Status do Laudo</th>
+									<th class="text-center">Ações</th>
+								</tr>
+							</thead>
+							<tbody>
+								@foreach (var item in Model.Laudos.Items)
+								{
+									<tr>
+										<td class="text-center">@Html.DisplayFor(modelItem => item.Id)</td>
+										<td class="text-center">@Html.DisplayFor(modelItem => item.Idade)</td>
+										<td class="text-center">@Html.DisplayFor(modelItem => item.Ordem)</td>
+										<td class="text-center">@Html.DisplayFor(modelItem => item.AlunoId) - @Html.DisplayFor(modelItem => item.NomeAluno)</td>
+										<td class="text-center">
+											@if (item.SaudeId != null)
+											{
+												<i class="fa fa-heartbeat" style="color: #d2322d;margin-right: 10px;" data-toggle="tooltip" data-placement="top" title="Saúde"></i>
+											}
+											else
+											{
+												<i class="fa fa-heartbeat" style="color: #78909c;margin-right: 10px;" data-toggle="tooltip" data-placement="top" title="Saúde não realizado"></i>
+											}
 
                             <div class="col-sm-2 pull-right">
                                 <button type="submit" class="btn btn-block btn-primary pull-right"><i class="fa fa-search"></i> &nbsp;&nbsp;Pesquisar</button>
