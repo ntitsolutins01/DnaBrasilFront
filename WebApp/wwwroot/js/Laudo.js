@@ -1,10 +1,10 @@
 var vm = new Vue({
     el: "#vLaudo",
     data: {
-        loading: false,
+        loading: false
     },
     mounted: function () {
-        var self = this;
+
         (function ($) {
             'use strict';
 
@@ -164,6 +164,7 @@ var vm = new Vue({
                         });
                 });
 
+                //clique de escolha do select
                 $("#ddlLocalidade").change(function () {
                     var id = $("#ddlLocalidade").val();
 
@@ -191,6 +192,171 @@ var vm = new Vue({
                                 });
                             }
                         });
+                });
+
+                //clique de escolha do select
+                $("#ddlEstadoGabarito").change(function () {
+                    var sigla = $("#ddlEstadoGabarito").val();
+
+                    var url = "../../DivisaoAdministrativa/GetMunicipioByUf?uf=" + sigla;
+
+                    $.getJSON(url,
+                        function (data) {
+                            if (data.length > 0) {
+                                var items = '<option value="">Selecionar Municipio</option>';
+                                $("#ddlMunicipioGabarito").empty;
+                                $.each(data,
+                                    function (i, row) {
+                                        items += "<option value='" + row.value + "'>" + row.text + "</option>";
+                                    });
+                                $("#ddlMunicipioGabarito").html(items);
+                            }
+                            else {
+                                new PNotify({
+                                    title: 'Estado',
+                                    text: data,
+                                    type: 'warning'
+                                });
+                            }
+                        });
+                });
+
+                //clique de escolha do select
+                $("#ddlMunicipioGabarito").change(function () {
+                    var id = $("#ddlMunicipioGabarito").val();
+
+                    var url = "../../Localidade/GetLocalidadeByMunicipio?id=" + id;
+
+                    $.getJSON(url,
+                        function (data) {
+                            if (data.length > 0) {
+                                var items = '<option value="">Selecionar Localidade</option>';
+                                $("#ddlLocalidadeGabarito").empty;
+                                $.each(data,
+                                    function (i, row) {
+                                        items += "<option value='" + row.value + "'>" + row.text + "</option>";
+                                    });
+                                $("#ddlLocalidadeGabarito").html(items);
+                            }
+                            else {
+                                new PNotify({
+                                    title: 'Localidades',
+                                    text: 'Localidades não encontradas.',
+                                    type: 'warning'
+                                });
+                            }
+                        });
+                });
+
+                //clique de escolha do select
+                $("#ddlLocalidadeGabarito").change(function () {
+
+                    var localidadeId = $("#ddlLocalidadeGabarito").val();
+                    var gabarito = $("#ddlGabarito").val();
+
+                    if (gabarito === "") {
+
+                        //Valida form para Impressão do Gabarito
+                        $("#formImprimirGabarito").valid();
+
+                        new PNotify({
+                            title: 'Laudo',
+                            text: 'Por favor selecione o gabarito',
+                            type: 'warning'
+                        });
+                        return;
+                    }
+
+                    var etapaId = 0;
+                    var serie = "";
+
+                    switch (gabarito) {
+                        case "3LP":
+                        case "3MT":
+                            etapaId = 3;
+                            serie = "3ª SÉRIE";
+                            break;
+                        case "5LP":
+                        case "5MT":
+                            etapaId = 1;
+                            serie = "5º ANO";
+                            break;
+                        case "9LP":
+                        case "9MT":
+                            etapaId = 2;
+                            serie = "9º ANO";
+                            break;
+                    }
+
+                    var url = "../../Serie/GetTurmasByLocalidadeIdEtapaIdSerie/";
+
+                    axios.get(url, {
+                        params: {
+                            localidadeId: localidadeId,
+                            etapaId: etapaId,
+                            serie: serie
+                        }
+                    }).then(result => {
+                        if (result.data && result.data.length > 0) {
+                            var items = '<option value="">Selecionar Turma</option>';
+                            $("#ddlTurma").empty;
+                            $.each(result.data,
+                                function (i, row) {
+                                    items += "<option value='" + row.value + "'>" + row.text + "</option>";
+                                });
+                            $("#ddlTurma").html(items);
+                        } else {
+                            new PNotify({
+                                title: 'Aluno',
+                                text: 'Turmas não encontradas.',
+                                type: 'warning'
+                            });
+                        }
+                    }).catch(error => {
+                        Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
+                    }).finally(function () {
+                        // sempre será executado
+                    });
+                });
+
+                //Valida form para Impressão do Gabarito
+                $("#formImprimirGabarito").validate({
+                    highlight: function (label) {
+                        $(label).closest('.form-group').removeClass('has-success').addClass('has-error');
+                    },
+                    success: function (label) {
+                        $(label).closest('.form-group').removeClass('has-error');
+                        label.remove();
+                    },
+                    errorPlacement: function (error, element) {
+                        var placement = element.closest('.input-group');
+                        if (!placement.get(0)) {
+                            placement = element;
+                        }
+                        if (error.text() !== '') {
+                            placement.after(error);
+                        }
+                    }
+                });
+
+                //Valida form para Upload do Gabarito
+                $("#formUploadGabarito").validate({
+                    highlight: function (label) {
+                        $(label).closest('.form-group').removeClass('has-success').addClass('has-error');
+                    },
+                    success: function (label) {
+                        $(label).closest('.form-group').removeClass('has-error');
+                        label.remove();
+                    },
+                    errorPlacement: function (error, element) {
+                        var placement = element.closest('.input-group');
+                        if (!placement.get(0)) {
+                            placement = element;
+                        }
+                        if (error.text() !== '') {
+                            placement.after(error);
+                        }
+                    }
                 });
             }
 

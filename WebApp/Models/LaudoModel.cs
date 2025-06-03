@@ -44,6 +44,8 @@ namespace WebApp.Models
         public SelectList ListDeficiencias { get; set; }
         public string DeficienciaId { get; set; }
         public LaudosFilterDto SearchFilter { get; set; }
+        public string? TurmaId { get; set; }
+        public SelectList ListTurmas { get; set; }
 
         public class CreateUpdateLaudoCommand
         {

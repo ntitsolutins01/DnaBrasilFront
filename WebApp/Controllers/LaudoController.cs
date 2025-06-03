@@ -68,12 +68,15 @@ namespace WebApp.Controllers
                 }
 
                 SelectList alunos = null;
+                //SelectList turmas = null;
 
                 if (usu.LocalidadeId != null)
                 {
                     var resultAlunos = ApiClientFactory.Instance.GetAlunosByLocalidadeId(Convert.ToInt32(usu.LocalidadeId));
 
                     alunos = new SelectList(resultAlunos, "Id", "Nome");
+
+                    //turmas = new SelectList(ApiClientFactory.Instance.GetTurmasByLocalidadeId(Convert.ToInt32(usu.LocalidadeId)));
                 }
 
                 var tiposLaudos = new SelectList(ApiClientFactory.Instance.GetTiposLaudoAll(), "Id", "Nome");
@@ -115,7 +118,8 @@ namespace WebApp.Controllers
                     ListLocalidades = localidades!,
                     ListDeficiencias = deficiencias,
                     ListAlunos = alunos,
-                    SearchFilter = searchFilter
+                    SearchFilter = searchFilter,
+                    //ListTurmas = turmas
                 };
 
                 return View(model);
@@ -1084,25 +1088,57 @@ namespace WebApp.Controllers
         /// <param name="ddlAlunoGabarito">Id do Aluno</param>
         /// <returns>Retorna a lista de Alunos</returns>
         [ClaimsAuthorize(ClaimType.Laudo, Claim.Consultar)]
-        public async Task<IActionResult> PrintGabarito([FromQuery] string ddlEstadoGabarito,
-            [FromQuery] string ddlMunicipioGabarito, [FromQuery] string ddlLocalidadeGabarito,
-            [FromQuery] string ddlAlunoGabarito)
+        public async Task<IActionResult> PrintGabarito(IFormCollection collection)
         {
             try
             {
                 var searchFilter = new AlunosFilterDto()
                 {
-                    Estado = ddlEstadoGabarito,
-                    MunicipioId = ddlMunicipioGabarito,
-                    LocalidadeId = ddlLocalidadeGabarito,
-                    AlunoId = ddlAlunoGabarito,
-                };
+                    Estado = collection["ddlEstadoGabarito"],
+                    MunicipioId = collection["ddlMunicipioGabarito"],
+                    LocalidadeId = collection["ddlLocalidadeGabarito"],
+                    AlunoId = collection["ddlAlunoGabarito"],
+                    SerieId = collection["ddlTurma"] 
+                } ;
 
                 var result = await ApiClientFactory.Instance.GetAlunosByFilter(searchFilter);
 
+                var textoGabarito = "";
+                var anoGabarito = "";
+
+                switch (collection["ddlGabarito"])
+                {
+                    case "3LP":
+                        textoGabarito = "LÍNGUA PORTUGUESA";
+                        anoGabarito = " 3ª Série do Ensino Médio";
+                        break;
+                    case "3MT":
+                        textoGabarito = "MATEMÁTICA";
+                        anoGabarito = " 3ª Série do Ensino Médio";
+                        break;
+                    case "5LP":
+                        textoGabarito = "LÍNGUA PORTUGUESA";
+                        anoGabarito = " 5º Ano do Ensino Médio";
+                        break;
+                    case "5MT":
+                        textoGabarito = "MATEMÁTICA";
+                        anoGabarito = " 5º Ano do Ensino Médio";
+                        break;
+                    case "9LP":
+                        textoGabarito = "LÍNGUA PORTUGUESA";
+                        anoGabarito = " 9º Ano do Ensino Médio";
+                        break;
+                    case "9MT":
+                        textoGabarito = "MATEMÁTICA";
+                        anoGabarito = " 9º Ano do Ensino Médio";
+                        break;
+                }
+
                 var model = new AlunoModel()
                 {
-                    Alunos = result.Alunos.ToList()
+                    Alunos = result.Alunos.ToList(),
+                    TextGabarito = textoGabarito,
+                    AnoGabarito = anoGabarito
                 };
 
                 return View(model);
