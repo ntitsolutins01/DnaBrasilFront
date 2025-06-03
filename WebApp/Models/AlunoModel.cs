@@ -48,6 +48,8 @@ namespace WebApp.Models
         public int ProfessorProfissionalId { get; set; }
         public SelectList ListProfessoresProfissionais { get; set; }
         public UsuarioDto UsuarioLogado { get; set; }
+        public string TextGabarito { get; set; }
+        public string AnoGabarito { get; set; }
 
         public class CreateUpdateDadosAlunoCommand
         {

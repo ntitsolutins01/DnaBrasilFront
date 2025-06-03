@@ -5,10 +5,10 @@
 }
 
 <div id="vLaudo">
-	@using (@Html.BeginForm("Index", "Laudo", FormMethod.Post, new { id = "formPesquisarLaudo", @class = "form-horizontal" }))
-	{
-		<div class="row">
-			<div class="col-md-12">
+	<div class="row">
+		<div class="col-md-12">
+			@using (@Html.BeginForm("Index", "Laudo", FormMethod.Post, new { id = "formPesquisarLaudo", @class = "form-horizontal" }))
+			{
 				<section class="panel">
 					<header class="panel-heading">
 						<div class="panel-actions">
@@ -75,30 +75,12 @@
 					</div>
 					<footer class="panel-footer">
 						<div class="row">
-							@{
-								bool nenhumFiltroSelecionado = string.IsNullOrEmpty(Model.FomentoId) &&
-								                               string.IsNullOrEmpty(Model.EstadoId) &&
-								                               string.IsNullOrEmpty(Model.MunicipioId) &&
-								                               string.IsNullOrEmpty(Model.LocalidadeId) &&
-								                               string.IsNullOrEmpty(Model.AlunoId) &&
-								                               string.IsNullOrEmpty(Model.TipoLaudoId);
-
-								bool semResultados = Model.Laudos?.Items == null || !Model.Laudos.Items.Any();
-
-								bool mostrarAlerta = nenhumFiltroSelecionado || (Context.Request.Method == "POST" && semResultados);
-
-								if (mostrarAlerta)
-								{
-
-									<div class="col-sm-6 pull-left">
-										<div class="alert alert-info" style="padding-bottom: 6px;padding-top: 6px; !important; margin-bottom: 0px; !important">
-											<strong>Info:</strong> Para exportação / impressão de laudos selecione o filtro e clique em
-											<a href="" class="alert-link">Exportar / Imprimir</a>.
-										</div>
-									</div>
-								}
-							}
-							
+							<div class="col-sm-6 pull-left">
+								<div class="alert alert-info" style="padding-bottom: 6px; padding-top: 6px; !important; margin-bottom: 0px; !important">
+									<strong>Info:</strong> Para exportação / impressão de laudos selecione o filtro e clique em
+									<a href="" class="alert-link">Exportar / Imprimir</a>.
+								</div>
+							</div>
 							<div class="col-sm-2 pull-right">
 								<button type="submit" class="btn btn-block btn-primary pull-right"><i class="fa fa-search"></i> &nbsp;&nbsp;Pesquisar</button>
 							</div>
@@ -113,287 +95,320 @@
 								</a>
 							</div>
 						</div>
-						
 					</footer>
 				</section>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-lg-12">
-				<section class="panel">
-					<header class="panel-heading">
-						<div class="panel-actions">
-							<a href="#" class="card-action card-action-toggle" data-card-toggle></a>
-						</div>
-						<h2 class="panel-title">Listagem de Laudos</h2>
-					</header>
-					<div class="panel-body">
-						<div class="form-group row">
-							<div class="col-sm-6 pull-left">
-								<div class="alert alert-warning" style="padding-bottom: 6px;padding-top: 6px; !important; margin-bottom: 0px; !important">
-									<strong>Atenção!</strong> Os laudos listados são referentes ao seu <a href="" class="alert-link">Estado/Município/Localidade</a> de cadastro.
-								</div>
-							</div>
-							<div class="col-sm-2 pull-right">
-								<a href="@Url.Action("Create", "Laudo")" id="addToTable" class="btn btn-block btn-primary pull-right"><i class="fa fa-plus"></i> Novo Laudo </a>
-							</div>
-							@* <div class="col-sm-2 pull-right">
-								<a href="#" id="btnImprimirGabarito" data-toggle="modal" data-target="#mdPrintGabarito" class="btn btn-block btn-default pull-right">
-									<i class="fa fa-print"></i> &nbsp;&nbsp;Imprimir Gabaritos
-								</a>
-							</div> *@
-						</div>
-						<table class="table  table-bordered" id="datatable-default">
-							<thead>
-								<tr>
-									<th class="text-center">Id</th>
-									<th class="text-center">Idade</th>
-									<th class="text-center">Número do Laudo</th>
-									<th class="text-center">Matrícula - Nome Aluno</th>
-									<th class="text-center">Dimensões Realizadas</th>
-									<th class="text-center">Localidade - Município / Uf</th>
-									@* <th class="text-center">Encaminhamento</th> *@
-									<th class="text-center">Status do Laudo</th>
-									<th class="text-center">Ações</th>
-								</tr>
-							</thead>
-							<tbody>
-								@foreach (var item in Model.Laudos.Items)
-								{
-									<tr>
-										<td class="text-center">@Html.DisplayFor(modelItem => item.Id)</td>
-										<td class="text-center">@Html.DisplayFor(modelItem => item.Idade)</td>
-										<td class="text-center">@Html.DisplayFor(modelItem => item.Ordem)</td>
-										<td class="text-center">@Html.DisplayFor(modelItem => item.AlunoId) - @Html.DisplayFor(modelItem => item.NomeAluno)</td>
-										<td class="text-center">
-											@if (item.SaudeId != null)
-											{
-												<i class="fa fa-heartbeat" style="color: #d2322d;margin-right: 10px;" data-toggle="tooltip" data-placement="top" title="Saúde"></i>
-											}
-											else
-											{
-												<i class="fa fa-heartbeat" style="color: #78909c;margin-right: 10px;" data-toggle="tooltip" data-placement="top" title="Saúde não realizado"></i>
-											}
-
-											@if (item.TalentoEsportivoId != null)
-											{
-												<i class="fa fa-trophy" style="color: #ed9c28;margin-right: 10px;" data-toggle="tooltip" data-placement="top" title="Talento Esportivo"></i>
-											}
-											else
-											{
-												<i class="fa fa-trophy" style="color: #78909c;margin-right: 10px;" data-toggle="tooltip" data-placement="top" title="Talento Esportivo não realizado"></i>
-											}
-
-											@if (item.ConsumoAlimentarId != null)
-											{
-												<i class="fa fa-cutlery" style="color: #47a447;margin-right: 10px;" data-toggle="tooltip" data-placement="top" title="Consumo Alimentar"></i>
-											}
-											else
-											{
-												<i class="fa fa-cutlery" style="color: #78909c;margin-right: 10px;" data-toggle="tooltip" data-placement="top" title="Consumo Alimentar não realizado"></i>
-											}
-
-											@if (item.SaudeBucalId != null)
-											{
-												<i class="fa fa-medkit" style="color: #5bc0de;margin-right: 10px;" data-toggle="tooltip" data-placement="top" title="Saúde Bucal"></i>
-											}
-											else
-											{
-												<i class="fa fa-medkit" style="color: #78909c;margin-right: 10px;" data-toggle="tooltip" data-placement="top" title="Saúde Bucal não realizado"></i>
-											}
-
-											@if (item.Idade >= 12)
-											{
-												if (item.QualidadeDeVidaId != null)
-												{
-													<i class="fa fa-thumbs-up" style="color: #00a4a9;margin-right: 10px;" data-toggle="tooltip" data-placement="top" title="Qualidade de Vida"></i>
-												}
-												else
-												{
-													<i class="fa fa-thumbs-up" style="color: #78909c;margin-right: 10px;" data-toggle="tooltip" data-placement="top" title="Qualidade de Vida não realizado"></i>
-												}
-											}
-
-											@if (item.Idade >= 14)
-											{
-												if (item.VocacionalId != null)
-												{
-													<i class="fa fa-star" style="color: #9c27b0;margin-right: 10px;" data-toggle="tooltip" data-placement="top" title="Vocacional"></i>
-												}
-												else
-												{
-													<i class="fa fa-star" style="color: #78909c;margin-right: 10px;" data-toggle="tooltip" data-placement="top" title="Vocacional não realizado"></i>
-												}
-											}
-
-										</td>
-										<td class="text-center">@Html.DisplayFor(modelItem => item.NomeLocalidade) - @Html.DisplayFor(modelItem => item.MunicipioEstado)</td>
-										@* @if (string.IsNullOrEmpty(item.Encaminhamento))
-                                {
-                                <td class="text-center"><span class="label label-dark">EM DESENVOLVIMENTO</span></td>
-                                }
-                                else
-                                {
-                                <td class="text-center"><span class="label label-success">FINALIZADO</span></td>
-                                } *@
-										@if (item.StatusLaudo == "F")
-										{
-											<td class="text-center"><span class="label label-success">FINALIZADO</span></td>
-										}
-										else
-										{
-											<td class="text-center"><span class="label label-warning">EM ANDAMENTO</span></td>
-										}
-										<td class="actions text-center">
-											<a data-toggle="tooltip" data-placement="top" title="Editar" asp-action="Edit" asp-controller="Laudo" asp-route-id="@item.Id" class="on-default edit-row" style='color: #FF9800'><i class="fa fa-pencil"></i></a>
-
-											<a data-toggle="tooltip" data-placement="top" title="Avaliação Completa" asp-action="Details" asp-controller="Laudo" asp-route-id="@item.AlunoId" class="on-default edit-row" style='color: #d2322d'><i class="fa fa-bar-chart"></i></a>
-											<a data-toggle="tooltip" data-placement="top" title="Relatório" asp-action="Report" asp-controller="Laudo" asp-route-id="@item.AlunoId" class="on-default edit-row" style='color: #47a447' target="_blank"><i class="fa fa-file-text"></i></a>
-										</td>
-									</tr>
-								}
-							</tbody>
-						</table>
-					</div>
-				</section>
-			</div>
-		</div>
-	}
-</div>
-<!-- Modal -->
-<div class="modal fade" id="mdPrintLaudo" tabindex="-1" role="dialog" aria-labelledby="mmdPrintLaudoLabel" aria-hidden="true">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title" id="mmdPrintLaudoLabel">
-					<i class="fa fa-print"></i> &nbsp;&nbsp;<strong>Impressão de Laudos</strong>
-				</h5>
-			</div>
-			<div class="modal-body">
-				<div class="modal-icon">
-					<i class="fa fa-question-circle"></i>
-				</div>
-				<div class="modal-text">
-					<input type="hidden" id="printLaudoId" />
-					<p class="mb-0">Escolha qual tipo de impressão deseja realizar <b>completa</b> ou resumida</p>
-				</div>
-				<div class="modal-wrapper">
-				</div>
-			</div>
-			<div class="modal-footer">
-				<button type="submit" class="btn btn-warning pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-thumbs-o-down"></i> &nbsp;&nbsp;Completa</button>
-				<a id="printLaudoHref" class="btn btn-info pull-right" style="margin-left: 5px;"><i class="fa fa-thumbs-o-up"></i> &nbsp;&nbsp;Resumida</a>
-			</div>
-		</div>
-	</div>
-</div>
-<!-- Modal -->
-<div class="modal fade" id="mdPrintGabarito" tabindex="-1" role="dialog" aria-labelledby="mdmdPrintGabaritoLabel" aria-hidden="true">
-	<div class="modal-dialog modal-lg" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title" id="mdmdPrintGabaritoLabel">
-					<i class="fa fa-print"></i> &nbsp;&nbsp;<strong>Impressão Gabarito de Questionário avaliativo SAEB</strong>
-				</h5>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-			@using (@Html.BeginForm("PrintGabarito", "Laudo", FormMethod.Post, new { id = "formImprimirGabarito", @class = "form-horizontal" }))
-			{
-				<div class="modal-body">
-					
-					<div class="form-group">
-
-						<label class="col-sm-2 control-label">Gabarito <span class="required text-danger">*</span></label>
-						<div class="col-md-9">
-							<select class="form-control populate select2"
-									name="ddlGabarito"
-									id="ddlGabarito"
-									style="width:100%"
-									title="Por favor selecione o gabarito."
-									required>
-								<option value="">Selecionar Gabarito</option>
-								<option value="3LP">LÍNGUA PORTUGUESA 3º Ano do Ensino Médio</option>
-								<option value="3MT">MATEMÁTICA 3º Ano do Ensino Médio</option>
-								<option value="5LP">LÍNGUA PORTUGUESA 5º Ano do Ensino Fundamental</option>
-								<option value="5MT">MATEMÁTICA 5º Ano do Ensino Fundamental</option>
-								<option value="9LP">LÍNGUA PORTUGUESA 9º Ano do Ensino Fundamental</option>
-								<option value="9MT">MATEMÁTICA 9º Ano do Ensino Fundamental</option>
-							</select>
-						</div>
-						
-					</div>
-					<div class="form-group">
-						<label class="col-sm-2 control-label">Estado:</label>
-						<div class="col-md-4">
-							<select class="form-control populate select2" name="ddlEstadoGabarito" id="ddlEstadoGabarito" style="width: 100%"
-							        asp-for="EstadoId" asp-items="Model.ListEstados">
-								<option value="">Selecionar Estado</option>
-							</select>
-						</div>
-						<label class="col-sm-1 control-label">Municipio:</label>
-						<div class="col-md-4">
-							<select class="form-control populate select2" name="ddlMunicipioGabarito" id="ddlMunicipioGabarito" style="width: 100%"
-							        asp-for="MunicipioId" asp-items="Model.ListMunicipios">
-								<option value="">Selecionar Municipio</option>
-							</select>
-						</div>
-					</div>
-					<div class="form-group">
-
-						<label class="col-sm-2 control-label">Localidade:</label>
-						<div class="col-md-4">
-							<select class="form-control populate select2" name="ddlLocalidadeGabarito" id="ddlLocalidadeGabarito" style="width: 100%"
-									asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
-								<option value="">Selecionar Localidade</option>
-							</select>
-						</div>
-						<label class="col-sm-1 control-label">Aluno:</label>
-						<div class="col-md-4">
-							<select class="form-control populate select2" name="ddlAlunoGabarito" id="ddlAlunoGabarito" style="width: 100%"
-									asp-for="AlunoId" asp-items="Model.ListAlunos">
-								<option value="">Selecionar Aluno</option>
-							</select>
-						</div>
-					</div>
-				</div>
-				<div class="modal-footer" style="border-top: 1px solid #dee2e6; padding: 1rem;">
-					<div class="w-100">
-						<div class="col-12 text-right">
-							<button type="button"
-									class="btn btn-success"
-									onclick="submitForm()">
-								<i class="fa fa-print"></i> &nbsp;Imprimir
-							</button>
-							<button type="reset"
-									class="btn btn-danger"
-									data-dismiss="modal"
-									style="margin-right: 10px;">
-								<i class="fa fa-times"></i> &nbsp;Cancelar
-							</button>
-						</div>
-					</div>
-				</div>
 			}
 		</div>
 	</div>
+	<div class="row">
+		<div class="col-lg-12">
+			<section class="panel">
+				<header class="panel-heading">
+					<div class="panel-actions">
+						<a href="#" class="card-action card-action-toggle" data-card-toggle></a>
+					</div>
+					<h2 class="panel-title">Listagem de Laudos</h2>
+				</header>
+				<div class="panel-body">
+					<div class="form-group row">
+						<div class="col-sm-6 pull-left">
+							<div class="alert alert-warning" style="padding-bottom: 6px;padding-top: 6px; !important; margin-bottom: 0px; !important">
+								<strong>Atenção!</strong> Os laudos listados são referentes ao seu <a href="" class="alert-link">Estado/Município/Localidade</a> de cadastro.
+							</div>
+						</div>
+						<div class="col-sm-2 pull-right">
+							<a href="@Url.Action("Create", "Laudo")" id="addToTable" class="btn btn-block btn-primary pull-right"><i class="fa fa-plus"></i> Novo Laudo </a>
+						</div>
+						<div class="col-sm-2 pull-right">
+							<a href="#" id="btnImprimirGabarito" data-toggle="modal" data-target="#mdPrintGabarito" class="btn btn-block btn-default pull-right">
+								<i class="fa fa-print"></i> &nbsp;&nbsp;Imprimir Gabaritos
+							</a>
+						</div>
+					</div>
+					<table class="table table-bordered table-striped mb-0" id="datatable-default">
+						<thead>
+							<tr>
+								<th class="text-center">Id</th>
+								<th class="text-center">Idade</th>
+								<th class="text-center">Número do Laudo</th>
+								<th class="text-center">Matrícula - Nome Aluno</th>
+								<th class="text-center">Dimensões Realizadas</th>
+								<th class="text-center">Localidade - Município / Uf</th>
+								@* <th class="text-center">Encaminhamento</th> *@
+								<th class="text-center">Status do Laudo</th>
+								<th class="text-center">Ações</th>
+							</tr>
+						</thead>
+						<tbody>
+							@foreach (var item in Model.Laudos.Items)
+							{
+								<tr>
+									<td class="text-center">@Html.DisplayFor(modelItem => item.Id)</td>
+									<td class="text-center">@Html.DisplayFor(modelItem => item.Idade)</td>
+									<td class="text-center">@Html.DisplayFor(modelItem => item.Ordem)</td>
+									<td class="text-center">@Html.DisplayFor(modelItem => item.AlunoId) - @Html.DisplayFor(modelItem => item.NomeAluno)</td>
+									<td class="text-center">
+										@if (item.SaudeId != null)
+										{
+											<i class="fa fa-heartbeat" style="color: #d2322d;margin-right: 10px;" data-toggle="tooltip" data-placement="top" title="Saúde"></i>
+										}
+										else
+										{
+											<i class="fa fa-heartbeat" style="color: #78909c;margin-right: 10px;" data-toggle="tooltip" data-placement="top" title="Saúde não realizado"></i>
+										}
+
+										@if (item.TalentoEsportivoId != null)
+										{
+											<i class="fa fa-trophy" style="color: #ed9c28;margin-right: 10px;" data-toggle="tooltip" data-placement="top" title="Talento Esportivo"></i>
+										}
+										else
+										{
+											<i class="fa fa-trophy" style="color: #78909c;margin-right: 10px;" data-toggle="tooltip" data-placement="top" title="Talento Esportivo não realizado"></i>
+										}
+
+										@if (item.ConsumoAlimentarId != null)
+										{
+											<i class="fa fa-cutlery" style="color: #47a447;margin-right: 10px;" data-toggle="tooltip" data-placement="top" title="Consumo Alimentar"></i>
+										}
+										else
+										{
+											<i class="fa fa-cutlery" style="color: #78909c;margin-right: 10px;" data-toggle="tooltip" data-placement="top" title="Consumo Alimentar não realizado"></i>
+										}
+
+										@if (item.SaudeBucalId != null)
+										{
+											<i class="fa fa-medkit" style="color: #5bc0de;margin-right: 10px;" data-toggle="tooltip" data-placement="top" title="Saúde Bucal"></i>
+										}
+										else
+										{
+											<i class="fa fa-medkit" style="color: #78909c;margin-right: 10px;" data-toggle="tooltip" data-placement="top" title="Saúde Bucal não realizado"></i>
+										}
+
+										@if (item.Idade >= 12)
+										{
+											if (item.QualidadeDeVidaId != null)
+											{
+												<i class="fa fa-thumbs-up" style="color: #00a4a9;margin-right: 10px;" data-toggle="tooltip" data-placement="top" title="Qualidade de Vida"></i>
+											}
+											else
+											{
+												<i class="fa fa-thumbs-up" style="color: #78909c;margin-right: 10px;" data-toggle="tooltip" data-placement="top" title="Qualidade de Vida não realizado"></i>
+											}
+										}
+
+										@if (item.Idade >= 14)
+										{
+											if (item.VocacionalId != null)
+											{
+												<i class="fa fa-star" style="color: #9c27b0;margin-right: 10px;" data-toggle="tooltip" data-placement="top" title="Vocacional"></i>
+											}
+											else
+											{
+												<i class="fa fa-star" style="color: #78909c;margin-right: 10px;" data-toggle="tooltip" data-placement="top" title="Vocacional não realizado"></i>
+											}
+										}
+
+									</td>
+									<td class="text-center">@Html.DisplayFor(modelItem => item.NomeLocalidade) - @Html.DisplayFor(modelItem => item.MunicipioEstado)</td>
+									@* @if (string.IsNullOrEmpty(item.Encaminhamento))
+	                                {
+	                                <td class="text-center"><span class="label label-dark">EM DESENVOLVIMENTO</span></td>
+	                                }
+	                                else
+	                                {
+	                                <td class="text-center"><span class="label label-success">FINALIZADO</span></td>
+	                                } *@
+									@if (item.StatusLaudo == "F")
+									{
+										<td class="text-center"><span class="label label-success">FINALIZADO</span></td>
+									}
+									else
+									{
+										<td class="text-center"><span class="label label-warning">EM ANDAMENTO</span></td>
+									}
+									<td class="actions text-center">
+										<a data-toggle="tooltip" data-placement="top" title="Editar" asp-action="Edit" asp-controller="Laudo" asp-route-id="@item.Id" class="on-default edit-row" style='color: #FF9800'><i class="fa fa-pencil"></i></a>
+										<a href="#" data-id="@item.Id" data-toggle="modal" data-target="#mdUpload"
+										   data-toggle="tooltip" data-placement="top" title="Upload Gabarito"
+										   class="on-default edit-row" style='color: #303F9F'><i class="fa fa-upload"></i></a>
+										<a data-toggle="tooltip" data-placement="top" title="Avaliação Completa" asp-action="Details" asp-controller="Laudo" asp-route-id="@item.AlunoId" class="on-default edit-row" style='color: #d2322d'><i class="fa fa-bar-chart"></i></a>
+										<a data-toggle="tooltip" data-placement="top" title="Relatório" asp-action="Report" asp-controller="Laudo" asp-route-id="@item.AlunoId" class="on-default edit-row" style='color: #47a447' target="_blank"><i class="fa fa-file-text"></i></a>
+									</td>
+								</tr>
+							}
+						</tbody>
+					</table>
+				</div>
+			</section>
+		</div>
+	</div>
+	<!-- Modal -->
+	<div class="modal fade" id="mdUpload" tabindex="-1" role="dialog" aria-labelledby="mdUploadLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="mdUploadLabel">
+						<i class="fa fa-upload"></i> &nbsp;&nbsp;<strong>Upload Gabarito</strong>
+					</h5>
+				</div>
+				@using (@Html.BeginForm("Upload", "Laudo", FormMethod.Post, new { id = "formUploadGabarito", @class = "form-horizontal", @enctype = "multipart/form-data" }))
+				{
+					<div class="modal-body">
+						<input type="hidden" id="laudoId" name="laudoId" />
+						<div class="form-group mb-lg">
+							<label class="col-sm-2 control-label">Gabarito: <span class="required text-danger">*</span></label>
+							<div class="col-md-10">
+								<select class="form-control populate select2"
+								        name="ddlGabarito"
+								        id="ddlGabarito"
+								        style="width:100%"
+								        title="Por favor selecione o gabarito."
+								        required>
+									<option value="">Selecionar Gabarito</option>
+									<option value="3LP">LÍNGUA PORTUGUESA 3ª Série do Ensino Médio</option>
+									<option value="3MT">MATEMÁTICA 3ª Série do Ensino Médio</option>
+									<option value="5LP">LÍNGUA PORTUGUESA 5º Ano do Ensino Fundamental</option>
+									<option value="5MT">MATEMÁTICA 5º Ano do Ensino Fundamental</option>
+									<option value="9LP">LÍNGUA PORTUGUESA 9º Ano do Ensino Fundamental</option>
+									<option value="9MT">MATEMÁTICA 9º Ano do Ensino Fundamental</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group mb-lg">
+							<label class="col-sm-2 control-label">Arquivo: <span class="required text-danger">*</span></label>
+							<div class="col-sm-10">
+								<div class="fileupload fileupload-new" data-provides="fileupload">
+									<div class="input-append">
+										<div class="uneditable-input">
+											<i class="fa fa-file fileupload-exists"></i>
+											<span class="fileupload-preview"></span>
+										</div>
+										<span class="btn btn-default btn-file">
+											<span class="fileupload-exists">Alterar</span>
+											<span class="fileupload-new">Selecionar Gabarito</span>
+											<input type="file" id="arquivo" name="arquivo" required title="Por favor selecione o arquivo"/>
+										</span>
+										<a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload">Remover</a>
+									</div>
+								</div>
+							</div>
+							<label class="error" for="arquivo"></label>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-remove"></i> &nbsp;&nbsp;Fechar</button>
+						<button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
+					</div>
+				}
+			</div>
+		</div>
+	</div>
+	<!-- Modal -->
+	<div class="modal fade" id="mdPrintGabarito" tabindex="-1" role="dialog" aria-labelledby="mdmdPrintGabaritoLabel" aria-hidden="true">
+		<div class="modal-dialog modal-md" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="mdmdPrintGabaritoLabel">
+						<i class="fa fa-print"></i> &nbsp;&nbsp;<strong>Impressão Gabarito de Questionário avaliativo SAEB</strong>
+					</h5>
+				</div>
+				@using (@Html.BeginForm("PrintGabarito", "Laudo", FormMethod.Post, new { id = "formImprimirGabarito", @class = "form-horizontal", target = "_blank" }))
+				{
+					<div class="modal-body">
+						<div class="form-group">
+
+							<label class="col-sm-2 control-label">Gabarito <span class="required text-danger">*</span></label>
+							<div class="col-md-10">
+								<select class="form-control populate select2"
+										name="ddlGabarito"
+										id="ddlGabarito"
+										style="width:100%"
+										title="Por favor selecione o gabarito."
+										required>
+									<option value="">Selecionar Gabarito</option>
+									<option value="3LP">LÍNGUA PORTUGUESA 3ª Série do Ensino Médio</option>
+									<option value="3MT">MATEMÁTICA 3ª Série do Ensino Médio</option>
+									<option value="5LP">LÍNGUA PORTUGUESA 5º Ano do Ensino Fundamental</option>
+									<option value="5MT">MATEMÁTICA 5º Ano do Ensino Fundamental</option>
+									<option value="9LP">LÍNGUA PORTUGUESA 9º Ano do Ensino Fundamental</option>
+									<option value="9MT">MATEMÁTICA 9º Ano do Ensino Fundamental</option>
+								</select>
+							</div>
+
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label">Estado: <span class="required text-danger">*</span></label>
+							<div class="col-md-4">
+								<select class="form-control populate select2" name="ddlEstadoGabarito" id="ddlEstadoGabarito" style="width: 100%"
+										asp-for="EstadoId" asp-items="Model.ListEstados" required>
+									<option value="">Selecionar Estado</option>
+								</select>
+							</div>
+							<label class="col-sm-2 control-label">Municipio: <span class="required text-danger">*</span></label>
+							<div class="col-md-4">
+								<select class="form-control populate select2" name="ddlMunicipioGabarito" id="ddlMunicipioGabarito" style="width: 100%"
+										asp-for="MunicipioId" asp-items="Model.ListMunicipios" required>
+									<option value="">Selecionar Municipio</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label">Localidade: <span class="required text-danger">*</span></label>
+							<div class="col-md-4">
+								<select class="form-control populate select2" name="ddlLocalidadeGabarito" id="ddlLocalidadeGabarito" style="width: 100%"
+								        asp-for="LocalidadeId" asp-items="Model.ListLocalidades" required>
+									<option value="">Selecionar Localidade</option>
+								</select>
+							</div>
+							<label class="col-sm-2 control-label">Aluno: </label>
+							<div class="col-md-4">
+								<select class="form-control populate select2" name="ddlAlunoGabarito" id="ddlAlunoGabarito" style="width: 100%"
+								        asp-for="AlunoId" asp-items="Model.ListAlunos">
+									<option value="">Selecionar Aluno</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label">Turma: <span class="required">*</span></label>
+							<div class="col-md-4">
+								@* <select class="form-control populate" multiple="multiple" data-plugin-multiselect data-plugin-options='{ "maxHeight": 200, "enableCaseInsensitiveFiltering": true }'
+										id="ddlTurma" name="ddlTurma" style="width:100%" asp-for="TurmaId" asp-items="Model.ListTurmas" required
+										title="Por favor selecione ao menos uma turma.">
+								</select> *@
+								<select class="form-control populate select2" name="ddlTurma" id="ddlTurma"
+										title="Por favor informe a turma." required style="width: 100%"
+								        asp-for="TurmaId" asp-items="Model.ListTurmas">
+									<option value="">Selecionar Turma</option>
+								</select> 
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-remove"></i> &nbsp;&nbsp;Cancelar</button>
+						<button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-print"></i> &nbsp;&nbsp;Imprimir</button>
+					</div>
+				}
+			</div>
+		</div>
+	</div>
 </div>
+
+
 @section CssSpecificVendor {
+	<link rel="stylesheet" href="~/assets/vendor/bootstrap-fileupload/bootstrap-fileupload.min.css" />
 	<link rel="stylesheet" href="~/assets/vendor/select2/css/select2.css" />
 	<link rel="stylesheet" href="~/assets/vendor/select2-bootstrap-theme/select2-bootstrap.min.css" />
+	<link rel="stylesheet" href="~/assets/vendor/bootstrap-multiselect/bootstrap-multiselect.css" />
 	<link rel="stylesheet" href="~/assets/vendor/datatables/media/css/dataTables.bootstrap4.css" />
-@*	<link href="~/assets/vendor/datatables2023/datatables.css" rel="stylesheet" />*@
 }
 @section Scripts {
-	<script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
+	<script src="~/assets/vendor/bootstrap-fileupload/bootstrap-fileupload.min.js"></script>
 	<script src="~/assets/vendor/select2/js/select2.js"></script>
-	<script src="~/assets/vendor/ios7-switch/ios7-switch.js"></script>
 	<script src="~/assets/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
 	<script src="~/assets/vendor/datatables/media/js/dataTables.bootstrap4.min.js"></script>
-	  <script src="https://cdn.datatables.net/rowgroup/1.5.1/js/dataTables.rowGroup.js"></script>
-    <script src="https://cdn.datatables.net/rowgroup/1.5.1/js/rowGroup.dataTables.js"></script> 
-    @*<script src="~/assets/vendor/datatables2023/datatables.js"></script>*@
+	<script src="~/assets/vendor/ios7-switch/ios7-switch.js"></script>
+	<script src="~/js/formatTable.js"></script>
+	<script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
 	<script src="~/js/Laudo.js"></script>
 
 	<script>
@@ -457,6 +472,33 @@
 
 			window.location.href = url;
 		});
+
+		// function submitQuestionario() {
+		// 	// Coleta os valores dos campos do formulário
+		// 	var estado = $('#ddlEstadoGabarito').val();
+		// 	var municipio = $('#ddlMunicipioGabarito').val();
+		// 	var localidade = $('#ddlLocalidadeGabarito').val();
+		// 	var aluno = $('#ddlAlunoGabarito').val();
+		// 	var gabarito = $('#ddlGabarito').val();
+
+		// 	// Validação simples
+		// 	if (!estado || !municipio || !localidade) {
+		// 		alert('Preencha todos os campos obrigatórios para imprimir o gabarito.');
+		// 		return;
+		// 	}
+
+		// 	// Monta a URL de destino
+		// 	var url = '/Laudo/PrintGabarito'
+		// 		+ '?ddlEstadoGabarito=' + encodeURIComponent(estado)
+		// 		+ '&ddlMunicipioGabarito=' + encodeURIComponent(municipio)
+		// 		+ '&ddlLocalidadeGabarito=' + encodeURIComponent(localidade)
+		// 		+ '&ddlAlunoGabarito=' + encodeURIComponent(aluno)
+		// 		+ '&ddlGabarito=' + encodeURI(gabarito);
+
+		// 	// Abre em nova aba para impressão
+		// 	window.open(url, '_blank');
+		// }
+
 
 		(function ($) {
 
