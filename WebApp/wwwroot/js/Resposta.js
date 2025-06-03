@@ -2,7 +2,7 @@
     el: "#formResposta",
     data: {
         loading: false,
-        editDto: { Id: "", Questionario: "", Resposta: "", TipoLaudo: "", ValorPesoResposta: "", Vocacional:true }
+        editDto: { Id: "", Questionario: "", Resposta: "", Descricao: "", TipoLaudo: "", ValorPesoResposta: "", Vocacional:true, Educacional:false }
     },
     mounted: function () {
         var self = this;
@@ -60,7 +60,14 @@
                 });
 
                 $("#ddlTipoLaudo").change(function () {
+
                     var id = $("#ddlTipoLaudo").val();
+
+                    if (id === "10") {
+                        $("#dvEducacional").show();
+                    } else {
+                        $("#dvEducacional").hide();
+                    }
 
                     var url = "../Questionario/GetQuestionariosByTipoLaudo?id=" + id;
 
@@ -70,6 +77,7 @@
                         { id: $(ddlSource).val() },
                         function (data) {
                             if (data.length > 0) {
+                                
                                 var items = '<option value="">Selecionar Questionario</option>';
                                 $("#ddlQuestionario").empty;
                                 $.each(data,
@@ -79,9 +87,10 @@
                                 $("#ddlQuestionario").html(items);
                             }
                             else {
+                                
                                 new PNotify({
                                     title: 'Usuario',
-                                    text: data,
+                                    text: "Não existem questionários cadastrados para esse tipo de laudo.",
                                     type: 'warning'
                                 });
                             }
@@ -148,17 +157,31 @@
         EditResposta: function (id) {
             var self = this;
 
+            var tipoLaudo = $("#ddlTipoLaudo").val();
+
+            if (tipoLaudo === "10") {
+                $("#dvEducacional").show();
+            } else {
+                $("#dvEducacional").hide();
+            }
+
             axios.get("Resposta/GetRespostaById/?id=" + id).then(result => {
 
                 self.editDto.Id = result.data.id;
                 self.editDto.Questionario = result.data.pergunta;
                 self.editDto.TipoLaudo = result.data.nomeTipoLaudo;
                 self.editDto.Resposta = result.data.respostaQuestionario;
+                self.editDto.Descricao = result.data.descricao;
                 self.editDto.ValorPesoResposta = result.data.valorPesoResposta;
                 if (result.data.nomeTipoLaudo === 'Vocacional') {
                     self.editDto.Vocacional = true;
-                } else {
+                }
+                else if (result.data.nomeTipoLaudo === 'Educacional') {
+                    self.editDto.Educacional = true;
+                }
+                else {
                     self.editDto.Vocacional = false;
+                    self.editDto.Educacional = false;
                 }
 
             }).catch(error => {

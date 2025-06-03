@@ -1,5 +1,4 @@
-﻿using DocumentFormat.OpenXml.Spreadsheet;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using WebApp.Configuration;
 using WebApp.Dto;
@@ -10,11 +9,11 @@ using WebApp.Utility;
 
 namespace WebApp.Controllers
 {
-	/// <summary>
-	/// Controle de Contrato
-	/// </summary>
+    /// <summary>
+    /// Controle de Contrato
+    /// </summary>
     public class ContratoController : BaseController
-	{
+    {
         #region Parametros
 
         private readonly IOptions<UrlSettings> _appSettings;

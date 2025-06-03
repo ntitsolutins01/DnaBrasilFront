@@ -1,10 +1,11 @@
+using System.Globalization;
 using System.Security.Claims;
 using log4net;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
+using WebApp.Authorization;
 using WebApp.Configuration;
 using WebApp.Dto;
 using WebApp.Enumerators;
@@ -13,9 +14,6 @@ using WebApp.Identity;
 using WebApp.Models;
 using WebApp.Utility;
 using Claim = WebApp.Identity.Claim;
-using WebApp.Authorization;
-using System.Linq;
-using System.Globalization;
 
 namespace WebApp.Controllers
 {
@@ -271,7 +269,7 @@ namespace WebApp.Controllers
 
                 if (listFalta.Any())
                 {
-                    
+
                     //command.VocacionalId = (int)await ApiClientFactory.Instance.CreateVocacional(
                     //    new VocacionalModel.CreateUpdateVocacionalCommand()
                     //    {
@@ -512,31 +510,11 @@ namespace WebApp.Controllers
         /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
         /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
         [ClaimsAuthorize(ClaimType.ControlePresenca, Claim.Incluir)]
-        public ActionResult ImprimirFrequencia(int id, int mes)
+        public ActionResult ImprimirFrequencia(int mes)
         {
-            var result = ApiClientFactory.Instance.GetControlePresencaById(id);
+            ViewBag.Mes = mes;
 
-            var model = new ControlePresencaModel()
-            {
-                ControlePresenca = new ControlePresencaDto
-                {
-                    Id = result.Id,
-                    AlunoId = result.AlunoId,
-                    EventoId = result.EventoId,
-                    NomeAluno = result.NomeAluno,
-                    Controle = result.Controle,
-                    Justificativa = result.Justificativa,
-                    MunicipioEstado = result.MunicipioEstado,
-                    NomeLocalidade = result.NomeLocalidade,
-                    Data = result.Data,
-                    LocalidadeId = result.LocalidadeId,
-                    MunicipioId = result.MunicipioId,
-                    Status = result.Status,
-                    Mes = mes,
-                }
-            };
-
-            return View("ImprimirFrequencia", model);
+            return View("ImprimirFrequencia");
         }
 
         #endregion

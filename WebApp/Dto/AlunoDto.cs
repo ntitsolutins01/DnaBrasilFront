@@ -3,10 +3,10 @@
     public class AlunoDto
     {
         public int Id { get; set; }
-        public  string? AspNetUserId { get; set; }
-        public  string Nome { get; set; }
-        public  string Email { get; set; }
-        public  string DtNascimento { get; set; }
+        public string? AspNetUserId { get; set; }
+        public string Nome { get; set; }
+        public string Email { get; set; }
+        public string DtNascimento { get; set; }
         public string NomeMae { get; set; }
         public string NomePai { get; set; }
         public string Cpf { get; set; }

@@ -3,6 +3,7 @@
     data: {
         params: {
             cpf: "",
+            email: "",
             deficiencias: [],
             modalidadeAlunos: [],
             possuiDeficiencia: false
@@ -227,6 +228,41 @@
                                 });
                             }
                         });
+
+                    var urlLocalidadeFomento = "../../Aluno/GetFomentoByLocalidadeId/";
+
+                    axios.get(urlLocalidadeFomento, {
+                        params: {
+                            id: id
+                        }
+                    }).then(result => {
+                        console.log('Dados retornados:', result.data);
+
+                        if (result.data && result.data.length > 0) {
+                            var items = '<option value="">Selecionar o Fomento</option>';
+                            $("#ddlFomento").empty();
+                            $.each(result.data,
+                                function (i, row) {
+                                    if (row.selected) {
+                                        items += "<option selected value='" + row.value + "'>" + row.text + "</option>";
+                                    } else {
+                                        items += "<option value='" + row.value + "'>" + row.text + "</option>";
+                                    }
+                                });
+                            $("#ddlFomento").html(items);
+                        } else {
+                            new PNotify({
+                                title: 'Fomento',
+                                text: 'Fomento não encontrado.',
+                                type: 'warning'
+                            });
+                        }
+                    }).catch(error => {
+                        console.error('Erro ao carregar dados:', error);
+                        Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
+                    }).finally(function () {
+                        // sempre será executado
+                    });
                 });
 
                 //clique de escolha do select
@@ -506,6 +542,58 @@
         DeleteDadosAluno: function (id) {
             var url = "DadosAluno/Delete/" + id;
             $("#deleteDadosAlunoHref").prop("href", url);
+        },
+        ExisteCpf: function () {
+            var self = this;
+            self.ShowLoad(true, "pAluno");
+
+            axios.get("GetAlunoByCpf",
+                {
+                    params: {
+                        cpf: self.params.cpf
+                    }
+                })
+                .then(result => {
+
+                    if (result.data === false) {
+                        Site.Notification("Aluno", "Já existe um aluno cadastrado com esse cpf.", "warning", 2);
+                    } else if (result.data !== true) {
+                        Site.Notification("Aluno", result.data, "warning", 2);
+                        self.ShowLoad(false, "pAluno");
+                    }
+
+                    self.ShowLoad(false, "pAluno");
+
+                }).catch(error => {
+                    Site.Notification("Erro ao buscar e analisar dados", error.response.data, "error", 2);
+                    self.ShowLoad(false, "pAluno");
+                });
+        },
+        ExisteEmail: function () {
+            var self = this;
+            self.ShowLoad(true, "pAluno");
+
+            axios.get("GetAlunoByEmail",
+                {
+                    params: {
+                        email: self.params.email
+                    }
+                })
+                .then(result => {
+
+                    if (result.data === false) {
+                        Site.Notification("Aluno", "Já existe um aluno cadastrado com esse email.", "warning", 2);
+                    } else if (result.data !== true) {
+                        Site.Notification("Aluno", result.data, "warning", 2);
+                        self.ShowLoad(false, "pAluno");
+                    }
+
+                    self.ShowLoad(false, "pAluno");
+
+                }).catch(error => {
+                    Site.Notification("Erro ao buscar e analisar dados", error.response.data, "error", 2);
+                    self.ShowLoad(false, "pAluno");
+                });
         },
         AddDeficiencia: function () {
             var self = this;

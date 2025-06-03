@@ -10,11 +10,11 @@ using WebApp.Utility;
 
 namespace WebApp.Controllers
 {
-	/// <summary>
-	/// Controle de Metricalmc
-	/// </summary>
-	public class MetricaImcController : BaseController
-	{
+    /// <summary>
+    /// Controle de Metricalmc
+    /// </summary>
+    public class MetricaImcController : BaseController
+    {
 
         #region Parametros
 

@@ -8,7 +8,7 @@ namespace WebApp.ApiClient
     /// </summary>
     public partial class DnaApiClient
     {
-	    private const string ResourceMetricaImc = "MetricasImc";
+        private const string ResourceMetricaImc = "MetricasImc";
 
         #region Main Methods
 
@@ -17,10 +17,10 @@ namespace WebApp.ApiClient
         /// </summary>
         /// <param name="command">Objeto de inclusão de Métrica Imc</param>
         /// <returns>Retorna Id de novas Métrica Imc</returns>
-        public Task<long> CreateMetricaImc (MetricaImcModel.CreateUpdateMetricaImcCommand command)
+        public Task<long> CreateMetricaImc(MetricaImcModel.CreateUpdateMetricaImcCommand command)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceMetricaImc }"));
+                $"{ResourceMetricaImc}"));
             return Post(requestUrl, command);
         }
 
@@ -30,10 +30,10 @@ namespace WebApp.ApiClient
         /// <param name="id">Id de alteração de Métrica Imc</param>
         /// <param name="command">Objeto de alteração de Métrica Imc</param>
         /// <returns>Retorna true ou false</returns>
-        public Task<bool> UpdateMetricaImc (int id, MetricaImcModel.CreateUpdateMetricaImcCommand command)
+        public Task<bool> UpdateMetricaImc(int id, MetricaImcModel.CreateUpdateMetricaImcCommand command)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceMetricaImc }/{id}"));
+                $"{ResourceMetricaImc}/{id}"));
             return Put(requestUrl, command);
         }
 
@@ -42,10 +42,10 @@ namespace WebApp.ApiClient
         /// </summary>
         /// <param name="id">Id de exclusao de Métrica Imc</param>
         /// <returns>Retorna true ou false</returns>
-        public Task<bool> DeleteMetricaImc (int id)
+        public Task<bool> DeleteMetricaImc(int id)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceMetricaImc }/{id}"));
+                $"{ResourceMetricaImc}/{id}"));
             return Delete<bool>(requestUrl);
         }
 

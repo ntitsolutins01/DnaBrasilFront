@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using WebApp.Dto;
+﻿using WebApp.Dto;
 using WebApp.Models;
 
 namespace WebApp.ApiClient
@@ -9,7 +8,7 @@ namespace WebApp.ApiClient
     /// </summary>
     public partial class DnaApiClient
     {
-	    private const string ResourceEstrutura = "Estruturas";
+        private const string ResourceEstrutura = "Estruturas";
 
         #region Main Methods
 
@@ -18,10 +17,10 @@ namespace WebApp.ApiClient
         /// </summary>
         /// <param name="command">Objeto de inclusão da Estrutura</param>
         /// <returns>Id de Estrutura inserido</returns>
-        public Task<long> CreateEstrutura (EstruturaModel.CreateUpdateEstruturaCommand command)
+        public Task<long> CreateEstrutura(EstruturaModel.CreateUpdateEstruturaCommand command)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceEstrutura }"));
+                $"{ResourceEstrutura}"));
             return Post(requestUrl, command);
         }
 
@@ -31,10 +30,10 @@ namespace WebApp.ApiClient
         /// <param name="id">Id de alteração da Estrutura</param>
         /// <param name="command">Objeto de alteração da Estrutura</param>
         /// <returns>Retorna true ou false</returns>
-        public Task<bool> UpdateEstrutura (int id, EstruturaModel.CreateUpdateEstruturaCommand command)
+        public Task<bool> UpdateEstrutura(int id, EstruturaModel.CreateUpdateEstruturaCommand command)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceEstrutura }/{id}"));
+                $"{ResourceEstrutura}/{id}"));
             return Put(requestUrl, command);
         }
 
@@ -43,10 +42,10 @@ namespace WebApp.ApiClient
         /// </summary>
         /// <param name="id">Id de exclusao da Estrutura</param>
         /// <returns>Retorna true ou false</returns>
-        public Task<bool> DeleteEstrutura (int id)
+        public Task<bool> DeleteEstrutura(int id)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceEstrutura }/{id}"));
+                $"{ResourceEstrutura}/{id}"));
             return Delete<bool>(requestUrl);
         }
 

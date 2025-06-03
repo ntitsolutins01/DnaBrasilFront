@@ -1,8 +1,4 @@
-using System.Collections.Specialized;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using WebApp.Data;
 using WebApp.Dto;
 
 namespace WebApp.Models
@@ -51,6 +47,7 @@ namespace WebApp.Models
         public SelectList ListCategorias { get; set; }
         public int ProfessorProfissionalId { get; set; }
         public SelectList ListProfessoresProfissionais { get; set; }
+        public UsuarioDto UsuarioLogado { get; set; }
 
         public class CreateUpdateDadosAlunoCommand
         {

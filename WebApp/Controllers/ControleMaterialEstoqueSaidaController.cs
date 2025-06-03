@@ -1,5 +1,4 @@
-﻿using DocumentFormat.OpenXml.Presentation;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
@@ -11,7 +10,6 @@ using WebApp.Factory;
 using WebApp.Identity;
 using WebApp.Models;
 using WebApp.Utility;
-using WebApp.Views;
 
 namespace WebApp.Controllers;
 
@@ -36,7 +34,7 @@ public class ControleMaterialEstoqueSaidaController : BaseController
         ApplicationSettings.WebApiUrl = _appSettings.Value.WebApiBaseUrl;
     }
     #endregion
-     
+
     #region Main Methods
     /// <summary>
     /// Listagem de Controle de Material de Estoque e Saida

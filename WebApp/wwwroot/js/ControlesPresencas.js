@@ -442,7 +442,7 @@ function submitForm() {
 
     if (itemId) {
         // Impressão individual
-        vm.handlePrintSubmit(itemId, mes);
+        vm.handlePrintSubmit(mes);
     } else {
         // Impressão em lote
         $('#formImprimir').submit();

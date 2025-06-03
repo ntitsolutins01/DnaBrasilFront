@@ -59,7 +59,7 @@
                                             foreach (var item in Model.Cursos)
                                             {
                                                 var progresso = Model.AlunosCursos?
-                                                .FirstOrDefault(ac => Equals(ac.CursoId, item.Id))?
+                                                .FirstOrDefault(ac => ac.CursoId == item.Id.ToString())
                                                 .Progresso ?? 0;
 
                                                 string statusClasse = progresso == 0 ? "danger" :

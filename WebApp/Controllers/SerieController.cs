@@ -11,11 +11,11 @@ using WebApp.Utility;
 
 namespace WebApp.Controllers
 {
-	/// <summary>
-	/// Controle de Serie
-	/// </summary>
-	public class SerieController : BaseController
-	{
+    /// <summary>
+    /// Controle de Serie
+    /// </summary>
+    public class SerieController : BaseController
+    {
 
         #region Parametros
 

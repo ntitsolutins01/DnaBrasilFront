@@ -116,14 +116,22 @@
                                    title="Por favor informe o questionário." readonly />
                         </div>
                     </div>
-	                <div class="form-group row">
-		                <label class="col-sm-3 control-label text-sm-right pt-2">Resposta: <span class="required">*</span></label>
-		                <div class="col-sm-8">
-			                <input type="text" id="resposta" name="resposta" class="form-control"
-                                   maxlength="100" :value="editDto.Resposta"
-			                       title="Por favor informe a Resposta." required />
-		                </div>
-	                </div>
+                    <div class="form-group row">
+	                    <label class="col-sm-3 control-label text-sm-right pt-2">Resposta: <span class="required">*</span></label>
+	                    <div class="col-sm-8">
+		                    <input type="text" id="resposta" name="resposta" class="form-control"
+		                           maxlength="300" :value="editDto.Resposta"
+		                           title="Por favor informe a Resposta." required />
+	                    </div>
+                    </div>
+
+                    <div class="form-group row" style="display: none;" id="dvEducacional">
+	                    <label class="col-sm-3 control-label text-sm-right pt-2">Descrição </label>
+	                    <div class="col-sm-8">
+                            <textarea class="form-control" rows="3" maxlength="500" :value="editDto.Descricao" name="descricao" id="descricao"></textarea>
+	                    </div>
+                    </div>
+
                     <div class="form-group row">
                         <label class="col-sm-3 control-label text-sm-right pt-2">Valor/Peso Resposta: <span class="required">*</span></label>
                         <div class="col-sm-2">

@@ -102,6 +102,18 @@ namespace WebApp.ApiClient
             return Get<List<SerieDto>>(requestUrl);
         }
 
+        /// <summary>
+        /// Busca uma lista de turmas por localidade
+        /// </summary>
+        /// <param name="localidadeId">Id da localidade</param>
+        /// <returns>Retorna um json com a lista de séries</returns>
+        public List<SerieDto> GetTurmasByLocalidadeId(int localidadeId)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceSerie}/Localidade/{localidadeId}"));
+            return Get<List<SerieDto>>(requestUrl);
+        }
+
         #endregion
     }
 }

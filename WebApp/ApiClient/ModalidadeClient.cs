@@ -1,15 +1,14 @@
-﻿using System.Collections;
-using WebApp.Dto;
+﻿using WebApp.Dto;
 using WebApp.Models;
 
 namespace WebApp.ApiClient
-{ 
+{
     /// <summary>
     /// Modalidade Client
     /// </summary>
     public partial class DnaApiClient
     {
-	    private const string ResourceModalidade = "Modalidades";
+        private const string ResourceModalidade = "Modalidades";
 
         #region Main Methods
 

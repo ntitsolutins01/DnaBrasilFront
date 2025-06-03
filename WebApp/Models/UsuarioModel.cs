@@ -18,14 +18,14 @@ namespace WebApp.Models
         public SelectList ListLocalidades { get; set; }
 
         public class CreateUpdateUsuarioCommand
-		{
-			public string AspNetUserId { get; set; }
-			public string Nome { get; set; }
-			public string CpfCnpj { get; set; }
-			public string Email { get; set; }
-			public string AspNetRoleId { get; set; }
-			public int PerfilId { get; set; }
-			public int Id { get; set; }
+        {
+            public string AspNetUserId { get; set; }
+            public string Nome { get; set; }
+            public string CpfCnpj { get; set; }
+            public string Email { get; set; }
+            public string AspNetRoleId { get; set; }
+            public int PerfilId { get; set; }
+            public int Id { get; set; }
             public string TipoPessoa { get; set; }
             public int MunicipioId { get; set; }
             public bool Status { get; set; }
@@ -41,5 +41,5 @@ namespace WebApp.Models
             public string ExpiresIn { get; set; }
             public string RefreshToken { get; set; }
         }
-	}
+    }
 }

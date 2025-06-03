@@ -98,11 +98,16 @@ public class EncaminhamentoController : BaseController
                 Nome = collection["nome"].ToString(),
                 Parametro = collection["parametro"].ToString(),
                 Descricao = collection["descricao"].ToString(),
-			};
+            };
+
+            string? fileName;
 
             foreach (var file in collection.Files)
             {
                 if (file.Length <= 0) continue;
+                fileName = Path.GetFileName(collection.Files[0].FileName);
+
+                command.NomeImagem = fileName;
 
                 using (var ms = new MemoryStream())
                 {
@@ -135,25 +140,29 @@ public class EncaminhamentoController : BaseController
         {
             var command = new EncaminhamentoModel.CreateUpdateEncaminhamentoCommand
             {
-	            Id = Convert.ToInt32(collection["editEncaminhamentoId"]),
-				Nome = collection["nome"].ToString(),
-				Parametro = collection["parametro"].ToString(),
-				Descricao = collection["descricao"].ToString(),
-				Status = collection["editStatus"].ToString() == "" ? false : true
+                Id = Convert.ToInt32(collection["editEncaminhamentoId"]),
+                Nome = collection["nome"].ToString(),
+                Parametro = collection["parametro"].ToString(),
+                Descricao = collection["descricao"].ToString(),
+                Status = collection["editStatus"].ToString() == "" ? false : true
 
-			};
+            };
+
+            string? fileName;
 
             foreach (var file in collection.Files)
             {
-	            if (file.Length <= 0) continue;
+                if (file.Length <= 0) continue;
+                fileName = Path.GetFileName(collection.Files[0].FileName);
 
-	            using var ms = new MemoryStream();
-	            await file.CopyToAsync(ms);
-	            var byteIMage = ms.ToArray();
-	            command.ByteImage = byteIMage;
+                using var ms = new MemoryStream();
+                await file.CopyToAsync(ms);
+                var byteIMage = ms.ToArray();
+                command.ByteImage = byteIMage;
+                command.NomeImagem = fileName;
             }
 
-			await ApiClientFactory.Instance.UpdateEncaminhamento(command.Id, command);
+            await ApiClientFactory.Instance.UpdateEncaminhamento(command.Id, command);
 
             return RedirectToAction(nameof(Index), new { crud = (int)EnumCrud.Updated });
         }

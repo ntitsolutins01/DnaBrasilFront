@@ -149,15 +149,17 @@
                                             <div class="col-sm-3">
                                                 @if (Model.Saude.Massa != null)
                                                 {
-                                                    var peso = Math.Round((decimal)Model.Saude.Massa, 0);
-
-                                                    <input type="text" class="form-control peso-mask" id="massaCorporalSaude" name="massaCorporalSaude" maxlength="5" placeholder="00.00" required value="@peso" title="Por favor informe a Massa Corporal (kg)" />
+                                                    var peso = Model.Saude.Massa;
+                                                    <input type="text" class="form-control numeric" id="massaCorporalSaude" name="massaCorporalSaude" 
+                                                           maxlength="6" placeholder="000.00" required value="@peso.ToString().Replace(",", ".")" 
+                                                           title="Por favor informe a Massa Corporal (kg)" />
                                                 }
                                                 else
                                                 {
                                                     var peso = Model.TalentoEsportivo.Peso;
-                                                    peso = peso == null ? null : (decimal)peso;
-                                                    <input type="text" class="form-control peso-mask" id="massaCorporalSaude" name="massaCorporalSaude" maxlength="2" placeholder="00" required value="@peso" title="Por favor informe a Massa Corporal (kg)" />
+                                                    <input type="text" class="form-control numeric" id="massaCorporalSaude" name="massaCorporalSaude" 
+                                                           maxlength="6" placeholder="000.00" required value="@(peso != null ? peso.ToString().Replace(",", ".") : "")" 
+                                                           title="Por favor informe a Massa Corporal (kg)" />
                                                 }
                                             </div>
                                         </div>
@@ -204,7 +206,10 @@
                                             }
                                             <label class="col-sm-3 control-label"><strong>Massa Corporal (kg)</strong> <span class="required">*</span></label>
                                             <div class="col-sm-3">
-                                                <input type="text" class="form-control peso-mask" id="massaCorporal" name="massaCorporal" maxlength="5" placeholder="00.00" value="@pesoFormatadoTalentoEsportivo" required title="Favor informe Massa Corporal (kg)" />
+                                                <input type="text" class="form-control numeric-peso" id="massaCorporal" name="massaCorporal" 
+                                                       maxlength="6" placeholder="000.00" required 
+                                                       value="@pesoFormatadoTalentoEsportivo.ToString().Replace(",", ".")" 
+                                                       title="Favor informe Massa Corporal (kg)" />
                                             </div>
                                         </div>
                                     </div>
@@ -249,7 +254,10 @@
                                                     <span class="input-group-addon">
                                                         <i class="fa fa-clock-o"></i>
                                                     </span>
-                                                    <input type="text" class="form-control" id="testeVelocidade" name="testeVelocidade" maxlength="5" placeholder="00.00" value="@Model.TalentoEsportivo.Velocidade" required title="Favor informe Teste de Velocidade 20m (seg)" />
+                                                    <input type="text" class="form-control numeric-tempo" id="testeVelocidade" name="testeVelocidade" 
+                                                           maxlength="5" placeholder="00.00" 
+                                                           value="@(Model.TalentoEsportivo.Velocidade != null ? Model.TalentoEsportivo.Velocidade.ToString().Replace(",", ".") : "")" 
+                                                           required title="Favor informe Teste de Velocidade 20m (seg)" />
                                                 </div>
                                             </div>
                                         </div>
@@ -258,7 +266,10 @@
                                         <div>
                                             <label class="col-sm-2 control-label"><strong>Aptidão Física (mLO2/min)</strong> <span class="required">*</span></label>
                                             <div class="col-sm-3">
-                                                <input type="text" class="form-control" id="aptidaoFisica" name="aptidaoFisica" maxlength="5" placeholder="00.00" value="@Model.TalentoEsportivo.Vo2Max" required title="Favor informe Aptidão Física (mLO2/min)" />
+                                                <input type="text" class="form-control numeric-tempo" id="aptidaoFisica" name="aptidaoFisica" 
+                                                       maxlength="5" placeholder="00.00" 
+                                                       value="@(Model.TalentoEsportivo.Vo2Max != null ? Model.TalentoEsportivo.Vo2Max.ToString().Replace(",", ".") : "")" 
+                                                       required title="Favor informe Aptidão Física (mLO2/min)" />
                                             </div>
                                         </div>
                                         <div>
@@ -268,8 +279,10 @@
                                                     <span class="input-group-addon">
                                                         <i class="fa fa-clock-o"></i>
                                                     </span>
-                                                    <input type="text" class="form-control" id="agilidade" name="agilidade" maxlength="5" placeholder="00.00" value="@Model.TalentoEsportivo.ShuttleRun" required title="Favor informe Agilidade (seg)" />
-
+                                                    <input type="text" class="form-control numeric-tempo" id="agilidade" name="agilidade" 
+                                                           maxlength="5" placeholder="00.00" 
+                                                           value="@(Model.TalentoEsportivo.ShuttleRun != null ? Model.TalentoEsportivo.ShuttleRun.ToString().Replace(",", ".") : "")" 
+                                                           required title="Favor informe Agilidade (seg)" />
                                                 </div>
                                             </div>
                                         </div>

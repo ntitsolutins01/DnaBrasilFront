@@ -92,17 +92,17 @@
 				</div>
 				@using (@Html.BeginForm("Edit", "TipoMaterial", FormMethod.Post, new { id = "formEditTipoMaterial", @class = "form-horizontal" }))
 				{
-					<div class="modal-body">
-						<input type="hidden" name="editTipoMaterialId" :value="editDto.Id" />
-						<div class="form-group row">
-							<label class="col-sm-3 control-label text-sm-right pt-2">Nome <span class="required">*</span></label>
-							<div class="col-sm-9">
-								<input type="text" name="nome" :value="editDto.Nome" class="form-control"
-								       maxlength="150"
-									   title="Por favor informe o nome do Tipo de Material." required/>
-							</div>
-						</div>
-					</div>
+                    <div class="modal-body">
+                        <input type="hidden" name="editTipoMaterialId" :value="editDto.Id" />
+                        <div class="form-group row">
+                            <label class="col-sm-3 control-label text-sm-right pt-2">Nome <span class="required">*</span></label>
+                            <div class="col-sm-9">
+                                <input type="text" name="nome" :value="editDto.Nome" class="form-control"
+                                       maxlength="150"
+                                       title="Por favor informe o nome do Tipo de Material." required/>
+                            </div>
+                        </div>
+                    </div>
 					<div class="modal-footer">
 						<button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-remove"></i> &nbsp;&nbsp;Cancelar</button>
 						<button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>

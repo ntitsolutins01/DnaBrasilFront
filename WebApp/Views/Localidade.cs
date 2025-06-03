@@ -1,6 +1,6 @@
 ﻿namespace WebApp.Views
 {
-	public class Localidade
-	{
-	}
+    public class Localidade
+    {
+    }
 }

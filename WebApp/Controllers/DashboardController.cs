@@ -16,7 +16,7 @@ namespace WebApp.Controllers
     {
         private readonly ILogger<DashboardController> _logger;
         private readonly IOptions<UrlSettings> _appSettings;
-         
+
 
         public DashboardController(ILogger<DashboardController> logger, IOptions<UrlSettings> appSettings)
         {
@@ -44,7 +44,7 @@ namespace WebApp.Controllers
             var dashboard = new DashboardDto();
 
             var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentosAll(), "Id", "Nome", dashboard.FomentoId);
-            var deficiencias = new SelectList(ApiClientFactory.Instance.GetDeficienciaAll().Where(x=>x.Status), "Id", "Nome", dashboard.DeficienciaId);
+            var deficiencias = new SelectList(ApiClientFactory.Instance.GetDeficienciaAll().Where(x => x.Status), "Id", "Nome", dashboard.DeficienciaId);
             var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome", dashboard.Estado);
 
             List<SelectListDto> list = new List<SelectListDto>

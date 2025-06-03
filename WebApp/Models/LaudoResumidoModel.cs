@@ -2,8 +2,8 @@
 
 namespace WebApp.Models
 {
-	public class LaudoResumidoModel
-	{
+    public class LaudoResumidoModel
+    {
         public List<LaudoResumidoDto> ListLaudosResumidos { get; set; }
-	}
+    }
 }

@@ -1,8 +1,5 @@
-@model ControlePresencaModel
-
 @{
-    ViewData["Title"] = "Impressão de Relatório de Presença";
-    Layout = "";
+Layout = "";
 }
 
 @functions {
@@ -29,7 +26,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, orientation=landscape" />
-    <title>relatorio-frequencia-@Model.ControlePresenca.NomeAluno</title>
+    <title>relatorio-frequencia</title>
     <link rel="stylesheet" href="~/assets/assets_RF/index.css" media="all" />
     <link rel="stylesheet" href="~/assets/assets_RF/pages.css" media="all" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
@@ -99,23 +96,23 @@
                     <div class="student-info">
                         <div class="info-row">
                             <span class="info-label">ALUNO</span>
-                            <span class="info-value">@Model.ControlePresenca.NomeAluno</span>
+                            <span class="info-value">Nome Aluno</span>
                         </div>
                         <div class="info-row">
                             <span class="info-label">MATRÍCULA</span>
-                            <span class="info-value">@Model.ControlePresenca.AlunoId</span>
+                            <span class="info-value">25779</span>
                         </div>
                         <div class="info-row">
                             <span class="info-label">MUNICIPIO/ESTADO</span>
-                            <span class="info-value">@Model.ControlePresenca.MunicipioEstado</span>
+                            <span class="info-value">Brasília / DF</span>
                         </div>
                         <div class="info-row">
                             <span class="info-label">UNIDADE ESCOLAR</span>
-                            <span class="info-value">@Model.ControlePresenca.NomeLocalidade</span>
+                            <span class="info-value">Nome Localidade</span>
                         </div>
                         <div class="info-row">
                             <span class="info-label">PERÍODO</span>
-                            <span class="info-value">Todo o mês de @GetMesNome(Model.ControlePresenca.Mes)</span>
+                            <span class="info-value">Todo o mês de @GetMesNome(ViewBag.Mes)</span>
                         </div>
                     </div>
                 </div>

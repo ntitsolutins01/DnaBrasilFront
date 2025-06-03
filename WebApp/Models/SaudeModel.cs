@@ -9,10 +9,10 @@ namespace WebApp.Models
         public List<SaudeDto> Saudes { get; set; }
         public string SaudeId { get; set; }
         public SelectList ListSaudes { get; set; }
-        
+
         public class CreateUpdateSaudeCommand
         {
-	        public int Id { get; set; }
+            public int Id { get; set; }
             public int? ProfissionalId { get; set; }
             public int? AlunoId { get; set; }
             public decimal? EnvergaduraSaude { get; set; }

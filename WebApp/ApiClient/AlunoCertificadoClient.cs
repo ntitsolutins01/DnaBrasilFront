@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using WebApp.Dto;
+﻿using WebApp.Dto;
 using WebApp.Models;
 
 namespace WebApp.ApiClient
@@ -9,11 +8,11 @@ namespace WebApp.ApiClient
     /// </summary>
     public partial class DnaApiClient
     {
-	    private const string ResourceAlunoCertificado = "AlunosCertificados";
+        private const string ResourceAlunoCertificado = "AlunosCertificados";
 
         #region Main Methods
 
-        
+
 
         /// <summary>
         /// Alteração de AlunoCertificado
@@ -21,10 +20,10 @@ namespace WebApp.ApiClient
         /// <param name="id">Id de alteração de AlunoCertificado</param>
         /// <param name="command">Objeto de alteração de AlunoCertificado</param>
         /// <returns>Retorna true ou false</returns>
-        public Task<bool> UpdateAlunoCertificado (int id, AlunoCursoCertificadoModel.CreateUpdateAlunoCertificadoCommand command)
+        public Task<bool> UpdateAlunoCertificado(int id, AlunoCursoCertificadoModel.CreateUpdateAlunoCertificadoCommand command)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceAlunoCertificado }/{id}"));
+                $"{ResourceAlunoCertificado}/{id}"));
             return Put(requestUrl, command);
         }
 
@@ -33,10 +32,10 @@ namespace WebApp.ApiClient
         /// </summary>
         /// <param name="id">Id de exclusão de AlunoCertificado</param>
         /// <returns>Retorna true ou false</returns>
-        public Task<bool> DeleteAlunoCertificado (int id)
+        public Task<bool> DeleteAlunoCertificado(int id)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceAlunoCertificado }/{id}"));
+                $"{ResourceAlunoCertificado}/{id}"));
             return Delete<bool>(requestUrl);
         }
 

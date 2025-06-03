@@ -7,18 +7,18 @@ namespace WebApp.ApiClient
     /// Usuário Client
     /// </summary>
 	public partial class DnaApiClient
-	{
+    {
         private const string ResourceUsuario = "Usuarios";
         private const string ResourceUser = "Users";
 
         #region Main Methods
 
         public async Task<UsuarioModel.LoginUsuarioRequest?> LoginUsuario(UsuarioModel.LoginUsuarioRequest request)
-		{
-			var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-				$"{ResourceUser}/login"));
-			return await PostWithResponseBody(requestUrl, request);
-		}
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceUser}/login"));
+            return await PostWithResponseBody(requestUrl, request);
+        }
 
         /// <summary>
         /// Inclusão de Usuário
@@ -26,11 +26,11 @@ namespace WebApp.ApiClient
         /// <param name="command">Objeto de inclusão de Usuário</param>
         /// <returns>Id do Usuário inserido</returns>
         public async Task<long> CreateUsuario(UsuarioModel.CreateUpdateUsuarioCommand command)
-		{
-			var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-				$"{ResourceUsuario}"));
-			return await Post(requestUrl, command);
-		}
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceUsuario}"));
+            return await Post(requestUrl, command);
+        }
 
         /// <summary>
         ///  Alteração de Usuário
@@ -78,11 +78,11 @@ namespace WebApp.ApiClient
         /// <param name="id">Id de Usuário a ser buscado</param>
         /// <returns>Retorna o objeto do Usuário</returns>
         public async Task<UsuarioDto> GetUsuarioById(string id)
-		{
-			var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-				$"{ResourceUsuario}/{id}"));
-			return Get<UsuarioDto>(requestUrl);
-		}
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceUsuario}/{id}"));
+            return Get<UsuarioDto>(requestUrl);
+        }
 
         /// <summary>
         /// Busca Usuário por Id de Rede 
@@ -90,11 +90,11 @@ namespace WebApp.ApiClient
         /// <param name="aspNetUserId">id de Usuário por rede </param>
         /// <returns>retorna um objeto de Usuário</returns>
         public async Task<UsuarioDto> GetUsuarioByAspNetUserId(string aspNetUserId)
-		{
-			var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-				$"{ResourceUsuario}/AspNetUser/{aspNetUserId}"));
-			return Get<UsuarioDto>(requestUrl);
-		}
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceUsuario}/AspNetUser/{aspNetUserId}"));
+            return Get<UsuarioDto>(requestUrl);
+        }
 
         /// <summary>
         /// Busca Usuário por Cpf

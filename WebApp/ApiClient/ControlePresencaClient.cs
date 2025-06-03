@@ -8,7 +8,7 @@ namespace WebApp.ApiClient
     /// </summary>
     public partial class DnaApiClient
     {
-	    private const string ResourceControlesPresencas = "ControlesPresencas";
+        private const string ResourceControlesPresencas = "ControlesPresencas";
 
         #region Main Methods
 
@@ -116,6 +116,6 @@ namespace WebApp.ApiClient
 
         #endregion
 
-        
+
     }
 }

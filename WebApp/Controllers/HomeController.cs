@@ -1,10 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Extensions.Options;
-using System.Diagnostics;
-using WebApp.Factory;
+﻿using System.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
 using WebApp.Models;
-using WebApp.Utility;
 
 namespace WebApp.Controllers
 {
