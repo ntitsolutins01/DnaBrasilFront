@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
 using WebApp.Authorization;
@@ -12,7 +11,9 @@ using WebApp.Models;
 using WebApp.Utility;
 
 namespace WebApp.Controllers;
-
+/// <summary>
+/// Controle de Encaminhamento
+/// </summary>
 public class EncaminhamentoController : BaseController
 {
     #region Constructor
@@ -28,9 +29,9 @@ public class EncaminhamentoController : BaseController
         _appSettings = appSettings;
         ApplicationSettings.WebApiUrl = _appSettings.Value.WebApiBaseUrl;
     }
-    #endregion
+    #endregion 
 
-    #region Crud Methods
+    #region Main Methods
     /// <summary>
     /// Listagem de Encaminhamento
     /// </summary>
@@ -49,7 +50,7 @@ public class EncaminhamentoController : BaseController
     }
 
     /// <summary>
-    /// Tela para inclusão de Encaminhamento
+    /// Tela para Inclusão de Encaminhamento
     /// </summary>
     /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
     /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
@@ -81,10 +82,10 @@ public class EncaminhamentoController : BaseController
     }
 
     /// <summary>
-    /// Ação de inclusão do Encaminhamento
+    /// Ação de Inclusão de Encaminhamento
     /// </summary>
-    /// <param name="collection">coleção de dados para inclusao de Encaminhamento</param>
-    /// <returns>retorna mensagem de inclusao através do parametro crud</returns>
+    /// <param name="collection">coleção de dados para Inclusao de Encaminhamento</param>
+    /// <returns>retorna mensagem de Inclusao através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.Encaminhamento, Identity.Claim.Incluir)]
     [HttpPost]
     public async Task<ActionResult> Create(IFormCollection collection)
@@ -97,11 +98,16 @@ public class EncaminhamentoController : BaseController
                 Nome = collection["nome"].ToString(),
                 Parametro = collection["parametro"].ToString(),
                 Descricao = collection["descricao"].ToString(),
-			};
+            };
+
+            string? fileName;
 
             foreach (var file in collection.Files)
             {
                 if (file.Length <= 0) continue;
+                fileName = Path.GetFileName(collection.Files[0].FileName);
+
+                command.NomeImagem = fileName;
 
                 using (var ms = new MemoryStream())
                 {
@@ -122,7 +128,7 @@ public class EncaminhamentoController : BaseController
     }
 
     /// <summary>
-    /// Ação de alteração do Encaminhamento
+    /// Ação de Alteração de Encaminhamento
     /// </summary>
     /// <param name="id">identificador do Encaminhamento</param>
     /// <param name="collection">coleção de dados para alteração de Encaminhamento</param>
@@ -134,25 +140,29 @@ public class EncaminhamentoController : BaseController
         {
             var command = new EncaminhamentoModel.CreateUpdateEncaminhamentoCommand
             {
-	            Id = Convert.ToInt32(collection["editEncaminhamentoId"]),
-				Nome = collection["nome"].ToString(),
-				Parametro = collection["parametro"].ToString(),
-				Descricao = collection["descricao"].ToString(),
-				Status = collection["editStatus"].ToString() == "" ? false : true
+                Id = Convert.ToInt32(collection["editEncaminhamentoId"]),
+                Nome = collection["nome"].ToString(),
+                Parametro = collection["parametro"].ToString(),
+                Descricao = collection["descricao"].ToString(),
+                Status = collection["editStatus"].ToString() == "" ? false : true
 
-			};
+            };
+
+            string? fileName;
 
             foreach (var file in collection.Files)
             {
-	            if (file.Length <= 0) continue;
+                if (file.Length <= 0) continue;
+                fileName = Path.GetFileName(collection.Files[0].FileName);
 
-	            using var ms = new MemoryStream();
-	            await file.CopyToAsync(ms);
-	            var byteIMage = ms.ToArray();
-	            command.ByteImage = byteIMage;
+                using var ms = new MemoryStream();
+                await file.CopyToAsync(ms);
+                var byteIMage = ms.ToArray();
+                command.ByteImage = byteIMage;
+                command.NomeImagem = fileName;
             }
 
-			await ApiClientFactory.Instance.UpdateEncaminhamento(command.Id, command);
+            await ApiClientFactory.Instance.UpdateEncaminhamento(command.Id, command);
 
             return RedirectToAction(nameof(Index), new { crud = (int)EnumCrud.Updated });
         }
@@ -163,7 +173,7 @@ public class EncaminhamentoController : BaseController
     }
 
     /// <summary>
-    /// Ação de exclusão do Encaminhamento
+    /// Ação de Exclusão de Encaminhamento
     /// </summary>
     /// <param name="id">identificador do Encaminhamento</param>
     /// <param name="collection">coleção de dados para exclusão de Encaminhamento</param>
@@ -185,6 +195,11 @@ public class EncaminhamentoController : BaseController
 
     #region Get Methods
 
+    /// <summary>
+    /// Busca Encaminhamento por Id
+    /// </summary>
+    /// <param name="id">Identificador de Encaminhamneto</param>
+    /// <returns>Retorna a um Encaminhamneto</returns>
     public Task<EncaminhamentoDto> GetEncaminhamentoById(int id)
     {
         var result = ApiClientFactory.Instance.GetEncaminhamentoById(id);

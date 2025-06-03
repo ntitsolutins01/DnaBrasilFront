@@ -1,0 +1,302 @@
+﻿@using System.Globalization
+@using System.Text.Json
+@using DocumentFormat.OpenXml.Drawing
+@using WebApp.Dto
+@using WebApp.Factory
+@model AlunoCursoCertificadoModel
+@{
+    ViewData["Title"] = "Detalhes do Curso";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="vCursoDetalhes">
+    <input type="hidden" id="alunoId" value="@Model.Aluno.Id" />
+    <div class="row mb-lg">
+        <div class="col-lg-12">
+            <h2 class="mt-none mb-sm text-dark">@Model.Curso.Titulo</h2>
+            <p class="mb-lg">
+                @if (Model.Curso.Descricao != null)
+                {
+                    @Model.Curso.Descricao
+                }
+            </p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <section class="panel">
+                <header class="panel-heading">
+                    <div class="panel-actions">
+                        <a href="#" class="card-action card-action-toggle" data-card-toggle></a>
+                    </div>
+                    <h2 class="panel-title">Conteúdo do Curso</h2>
+                </header>
+
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <!-- Player de vídeo -->
+                            <div class="embed-responsive embed-responsive-16by9 mb-md">
+                                <video id="videoPlayer" class="embed-responsive-item" controls>
+                                    <source :src="selectedVideoUrl" type="video/mp4" id="videoSource">
+                                    Seu navegador não suporta a tag de vídeo.
+                                </video>
+                            </div>
+
+
+                            <!-- Título da Aula Atual -->
+                            <div class="mb-md">
+                                <h3 id="aulaAtualTitulo" class="text-weight-semibold text-dark">Selecione uma aula para começar</h3>
+                            </div>
+
+                            <!-- Informações do Professor -->
+                            <div class="widget-summary mb-md">
+                                <div class="widget-summary-col widget-summary-col-icon">
+                                    <div class="summary-icon bg-primary">
+                                        <i class="fa fa-user-circle-o"></i>
+                                    </div>
+                                </div>
+                                <div class="widget-summary-col">
+                                    <div class="summary">
+                                        <h4 class="title">Professor</h4>
+                                        <div class="info">
+                                            <strong class="amount">@Model.Curso.NomeCoordenador</strong>
+                                            <p class="text-muted">Desenvolvedora Full Stack</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Materiais da Aula -->
+                            <div class="mt-lg">
+                                <h4 class="mb-sm"><i class="fa fa-book mr-xs"></i> Materiais da Aula</h4>
+                                <div id="materiais-aula" class="panel panel-default">
+                                    <div class="panel-body">
+                                        <ul class="list-group" id="lista-materiais">
+                                            <li class="list-group-item text-center">
+                                                <i class="fa fa-info-circle mr-xs"></i> Selecione uma aula para ver os materiais disponíveis
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <!-- Progresso do Curso -->
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title"><i class="fa fa-graduation-cap mr-xs"></i> Seu Progresso</h4>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="progress light mb-md">
+                                        @{
+                                            var progress = (double)0;
+                                            if (Model.Aulas != null)
+                                            {
+                                                progress = Math.Round((double)Model.AlunosAulas.Count() / Model.Aulas.Count() * 100, 1);
+                                            }
+
+
+                                            var serializerOptions = new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            };
+
+                                            var alunoCurso = new
+                                            {
+                                                AlunoId = Model.Aluno.Id,
+                                                CursoId = Model.Curso.Id,
+                                                Progresso = progress
+                                            };
+                                        }
+                                        <input type="hidden" id="progresso" value="@progress" />
+                                        <div class="progress-bar progress-bar-primary" role="progressbar"
+                                             aria-valuenow="@progress" aria-valuemin="0"
+                                             aria-valuemax="100" style="width: @progress%;">
+                                            @progress%
+                                        </div>
+                                    </div>
+
+                                    <div class="text-center mb-md">
+                                        <button class="btn btn-default btn-block" disabled>
+                                            <i class="fa fa-certificate"></i> Ver Certificado
+                                            <small>(Conclua o curso para desbloquear)</small>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Módulos e Aulas -->
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title"><i class="fa fa-list-alt mr-xs"></i> Conteúdo do Curso</h4>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="panel-group" id="accordion">
+                                        @if (Model.Modulos != null && Model.Modulos.Any())
+                                        {
+                                            foreach (var modulo in Model.Modulos)
+                                            {
+                                                // Filter lessons that belong to the current module
+                                                var moduloAulas = Model.Aulas?.Where(a => a.ModuloEadId == modulo.Id).OrderBy(a => a.Ordem).ToList()
+                                                ?? new List<AulaDto>();
+                                                var collapseId = "collapseModulo" + modulo.Id;
+                                                // Expand the first module panel by default
+                                                var isExpanded = modulo.Equals(Model.Modulos.First()) ? "in" : "";
+                                                <div class="panel panel-accordion">
+                                                    <div class="panel-heading">
+                                                        <h4 class="panel-title">
+                                                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#@collapseId">
+                                                                <i class="fa fa-folder-o mr-xs"></i> @modulo.Titulo
+                                                            </a>
+                                                        </h4>
+                                                    </div>
+                                                    <div id="@collapseId" class="accordion-body collapse @isExpanded">
+                                                        <div class="panel-body">
+                                                            @if (moduloAulas.Any())
+                                                            {
+                                                                <ul class="nav nav-list">
+                                                                    @foreach (var aula in moduloAulas)
+                                                                    {
+                                                                        <li class="mb-sm">
+                                                                            <a href="#" class="aula-link"
+                                                                               v-on:click.prevent="selectLesson(@aula.Id)"
+                                                                               data-aula-id="@aula.Id"
+                                                                               data-aula-titulo="@aula.Titulo">
+                                                                                <i class="fa fa-play-circle-o mr-xs"></i> @aula.Titulo
+                                                                                @if (Model.AlunosAulas.Any(a => Convert.ToInt32(a.AulaId) == aula.Id))
+                                                                                {
+                                                                                    <span class="pull-right text-success">
+                                                                                        <i class="fa fa-check-circle"></i>
+                                                                                    </span>
+                                                                                }
+                                                                            </a>
+                                                                        </li>
+                                                                    }
+                                                                </ul>
+                                                            }
+                                                            else
+                                                            {
+                                                                <p>Nenhuma aula disponível para este módulo.</p>
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <p>Nenhum módulo encontrado.</p>
+                                        }
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+                            <!-- Opções -->
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title"><i class="fa fa-cog mr-xs"></i> Opções</h4>
+                                </div>
+                                <div class="panel-body">
+                                    <a href="#" class="btn btn-default btn-block mb-xs">
+                                        <i class="fa fa-arrow-left"></i> Voltar para Meus Cursos
+                                    </a>
+
+                                    <button class="btn btn-success btn-block" id="btnProximaAula" disabled>
+                                        <i class="fa fa-forward"></i> Próxima Aula
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+@section CssSpecificVendor {
+    <link rel="stylesheet" href="~/assets/vendor/bootstrap-fileupload/bootstrap-fileupload.min.css" />
+    <link rel="stylesheet" href="~/assets/vendor/select2/css/select2.css" />
+    <link rel="stylesheet" href="~/assets/vendor/select2-bootstrap-theme/select2-bootstrap.min.css" />
+    <link rel="stylesheet" href="~/assets/vendor/datatables/media/css/dataTables.bootstrap4.css" />
+    <style>
+        /* Estilos específicos para a página de detalhes do curso */
+        .aula-link.active {
+            font-weight: bold;
+            color: #0088cc;
+        }
+
+        .summary-icon img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+        }
+
+        #videoPlayer {
+            background-color: #000;
+        }
+
+        .curso-controles {
+            margin-top: 15px;
+        }
+
+        .list-group-item i {
+            margin-right: 5px;
+        }
+
+        .panel-accordion .panel-heading {
+            padding: 10px;
+        }
+
+        .nav-list li a {
+            padding: 8px 10px;
+            display: block;
+            border-radius: 4px;
+        }
+
+            .nav-list li a:hover {
+                background-color: #f5f5f5;
+                text-decoration: none;
+            }
+
+            .nav-list li a.active {
+                background-color: #eaeaea;
+                font-weight: bold;
+            }
+    </style>
+}
+
+@section Scripts {
+    <script src="~/assets/vendor/bootstrap-fileupload/bootstrap-fileupload.min.js"></script>
+    <script src="~/assets/vendor/select2/js/select2.js"></script>
+    <script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
+    <script src="~/assets/vendor/jquery-mask/jquery.mask.js"></script>
+    <script src="~/assets/vendor/ios7-switch/ios7-switch.js"></script>
+    <script src="~/js/AlunoCertificado.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const alunoCurso = @Html.Raw(JsonSerializer.Serialize(alunoCurso, serializerOptions));
+            const url = `/AlunoCursoCertificado/UpdateProgresso`;
+
+            const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+            const form = new URLSearchParams();
+            form.append('AlunoId', alunoCurso.alunoId);
+            form.append('CursoId', alunoCurso.cursoId);
+            form.append('Progresso', alunoCurso.progresso);
+            form.append('__RequestVerificationToken', token);
+
+            axios.post(url, form, {
+                headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                withCredentials: true
+            })
+        });
+    </script>
+}

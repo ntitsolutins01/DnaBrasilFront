@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Extensions.Primitives;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using WebApp.Dto;
 
 namespace WebApp.Models
@@ -10,6 +8,9 @@ namespace WebApp.Models
         public MaterialDto Material { get; set; }
         public List<MaterialIndexDto> Materiais { get; set; }
         public SelectList ListMateriais { get; set; }
+        public List<GrupoMaterialDto> GruposMateriais { get; set; }
+        public SelectList ListGruposMateriais { get; set; }
+        public int GrupoMaterialId { get; set; }
         public TipoMaterialDto TipoMaterial { get; set; }
         public List<TipoMaterialDto> TiposMateriais { get; set; }
         public SelectList ListTiposMateriais { get; set; }
@@ -24,7 +25,6 @@ namespace WebApp.Models
             public int TipoMaterialId { get; set; }
             public string UnidadeMedida { get; set; }
             public string Descricao { get; set; }
-            public int? QtdAdquirida { get; set; }
         }
     }
 

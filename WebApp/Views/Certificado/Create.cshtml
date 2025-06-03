@@ -19,34 +19,24 @@
 
                     <div class="panel-body">
                         <div class="form-group row">
-                            <label class="col-sm-3 control-label text-sm-right pt-2">Tipo de Curso <span class="required">*</span></label>
+                            <label class="col-sm-2 control-label text-sm-right pt-2">Fomento <span class="required">*</span></label>
                             <div class="col-sm-4">
-                                <select class="form-control populate select2" name="ddlTipoCurso" id="ddlTipoCurso" style="width:100%"
-                                        required title="Por favor selecione o tipo de curso"
-                                        asp-for="TipoCursosId" asp-items="Model.ListTipoCursos">
-                                    <option value="">Selecionar Tipo de Curso</option>
+                                <select class="form-control populate select2" name="ddlFomento" id="ddlFomento" style="width:100%"
+                                        required title="Por favor selecione o Fomento"
+                                        asp-for="FomentoId" asp-items="Model.ListFomentos">
+                                    <option value="">Selecionar Fomento</option>
                                 </select>
                             </div>
-                            <label class="col-sm-1 control-label text-sm-right pt-2">Curso <span class="required">*</span></label>
-                            <div class="col-sm-4">
-                                <select class="form-control populate select2" name="ddlCurso" id="ddlCurso" style="width:100%"
-                                        required title="Por favor selecione o curso"
-                                        asp-for="CursoId" asp-items="Model.ListCursos">
-                                    <option value="">Selecionar Curso</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-3 control-label text-sm-right pt-2">Status</label>
-                            <div class="col-sm-9">
+                            <label class="col-sm-1 control-label text-sm-right pt-2">Status</label>
+                            <div class="col-sm-5">
                                 <div class="switch switch-sm switch-primary">
                                     <input type="checkbox" name="Status" id="Status" data-plugin-ios-switch checked="checked" />
                                 </div>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-sm-3 control-label text-sm-right pt-2">Certificado</label>
-                            <div class="col-sm-9">
+                            <label class="col-sm-2 control-label text-sm-right pt-2">Certificado</label>
+                            <div class="col-sm-10">
                                 <!-- Tabs de navegação -->
                                 <div class="tabs">
                                     <ul class="nav nav-tabs">
@@ -126,20 +116,19 @@
         /* Estilos do Editor */
         .note-editor {
             margin-bottom: 0;
-            width: 1140px !important; /* Largura fixa do certificado */
+            width: 1754px !important; /* Largura fixa do certificado */
         }
 
         .note-editable {
-            min-height: 813px !important; /* Altura fixa do certificado */
-            height: 813px !important;
-            max-height: 813px !important;
-            width: 1140px !important;
+            min-height: 1240px !important;
+            height: 1240px !important;
+            width: 1754px !important;
         }
 
         .note-editing-area {
             position: relative !important;
-            height: 813px !important;
-            width: 1140px !important;
+            height: 1240px !important;
+            width: 1754px !important;
         }
 
         .background-overlay {
@@ -312,6 +301,7 @@
     <script src="~/assets/vendor/summernote/lang/summernote-pt-BR.js"></script>
 
     <script src="~/assets/javascripts/theme.init.js"></script>
+    <script src="~/js/Certificado.js"></script>
 
     <script>
         // Plugin personalizado do Summernote
@@ -366,24 +356,24 @@
                                     'aluno_cidade': 'Cidade do aluno',
                                     'aluno_uf': 'Estado do aluno',
                                     'aluno_frequencia': 'Frequência do aluno',
-                                    'aluno_progresso': 'Porcentagem de conclusão do aluno no curso'
+                                    'aluno_progresso': 'Porcentagem de conclusão do aluno no Fomento'
                                 },
                                 'Certificado': {
                                     'cert': 'Código do certificado',
                                     'certificado_nota': 'Média final do aluno',
-                                    'certificado_dia_inicio': 'Data de início do curso',
-                                    'certificado_dia_fim': 'Data de conclusão do curso',
+                                    'certificado_dia_inicio': 'Data de início do Fomento',
+                                    'certificado_dia_fim': 'Data de conclusão do Fomento',
                                     'certificado_data_validade': 'Data de validade do certificado',
                                     'matricula_dia_cadastro': 'Data da matrícula',
-                                    'certificado_carga_horaria': 'Carga horária do curso',
+                                    'certificado_carga_horaria': 'Carga horária do Fomento',
                                     'qrcode_frente': 'QR Code da frente (150px)',
                                     'qrcode_verso': 'QR Code do verso (200px)'
                                 },
-                                'Curso': {
-                                    'curso_titulo': 'Curso',
-                                    'curso_professor': 'Nome do professor coordenador do curso',
-                                    'curso_modulos': 'Lista de módulos do curso',
-                                    'curso_modulos_carga_horaria': 'Lista de módulos do curso com carga horária'
+                                'Fomento': {
+                                    'Fomento_titulo': 'Fomento',
+                                    'Fomento_professor': 'Nome do professor coordenador do Fomento',
+                                    'Fomento_modulos': 'Lista de módulos do Fomento',
+                                    'Fomento_modulos_carga_horaria': 'Lista de módulos do Fomento com carga horária'
                                 },
                                 'Escola': {
                                     'seal_name': 'Nome da escola',
@@ -579,16 +569,16 @@
         }
 
         $(document).ready(function () {
-            // Select2 com Tipo de Curso
-            $("#ddlTipoCurso").change(function () {
-                var tipoCursoId = $(this).val();
-                $("#ddlCurso").empty();
-                $("#ddlCurso").append('<option value="">Selecionar Curso</option>');
+            // Select2 com Tipo de Fomento
+            $("#ddlTipoFomento").change(function () {
+                var tipoFomentoId = $(this).val();
+                $("#ddlFomento").empty();
+                $("#ddlFomento").append('<option value="">Selecionar Fomento</option>');
 
-                if (tipoCursoId !== "") {
-                    $.getJSON(`/Certificado/GetCursosByTipoCursoId/${tipoCursoId}`, function (data) {
+                if (tipoFomentoId !== "") {
+                    $.getJSON(`/Certificado/GetFomentosByTipoFomentoId/${tipoFomentoId}`, function (data) {
                         $.each(data, function (i, item) {
-                            $("#ddlCurso").append(`<option value="${item.id}">${item.titulo}</option>`);
+                            $("#ddlFomento").append(`<option value="${item.id}">${item.titulo}</option>`);
                         });
                     });
                 }

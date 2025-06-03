@@ -1,8 +1,4 @@
-using System.Collections.Specialized;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using WebApp.Data;
 using WebApp.Dto;
 
 namespace WebApp.Models
@@ -23,6 +19,12 @@ namespace WebApp.Models
         public SelectList ListFomentos { get; set; }
         public string? LocalidadeId { get; set; }
         public SelectList ListLocalidades { get; set; }
+        public string? SerieId { get; set; }
+        public SelectList ListSeries { get; set; }
+        public string? TurmaId { get; set; }
+        public SelectList ListTurmas { get; set; }
+        public string? EtapaId { get; set; }
+        public SelectList ListEtapas { get; set; }
         public SelectList ListProfissionais { get; set; }
         public string ProfissionalId { get; set; }
         public List<ModalidadeDto>? Modalidades { get; set; }
@@ -32,7 +34,22 @@ namespace WebApp.Models
         public string SexoId { get; set; }
         public string? NomePerfil { get; set; }
         public AlunosFilterDto SearchFilter { get; set; }
-
+        public ModeloCarteirinhaDto ModeloCarteirinha { get; set; }
+        public AtividadeDto Atividade { get; set; }
+        public List<AtividadeDto> Atividades { get; set; }
+        public int EstruturaId { get; set; }
+        public SelectList ListEstruturas { get; set; }
+        public int LinhaAcaoId { get; set; }
+        public SelectList ListLinhasAcoes { get; set; }
+        public int AtividadeModalidadeId { get; set; }
+        public SelectList ListAtividadesModalidades { get; set; }
+        public int CategoriaId { get; set; }
+        public SelectList ListCategorias { get; set; }
+        public int ProfessorProfissionalId { get; set; }
+        public SelectList ListProfessoresProfissionais { get; set; }
+        public UsuarioDto UsuarioLogado { get; set; }
+        public string TextGabarito { get; set; }
+        public string AnoGabarito { get; set; }
 
         public class CreateUpdateDadosAlunoCommand
         {
@@ -71,6 +88,24 @@ namespace WebApp.Models
             public bool? CopiaDocAlunoResponsavel { get; set; } = false;
             public int? FomentoId { get; set; }
             public bool? Convidado { get; set; } = false;
+            public int? SerieId { get; set; }
+        }
+        public class CreateUpdateAlunoCursoCommand
+        {
+            public required int AlunoId { get; set; }
+            public required string CursosId { get; set; }
+        }
+
+        public class CreateUpdateAlunoCertificadoCommand
+        {
+            public required int AlunoId { get; set; }
+            public required string CertificadosId { get; set; }
+        }
+        public class CreateUpdateAlunoAulaCommand
+        {
+            public required int AlunoId { get; set; }
+            public required string AulaId { get; set; }
+            public int? Progresso { get; set; }
         }
     }
 

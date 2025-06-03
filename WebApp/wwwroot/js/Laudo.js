@@ -1,10 +1,10 @@
 var vm = new Vue({
     el: "#vLaudo",
     data: {
-        loading: false,
+        loading: false
     },
     mounted: function () {
-        var self = this;
+
         (function ($) {
             'use strict';
 
@@ -37,8 +37,13 @@ var vm = new Vue({
 
                     var datatableInit = function () {
 
+                        $('#datatable-default').DataTable().destroy();
+
                         $('#datatable-default').dataTable({
-                            order: [[0, 'desc']],
+                            order: [[2, 'asc']],
+                            rowGroup: {
+                                dataSrc: 2
+                            },
                             dom: '<"row"<"col-lg-6"l><"col-lg-6"f>><"table-responsive"t>p',
                             "language": {
                                 "sEmptyTable": "Nenhum registro encontrado",
@@ -66,7 +71,6 @@ var vm = new Vue({
                                 }
                             }
                         });
-
                     };
 
                     $(function () {
@@ -160,10 +164,11 @@ var vm = new Vue({
                         });
                 });
 
+                //clique de escolha do select
                 $("#ddlLocalidade").change(function () {
                     var id = $("#ddlLocalidade").val();
 
-                    var url = "../../Aluno/GetAlunosByLocalidade?id=" + id;
+                    var url = "../../Aluno/GetAlunosByLocalidadeId?id=" + id;
 
                     var ddlSource = "#ddlAluno";
 
@@ -187,6 +192,171 @@ var vm = new Vue({
                                 });
                             }
                         });
+                });
+
+                //clique de escolha do select
+                $("#ddlEstadoGabarito").change(function () {
+                    var sigla = $("#ddlEstadoGabarito").val();
+
+                    var url = "../../DivisaoAdministrativa/GetMunicipioByUf?uf=" + sigla;
+
+                    $.getJSON(url,
+                        function (data) {
+                            if (data.length > 0) {
+                                var items = '<option value="">Selecionar Municipio</option>';
+                                $("#ddlMunicipioGabarito").empty;
+                                $.each(data,
+                                    function (i, row) {
+                                        items += "<option value='" + row.value + "'>" + row.text + "</option>";
+                                    });
+                                $("#ddlMunicipioGabarito").html(items);
+                            }
+                            else {
+                                new PNotify({
+                                    title: 'Estado',
+                                    text: data,
+                                    type: 'warning'
+                                });
+                            }
+                        });
+                });
+
+                //clique de escolha do select
+                $("#ddlMunicipioGabarito").change(function () {
+                    var id = $("#ddlMunicipioGabarito").val();
+
+                    var url = "../../Localidade/GetLocalidadeByMunicipio?id=" + id;
+
+                    $.getJSON(url,
+                        function (data) {
+                            if (data.length > 0) {
+                                var items = '<option value="">Selecionar Localidade</option>';
+                                $("#ddlLocalidadeGabarito").empty;
+                                $.each(data,
+                                    function (i, row) {
+                                        items += "<option value='" + row.value + "'>" + row.text + "</option>";
+                                    });
+                                $("#ddlLocalidadeGabarito").html(items);
+                            }
+                            else {
+                                new PNotify({
+                                    title: 'Localidades',
+                                    text: 'Localidades não encontradas.',
+                                    type: 'warning'
+                                });
+                            }
+                        });
+                });
+
+                //clique de escolha do select
+                $("#ddlLocalidadeGabarito").change(function () {
+
+                    var localidadeId = $("#ddlLocalidadeGabarito").val();
+                    var gabarito = $("#ddlGabarito").val();
+
+                    if (gabarito === "") {
+
+                        //Valida form para Impressão do Gabarito
+                        $("#formImprimirGabarito").valid();
+
+                        new PNotify({
+                            title: 'Laudo',
+                            text: 'Por favor selecione o gabarito',
+                            type: 'warning'
+                        });
+                        return;
+                    }
+
+                    var etapaId = 0;
+                    var serie = "";
+
+                    switch (gabarito) {
+                        case "3LP":
+                        case "3MT":
+                            etapaId = 3;
+                            serie = "3ª SÉRIE";
+                            break;
+                        case "5LP":
+                        case "5MT":
+                            etapaId = 1;
+                            serie = "5º ANO";
+                            break;
+                        case "9LP":
+                        case "9MT":
+                            etapaId = 2;
+                            serie = "9º ANO";
+                            break;
+                    }
+
+                    var url = "../../Serie/GetTurmasByLocalidadeIdEtapaIdSerie/";
+
+                    axios.get(url, {
+                        params: {
+                            localidadeId: localidadeId,
+                            etapaId: etapaId,
+                            serie: serie
+                        }
+                    }).then(result => {
+                        if (result.data && result.data.length > 0) {
+                            var items = '<option value="">Selecionar Turma</option>';
+                            $("#ddlTurma").empty;
+                            $.each(result.data,
+                                function (i, row) {
+                                    items += "<option value='" + row.value + "'>" + row.text + "</option>";
+                                });
+                            $("#ddlTurma").html(items);
+                        } else {
+                            new PNotify({
+                                title: 'Aluno',
+                                text: 'Turmas não encontradas.',
+                                type: 'warning'
+                            });
+                        }
+                    }).catch(error => {
+                        Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
+                    }).finally(function () {
+                        // sempre será executado
+                    });
+                });
+
+                //Valida form para Impressão do Gabarito
+                $("#formImprimirGabarito").validate({
+                    highlight: function (label) {
+                        $(label).closest('.form-group').removeClass('has-success').addClass('has-error');
+                    },
+                    success: function (label) {
+                        $(label).closest('.form-group').removeClass('has-error');
+                        label.remove();
+                    },
+                    errorPlacement: function (error, element) {
+                        var placement = element.closest('.input-group');
+                        if (!placement.get(0)) {
+                            placement = element;
+                        }
+                        if (error.text() !== '') {
+                            placement.after(error);
+                        }
+                    }
+                });
+
+                //Valida form para Upload do Gabarito
+                $("#formUploadGabarito").validate({
+                    highlight: function (label) {
+                        $(label).closest('.form-group').removeClass('has-success').addClass('has-error');
+                    },
+                    success: function (label) {
+                        $(label).closest('.form-group').removeClass('has-error');
+                        label.remove();
+                    },
+                    errorPlacement: function (error, element) {
+                        var placement = element.closest('.input-group');
+                        if (!placement.get(0)) {
+                            placement = element;
+                        }
+                        if (error.text() !== '') {
+                            placement.after(error);
+                        }
+                    }
                 });
             }
 
@@ -280,7 +450,7 @@ var vm = new Vue({
                 $("#ddlLocalidade").change(function () {
                     var id = $("#ddlLocalidade").val();
 
-                    var url = "../../Aluno/GetAlunosByLocalidade?id=" + id;
+                    var url = "../../Aluno/GetAlunosByLocalidadeId?id=" + id;
 
                     var ddlSource = "#ddlAluno";
 
@@ -331,22 +501,104 @@ var vm = new Vue({
                         });
                 });
 
-                //mascara dos inputs
-                $('#massaCorporalSaude').maskMoney();
-                $("#massaCorporalSaude").maskMoney('mask');
-                $('#massaCorporal').maskMoney();
-                $("#massaCorporal").maskMoney('mask');
-                $('#preensaoManual').maskMoney();
-                $("#preensaoManual").maskMoney('mask');
+                //mascara dos inputs 
+                var $numeric2 = $(".numeric2");
+                $numeric2.mask('00', { reverse: false });
 
-                $('#aptidaoFisica').maskMoney();
-                $("#aptidaoFisica").maskMoney('mask');
-                $('#testeVelocidade').maskMoney();
-                $("#testeVelocidade").maskMoney('mask');
-                $('#agilidade').maskMoney();
-                $("#agilidade").maskMoney('mask');
+                // Configuração para campos de peso com separador decimal (000.00)
+                $(".numeric-peso").mask('000.00', {
+                    reverse: true,
+                    translation: {
+                        '.': { pattern: /[.]/, fallback: '.' },
+                        placeholder: "000.00"
+                    }
+                });
+
+                // Configuração para campos com duas casas antes do decimal (00.00)
+                $(".numeric-tempo").mask('00.00', {
+                    reverse: true,
+                    translation: {
+                        '.': { pattern: /[.]/, fallback: '.' },
+                        placeholder: "00.00"
+                    }
+                });
+
+                // Manter compatibilidade com código existente
+                $(".numeric").mask('000.00', {
+                    reverse: true,
+                    translation: {
+                        '.': { pattern: /[.]/, fallback: '.' },
+                        placeholder: "000.00"
+                    }
+                });
+
+                // Configuração correta para campos de peso com separador decimal
+                $(".numeric").mask('000.00', {
+                    reverse: true,
+                    translation: {
+                        '.': { pattern: /[.]/, fallback: '.' },
+                        placeholder: "000.00"
+                    }
+                });
 
                 $("#formEditLaudo").validate({
+                    rules: {
+                        alturaSaude: {
+                            required: true,
+                            min: 1,
+                            max: 300
+                        },
+                        massaCorporalSaude: {
+                            required: true,
+                            min: 1,
+                            max: 200
+                        },
+                        envergaduraSaude: {
+                            required: true,
+                            min: 1,
+                            max: 300
+                        },
+                        altura: {
+                            required: true,
+                            min: 1,
+                            max: 300
+                        },
+                        massaCorporal: {
+                            required: true,
+                            min: 1,
+                            max: 200
+                        },
+                        preensaoManual: {
+                            required: true,
+                            min: 1,
+                            max: 150
+                        },
+                        flexibilidade: {
+                            required: true,
+                            min: 0,
+                            max: 100
+                        },
+                        impulsaoHorizontal: {
+                            required: true,
+                            min: 0,
+                            max: 500
+                        },
+                        testeVelocidade: {
+                            required: true,
+                            min: 0,
+                            max: 60
+                        },
+                        aptidaoFisica: {
+                            required: true,
+                            min: 0,
+                            max: 100
+                        },
+                        agilidade: {
+                            required: true,
+                            min: 0,
+                            max: 60
+                        }
+                    },
                     highlight: function (label) {
                         $(label).closest('.form-group').removeClass('has-success').addClass('has-error');
                     },
@@ -457,7 +709,7 @@ var vm = new Vue({
                 $("#ddlLocalidade").change(function () {
                     var id = $("#ddlLocalidade").val();
 
-                    var url = "../../Aluno/GetAlunosByLocalidade?id=" + id;
+                    var url = "../../Aluno/GetAlunosByLocalidadeId?id=" + id;
 
                     var ddlSource = "#ddlAluno";
 
@@ -519,31 +771,164 @@ var vm = new Vue({
                         function (data) {
                             $("#divIdade").show();
                             $("#spanIdade").text(data + " anos");
-                            if (data < 12) {
-                                $("#liQualidade").hide();
-                            }
-                            if (data < 14) {
+                            if (data >= 12) {
+                                $("#liQualidade").show();
                                 $("#liVocacional").hide();
                             }
+                            if (data >= 14) {
+                                $("#liQualidade").show();
+                                $("#liVocacional").show();
+                            }
+                            if (data <= 11) {
+                                $("#liQualidade").hide();
+                                $("#liVocacional").hide();
+                                $("#liEducacional3Lp").hide();
+                            }
+                                $("#liEducacional3Lp").show();
                         });
                 });
 
                 //mascara dos inputs 
-                $('#massaCorporalSaude').maskMoney();
-                //$("#massaCorporalSaude").maskMoney('mask');
-                $('#massaCorporal').maskMoney();
-                //$("#massaCorporal").maskMoney('mask');
-                $('#preensaoManual').maskMoney();
-                //$("#preensaoManual").maskMoney('mask');
+                var $numeric2 = $(".numeric2");
+                $numeric2.mask('00', { reverse: false });
 
-                $('#aptidaoFisica').maskMoney();
-                //$("#aptidaoFisica").maskMoney('mask');
-                $('#testeVelocidade').maskMoney();
-                //$("#testeVelocidade").maskMoney('mask');
-                $('#agilidade').maskMoney();
-                //$("#agilidade").maskMoney('mask');
+                // Configuração para campos de peso com separador decimal (000.00)
+                $(".numeric").mask('000.00', {
+                    reverse: true,
+                    translation: {
+                        '.': { pattern: /[.]/, fallback: '.' },
+                        placeholder: "000.00"
+                    }
+                });
+
+                // Adicionar configuração para campos de tempo e valores menores (00.00)
+                $(".numeric-tempo").mask('00.00', {
+                    reverse: true,
+                    translation: {
+                        '.': { pattern: /[.]/, fallback: '.' },
+                        placeholder: "00.00"
+                    }
+                });
 
                 $("#formLaudo").validate({
+                    rules: {
+                        // Saúde
+                        alturaSaude: {
+                            required: true,
+                            min: 1,
+                            max: 300
+                        },
+                        massaCorporalSaude: {
+                            required: true,
+                            min: 1,
+                            max: 200
+                        },
+                        envergaduraSaude: {
+                            required: true,
+                            min: 1,
+                            max: 300
+                        },
+                        // Talento Esportivo
+                        altura: {
+                            required: true,
+                            min: 1,
+                            max: 300
+                        },
+                        massaCorporal: {
+                            required: true,
+                            min: 1,
+                            max: 200
+                        },
+                        preensaoManual: {
+                            required: true,
+                            min: 1,
+                            max: 150
+                        },
+                        flexibilidade: {
+                            required: true,
+                            min: 0,
+                            max: 100
+                        },
+                        impulsaoHorizontal: {
+                            required: true,
+                            min: 0,
+                            max: 500
+                        },
+                        testeVelocidade: {
+                            required: true,
+                            min: 0,
+                            max: 60
+                        },
+                        aptidaoFisica: {
+                            required: true,
+                            min: 0,
+                            max: 100
+                        },
+                        agilidade: {
+                            required: true,
+                            min: 0,
+                            max: 60
+                        }
+                    },
+                    messages: {
+                        // Saúde
+                        alturaSaude: {
+                            required: "Por favor, informe a altura",
+                            min: "A altura deve ser maior que 1 cm",
+                            max: "A altura deve ser menor que 300 cm"
+                        },
+                        massaCorporalSaude: {
+                            required: "Por favor, informe o peso",
+                            min: "O peso deve ser maior que 1 kg",
+                            max: "O peso deve ser menor que 200 kg"
+                        },
+                        envergaduraSaude: {
+                            required: "Por favor, informe a envergadura",
+                            min: "A envergadura deve ser maior que 1 cm",
+                            max: "A envergadura deve ser menor que 300 cm"
+                        },
+                        // Talento Esportivo
+                        altura: {
+                            required: "Por favor, informe a altura",
+                            min: "A altura deve ser maior que 1 cm",
+                            max: "A altura deve ser menor que 300 cm"
+                        },
+                        massaCorporal: {
+                            required: "Por favor, informe o peso",
+                            min: "O peso deve ser maior que 1 kg",
+                            max: "O peso deve ser menor que 200 kg"
+                        },
+                        preensaoManual: {
+                            required: "Por favor, informe a preensão manual",
+                            min: "A preensão manual deve ser maior que 1 kg",
+                            max: "A preensão manual deve ser menor que 150 kg"
+                        },
+                        flexibilidade: {
+                            required: "Por favor, informe a flexibilidade",
+                            min: "A flexibilidade deve ser maior ou igual a 0 cm",
+                            max: "A flexibilidade deve ser menor que 100 cm"
+                        },
+                        impulsaoHorizontal: {
+                            required: "Por favor, informe a impulsão horizontal",
+                            min: "A impulsão horizontal deve ser maior ou igual a 0 cm",
+                            max: "A impulsão horizontal deve ser menor que 500 cm"
+                        },
+                        testeVelocidade: {
+                            required: "Por favor, informe o tempo do teste de velocidade",
+                            min: "O tempo deve ser maior ou igual a 0 segundos",
+                            max: "O tempo deve ser menor que 60 segundos"
+                        },
+                        aptidaoFisica: {
+                            required: "Por favor, informe a aptidão física",
+                            min: "A aptidão física deve ser maior ou igual a 0 mLO2/min",
+                            max: "A aptidão física deve ser menor que 100 mLO2/min"
+                        },
+                        agilidade: {
+                            required: "Por favor, informe o tempo de agilidade",
+                            min: "O tempo deve ser maior ou igual a 0 segundos",
+                            max: "O tempo deve ser menor que 60 segundos"
+                        }
+                    },
                     highlight: function (label) {
                         $(label).closest('.form-group').removeClass('has-success').addClass('has-error');
                     },

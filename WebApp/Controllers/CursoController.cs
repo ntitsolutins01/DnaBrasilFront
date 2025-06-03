@@ -1,6 +1,4 @@
-﻿using DocumentFormat.OpenXml.Bibliography;
-using DocumentFormat.OpenXml.Spreadsheet;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
@@ -15,7 +13,9 @@ using WebApp.Utility;
 
 namespace WebApp.Controllers;
 
-
+/// <summary>
+/// Controle de Curso
+/// </summary>
 [Authorize(Policy = ModuloAccess.ConfiguracaoSistemaEad)]
 public class CursoController : BaseController
 {
@@ -39,14 +39,14 @@ public class CursoController : BaseController
     }
     #endregion
 
-    #region Crud Methods
+    #region Main Methods
 
     /// <summary>
-    /// Listagem de Curso
+    /// Listagem do Curso
     /// </summary>
-    /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
-    /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
-    /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+    /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+    /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+    /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
     [ClaimsAuthorize(ClaimType.Curso, Identity.Claim.Consultar)]
     public IActionResult Index(int? crud, int? notify, string message = null)
     {
@@ -58,11 +58,11 @@ public class CursoController : BaseController
     }
 
     /// <summary>
-    /// Tela para inclusão de Curso
+    /// Tela para Inclusão do Curso
     /// </summary>
-    /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
-    /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
-    /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+    /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+    /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+    /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
     [ClaimsAuthorize(ClaimType.Curso, Identity.Claim.Incluir)]
     public ActionResult Create(int? crud, int? notify, string message = null)
     {
@@ -71,7 +71,7 @@ public class CursoController : BaseController
             SetNotifyMessage(notify, message);
             SetCrudMessage(crud);
             var tiposcursos = new SelectList(ApiClientFactory.Instance.GetTipoCursosAll(), "Id", "Nome");
-            var coordenadores = new SelectList(ApiClientFactory.Instance.GetUsuarioAll().Where(x=>x.Perfil.Id == (int)EnumPerfil.Coordenador), "Id", "Nome");
+            var coordenadores = new SelectList(ApiClientFactory.Instance.GetUsuarioAll().Where(x => x.Perfil.Id == (int)EnumPerfil.CoordenadorEad), "Id", "Nome");
 
 
             return View(new CursoModel()
@@ -89,10 +89,10 @@ public class CursoController : BaseController
     }
 
     /// <summary>
-    /// Ação de inclusão do Curso
+    /// Ação de Inclusão do Curso
     /// </summary>
-    /// <param name="collection">coleção de dados para inclusao de Curso</param>
-    /// <returns>retorna mensagem de inclusao através do parametro crud</returns>
+    /// <param name="collection">Coleção de dados para inclusao de Curso</param>
+    /// <returns>Retorna mensagem de inclusao através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.Curso, Identity.Claim.Incluir)]
     [HttpPost]
     public async Task<ActionResult> Create(IFormCollection collection)
@@ -101,12 +101,14 @@ public class CursoController : BaseController
         {
             var command = new CursoModel.CreateUpdateCursoCommand
             {
-	            TipoCursoId = Convert.ToInt32(collection["ddlTipoCurso"].ToString()),
-	            CoordenadorId = Convert.ToInt32(collection["ddlCoordenador"].ToString()),
-	            Titulo = collection["nome"].ToString(),
-	            Descricao = collection["descricao"].ToString(),
-				CargaHoraria = Convert.ToInt32(collection["cargaHoraria"].ToString())
-			};
+                TipoCursoId = Convert.ToInt32(collection["ddlTipoCurso"].ToString()),
+                CoordenadorId = Convert.ToInt32(collection["ddlCoordenador"].ToString()),
+                Titulo = collection["nome"].ToString(),
+                Descricao = collection["descricao"].ToString(),
+                CargaHoraria = Convert.ToInt32(collection["cargaHoraria"].ToString())
+            };
+
+
 
             string? filePath;
             string? fileName;
@@ -115,6 +117,8 @@ public class CursoController : BaseController
                 Guid.NewGuid().ToString(),
                 extension
             );
+
+            long size = collection.Files.Sum(f => f.Length);
 
             foreach (var file in collection.Files)
             {
@@ -144,11 +148,11 @@ public class CursoController : BaseController
 
 
     /// <summary>
-    /// Ação de alteração do Curso
+    /// Ação de Alteração do Curso
     /// </summary>
-    /// <param name="id">identificador do Curso</param>
-    /// <param name="collection">coleção de dados para alteração de Curso</param>
-    /// <returns>retorna mensagem de alteração através do parametro crud</returns>
+    /// <param name="id">Identificador do Curso</param>
+    /// <param name="collection">Coleção de dados para alteração de Curso</param>
+    /// <returns>Retorna mensagem de alteração através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.Curso, Identity.Claim.Alterar)]
     public async Task<ActionResult> Edit(IFormCollection collection)
     {
@@ -158,7 +162,7 @@ public class CursoController : BaseController
             {
                 Id = Convert.ToInt32(collection["editCursoId"]),
                 CoordenadorId = Convert.ToInt32(collection["ddlCoordenador"].ToString()),
-				Titulo = collection["nome"].ToString(),
+                Titulo = collection["nome"].ToString(),
                 Descricao = collection["descricao"].ToString(),
                 CargaHoraria = Convert.ToInt32(collection["cargaHoraria"].ToString()),
                 Status = collection["editStatus"].ToString() == "" ? false : true
@@ -179,9 +183,9 @@ public class CursoController : BaseController
 
             if (!collection.Files.Any())
             {
-				command.Imagem = curso.Imagem;
-				command.NomeImagem = curso.NomeImagem;
-			}
+                command.Imagem = curso.Imagem;
+                command.NomeImagem = curso.NomeImagem;
+            }
 
             foreach (var file in collection.Files)
             {
@@ -210,16 +214,16 @@ public class CursoController : BaseController
     }
 
     /// <summary>
-    /// Ação de exclusão do Curso
+    /// Ação de Exclusão do Curso
     /// </summary>
-    /// <param name="id">identificador do Curso</param>
-    /// <param name="collection">coleção de dados para exclusão de Curso</param>
-    /// <returns>retorna mensagem de exclusão através do parametro crud</returns>
+    /// <param name="id">Identificador do Curso</param>
+    /// <param name="collection">Coleção de dados para exclusão de Curso</param>
+    /// <returns>Retorna mensagem de exclusão através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.Curso, Identity.Claim.Excluir)]
     public ActionResult Delete(int id)
     {
-	    try
-	    {
+        try
+        {
             var imagem = ApiClientFactory.Instance.GetCursoById(id).Imagem!;
 
             if (imagem != null)
@@ -227,24 +231,29 @@ public class CursoController : BaseController
 
             ApiClientFactory.Instance.DeleteCurso(id);
 
-		    return RedirectToAction(nameof(Index), new { crud = (int)EnumCrud.Deleted });
-	    }
-	    catch (Exception e)
-	    {
-			return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = "Este curso não pode ser excluído pois possui módulos vinculadas a ele." });
-		}
+            return RedirectToAction(nameof(Index), new { crud = (int)EnumCrud.Deleted });
+        }
+        catch (Exception e)
+        {
+            return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = "Este curso não pode ser excluído pois possui módulos vinculadas a ele." });
+        }
     }
     #endregion
 
     #region Get Methods
 
+    /// <summary>
+    /// Busca de Curso por Id
+    /// </summary>
+    /// <param name="id">Identificador de Curso</param>
+    /// <returns>Retorna o Curso</returns>
     public Task<CursoDto> GetCursoById(int id)
     {
         var result = ApiClientFactory.Instance.GetCursoById(id);
-        var coordenadores = new SelectList(ApiClientFactory.Instance.GetUsuarioAll().Where(x => x.Perfil.Id == (int)EnumPerfil.Coordenador), "Id", "Nome", result.CoordenadorId);
+        var coordenadores = result.CoordenadorId == null ? null : new SelectList(ApiClientFactory.Instance.GetUsuarioAll().Where(x => x.Perfil.Id == (int)EnumPerfil.CoordenadorEad), "Id", "Nome", result.CoordenadorId);
         result.ListCoordenadores = coordenadores;
 
-		return Task.FromResult(result);
+        return Task.FromResult(result);
     }
     /// <summary>
     /// Método de busca todos os Cursos pelo id do tipo de curso

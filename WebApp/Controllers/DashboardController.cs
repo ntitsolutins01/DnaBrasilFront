@@ -43,8 +43,8 @@ namespace WebApp.Controllers
 
             var dashboard = new DashboardDto();
 
-            var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentoAll(), "Id", "Nome", dashboard.FomentoId);
-            var deficiencias = new SelectList(ApiClientFactory.Instance.GetDeficienciaAll().Where(x=>x.Status), "Id", "Nome", dashboard.DeficienciaId);
+            var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentosAll(), "Id", "Nome", dashboard.FomentoId);
+            var deficiencias = new SelectList(ApiClientFactory.Instance.GetDeficienciaAll().Where(x => x.Status), "Id", "Nome", dashboard.DeficienciaId);
             var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome", dashboard.Estado);
 
             List<SelectListDto> list = new List<SelectListDto>
@@ -67,7 +67,7 @@ namespace WebApp.Controllers
 
             if (!string.IsNullOrEmpty(dashboard.LocalidadeId))
             {
-                localidades = new SelectList(ApiClientFactory.Instance.GetLocalidadeByMunicipio(dashboard.MunicipioId), "Id", "Nome", dashboard.LocalidadeId);
+                localidades = new SelectList(ApiClientFactory.Instance.GetLocalidadeByMunicipioId(dashboard.MunicipioId), "Id", "Nome", dashboard.LocalidadeId);
             }
 
             var model = new DashboardModel

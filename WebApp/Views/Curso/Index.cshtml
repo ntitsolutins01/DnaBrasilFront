@@ -59,12 +59,18 @@
                                     }
                                     <td class="actions text-center">
                                         <a data-toggle="tooltip" data-placement="top" title="Editar"
-                                           href='javascript:(crud.EditModal(@item.Id))'
+                                           href="javascript:void(0);"
+                                           onclick="crud.EditModal(@item.Id)"
                                            class="on-default edit-row" style='color: #FF9800'>
                                             <i class="fa fa-pencil"></i>
                                         </a>
-                                        <a data-toggle="tooltip" data-placement="top" title="Excluir" href='javascript:(crud.DeleteModal(@item.Id))'
-                                           class="on-default remove-row" style="cursor: pointer;color: #F44336"><i class="fa fa-trash"></i></a>
+
+                                        <a data-toggle="tooltip" data-placement="top" title="Excluir"
+                                           href="javascript:void(0);"
+                                           onclick="crud.DeleteModal(@item.Id)"
+                                           class="on-default remove-row" style="color: #F44336">
+                                            <i class="fa fa-trash"></i>
+                                        </a>
                                     </td>
                                 </tr>
                             }
@@ -155,7 +161,7 @@
                                         <span class="btn btn-default btn-file">
                                             <span class="fileupload-exists">Alterar</span>
                                             <span class="fileupload-new">Selecionar Arquivo</span>
-                                            <input type="file" id="arquivo" name="arquivo" />
+                                            <input type="file" id="arquivo" name="arquivo" accept=".jpg,.jpeg,.png" v-on:change="ValidateFileType()" />
                                         </span>
                                         <a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload">Remover</a>
                                     </div>
@@ -212,31 +218,31 @@
         (function ($) {
 
             'use strict';
-            var crub = @ViewBag.CrudMessage;
+            var crud = @ViewBag.CrudMessage;
 
-            if (crub === 1) {
+            if (crud === 1) {
                 new PNotify({
                     title: 'Curso',
                     text: 'Cadastro realizado com sucesso!',
                     type: 'success'
                 });
-                crub = 0;
-            } else if (crub === 2) {
+                crud = 0;
+            } else if (crud === 2) {
                 new PNotify({
                     title: 'Curso',
                     text: 'Dados alterados com sucesso.',
                     type: 'warning',
                     icon: 'fa fa-pencil'
                 });
-                crub = 0;
-            } else if (crub === 3) {
+                crud = 0;
+            } else if (crud === 3) {
                 new PNotify({
                     title: 'Curso',
                     text: 'Registro excluído com sucesso.',
                     type: 'error',
                     icon: 'fa fa-trash-o'
                 });
-                crub = 0;
+                crud = 0;
             }
 
 
@@ -249,21 +255,21 @@
                     text: messagem,
                     type: 'success'
                 });
-                crub = 0;
+                crud = 0;
             } else if (notify === 1) {
                 new PNotify({
                     title: 'Curso',
                     text: messagem,
                     type: 'warning'
                 });
-                crub = 0;
+                crud = 0;
             } else if (notify === 2) {
                 new PNotify({
                     title: 'Curso',
                     text: messagem,
                     type: 'error'
                 });
-                crub = 0;
+                crud = 0;
             }
 
             if ($.isFunction($.fn['tooltip'])) {
@@ -271,6 +277,25 @@
             }
 
         }).apply(this, [jQuery]);
+    </script>
+
+    <script>
+        (function ($) {
+            'use strict';
+
+            if ($.isFunction($.fn['tooltip'])) {
+                $('[data-toggle=tooltip],[rel=tooltip]').tooltip({ container: 'body' });
+            }
+
+            // Inicialização do Nestable movida para o Vue
+            $(document).ready(function() {
+                $('#mdPlanCurso').on('shown.bs.modal', function () {
+                    vm.InitializeNestable();
+                });
+            });
+
+        }).apply(this, [jQuery]);
+
     </script>
 }
 

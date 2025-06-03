@@ -1,9 +1,6 @@
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using WebApp.Authorization;
 using WebApp.Configuration;
 using WebApp.Dto;
@@ -17,18 +14,23 @@ using Claim = WebApp.Identity.Claim;
 namespace WebApp.Controllers;
 
 /// <summary>
-/// Controller de Evento
+/// Controle de Categoria
 /// </summary>
 [Authorize(Policy = ModuloAccess.ConfiguracaoSistema)]
 public class CategoriaController : BaseController
 {
-    #region Constructor
+    #region Parametros
+
     private readonly IOptions<UrlSettings> _appSettings;
+
+    #endregion
+
+    #region Constructor
 
     /// <summary>
     /// Construtor da página
     /// </summary>
-    /// <param name="app">configurações de urls do sistema</param>
+    /// <param name="appSettings">Configurações de urls do sistema</param>
     public CategoriaController(IOptions<UrlSettings> appSettings)
     {
         _appSettings = appSettings;
@@ -36,14 +38,13 @@ public class CategoriaController : BaseController
     }
     #endregion
 
-    #region Crud Methods
+    #region Main Methods
     /// <summary>
     /// Listagem de Categoria
     /// </summary>
-    /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
-    /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
-    /// <param name="collection">lista de filtros selecionados para pesquisa de alunos</param>
-    /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+    /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+    /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+    /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
     [ClaimsAuthorize(ClaimType.Categoria, Claim.Consultar)]
     public IActionResult Index(int? crud, int? notify, string message = null)
     {
@@ -55,11 +56,11 @@ public class CategoriaController : BaseController
     }
 
     /// <summary>
-    /// Tela para inclusão de Categoria
+    /// Tela para Inclusão de Categoria
     /// </summary>
-    /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
-    /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
-    /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+    /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+    /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+    /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
     [ClaimsAuthorize(ClaimType.Categoria, Claim.Incluir)]
     public ActionResult Create(int? crud, int? notify, string message = null)
     {
@@ -78,10 +79,10 @@ public class CategoriaController : BaseController
     }
 
     /// <summary>
-    /// Ação de inclusão do Categoria
+    /// Ação de Inclusão de Categoria
     /// </summary>
-    /// <param name="collection">coleção de dados para inclusao de Categoria</param>
-    /// <returns>retorna mensagem de inclusao através do parametro crud</returns>
+    /// <param name="collection">Coleção de dados para inclusao de Categoria</param>
+    /// <returns>Retorna mensagem de inclusao através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.Categoria, Claim.Incluir)]
     [HttpPost]
     public async Task<ActionResult> Create(IFormCollection collection)
@@ -108,11 +109,10 @@ public class CategoriaController : BaseController
     }
 
     /// <summary>
-    /// Ação de alteração do Categoria
+    /// Ação de Alteração de Categoria
     /// </summary>
-    /// <param name="id">identificador do Categoria</param>
-    /// <param name="collection">coleção de dados para alteração de Categoria</param>
-    /// <returns>retorna mensagem de alteração através do parametro crud</returns>
+    /// <param name="id">Identificador de Categoria</param>
+    /// <returns>Retorna mensagem de alteração através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.Categoria, Claim.Alterar)]
     public async Task<ActionResult> Edit(IFormCollection collection)
     {
@@ -121,12 +121,12 @@ public class CategoriaController : BaseController
             var command = new CategoriaModel.CreateUpdateCategoriaCommand
             {
                 Id = Convert.ToInt32(collection["editCategoriaId"]),
-				Codigo = collection["codigo"].ToString(),
-				Nome = collection["nome"].ToString(),
-				IdadeFinal = Convert.ToInt32(collection["idadeFinal"]),
-				IdadeInicial = Convert.ToInt32(collection["idadeInicial"]),
-				Descricao = collection["descricao"].ToString(),
-				Status = collection["editStatus"].ToString() == "" ? false : true,
+                Codigo = collection["codigo"].ToString(),
+                Nome = collection["nome"].ToString(),
+                IdadeFinal = Convert.ToInt32(collection["idadeFinal"]),
+                IdadeInicial = Convert.ToInt32(collection["idadeInicial"]),
+                Descricao = collection["descricao"].ToString(),
+                Status = collection["editStatus"].ToString() == "" ? false : true,
             };
 
             await ApiClientFactory.Instance.UpdateCategoria(command.Id, command);
@@ -140,12 +140,11 @@ public class CategoriaController : BaseController
     }
 
     /// <summary>
-    /// Ação de exclusão do Categoria
+    /// Ação de Exclusão do Categoria
     /// </summary>
-    /// <param name="id">identificador do Categoria</param>
-    /// <param name="collection">coleção de dados para exclusão de Categoria</param>
-    /// <returns>retorna mensagem de exclusão através do parametro crud</returns>
-    [ClaimsAuthorize(ClaimType.Categoria, Claim.Excluir)]
+    /// <param name="id">Identificador do Categoria</param>
+    /// <param name="collection">Coleção de dados para exclusão de Categoria</param>
+    /// <returns>Retorna mensagem de exclusão através do parametro crud</returns>
     public ActionResult Delete(int id)
     {
         try
@@ -166,6 +165,11 @@ public class CategoriaController : BaseController
 
     #region Get Methods
 
+    /// <summary>
+    /// Busca Categoria por Id
+    /// </summary>
+    /// <param name="id">Identificador de Categoria</param>
+    /// <returns>Retorna a Categoria</returns>
     public Task<CategoriaDto> GetCategoriaById(int id)
     {
         var result = ApiClientFactory.Instance.GetCategoriaById(id);

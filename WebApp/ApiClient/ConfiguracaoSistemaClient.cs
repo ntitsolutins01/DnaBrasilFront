@@ -31,9 +31,9 @@ namespace WebApp.ApiClient
         /// <returns>Retorna true ou false</returns>
         public Task<bool> UpdateModulo(int id, ConfiguracaoSistemaModel.CreateUpdateModuloCommand command)
         {
-	        var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-		        $"{ResourceConfiguracaoSistema}/{id}"));
-	        return Put(requestUrl, command);
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceConfiguracaoSistema}/Modulo/{id}"));
+            return Put(requestUrl, command);
         }
 
         /// <summary>
@@ -43,9 +43,9 @@ namespace WebApp.ApiClient
         /// <returns>Retorna true ou false</returns>
         public Task<bool> DeleteModulo(int id)
         {
-	        var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-		        $"{ResourceConfiguracaoSistema}/{id}"));
-	        return Delete<bool>(requestUrl);
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceConfiguracaoSistema}/Modulo/{id}"));
+            return Delete<bool>(requestUrl);
         }
 
         /// <summary>
@@ -107,9 +107,9 @@ namespace WebApp.ApiClient
         /// <returns>Retorna o objeto de Modulo</returns>
         public ModuloDto GetModuloById(int id)
         {
-	        var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-		        $"{ResourceConfiguracaoSistema}/{id}"));
-	        return Get<ModuloDto>(requestUrl);
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceConfiguracaoSistema}/Modulo/{id}"));
+            return Get<ModuloDto>(requestUrl);
         }
 
         /// <summary>
@@ -135,6 +135,6 @@ namespace WebApp.ApiClient
             return Get<List<FuncionalidadeDto>>(requestUrl);
         }
 
-		#endregion
-	}
+        #endregion
+    }
 }

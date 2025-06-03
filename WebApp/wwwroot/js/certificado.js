@@ -1,222 +1,349 @@
 var vm = new Vue({
-    el: "#vCertificado ",
+    el: "#vCertificado",
     data: {
         loading: false,
-        editDto: { Id: "", TipoCurso: "", Curso: "", ImagemFrente: "", HtmlFrente: "", ImagemVerso: "", HtmlVerso: "", NomeImagemFrente: "", NomeImagemVerso: "", Status: true }
+        editDto: {
+            Id: "", TipoCurso: "", Curso: "",
+            ImagemFrente: "", HtmlFrente: "",
+            ImagemVerso: "", HtmlVerso: "",
+            NomeImagemFrente: "", NomeImagemVerso: "",
+            Status: true
+        }
     },
     mounted: function () {
-        var self = this;
-        (function ($) {
-            'use strict';
+        $('.select2').select2({ allowClear: true });
 
+        $('[data-plugin-ios-switch]').each(function () {
+            var $this = $(this);
+            $this.themePluginIOS7Switch();
+        });
 
-
-            var $select = $(".select2").select2({
-                allowClear: true
-            });
-
-            $(".select2").each(function () {
-                var $this = $(this),
-                    opts = {};
-
-                var pluginOptions = $this.data('plugin-options');
-                if (pluginOptions)
-                    opts = pluginOptions;
-
-                $this.themePluginSelect2(opts);
-            });
-
-            /*
-             * When you change the value the select via select2, it triggers
-             * a 'change' event, but the jquery validation plugin
-             * only re-validates on 'blur'*/
-
-            $select.on('change', function () {
-                $(this).trigger('blur');
-            });
-
-            //skin checkbox
-            if (typeof Switch !== 'undefined' && $.isFunction(Switch)) {
-
-                $(function () {
-                    $('[data-plugin-ios-switch]').each(function () {
-                        var $this = $(this);
-
-                        $this.themePluginIOS7Switch();
-                    });
-                });
+        $('#formCertificado').validate({
+            highlight: function (label) {
+                $(label).closest('.form-group').removeClass('has-success').addClass('has-error');
+            },
+            success: function (label) {
+                $(label).closest('.form-group').removeClass('has-error');
+                label.remove();
+            },
+            errorPlacement: function (error, element) {
+                var placement = element.closest('.input-group');
+                if (!placement.get(0)) placement = element;
+                if (error.text() !== '') placement.after(error);
             }
-
-            var formid = $('form')[0].id;
-
-            if (formid === "formEditCertificado") {
-
-                $("#formEditCertificado ").validate({
-                    highlight: function (label) {
-                        $(label).closest('.form-group').removeClass('has-success').addClass('has-error');
-                    },
-                    success: function (label) {
-                        $(label).closest('.form-group').removeClass('has-error');
-                        label.remove();
-                    },
-                    errorPlacement: function (error, element) {
-                        var placement = element.closest('.input-group');
-                        if (!placement.get(0)) {
-                            placement = element;
-                        }
-                        if (error.text() !== '') {
-                            placement.after(error);
-                        }
-                    }
-                });
-            }
-
-            if (formid === "formCertificado") {
-
-
-                $("#formCertificado").validate({
-                    highlight: function (label) {
-                        $(label).closest('.form-group').removeClass('has-success').addClass('has-error');
-                    },
-                    success: function (label) {
-                        $(label).closest('.form-group').removeClass('has-error');
-                        label.remove();
-                    },
-                    errorPlacement: function (error, element) {
-                        var placement = element.closest('.input-group');
-                        if (!placement.get(0)) {
-                            placement = element;
-                        }
-                        if (error.text() !== '') {
-                            placement.after(error);
-                        }
-                    }
-                });
-            }
-        }).apply(this, [jQuery]);
+        });
     },
     methods: {
-        ShowLoad: function (flag, el) {
-            var self = this;
-
-            self.isLoading = flag;
-            $("#" + el).loadingOverlay({
-                "startShowing": flag
-            });
-            self.loading = flag;
-
-            if (!flag) {
-                self.isLoading = flag;
-                $("#" + el).removeClass("loading-overlay-showing");
-                self.loading = flag;
-            } else {
-                self.isLoading = flag;
-                $("#" + el).addClass("loading-overlay-showing");
-                self.loading = flag;
-            }
-        },
+        //ShowLoad: function (flag, el) {
+        //    this.loading = flag;
+        //    $("#" + el).loadingOverlay({ "startShowing": flag });
+        //    if (!flag) {
+        //        $("#" + el).removeClass("loading-overlay-showing");
+        //    } else {
+        //        $("#" + el).addClass("loading-overlay-showing");
+        //    }
+        //},
         DeleteCertificado: function (id) {
             var url = "Certificado/Delete/" + id;
             $("#deleteCertificadoHref").prop("href", url);
         },
-        EditCertificado: function (id) {
-            var self = this;
-
-            axios.get("Certificado/GetCertificadoById/?id=" + id).then(result => {
-
-                self.editDto.Id = result.data.id;
-                self.editDto.TipoCurso = result.data.tipoCurso;
-                self.editDto.Curso = result.data.curso;
-                self.editDto.HtmlFrente = result.data.htmlFrente;
-                self.editDto.HtmlVerso= result.data.htmlVerso;
-                self.editDto.Status = result.data.status;
-
-                self.editDto.NomeImagemFrente = result.data.nomeImagemFrente;
-                self.editDto.NomeImagemVerso = result.data.nomeImagemVerso;
-
-
-            }).catch(error => {
-                Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
-            });
-        },
         Certificado: function (id) {
             var self = this;
+            return axios.get("/Certificado/GetCertificadoById/?id=" + id).then(result => {
+                var data = result.data;
+                self.editDto.Id = data.id;
+                self.editDto.TipoCurso = data.tipoCurso;
+                self.editDto.Curso = data.curso;
+                self.editDto.HtmlFrente = data.htmlFrente;
+                self.editDto.HtmlVerso = data.htmlVerso;
+                self.editDto.Status = data.status;
+                self.editDto.ImagemFrente = "/Certificados/" + data.imagemFrente;
+                self.editDto.ImagemVerso = data.imagemVerso ? "/Certificados/" + data.imagemVerso : null;
 
-            axios.get("Certificado/GetCertificadoById/?id=" + id).then(result => {
-
-                self.editDto.Id = result.data.id;
-                self.editDto.TipoCurso = result.data.tipoCurso;
-                self.editDto.Curso = result.data.curso;
-                self.editDto.HtmlFrente = result.data.htmlFrente;
-                self.editDto.HtmlVerso = result.data.htmlVerso;
-                self.editDto.Status = result.data.status;
-
-                self.editDto.NomeImagemFrente = "\Certificados" + result.data.nomeImagemFrente.split("\Certificados")[1];
-                if (result.data.nomeImagemVerso && result.data.nomeImagemVerso.includes("\Certificados")) {
-                    self.editDto.NomeImagemVerso = "\Certificados" + result.data.nomeImagemVerso.split("\Certificados")[1];
-                } else {
-                    self.editDto.NomeImagemVerso = null;
+                if (self.editDto.ImagemFrente) {
+                    applyBackgroundImage('summernoteFrente', self.editDto.ImagemFrente);
                 }
-
-
-                //if (result.data.celular === "0" || result.data.celular === "" || result.data.celular === null) {
-                //    self.editDto.Telefone = "Não informado";
-                //}
-                //else {
-                //    self.editDto.Telefone = result.data.celular;
-                //}
-                //if (result.data.image == null && result.data.sexo == "Feminino") {
-                //    self.editDto.Image = 'assets/images/menina.jpg';
-                //} else if (result.data.image == null && result.data.sexo == "Masculino") {
-                //    self.editDto.Image = 'assets/images/menino.jpg';
-                //} else {
-                //    self.editDto.Image = 'data:image/jpeg;base64,' + result.data.image;
-                //}
-                //if (result.data.cpf === "0" || result.data.cpf === "" || result.data.cpf === null) {
-                //    self.editDto.Cpf = "Não informado";
-                //}
-                //else {
-                //    self.editDto.Cpf = result.data.cpf;
-                //}
-                //if (result.data.modalidadeLinhaAcao === "0" || result.data.modalidadeLinhaAcao === "" || result.data.modalidadeLinhaAcao === null) {
-                //    self.editDto.ModalidadeLinhaAcao = "Modalidade / Linha de Ação (não informado)";
-                //}
-                //else {
-                //    self.editDto.ModalidadeLinhaAcao = result.data.modalidadeLinhaAcao;
-                //}
-                //self.editDto.QRCode = 'data:image/jpeg;base64,' + result.data.qrCode;
-
-
-
-                //var text = 'http://front.hml.dnadobrasil.org.br/Identity/Account/ControlePresenca?alunoId=' + self.editDto.Id;
-
-                //$('#qr').ClassyQR({
-                //    create: true,// signals the library to create the image tag inside the container div.
-                //    type: 'text',// text/url/sms/email/call/locatithe text to encode in the QR. on/wifi/contact, default is TEXT
-                //    text: text// the text to encode in the QR.
-                //});
-
+                if (self.editDto.ImagemVerso) {
+                    applyBackgroundImage('summernoteVerso', self.editDto.ImagemVerso);
+                }
             }).catch(error => {
-                Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
+                alert("Erro ao carregar certificado: " + error.message);
             });
-        },
+        }
     }
 });
 
+function applyBackgroundImage(editorId, imageUrl) {
+    $('#' + editorId).next('.note-editor').find('.note-editable').css({
+        'background-image': 'url(' + imageUrl + ')',
+        'background-size': 'contain',
+        'background-repeat': 'no-repeat',
+        'background-position': 'center center'
+    });
+}
+
+$(document).ready(function () {
+    var id = $('#certificadoId').val();
+
+    if (id) {
+        vm.Certificado(id);
+    }
+
+    $('#btnImprimirCertificado').on('click', function () {
+
+        // Função para extrair os dados essenciais de cada lado do certificado
+        function extractCertificateData(side) {
+            var container = $('#mdCertificado #' + side);
+            if (!container.length) return null;
+
+            var data = {
+                imagem: '',
+                html: ''
+            };
+
+            // Pega a URL da imagem
+            var img = container.find('img');
+            if (img.length) {
+                data.imagem = img.attr('src') || '';
+            }
+
+            // Pega o HTML overlay (conteúdo dinâmico)
+            var htmlOverlay = container.find('[v-html]');
+            if (htmlOverlay.length) {
+                data.html = htmlOverlay.html() || '';
+            } else {
+                // Fallback: pega diretamente do Vue.js
+                if (side === 'frente' && vm.editDto.HtmlFrente) {
+                    data.html = vm.editDto.HtmlFrente;
+                } else if (side === 'verso' && vm.editDto.HtmlVerso) {
+                    data.html = vm.editDto.HtmlVerso;
+                }
+            }
+
+            return data;
+        }
+
+        // Extrai os dados de ambos os lados
+        var dadosFrente = extractCertificateData('frente');
+        var dadosVerso = extractCertificateData('verso');
+
+        // Debug
+        console.log('Dados Frente:', dadosFrente);
+        console.log('Dados Verso:', dadosVerso);
+
+        // Verifica se tem conteúdo para imprimir
+        if (!dadosFrente && !dadosVerso) {
+            alert("Erro ao localizar o conteúdo do certificado para impressão.");
+            return;
+        }
+
+        // Função para criar o HTML de uma página de certificado
+        function createCertificatePage(dados, pageId) {
+            if (!dados || (!dados.imagem && !dados.html)) return '';
+
+            return `
+            <div class="certificate-page" id="${pageId}">
+                <div class="certificate-container">
+                    ${dados.imagem ? `<img src="${dados.imagem}" class="certificate-bg" alt="Certificado" />` : ''}
+                    ${dados.html ? `<div class="certificate-overlay">${dados.html}</div>` : ''}
+                </div>
+            </div>
+        `;
+        }
+
+        // Cria as páginas
+        var paginaFrente = createCertificatePage(dadosFrente, 'pagina-frente');
+        var paginaVerso = createCertificatePage(dadosVerso, 'pagina-verso');
+
+        // Conta quantas páginas serão criadas
+        var totalPaginas = (paginaFrente ? 1 : 0) + (paginaVerso ? 1 : 0);
+        console.log('Total de páginas que serão criadas:', totalPaginas);
+
+        if (totalPaginas === 0) {
+            alert("Nenhum conteúdo encontrado para impressão.");
+            return;
+        }
+
+        // Monta o HTML final para impressão
+        var printWindow = window.open('', '_blank', 'width=1200,height=900');
+        printWindow.document.write(`
+        <html>
+        <head>
+            <title>Impressao-Certificado</title>
+            <style>
+                @page {
+                    size: A4 landscape;
+                    margin: 0;
+                }
+                
+                * {
+                    margin: 0;
+                    padding: 0;
+                    box-sizing: border-box;
+                }
+                
+                body { 
+                    background: white; 
+                    font-family: Arial, sans-serif;
+                    -webkit-print-color-adjust: exact;
+                    print-color-adjust: exact;
+                }
+                
+                .certificate-page {
+                    width: 100vw;
+                    height: 100vh;
+                    page-break-after: always;
+                    page-break-inside: avoid;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    position: relative;
+                }
+                
+                .certificate-page:last-child {
+                    page-break-after: avoid;
+                }
+                
+                .certificate-container {
+                    position: relative;
+                    width: 1140px;
+                    height: 813px;
+                    max-width: 90vw;
+                    max-height: 90vh;
+                }
+                
+                .certificate-bg {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: contain;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    z-index: 1;
+                }
+                
+                .certificate-overlay {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    z-index: 2;
+                    pointer-events: none;
+                    color: black;
+                }
+                
+                /* Remove qualquer elemento que possa causar quebra de página */
+                .certificate-overlay * {
+                    page-break-before: avoid !important;
+                    page-break-after: avoid !important;
+                    page-break-inside: avoid !important;
+                }
+            </style>
+        </head>
+        <body>
+            ${paginaFrente}
+            ${paginaVerso}
+        </body>
+        </html>
+    `);
+
+        printWindow.document.close();
+        printWindow.focus();
+
+        // Aguarda carregamento das imagens
+        setTimeout(function () {
+            printWindow.print();
+            setTimeout(function () {
+                printWindow.close();
+            }, 100);
+        }, 1500);
+    });
+
+    function initializeSummernote(elementId) {
+        $('#' + elementId).summernote({
+            lang: 'pt-BR',
+            height: 813,
+            width: 1140,
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'italic', 'underline', 'clear']],
+                ['fontname', ['fontname']],
+                ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture']],
+                ['view', ['fullscreen', 'codeview']]
+            ],
+            fontSizes: ['8', '9', '10', '11', '12', '14', '18', '24', '36'],
+            callbacks: {
+                onInit: function () {
+                    $(this).next('.note-editor').find('.note-editing-area').css({
+                        'width': '1140px',
+                        'height': '813px'
+                    });
+                },
+                onEnterFullscreen: function () {
+                    const $editor = $(this).next('.note-editor');
+                    $editor.find('.note-editable').css({
+                        'background-color': 'white',
+                        'margin': '20px auto'
+                    });
+                },
+                onExitFullscreen: function () {
+                    const $editor = $(this).next('.note-editor');
+                    $editor.find('.note-editable').css({ 'margin-top': '0' });
+                }
+            }
+        });
+    }
+
+    initializeSummernote('summernoteFrente');
+    initializeSummernote('summernoteVerso');
+
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        var target = $(e.target).attr("href");
+        if (target === "#tabFrente" && vm.editDto.ImagemFrente) {
+            applyBackgroundImage('summernoteFrente', vm.editDto.ImagemFrente);
+        } else if (target === "#tabVerso") {
+            if (vm.editDto.ImagemVerso) {
+                applyBackgroundImage('summernoteVerso', vm.editDto.ImagemVerso);
+            } else {
+                $('#summernoteVerso').next('.note-editor').find('.note-editable').css('background-image', 'none');
+            }
+        }
+    });
+
+    $("#ddlTipoFomento").change(function () {
+        var tipoFomentoId = $(this).val();
+        $("#ddlFomento").empty().append('<option value="">Selecionar Fomento</option>');
+        if (tipoFomentoId) {
+            $.getJSON(`/Certificado/GetFomentosByTipoFomentoId/${tipoFomentoId}`, function (data) {
+                $.each(data, function (i, item) {
+                    $("#ddlFomento").append(`<option value="${item.id}">${item.titulo}</option>`);
+                });
+            });
+        }
+    });
+
+    $('#formCertificado').on('submit', function () {
+        var htmlFrente = $('#summernoteFrente').summernote('code');
+        var htmlVerso = $('#summernoteVerso').summernote('code');
+        $('<input>').attr({ type: 'hidden', name: 'HtmlFrente', value: htmlFrente }).appendTo(this);
+        $('<input>').attr({ type: 'hidden', name: 'HtmlVerso', value: htmlVerso }).appendTo(this);
+    });
+});
+
 var crud = {
-    DeleteModal: function (id) {
-        $('input[name="deleteCertificadoId"]').attr('value', id);
-        $('#mdDeleteCertificado').modal('show');
-        vm.DeleteCertificado(id)
-    },
-    EditModal: function (id) {
-        $('input[name="editCertificadoId"]').attr('value', id);
-        $('#mdEditCertificado').modal('show');
-        vm.EditCertificado(id)
-    },
     CertificadoModal: function (id) {
-        $('input[name="certificadoId"]').attr('value', id);
+        $('input[name="certificadoId"]').val(id);
         $('#mdCertificado').modal('show');
         vm.Certificado(id);
+    },
+    DeleteModal: function (id) {
+        $('input[name="deleteCertificadoId"]').val(id);
+        $('#mdDeleteCertificado').modal('show');
+        vm.DeleteCertificado(id);
     }
 };

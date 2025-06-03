@@ -9,5 +9,5 @@
         public string? Url { get; set; }
         public string NomeArquivo { get; set; }
 
-	}
+    }
 }

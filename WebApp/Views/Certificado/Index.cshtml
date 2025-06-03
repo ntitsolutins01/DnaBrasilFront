@@ -24,11 +24,7 @@
                         <thead>
                             <tr>
                                 <th class="text-center">Id</th>
-                                <th class="text-center">Nome do Curso</th>
-                                @* <th class="text-center">Imagem Frente</th>
-                                <th class="text-center">Imagem Verso</th> *@
-                                <th class="text-center">Html Frente</th>
-                                <th class="text-center">Html Verso</th>
+                                <th class="text-center">Nome do Fomento</th>
                                 <th class="text-center">Status</th>
                                 <th class="text-center">Ações</th>
                             </tr>
@@ -38,18 +34,7 @@
                             {
                                 <tr>
                                     <td class="text-center" style="width:20px;">@Html.DisplayFor(modelItem => item.Id)</td>
-                                    <td class="text-center">@Html.DisplayFor(modelItem => item.TituloCurso)</td>
-                                    @* <td class="text-center">
-                                        <img src="data:image/png;base64,@Convert.ToBase64String(item.ImagemFrente)" alt="Imagem Frente" style="width: 50px; height: 50px;" />
-                                    </td>
-                                    <td class="text-center">
-                                        @if (item.ImagemVerso != null)
-                                        {
-                                            <img src="data:image/png;base64,@Convert.ToBase64String(item.ImagemVerso)" alt="Imagem Verso" style="width: 50px; height: 50px;" />
-                                        }
-                                    </td> *@
-                                    <td class="text-center">@Html.DisplayFor(modelItem => item.HtmlFrente)</td>
-                                    <td class="text-center">@Html.DisplayFor(modelItem => item.HtmlVerso)</td>
+                                    <td class="text-center">@Html.DisplayFor(modelItem => item.NomeFomento)</td>
                                     @if (item.Status)
                                     {
                                         <td class="text-center"><span class="label label-success">ATIVO</span></td>
@@ -103,27 +88,34 @@
                             </ul>
                             <div class="tab-content">
                                 <div id="frente" class="tab-pane active" style="position: relative;">
-                                    <!-- Imagem da Frente -->
-                                    <div class="photo-container" style="position: relative; z-index: 1;">
-                                        <img :src="editDto.NomeImagemFrente"
-                                             alt="Fundo do Certificado"
-                                             class="student-photo" style="width: 100%; height: auto; max-height: 100%; display: block; object-fit: contain;" />
-                                    </div>
-                                    <!-- HTML na Frente da Imagem -->
-                                    <div class="student-info"
-                                         style="position: absolute; top: 0; left: 0; z-index: 2; width: 100%; pointer-events: none;">
-                                        <div v-html="editDto.HtmlFrente" style="color: black; text-align: center;"></div>
-                                    </div>
-                                </div>
-                                <div id="verso" class="tab-pane">
-                                    <div class="main-content-verso">
-                                        <div class="photo-container">
-                                            <img :src="editDto.NomeImagemVerso"
-                                                 alt="Fundo do Certificado"
-                                                 class="student-photo" />
+                                    <!-- Container que agrupa imagem + html overlay -->
+                                    <div style="position: relative; width: 100%; height: auto;">
+                                        <!-- Imagem da Frente -->
+                                        <img :src="editDto.ImagemFrente"
+                                             alt="Frente do Certificado"
+                                             style="width: 100%; height: auto; display: block; object-fit: contain; z-index: 1;" />
+
+                                        <!-- HTML sobre a imagem -->
+                                        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none;">
+                                            <div v-html="editDto.HtmlFrente" style="color: black;"></div>
                                         </div>
                                     </div>
                                 </div>
+
+                                <div id="verso" class="tab-pane">
+                                    <div style="position: relative; width: 100%; height: auto;">
+                                        <!-- Imagem do Verso -->
+                                        <img :src="editDto.ImagemVerso"
+                                             alt="Verso do Certificado"
+                                             style="width: 100%; height: auto; display: block; object-fit: contain; z-index: 1;" />
+
+                                        <!-- HTML sobre a imagem -->
+                                        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none;">
+                                            <div v-html="editDto.HtmlVerso" style="color: black;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -131,14 +123,7 @@
 
                 <div class="modal-footer">
                     <button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-remove"></i> &nbsp;&nbsp;Fechar</button>
-                    <a data-toggle="tooltip"
-                       data-placement="top"
-                       title="Imprimir"
-                       :href="'/Aluno/ImprimirCertificado/' + editDto.Id"
-                       class="on-default edit-row btn btn-info pull-right"
-                       target="_blank">
-                        <i class="fa fa-print"></i> &nbsp;&nbsp;Imprimir
-                    </a>
+                    <button type="button" class="btn btn-primary" id="btnImprimirCertificado"><i class="fa fa-print"></i> &nbsp;&nbsp;Imprimir</button>
                 </div>
             </div>
         </div>
@@ -190,31 +175,31 @@
     <script>
         (function ($) {
             'use strict';
-            var crub = @ViewBag.CrudMessage;
+            var crud = @ViewBag.CrudMessage;
 
-            if (crub === 1) {
+            if (crud === 1) {
                 new PNotify({
                     title: 'Certificado',
                     text: 'Cadastro realizado com sucesso!',
                     type: 'success'
                 });
-                crub = 0;
-            } else if (crub === 2) {
+                crud = 0;
+            } else if (crud === 2) {
                 new PNotify({
                     title: 'Certificado',
                     text: 'Dados alterados com sucesso.',
                     type: 'warning',
                     icon: 'fa fa-pencil'
                 });
-                crub = 0;
-            } else if (crub === 3) {
+                crud = 0;
+            } else if (crud === 3) {
                 new PNotify({
                     title: 'Certificado',
                     text: 'Registro excluído com sucesso.',
                     type: 'error',
                     icon: 'fa fa-trash-o'
                 });
-                crub = 0;
+                crud = 0;
             }
 
             var notify = @ViewBag.NotifyMessage;
@@ -226,21 +211,21 @@
                     text: messagem,
                     type: 'success'
                 });
-                crub = 0;
+                crud = 0;
             } else if (notify === 1) {
                 new PNotify({
                     title: 'Certificado',
                     text: messagem,
                     type: 'warning'
                 });
-                crub = 0;
+                crud = 0;
             } else if (notify === 2) {
                 new PNotify({
                     title: 'Certificado',
                     text: messagem,
                     type: 'error'
                 });
-                crub = 0;
+                crud = 0;
             }
 
             if ($.isFunction($.fn['tooltip'])) {

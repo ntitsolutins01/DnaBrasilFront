@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using WebApp.Dto;
+﻿using WebApp.Dto;
 using WebApp.Models;
 
 namespace WebApp.ApiClient
@@ -9,7 +8,7 @@ namespace WebApp.ApiClient
     /// </summary>
     public partial class DnaApiClient
     {
-	    private const string ResourceAula = "Aulas";
+        private const string ResourceAula = "Aulas";
 
         #region Main Methods
 
@@ -18,10 +17,10 @@ namespace WebApp.ApiClient
         /// </summary>
         /// <param name="command">Objeto para inclusão de Aula</param>
         /// <returns>Id de Aula inserido</returns>
-        public Task<long> CreateAula (AulaModel.CreateUpdateAulaCommand command)
+        public Task<long> CreateAula(AulaModel.CreateUpdateAulaCommand command)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceAula }"));
+                $"{ResourceAula}"));
             return Post(requestUrl, command);
         }
 
@@ -31,10 +30,10 @@ namespace WebApp.ApiClient
         /// <param name="id">Id de alteração de Aula</param>
         /// <param name="command">Objeto de alteração de Aula</param>
         /// <returns>Retorna true ou false</returns>
-        public Task<bool> UpdateAula (int id, AulaModel.CreateUpdateAulaCommand command)
+        public Task<bool> UpdateAula(int id, AulaModel.CreateUpdateAulaCommand command)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceAula }/{id}"));
+                $"{ResourceAula}/{id}"));
             return Put(requestUrl, command);
         }
 
@@ -43,10 +42,10 @@ namespace WebApp.ApiClient
         /// </summary>
         /// <param name="id">Id de exclusão de Aula</param>
         /// <returns>Retorna true ou false</returns>
-        public Task<bool> DeleteAula (int id)
+        public Task<bool> DeleteAula(int id)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceAula }/{id}"));
+                $"{ResourceAula}/{id}"));
             return Delete<bool>(requestUrl);
         }
 
@@ -76,10 +75,16 @@ namespace WebApp.ApiClient
                 $"{ResourceAula}"));
             return Get<List<AulaDto>>(requestUrl);
         }
-        public List<AulaDto> GetAulasAllByModuloEadId(int id)
+        public List<AulaDto> GetAulasByModuloEadId(int id)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
                 $"{ResourceAula}/ModuloEad/{id}"));
+            return Get<List<AulaDto>>(requestUrl);
+        }
+        public List<AulaDto> GetAulasByCursoId(int id)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceAula}/Curso/{id}"));
             return Get<List<AulaDto>>(requestUrl);
         }
 

@@ -22,7 +22,7 @@
                     </header>
                     <div class="panel-body">
                         <div class="form-group">
-                            <label class="col-sm-1 control-label">Foto</label>
+                            @* <label class="col-sm-1 control-label">Foto</label>
                             <div class="col-sm-4">
                                 <div class="fileupload fileupload-new" data-provides="fileupload">
                                     <div class="input-append">
@@ -38,7 +38,7 @@
                                         <a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload">Remover</a>
                                     </div>
                                 </div>
-                            </div>
+                            </div> *@
                             <label class="col-sm-1 control-label">CPF </label>
                             <div class="col-sm-3">
                                 <input id="cpf" name="cpf"
@@ -57,7 +57,9 @@
                                     <span class="input-group-addon">
                                         <i class="fa fa-envelope"></i>
                                     </span>
-                                    <input type="text" name="email" maxlength="100" class="form-control" required title="Por favor informe o email." value="@Model.Aluno.Email" oninput="this.value = this.value.toUpperCase()" />
+                                    <input type="text" name="email" maxlength="100" class="form-control" 
+                                           required title="Por favor informe o email." value="@Model.Aluno.Email" oninput="this.value = this.value.toUpperCase()"
+                                           v-on:blur="ExisteEmail"/>
                                 </div>
                             </div>
                         </div>
@@ -104,30 +106,56 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-1 control-label text-sm-right pt-2">Estado <span class="required">*</span></label>
-                            <div class="col-md-2">
-                                <select class="form-control populate select2" name="ddlEstado" id="ddlEstado"
-                                        title="Por favor informe um Estado." required style="width:100%"
-                                        asp-for="EstadoId" asp-items="Model.ListEstados">
-                                    <option value="">Selecionar Estado</option>
-                                </select>
-                            </div>
-                            <label class="col-sm-1 control-label text-sm-right pt-2">Município <span class="required">*</span></label>
-                            <div class="col-md-3">
-                                <select class="form-control populate select2" name="ddlMunicipio" id="ddlMunicipio"
-                                        title="Por favor informe um Municipio." required style="width:100%"
-                                        asp-for="MunicipioId" asp-items="Model.ListMunicipios">
-                                    <option value="">Selecionar Município</option>
-                                </select>
-                            </div>
-                            <label class="col-sm-2 control-label text-sm-right pt-2">Localidade <span class="required">*</span></label>
-                            <div class="col-md-3">
-                                <select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade"
-                                        title="Por favor informe o localidade." required style="width:100%"
-                                        asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
-                                    <option value="">Selecionar Localidade</option>
-                                </select>
-                            </div>
+	                        <label class="col-sm-1 control-label text-sm-right pt-2">Estado <span class="required">*</span></label>
+	                        <div class="col-md-2">
+		                        <select class="form-control populate select2" name="ddlEstado" id="ddlEstado"
+		                                title="Por favor informe um Estado." required style="width:100%"
+		                                asp-for="EstadoId" asp-items="Model.ListEstados">
+			                        <option value="">Selecionar Estado</option>
+		                        </select>
+	                        </div>
+	                        <label class="col-sm-1 control-label text-sm-right pt-2">Município <span class="required">*</span></label>
+	                        <div class="col-md-3">
+		                        <select class="form-control populate select2" name="ddlMunicipio" id="ddlMunicipio"
+		                                title="Por favor informe um Municipio." required style="width:100%"
+		                                asp-for="MunicipioId" asp-items="Model.ListMunicipios">
+			                        <option value="">Selecionar Município</option>
+		                        </select>
+	                        </div>
+	                        <label class="col-sm-2 control-label text-sm-right pt-2">Localidade <span class="required">*</span></label>
+	                        <div class="col-md-3">
+		                        <select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade"
+		                                title="Por favor informe o localidade." required style="width:100%"
+		                                asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
+			                        <option value="">Selecionar Localidade</option>
+		                        </select>
+	                        </div>
+                        </div>
+                        <div class="form-group row">
+	                        <label class="col-sm-1 control-label">Etapa de Ensino <span class="required">*</span></label>
+	                        <div class="col-md-3">
+		                        <select class="form-control populate select2" name="ddlEtapa" id="ddlEtapa"
+		                                title="Por favor informe a etapa de ensino." required
+		                                asp-for="EtapaId" asp-items="Model.ListEtapas">
+			                        <option value="">Selecionar Etapa de Ensino</option>
+		                        </select>
+	                        </div>
+	                        <label class="col-sm-1 control-label">Série <span class="required">*</span></label>
+	                        <div class="col-md-2">
+		                        <select class="form-control populate select2" name="ddlSerie" id="ddlSerie"
+		                                title="Por favor informe a série." required
+		                                asp-for="SerieId" asp-items="Model.ListSeries">
+			                        <option value="">Selecionar Série</option>
+		                        </select>
+	                        </div>
+	                        <label class="col-sm-1 control-label">Turma <span class="required">*</span></label>
+	                        <div class="col-md-4">
+		                        <select class="form-control populate select2" name="ddlTurma" id="ddlTurma"
+		                                title="Por favor informe a turma." required
+		                                asp-for="TurmaId" asp-items="Model.ListTurmas">
+			                        <option value="">Selecionar Turma</option>
+		                        </select>
+	                        </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-1 control-label text-sm-right pt-2">Fomento: <span class="required">*</span></label>
@@ -277,6 +305,14 @@
 
             // Set the value
             $("#ddlModalidades").val(dataarray);
+
+            //set filter
+            $("#ddlModalidades").multiselect({
+                enableFiltering: true,
+                enableCaseInsensitiveFiltering: true,
+                maxHeight: 200,
+                dropUp: true
+            });
 
             // Then refresh
             $("#ddlModalidades").multiselect("refresh");

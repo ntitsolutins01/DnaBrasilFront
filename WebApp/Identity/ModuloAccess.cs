@@ -17,5 +17,9 @@
         public const string DashboardEad = "DashboardEad";
         public const string ControleMaterial = "ControleMaterial";
         public const string Atividade = "Atividade";
+        public const string AlunoCurso = "AlunoCurso";
+        public const string ControleFrequenciaEscolar = "ControleFrequenciaEscolar";
+        public const string MeusCursos = "MeusCursos";
+        public const string ControleInventario = "ControleInventario";
     }
 }

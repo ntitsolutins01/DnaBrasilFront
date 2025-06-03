@@ -5,27 +5,27 @@ namespace WebApp.ApiClient
 {
     public partial class DnaApiClient
     {
-	    private const string ResourceGrupoMaterial = "GruposMateriais";
+        private const string ResourceGrupoMaterial = "GruposMateriais";
 
-		#region Main Methods
+        #region Main Methods
 
-		public Task<long> CreateGrupoMaterial (GrupoMaterialModel.CreateUpdateGrupoMaterialCommand command)
+        public Task<long> CreateGrupoMaterial(GrupoMaterialModel.CreateUpdateGrupoMaterialCommand command)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceGrupoMaterial }"));
+                $"{ResourceGrupoMaterial}"));
             return Post(requestUrl, command);
         }
-        public Task<bool> UpdateGrupoMaterial (int id, GrupoMaterialModel.CreateUpdateGrupoMaterialCommand command)
+        public Task<bool> UpdateGrupoMaterial(int id, GrupoMaterialModel.CreateUpdateGrupoMaterialCommand command)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceGrupoMaterial }/{id}"));
+                $"{ResourceGrupoMaterial}/{id}"));
             return Put(requestUrl, command);
         }
 
-        public Task<bool> DeleteGrupoMaterial (int id)
+        public Task<bool> DeleteGrupoMaterial(int id)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceGrupoMaterial }/{id}"));
+                $"{ResourceGrupoMaterial}/{id}"));
             return Delete<bool>(requestUrl);
         }
 
@@ -36,13 +36,13 @@ namespace WebApp.ApiClient
         public GrupoMaterialDto GetGrupoMaterialById(int id)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceGrupoMaterial }/{id}"));
+                $"{ResourceGrupoMaterial}/{id}"));
             return Get<GrupoMaterialDto>(requestUrl);
         }
         public List<GrupoMaterialDto> GetGruposMateriaisAll()
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceGrupoMaterial }"));
+                $"{ResourceGrupoMaterial}"));
             return Get<List<GrupoMaterialDto>>(requestUrl);
         }
 

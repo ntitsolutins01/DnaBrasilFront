@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using WebApp.Dto;
+﻿using WebApp.Dto;
 using WebApp.Models;
 
 namespace WebApp.ApiClient
@@ -32,11 +31,11 @@ namespace WebApp.ApiClient
         /// <param name="command">Objeto de alteração de Profissionais</param>
         /// <returns>Retorna true ou false</returns>
 		public Task<bool> UpdateProfissional(int id, ProfissionalModel.CreateUpdateProfissionalCommand command)
-		{
-			var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-				$"{ResourceProfissional}/{id}"));
-			return Put(requestUrl, command);
-		}
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceProfissional}/{id}"));
+            return Put(requestUrl, command);
+        }
 
         /// <summary>
         /// exclusão de Profissionais
@@ -84,9 +83,9 @@ namespace WebApp.ApiClient
         /// <returns>retorna Profissional por cpf</returns>
         public ProfissionalDto GetProfissionalByCpf(string cpf)
         {
-	        var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-		        $"{ResourceProfissional}/Cpf/{cpf}"));
-	        return Get<ProfissionalDto>(requestUrl);
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceProfissional}/Cpf/{cpf}"));
+            return Get<ProfissionalDto>(requestUrl);
         }
 
         /// <summary>
@@ -94,11 +93,11 @@ namespace WebApp.ApiClient
         /// </summary>
         /// <param name="email">email</param>
         /// <returns>retorna um Profissional por Email</returns>
-        public ProfissionalDto GetProfissionalByEmail(string email)
+        public async Task<ProfissionalDto> GetProfissionalByEmail(string email)
         {
-	        var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-		        $"{ResourceProfissional}/Email/{email}"));
-	        return Get<ProfissionalDto>(requestUrl);
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceProfissional}/Email/{email}"));
+            return Get<ProfissionalDto>(requestUrl);
         }
 
         /// <summary>
@@ -108,12 +107,12 @@ namespace WebApp.ApiClient
         /// <returns>retrona uma lista de Profissionais</returns>
         public List<ProfissionalDto> GetProfissionaisByLocalidade(int id)
         {
-	        var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-		        $"{ResourceProfissional}/Localidade/{id}"));
-	        return Get<List<ProfissionalDto>>(requestUrl);
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceProfissional}/Localidade/{id}"));
+            return Get<List<ProfissionalDto>>(requestUrl);
         }
 
-		#endregion
+        #endregion
 
     }
 }

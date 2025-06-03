@@ -8,7 +8,7 @@ namespace WebApp.ApiClient
     /// </summary>
     public partial class DnaApiClient
     {
-	    private const string ResourceAtividade = "Atividades";
+        private const string ResourceAtividade = "Atividades";
 
         #region Main Methods
 
@@ -17,10 +17,10 @@ namespace WebApp.ApiClient
         /// </summary>
         /// <param name="command">Objeto para inclusão de Atividade</param>
         /// <returns>Id de Atividade inserido</returns>
-        public Task<long> CreateAtividade (AtividadeModel.CreateUpdateAtividadeCommand command)
+        public Task<long> CreateAtividade(AtividadeModel.CreateUpdateAtividadeCommand command)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceAtividade }"));
+                $"{ResourceAtividade}"));
             return Post(requestUrl, command);
         }
 
@@ -30,10 +30,10 @@ namespace WebApp.ApiClient
         /// <param name="id">Id de alteração de Atividade</param>
         /// <param name="command">Objeto de alteração de Atividade</param>
         /// <returns>Retorna true ou false</returns>
-        public Task<bool> UpdateAtividade (int id, AtividadeModel.CreateUpdateAtividadeCommand command)
+        public Task<bool> UpdateAtividade(int id, AtividadeModel.CreateUpdateAtividadeCommand command)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceAtividade }/{id}"));
+                $"{ResourceAtividade}/{id}"));
             return Put(requestUrl, command);
         }
 
@@ -42,11 +42,36 @@ namespace WebApp.ApiClient
         /// </summary>
         /// <param name="id">Id de exclusão de Atividade</param>
         /// <returns>Retorna true ou false</returns>
-        public Task<bool> DeleteAtividade (int id)
+        public Task<bool> DeleteAtividade(int id)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceAtividade }/{id}"));
+                $"{ResourceAtividade}/{id}"));
             return Delete<bool>(requestUrl);
+        }
+
+        /// <summary>
+        /// Inclusão de Atividade e Alunos
+        /// </summary>
+        /// <param name="command">Objeto para inclusão de AtividadeAlunos</param>
+        /// <returns>Id de Atividade</returns>
+        public Task<long> CreateAtividadeAluno(AtividadeModel.CreateUpdateAtividadeAlunosCommand command)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceAtividade}/Alunos"));
+            return Post(requestUrl, command);
+        }
+
+        /// <summary>
+        /// Alteração de Atividade e Alunos
+        /// </summary>
+        /// <param name="id">Id de alteração de Atividade</param>
+        /// <param name="command">Objeto de alteração de AtividadeAlunos</param>
+        /// <returns>Retorna true ou false</returns>
+        public Task<bool> UpdateAtividadeAluno(int id, AtividadeModel.CreateUpdateAtividadeAlunosCommand command)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceAtividade}/{id}/Alunos"));
+            return Put(requestUrl, command);
         }
 
         #endregion
@@ -76,6 +101,45 @@ namespace WebApp.ApiClient
             return Get<List<AtividadeDto>>(requestUrl);
         }
 
+        /// <summary>
+        /// Busca lista de turmas pelo id da modalidade e id do profissional 
+        /// </summary>
+        /// <param name="modalidadeId">Id da modalidade</param>
+        /// <param name="profissionalId">Id do profissional</param>
+        /// <returns>Retorna a Lista de turmas</returns>
+        public List<AtividadeDto> GetTurmasByModalidadeIdProfissionalId(int modalidadeId, int profissionalId)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceAtividade}/Modalidade/{modalidadeId}/Profissional/{profissionalId}"));
+            return Get<List<AtividadeDto>>(requestUrl);
+        }
+
+        /// <summary>
+        /// Busca Alunos por Id da atividade
+        /// </summary>
+        /// <param name="id">Id da atividade</param>
+        /// <returns>Retorna a Lista de Alunos </returns>
+        public List<AtividadeAlunosDto> GetAtividadeAlunosByAtividadeId(int id)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceAtividade}/{id}/Alunos"));
+            return Get<List<AtividadeAlunosDto>>(requestUrl);
+        }
+
+        /// <summary>
+        /// Busca atividades por id da localidade
+        /// </summary>
+        /// <param name="id">Id da localidade</param>
+        /// <returns>Retorna a lista de atividades</returns>
+        public async Task<List<AtividadeDto>> GetAtividadeByLocalidadeId(int id)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceAtividade}/Localidade/{id}"));
+            return Get<List<AtividadeDto>>(requestUrl);
+        }
+
         #endregion
+
+
     }
 }

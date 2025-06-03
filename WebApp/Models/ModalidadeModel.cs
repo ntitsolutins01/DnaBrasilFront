@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Extensions.Primitives;
 using WebApp.Dto;
 
 namespace WebApp.Models
@@ -41,7 +40,8 @@ namespace WebApp.Models
             public string? ModalidadesIds { get; set; }
             public int LinhaAcaoId { get; set; }
             public byte[]? ByteImage { get; set; }
-		}
+            public string? NomeByteImage { get; set; }
+        }
     }
 
 }

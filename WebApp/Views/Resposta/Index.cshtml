@@ -116,14 +116,22 @@
                                    title="Por favor informe o questionário." readonly />
                         </div>
                     </div>
-	                <div class="form-group row">
-		                <label class="col-sm-3 control-label text-sm-right pt-2">Resposta: <span class="required">*</span></label>
-		                <div class="col-sm-8">
-			                <input type="text" id="resposta" name="resposta" class="form-control"
-                                   maxlength="100" :value="editDto.Resposta"
-			                       title="Por favor informe a Resposta." required />
-		                </div>
-	                </div>
+                    <div class="form-group row">
+	                    <label class="col-sm-3 control-label text-sm-right pt-2">Resposta: <span class="required">*</span></label>
+	                    <div class="col-sm-8">
+		                    <input type="text" id="resposta" name="resposta" class="form-control"
+		                           maxlength="300" :value="editDto.Resposta"
+		                           title="Por favor informe a Resposta." required />
+	                    </div>
+                    </div>
+
+                    <div class="form-group row" style="display: none;" id="dvEducacional">
+	                    <label class="col-sm-3 control-label text-sm-right pt-2">Descrição </label>
+	                    <div class="col-sm-8">
+                            <textarea class="form-control" rows="3" maxlength="500" :value="editDto.Descricao" name="descricao" id="descricao"></textarea>
+	                    </div>
+                    </div>
+
                     <div class="form-group row">
                         <label class="col-sm-3 control-label text-sm-right pt-2">Valor/Peso Resposta: <span class="required">*</span></label>
                         <div class="col-sm-2">
@@ -161,31 +169,31 @@
         (function ($) {
 
             'use strict';
-            var crub = @ViewBag.CrudMessage;
+            var crud = @ViewBag.CrudMessage;
 
-            if (crub === 1) {
+            if (crud === 1) {
                 new PNotify({
                     title: 'Resposta',
                     text: 'Cadastro realizado com sucesso!',
                     type: 'success'
                 });
-                crub = 0;
-            } else if (crub === 2) {
+                crud = 0;
+            } else if (crud === 2) {
                 new PNotify({
                     title: 'Resposta',
                     text: 'Dados alterados com sucesso.',
                     type: 'warning',
                     icon: 'fa fa-pencil'
                 });
-                crub = 0;
-            } else if (crub === 3) {
+                crud = 0;
+            } else if (crud === 3) {
                 new PNotify({
                     title: 'Resposta',
                     text: 'Registro excluído com sucesso.',
                     type: 'error',
                     icon: 'fa fa-trash-o'
                 });
-                crub = 0;
+                crud = 0;
             }
 
 
@@ -198,21 +206,21 @@
                     text: messagem,
                     type: 'success'
                 });
-                crub = 0;
+                crud = 0;
             } else if (notify === 1) {
                 new PNotify({
                     title: 'Resposta',
                     text: messagem,
                     type: 'warning'
                 });
-                crub = 0;
+                crud = 0;
             } else if (notify === 2) {
                 new PNotify({
                     title: 'Resposta',
                     text: messagem,
                     type: 'error'
                 });
-                crub = 0;
+                crud = 0;
             }
 
             if ($.isFunction($.fn['tooltip'])) {
