@@ -1148,5 +1148,49 @@ namespace WebApp.Controllers
                 return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = e.Message });
             }
         }
+
+        /// <summary>
+        /// Ação de Upload de Foto do Gabarito
+        /// </summary>
+        /// <param name="collection">Arquivo de upload realizado</param>
+        /// <returns>Retorna mensagem de upload realizado através do parametro notfy e message</returns>
+        [HttpPost]
+        //[ClaimsAuthorize(ClaimType.Laudo, Claim.Upload)]
+        public async Task<ActionResult> Upload(IFormCollection collection)
+        {
+            try
+            {
+                _logger.Info($"Ação de upload de foto do gabarito - Laudo.Upload");
+
+                string filePath = null;
+
+                var command = new LaudoModel.CreateUpdateLaudoCommand
+                {
+                    Id = Convert.ToInt32(collection["laudoId"]),
+                    AlunoId = 0
+                };
+
+                foreach (var file in collection.Files)
+                {
+                    if (file.Length <= 0) continue;
+
+                    //command.NomeFoto = System.IO.Path.GetFileName(collection.Files[0].FileName);
+
+                    using var ms = new MemoryStream();
+                    await file.CopyToAsync(ms);
+                    var byteIMage = ms.ToArray();
+                    //command.ByteImage = byteIMage;
+                }
+
+                //await ApiClientFactory.Instance.UpdateAlunoFoto(command.Id, command);
+
+                return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Success, mesage = "Upload realizado com sucesso." });
+            }
+            catch (Exception e)
+            {
+                _logger.Error($"Ação de upload de foto do gabarito - Laudo.Upload: {e.StackTrace}");
+                return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, mesage = e.Message });
+            }
+        }
     }
 }
