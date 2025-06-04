@@ -252,20 +252,20 @@ var vm = new Vue({
                 $("#ddlLocalidadeGabarito").change(function () {
 
                     var localidadeId = $("#ddlLocalidadeGabarito").val();
-                    var gabarito = $("#ddlGabarito").val();
+                    var gabarito = $("#ddlGabaritoModal").select2('data')[0].id;
 
-                    if (gabarito === "") {
+                    //if (gabarito === "") {
 
-                        //Valida form para Impressão do Gabarito
-                        $("#formImprimirGabarito").valid();
+                    //    //Valida form para Impressão do Gabarito
+                    //    $("#formImprimirGabarito").valid();
 
-                        new PNotify({
-                            title: 'Laudo',
-                            text: 'Por favor selecione o gabarito',
-                            type: 'warning'
-                        });
-                        return;
-                    }
+                    //    new PNotify({
+                    //        title: 'Laudo',
+                    //        text: 'Por favor selecione o gabarito',
+                    //        type: 'warning'
+                    //    });
+                    //    return;
+                    //}
 
                     var etapaId = 0;
                     var serie = "";
@@ -784,7 +784,7 @@ var vm = new Vue({
                                 $("#liVocacional").hide();
                                 $("#liEducacional3Lp").hide();
                             }
-                                $("#liEducacional3Lp").show();
+                                //$("#liEducacional3Lp").show();
                         });
                 });
 
