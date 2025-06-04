@@ -64,3 +64,19 @@ const observer = new IntersectionObserver((entries) => {
 document.querySelectorAll('.page-container').forEach((page) => {
     observer.observe(page);
 });
+
+// Função para selecionar resposta (TEMPORARIA)
+function selectAnswer(questionNumber, option) {
+    // Remove seleção anterior da mesma questão
+    const questionRows = document.querySelectorAll('.question-item');
+    questionRows.forEach((row) => {
+        const number = row.querySelector('.question-number').textContent;
+        if (number == questionNumber) {
+            const circles = row.querySelectorAll('.answer-circle');
+            circles.forEach((circle) => circle.classList.remove('selected'));
+        }
+    });
+
+    // Adiciona seleção ao círculo clicado
+    event.target.classList.add('selected');
+}

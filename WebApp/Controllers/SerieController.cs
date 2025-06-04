@@ -249,6 +249,28 @@ namespace WebApp.Controllers
                 return Task.FromResult(Json(ex));
             }
         }
+
+        /// <summary>
+        /// Busca turmas por localidade
+        /// </summary>
+        /// <param name="id">Id da localidade</param>
+        /// <returns>Retorna um json com a lista de turmas</returns>
+        public Task<JsonResult> GetTurmasByLocalidadeId(string id)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(id)) throw new Exception("Localidade não informada.");
+                var result = ApiClientFactory.Instance.GetTurmasByLocalidadeId(Convert.ToInt32(id))
+                    .Select(s => new { Id = s.Id, Turma = s.Turma }).ToList();
+
+                return Task.FromResult(Json(new SelectList(result, "Id", "Turma")));
+            }
+            catch (Exception ex)
+            {
+                return Task.FromResult(Json(ex));
+            }
+        }
+
         #endregion
     }
 }
