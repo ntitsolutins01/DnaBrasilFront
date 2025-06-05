@@ -135,14 +135,14 @@ namespace WebApp.Controllers
         [ClaimsAuthorize(ClaimType.Laudo, Claim.Detalhar)]
         public async Task<ActionResult> Details(int id)
         {
-            var laudo = ApiClientFactory.Instance.GetLaudoByAluno(id);
+            var laudo = ApiClientFactory.Instance.GetLaudoById(id);
 
             var consumoAlimentar = laudo.ConsumoAlimentarId == null ? null : ApiClientFactory.Instance.GetConsumoAlimentarById((int)laudo.ConsumoAlimentarId);
             var saudeBucal = laudo.SaudeBucalId == null ? null : ApiClientFactory.Instance.GetConsumoAlimentarById((int)laudo.SaudeBucalId);
 
-            var aluno = await ApiClientFactory.Instance.GetAlunoById(id);
+            var aluno = await ApiClientFactory.Instance.GetAlunoById((int)laudo.AlunoId);
             var profissional = laudo.ProfissionalId == null ? null : ApiClientFactory.Instance.GetProfissionalById(Convert.ToInt32(aluno.ProfissionalId));
-            var talentoEsportivo = laudo.TalentoEsportivoId == null ? null : ApiClientFactory.Instance.GetTalentoEsportivoByAluno((int)laudo.AlunoId!);
+            var talentoEsportivo = laudo.TalentoEsportivoId == null ? null : ApiClientFactory.Instance.GetTalentoEsportivoById((int)laudo.TalentoEsportivoId!);
             var encaminhamentoImc = laudo.SaudeId == null ? null : ApiClientFactory.Instance.GetEncaminhamentoBySaudeId(Convert.ToInt32(laudo.SaudeId));
             var qualidadeDeVida = laudo.QualidadeDeVidaId == null ? null : ApiClientFactory.Instance.GetEncaminhamentoByQualidadeDeVidaId((int)laudo.QualidadeDeVidaId);
             var vocacional = laudo.VocacionalId == null ? null : ApiClientFactory.Instance.GetEncaminhamentoByVocacional();
@@ -178,7 +178,7 @@ namespace WebApp.Controllers
 
             var aluno = await ApiClientFactory.Instance.GetAlunoById((int)laudo.AlunoId);
             var profissional = laudo.ProfissionalId == null ? null : ApiClientFactory.Instance.GetProfissionalById(Convert.ToInt32(aluno.ProfissionalId));
-            var talentoEsportivo = laudo.TalentoEsportivoId == null ? null : ApiClientFactory.Instance.GetTalentoEsportivoByAluno((int)laudo.AlunoId!);
+            var talentoEsportivo = laudo.TalentoEsportivoId == null ? null : ApiClientFactory.Instance.GetTalentoEsportivoById((int)laudo.TalentoEsportivoId!);
             var encaminhamentoImc = laudo.SaudeId == null ? null : ApiClientFactory.Instance.GetEncaminhamentoBySaudeId(Convert.ToInt32(laudo.SaudeId));
             var qualidadeDeVida = laudo.QualidadeDeVidaId == null ? null : ApiClientFactory.Instance.GetEncaminhamentoByQualidadeDeVidaId((int)laudo.QualidadeDeVidaId);
             var vocacional = laudo.VocacionalId == null ? null : ApiClientFactory.Instance.GetEncaminhamentoByVocacional();
@@ -186,6 +186,10 @@ namespace WebApp.Controllers
             var encaminhamentoSaudeBucal = laudo.SaudeBucalId == null ? null : ApiClientFactory.Instance.GetEncaminhamentoById((int)saudeBucal.Encaminhamento.Id);
             var desempenho = ApiClientFactory.Instance.GetDesempenhoByAluno(Convert.ToInt32(laudo.AlunoId));
             var modalidade = ApiClientFactory.Instance.GetModalidadeById(Convert.ToInt32(laudo.ModalidadeId));
+
+            var talentoEsportivoAnterior = laudo.TalentoEsportivoId == null
+                ? null
+                : ApiClientFactory.Instance.GetTalentoEsportivoByAluno((int)laudo.AlunoId);
 
             var model = new LaudoModel()
             {
