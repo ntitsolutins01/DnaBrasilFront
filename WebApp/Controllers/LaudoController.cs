@@ -171,12 +171,12 @@ namespace WebApp.Controllers
         //[ClaimsAuthorize(ClaimType.Laudo, Claim.Ver)]
         public async Task<ActionResult> Report(int id)
         {
-            var laudo = ApiClientFactory.Instance.GetLaudoByAluno(id);
+            var laudo = ApiClientFactory.Instance.GetLaudoById(id);
 
             var consumoAlimentar = laudo.ConsumoAlimentarId == null ? null : ApiClientFactory.Instance.GetConsumoAlimentarById((int)laudo.ConsumoAlimentarId);
             var saudeBucal = laudo.SaudeBucalId == null ? null : ApiClientFactory.Instance.GetSaudeBucalById((int)laudo.SaudeBucalId);
 
-            var aluno = await ApiClientFactory.Instance.GetAlunoById(id);
+            var aluno = await ApiClientFactory.Instance.GetAlunoById((int)laudo.AlunoId);
             var profissional = laudo.ProfissionalId == null ? null : ApiClientFactory.Instance.GetProfissionalById(Convert.ToInt32(aluno.ProfissionalId));
             var talentoEsportivo = laudo.TalentoEsportivoId == null ? null : ApiClientFactory.Instance.GetTalentoEsportivoByAluno((int)laudo.AlunoId!);
             var encaminhamentoImc = laudo.SaudeId == null ? null : ApiClientFactory.Instance.GetEncaminhamentoBySaudeId(Convert.ToInt32(laudo.SaudeId));
