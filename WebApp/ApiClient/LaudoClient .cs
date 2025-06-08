@@ -1,5 +1,7 @@
+using Newtonsoft.Json;
 using WebApp.Dto;
 using WebApp.Models;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace WebApp.ApiClient
 {
@@ -184,7 +186,16 @@ namespace WebApp.ApiClient
             return GetFiltro(requestUrl, searchFilter);
         }
 
-        #endregion
+        public async Task<Dictionary<string, object>> ProcessarGabarito(byte[] imagemBytes)
+        {
+            var requestUrl = CreateRequestUri($"{ResourceLaudo}/ProcessarGabarito");
+
+            return await PostDict(requestUrl, imagemBytes);
+        }
 
     }
+
+
+    #endregion
+
 }

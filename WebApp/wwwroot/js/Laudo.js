@@ -358,6 +358,58 @@ var vm = new Vue({
                         }
                     }
                 });
+
+                // Código para processar o gabarito antes de liberar o upload
+                $("#btnProcessarGabarito").click(function (e) {
+                    e.preventDefault();
+                    var fileInput = $("#arquivo")[0];
+                    var file = fileInput.files[0];
+                    if (!file) {
+                        alert("Selecione um arquivo de gabarito!");
+                        return;
+                    }
+                    var formData = new FormData();
+                    formData.append("imagem", file);
+
+                    $("#respostasReconhecidas").html("<span class='text-info'>Processando, aguarde...</span>");
+                    $("#btnProcessarGabarito").prop("disabled", true);
+
+                    $.ajax({
+                        url: "../Laudo/ProcessarGabarito",
+                        type: "POST",
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: function (res) {
+                            var html = "<b>Matrícula reconhecida:</b> " + (res.matricula || "<i>Não reconhecida</i>") + "<br/><b>Respostas:</b><ul>";
+                            if (res.respostas) { 
+                                for (var q in res.respostas) {
+                                    html += "<li><b>Questão " + q + "</b>: " + res.respostas[q] + "</li>";
+                                }
+                                html += "</ul>";
+                                $("#respostasReconhecidas").html(html);
+                                $("#btnSalvarGabarito").prop("disabled", false);
+                            } else if (res.erro) {
+                                $("#respostasReconhecidas").html("<span class='text-danger'>" + res.erro + "</span>");
+                            }
+                        },
+                        error: function () {
+                            $("#respostasReconhecidas").html("<span class='text-danger'>Erro ao processar gabarito!</span>");
+                        },
+                        complete: function () {
+                            $("#btnProcessarGabarito").prop("disabled", false);
+                        }
+                    });
+                });
+
+                // Impede o submit antes de processar
+                $("#formUploadGabarito").submit(function (e) {
+                    if ($("#btnSalvarGabarito").is(":disabled")) {
+                        e.preventDefault();
+                        alert("Primeiro processe o gabarito antes de salvar!");
+                    }
+                });
+
             }
 
             if (formid === "formEditLaudo") {
