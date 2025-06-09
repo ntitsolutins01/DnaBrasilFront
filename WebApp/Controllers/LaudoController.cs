@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using WebApp.Authorization;
 using WebApp.Configuration;
 using WebApp.Dto;
@@ -1189,40 +1190,61 @@ namespace WebApp.Controllers
         /// <returns>Retorna mensagem de upload realizado através do parametro notfy e message</returns>
         [HttpPost]
         //[ClaimsAuthorize(ClaimType.Laudo, Claim.Upload)]
-        public async Task<ActionResult> Upload(IFormCollection collection)
+        public async Task<IActionResult> ProcessarGabarito(IFormCollection collection)
         {
             try
             {
-                _logger.Info($"Ação de upload de foto do gabarito - Laudo.Upload");
+                _logger.Info($"Ação de processamento do gabarito - Laudo.ProcessarGabarito");
 
-                string filePath = null;
-
-                var command = new LaudoModel.CreateUpdateLaudoCommand
-                {
-                    Id = Convert.ToInt32(collection["laudoId"]),
-                    AlunoId = 0
-                };
-
+                byte[]? byteImage = null;
                 foreach (var file in collection.Files)
                 {
                     if (file.Length <= 0) continue;
-
-                    //command.NomeFoto = System.IO.Path.GetFileName(collection.Files[0].FileName);
-
                     using var ms = new MemoryStream();
                     await file.CopyToAsync(ms);
-                    var byteIMage = ms.ToArray();
-                    //command.ByteImage = byteIMage;
+                    byteImage = ms.ToArray();
+                    break;
                 }
 
-                //await ApiClientFactory.Instance.UpdateAlunoFoto(command.Id, command);
+                if (byteImage == null)
+                    return Json(new { erro = "Nenhuma imagem foi enviada." });
 
-                return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Success, mesage = "Upload realizado com sucesso." });
+                var resultado = await ApiClientFactory.Instance.ProcessarGabarito(byteImage);
+
+                Dictionary<string, string> respostasDict;
+
+                if (resultado["respostas"] is Dictionary<string, object> respostasObj)
+                {
+                    respostasDict = respostasObj.ToDictionary(
+                        kvp => kvp.Key,
+                        kvp => kvp.Value?.ToString() ?? ""
+                    );
+                }
+                else if (resultado["respostas"] is Newtonsoft.Json.Linq.JObject respostasJObj)
+                {
+                    respostasDict = respostasJObj.ToObject<Dictionary<string, string>>();
+                }
+                else if (resultado["respostas"] is string respostasJson)
+                {
+                    respostasDict = JsonConvert.DeserializeObject<Dictionary<string, string>>(respostasJson);
+                }
+                else
+                {
+                    respostasDict = resultado["respostas"] as Dictionary<string, string>;
+                }
+
+                return Json(new
+                {
+                    sucesso = true,
+                    matricula = resultado["matricula"],
+                    respostas = respostasDict
+                });
+
             }
             catch (Exception e)
             {
-                _logger.Error($"Ação de upload de foto do gabarito - Laudo.Upload: {e.StackTrace}");
-                return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, mesage = e.Message });
+                _logger.Error($"Ação de upload de foto do gabarito - Laudo.ProcessarGabarito: {e.Message}");
+                return Json(new { sucesso = false, erro = e.Message });
             }
         }
     }
