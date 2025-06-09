@@ -124,6 +124,11 @@
 								<i class="fa fa-print"></i> &nbsp;&nbsp;Imprimir Gabaritos
 							</a>
 						</div>
+						<div class="col-sm-2 pull-right">
+							<a href="#" id="btnImprimirGabarito" data-toggle="modal" data-target="#mdPrintGabarito" class="btn btn-block btn-dark pull-right">
+								<i class="fa fa-upload"></i> &nbsp;&nbsp;Upload Gabaritos
+							</a>
+						</div>
 					</div>
 					<table class="table table-bordered table-striped mb-0" id="datatable-default">
 						<thead>
@@ -259,11 +264,11 @@
 							<label class="col-sm-2 control-label">Gabarito: <span class="required text-danger">*</span></label>
 							<div class="col-md-10">
 								<select class="form-control populate select2"
-								        name="ddlGabarito"
-								        id="ddlGabarito"
-								        style="width:100%"
-								        title="Por favor selecione o gabarito."
-								        required>
+										name="ddlGabarito"
+										id="ddlGabarito"
+										style="width:100%"
+										title="Por favor selecione o gabarito."
+										required>
 									<option value="">Selecionar Gabarito</option>
 									<option value="3LP">LÍNGUA PORTUGUESA 3ª Série do Ensino Médio</option>
 									<option value="3MT">MATEMÁTICA 3ª Série do Ensino Médio</option>
@@ -286,7 +291,7 @@
 										<span class="btn btn-default btn-file">
 											<span class="fileupload-exists">Alterar</span>
 											<span class="fileupload-new">Selecionar Gabarito</span>
-											<input type="file" id="arquivo" name="arquivo" required title="Por favor selecione o arquivo"/>
+											<input type="file" id="arquivo" name="arquivo" required title="Por favor selecione o arquivo" />
 										</span>
 										<a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload">Remover</a>
 									</div>
@@ -356,14 +361,14 @@
 							<label class="col-sm-2 control-label">Localidade: <span class="required text-danger">*</span></label>
 							<div class="col-md-4">
 								<select class="form-control populate select2" name="ddlLocalidadeGabarito" id="ddlLocalidadeGabarito" style="width: 100%"
-								        asp-for="LocalidadeId" asp-items="Model.ListLocalidades" required>
+										asp-for="LocalidadeId" asp-items="Model.ListLocalidades" required>
 									<option value="">Selecionar Localidade</option>
 								</select>
 							</div>
 							<label class="col-sm-2 control-label">Aluno: </label>
 							<div class="col-md-4">
 								<select class="form-control populate select2" name="ddlAlunoGabarito" id="ddlAlunoGabarito" style="width: 100%"
-								        asp-for="AlunoId" asp-items="Model.ListAlunos">
+										asp-for="AlunoId" asp-items="Model.ListAlunos">
 									<option value="">Selecionar Aluno</option>
 								</select>
 							</div>
@@ -377,9 +382,9 @@
 								</select> *@
 								<select class="form-control populate select2" name="ddlTurma" id="ddlTurma"
 										title="Por favor informe a turma." required style="width: 100%"
-								        asp-for="TurmaId" asp-items="Model.ListTurmas">
+										asp-for="TurmaId" asp-items="Model.ListTurmas">
 									<option value="">Selecionar Turma</option>
-								</select> 
+								</select>
 							</div>
 						</div>
 					</div>
