@@ -54,15 +54,15 @@ namespace WebApp.ApiClient
         #region Methods
 
         /// <summary>
-        ///  Busca Talento Esportivo de Aluno por Consulta
+        ///  Busca os Talentos Esportivos do Aluno pelo Id do ALuno
         /// </summary>
-        /// <param name="id">id de aluno por Consulta </param>
+        /// <param name="id">Id do Aluno </param>
         /// <returns>Retorna uma lista de Talento Esportivo</returns>
-        public TalentoEsportivoDto GetTalentoEsportivoByAluno(int id)
+        public List<TalentoEsportivoDto> GetTalentoEsportivoByAluno(int id)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
                 $"{ResourceTalentoEsportivo}/Aluno/{id}"));
-            return Get<TalentoEsportivoDto>(requestUrl);
+            return Get<List<TalentoEsportivoDto>>(requestUrl);
         }
 
         /// <summary>

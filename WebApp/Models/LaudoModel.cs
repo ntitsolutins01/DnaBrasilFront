@@ -46,6 +46,11 @@ namespace WebApp.Models
         public LaudosFilterDto SearchFilter { get; set; }
         public string? TurmaId { get; set; }
         public SelectList ListTurmas { get; set; }
+        public PercentualLaudoDto Percentual { get; set; }
+        public string TipoLaudoQualidadeVidaDescricao { get; set; }
+        public string TipoLaudoConsumoAlimentarDescricao { get; set; }
+        public string TipoLaudoSaudeBucalDescricao { get; set; }
+        public string TipoLaudoVocacionalDescricao { get; set; }
 
         public class CreateUpdateLaudoCommand
         {
