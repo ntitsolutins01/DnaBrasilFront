@@ -186,6 +186,11 @@ namespace WebApp.ApiClient
             return GetFiltro(requestUrl, searchFilter);
         }
 
+        /// <summary>
+        /// Processa o gabarito realizado pelo aluno
+        /// </summary>
+        /// <param name="imagemBytes">Imagem do gabarito</param>
+        /// <returns>Retorna respostas do gabarito</returns>
         public async Task<Dictionary<string, object>> ProcessarGabarito(byte[] imagemBytes)
         {
             var requestUrl = CreateRequestUri($"{ResourceLaudo}/ProcessarGabarito");
