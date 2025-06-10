@@ -156,7 +156,7 @@ namespace WebApp.Areas.Identity.Pages.Account
 
             if (validaAluno.Alunos.Any())
             {
-                return RedirectToAction(nameof(Register), new { notify = (int)EnumNotify.Error, message = "Já existe um aluno cadastrado com estas informações." });
+                return RedirectToAction("Identity/Account/Register", new { notify = (int)EnumNotify.Error, message = "Já existe um aluno cadastrado com estas informações." });
             }
 
             //var newUser = new IdentityUser { UserName = commandAluno.Email, Email = commandAluno.Email };
