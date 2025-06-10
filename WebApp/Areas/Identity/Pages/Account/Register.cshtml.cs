@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using WebApp.Configuration;
 using WebApp.Data;
 using WebApp.Dto;
@@ -141,6 +142,8 @@ namespace WebApp.Areas.Identity.Pages.Account
                 UtilizacaoImagem = Convert.ToBoolean(collection["utilizacaoImagem"].ToString()),
                 ParticipacaoProgramaCompartilhamentoDados = Convert.ToBoolean(collection["participacao"].ToString()),
                 AutorizacaoConsentimentoAssentimento = collection["agreeterms"].ToString() != "",
+                FomentoId = ApiClientFactory.Instance.GetFomentoByLocalidadeId(Convert.ToInt32(collection["ddlLocalidade"].ToString())).Id,
+                ModalidadesIds = collection["ddlModalidadeDesejada"] == "" ? null : collection["ddlModalidadeDesejada"].ToString(),
             };
 
 
@@ -153,53 +156,53 @@ namespace WebApp.Areas.Identity.Pages.Account
 
             if (validaAluno.Alunos.Any())
             {
-                return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = "Já existe um aluno cadastrado com estas informações." });
+                return RedirectToAction(nameof(Register), new { notify = (int)EnumNotify.Error, message = "Já existe um aluno cadastrado com estas informações." });
             }
 
-            var newUser = new IdentityUser { UserName = commandAluno.Email, Email = commandAluno.Email };
-            var aspNetUser = await _userManager.CreateAsync(newUser, "12345678");
+            //var newUser = new IdentityUser { UserName = commandAluno.Email, Email = commandAluno.Email };
+            //var aspNetUser = await _userManager.CreateAsync(newUser, "12345678");
 
-            StringBuilder msg = new StringBuilder();
-            if (!aspNetUser.Succeeded)
-            {
-                foreach (var error in aspNetUser.Errors)
-                {
-                    ModelState.AddModelError(string.Empty, error.Description);
-                    msg.AppendLine(error.Description);
-                }
+            //StringBuilder msg = new StringBuilder();
+            //if (!aspNetUser.Succeeded)
+            //{
+            //    foreach (var error in aspNetUser.Errors)
+            //    {
+            //        ModelState.AddModelError(string.Empty, error.Description);
+            //        msg.AppendLine(error.Description);
+            //    }
 
-                // Se chegamos até aqui, algo falhou, exiba novamente o formulário
-                //return Page();
-                return RedirectToPage("Register", new { notify = (int)EnumNotify.Error, message = msg });
-            }
+            //    // Se chegamos até aqui, algo falhou, exiba novamente o formulário
+            //    //return Page();
+            //    return RedirectToPage("Register", new { notify = (int)EnumNotify.Error, message = msg });
+            //}
 
-            var includedUserId = _userManager.Users.FirstOrDefault(x => x.Email == newUser.Email).Id;
+            //var includedUserId = _userManager.Users.FirstOrDefault(x => x.Email == newUser.Email).Id;
 
-            var perfil = ApiClientFactory.Instance.GetPerfilById((int)EnumPerfil.Aluno);
+            //var perfil = ApiClientFactory.Instance.GetPerfilById((int)EnumPerfil.Aluno);
 
-            var command = new UsuarioModel.CreateUpdateUsuarioCommand
-            {
-                Email = collection["email"].ToString(),
-                Nome = collection["nome"].ToString(),
-                CpfCnpj = collection["cpf"].ToString(),
-                AspNetUserId = includedUserId,
-                AspNetRoleId = perfil.AspNetRoleId,
-                PerfilId = perfil.Id,
-                MunicipioId = (int)commandAluno.MunicipioId,
-                TipoPessoa = "pf"
-            };
+            //var command = new UsuarioModel.CreateUpdateUsuarioCommand
+            //{
+            //    Email = collection["email"].ToString(),
+            //    Nome = collection["nome"].ToString(),
+            //    CpfCnpj = collection["cpf"].ToString(),
+            //    //AspNetUserId = includedUserId,
+            //    AspNetRoleId = perfil.AspNetRoleId,
+            //    PerfilId = perfil.Id,
+            //    MunicipioId = (int)commandAluno.MunicipioId,
+            //    TipoPessoa = "pf"
+            //};
 
-            var usu = await ApiClientFactory.Instance.CreateUsuario(command);
+            //var usu = await ApiClientFactory.Instance.CreateUsuario(command);
 
-            var userRole = _roleManager.Roles.FirstOrDefault(x => x.Id == perfil.AspNetRoleId).Name;
+            //var userRole = _roleManager.Roles.FirstOrDefault(x => x.Id == perfil.AspNetRoleId).Name;
 
-            await _userManager.AddToRoleAsync(newUser, userRole);
+            //await _userManager.AddToRoleAsync(newUser, userRole);
 
-            commandAluno.AspNetUserId = command.AspNetUserId;
+            //commandAluno.AspNetUserId = command.AspNetUserId;
 
             var alunoId = await ApiClientFactory.Instance.CreateDados(commandAluno);
 
-            SendNewUserEmail(newUser, command.Email, command.Nome);
+            //SendNewUserEmail(newUser, command.Email, command.Nome);
 
             string returnUrl = null;
             returnUrl ??= Url.Content("~/");

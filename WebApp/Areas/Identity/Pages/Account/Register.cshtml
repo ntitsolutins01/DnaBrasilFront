@@ -47,12 +47,12 @@
                     <div class="form-group mb-lg">
                         <label>Endereço</label>
                         <input name="endereco" id="endereco" type="text" class="form-control" required
-                               title="Por favor informe o endereço." />
+                               title="Por favor informe o endereço." maxlength="400" oninput="this.value = this.value.toUpperCase()" />
                     </div>
                     <div class="form-group mb-lg">
                         <label>Modalidade</label><br/>
                         <select class="form-control populate select2" name="ddlModalidadeDesejada" id="ddlModalidadeDesejada" style="width:100%"
-                                title="Por favor selecione a modalidade desejada."
+								title="Por favor selecione a modalidade desejada." required
                                 asp-for="ModalidadeId" asp-items="Model.ListModalidades">
                             <option value="">Selecionar Modalidade Desejada</option>
                         </select>
@@ -60,7 +60,7 @@
                     <div class="form-group mb-lg">
                         <label>Nome completo do Aluno</label>
                         <input name="nome" id="nome" type="text" class="form-control" required
-                               title="Por favor informe o nome completo." />
+                               title="Por favor informe o nome completo." maxlength="300" oninput="this.value = this.value.toUpperCase()" />
                         <p>
                             <code>Sem abreviações</code>
                         </p>
@@ -92,7 +92,7 @@
                     <div class="form-group mb-lg">
                         <label>E-mail</label>
                         <input name="email" id="email" type="email" class="form-control" required
-                               title="Por favor informe o email." />
+                               title="Por favor informe o email." maxlength="200" oninput="this.value = this.value.toLowerCase()" />
                     </div>
                     <div class="form-group mb-lg">
                         <label>Celular</label>
@@ -123,7 +123,7 @@
                     <div class="form-group mb-lg">
                         <label>Nome completo da Mãe</label>
                         <input name="nomeMae" id="nomeMae" type="text" class="form-control" required
-                               title="Por favor informe o nome da mãe." />
+                               title="Por favor informe o nome da mãe." maxlength="300" oninput="this.value = this.value.toUpperCase()" />
                         <p>
                             <code>Sem abreviações</code>
                         </p>
@@ -131,7 +131,7 @@
                     <div class="form-group mb-lg">
                         <label>Nome completo do Responsável</label>
                         <input name="nomeResp" id="nomeResp" type="text" class="form-control" required
-                               title="Por favor informe o nome do responsável." />
+                               title="Por favor informe o nome do responsável." maxlength="300" oninput="this.value = this.value.toUpperCase()" />
                         <p>
                             <code>Sem abreviações</code>
                         </p>

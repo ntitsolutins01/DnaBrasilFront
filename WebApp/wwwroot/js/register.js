@@ -190,20 +190,20 @@
                 }, "Informe um CPF válido");
 
                 $("#formRegister").validate({
-                    rules: {
-                        "EndEmail": {
-                            required: true,
-                            email: true
-                        },
-                        cpf: { cpf: true, required: true }
-                    },
-                    messages: {
-                        "EndEmail": {
-                            required: "Por favor informe o endereço eletrônico válido do usuário.",
-                            email: "Formato de e-mail inválido."
-                        },
-                        cpf: { cpf: 'Formato de CPF inválido', required: "Por favor informe o número do CPF do usuário." }
-                    },
+                    //rules: {
+                    //    "EndEmail": {
+                    //        required: true,
+                    //        email: true
+                    //    },
+                    //    cpf: { cpf: true, required: true }
+                    //},
+                    //messages: {
+                    //    "EndEmail": {
+                    //        required: "Por favor informe o endereço eletrônico válido do usuário.",
+                    //        email: "Formato de e-mail inválido."
+                    //    },
+                    //    cpf: { cpf: 'Formato de CPF inválido', required: "Por favor informe o número do CPF do usuário." }
+                    //},
                     highlight: function (label) {
                         $(label).closest('.form-group').removeClass('has-success').addClass('has-error');
                     },
