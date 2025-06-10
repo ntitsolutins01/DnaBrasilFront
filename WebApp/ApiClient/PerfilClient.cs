@@ -74,7 +74,7 @@ namespace WebApp.ApiClient
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
                 $"{ResourcePerfil}/{id}"));
             return Get<PerfilDto>(requestUrl);
-		}
+        }
 
         /// <summary>
         /// Busca Perfil por id de Funçao de Rede Asp
@@ -86,8 +86,8 @@ namespace WebApp.ApiClient
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
                 $"{ResourcePerfil}/AspNetRoleId/{aspNetRoleId}"));
             return Get<PerfilDto>(requestUrl);
-		}
+        }
 
-		#endregion
-	}
+        #endregion
+    }
 }

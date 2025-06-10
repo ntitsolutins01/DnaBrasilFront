@@ -13,10 +13,10 @@ namespace WebApp.Models
         public class CreateUpdateContratoCommand
         {
             public int Id { get; set; }
-            public  string Nome { get; set; }
-            public  string? Descricao { get; set; }
-            public  string DtIni { get; set; }
-            public  string DtFim { get; set; }
+            public string Nome { get; set; }
+            public string? Descricao { get; set; }
+            public string DtIni { get; set; }
+            public string DtFim { get; set; }
             public string Anexo { get; set; }
             public bool Status { get; set; } = true;
         }

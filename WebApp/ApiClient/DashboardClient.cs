@@ -1,13 +1,10 @@
-﻿using NuGet.Protocol.Core.Types;
-using WebApp.Dto;
-using WebApp.Models;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+﻿using WebApp.Dto;
 
 namespace WebApp.ApiClient
 {
     public partial class DnaApiClient
     {
-	    private const string ResourceDashboard = "Dashboards";
+        private const string ResourceDashboard = "Dashboards";
 
         #region Main Methods
 
@@ -73,35 +70,35 @@ namespace WebApp.ApiClient
             return GetFiltro(requestUrl, searchFilter);
         }
         public Task<DashboardDto?> GetIndicadoresAlunosByFilter(DashboardDto searchFilter)
-		{
-			var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-				$"{ResourceDashboard}/Indicadores"));
-			return GetFiltro(requestUrl, searchFilter);
-		}
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceDashboard}/Indicadores"));
+            return GetFiltro(requestUrl, searchFilter);
+        }
         public Task<DashboardDto?> GetControlePresencaByFilter(DashboardDto searchFilter)
-		{
-			var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-				$"{ResourceDashboard}/ControlePresenca"));
-			return GetFiltro(requestUrl, searchFilter);
-		}
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceDashboard}/ControlePresenca"));
+            return GetFiltro(requestUrl, searchFilter);
+        }
         public Task<DashboardDto?> GetLaudosPeriodoByFilter(DashboardDto searchFilter)
-		{
-			var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-				$"{ResourceDashboard}/LaudosPeriodo"));
-			return GetFiltro(requestUrl, searchFilter);
-		}
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceDashboard}/LaudosPeriodo"));
+            return GetFiltro(requestUrl, searchFilter);
+        }
         public Task<DashboardDto?> GetStatusLaudosByFilter(DashboardDto searchFilter)
-		{
-			var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-				$"{ResourceDashboard}/StatusLaudos"));
-			return GetFiltro(requestUrl, searchFilter);
-		}
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceDashboard}/StatusLaudos"));
+            return GetFiltro(requestUrl, searchFilter);
+        }
         public Task<DashboardDto?> GetEvolutivoByFilter(DashboardDto searchFilter)
-		{
-			var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-				$"{ResourceDashboard}/Evolutivo"));
-			return GetFiltro(requestUrl, searchFilter);
-		}
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceDashboard}/Evolutivo"));
+            return GetFiltro(requestUrl, searchFilter);
+        }
 
         #endregion
 

@@ -21,7 +21,7 @@ namespace WebApp.Models
         public DataGrafico DataGrafico { get; set; }
     }
 
-    public class DataGrafico    
+    public class DataGrafico
     {
         public string name { get; set; }
         public decimal y { get; set; }

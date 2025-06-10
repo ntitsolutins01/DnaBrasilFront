@@ -1,20 +1,28 @@
-﻿namespace WebApp.Dto
+﻿using Microsoft.Extensions.Primitives;
+
+namespace WebApp.Dto
 {
-	public class AlunosFilterDto
+    public class AlunosFilterDto
     {
 
-		#region SearchFilter
-		public string? Sexo { get; set; }
-		public string? FomentoId { get; set; }
-		public string? Estado { get; set; }
-		public string? MunicipioId { get; set; }
-		public string? LocalidadeId { get; set; }
+        #region SearchFilter
+        public string? Sexo { get; set; }
+        public string? FomentoId { get; set; }
+        public string? Estado { get; set; }
+        public string? MunicipioId { get; set; }
+        public string? LocalidadeId { get; set; }
         public string? ProfissionalId { get; set; }
         public string? DeficienciaId { get; set; }
         public string? Etnia { get; set; }
         public string? Nome { get; set; }
         public string? Matricula { get; set; }
         public bool PossuiFoto { get; set; }
+        public string? SerieId { get; set; }
+        public string? AlunoId { get; set; }
+        public string? DataNascimento { get; set; }
+        public string? Email { get; set; }
+        public string? Cpf { get; set; }
+
 
         #endregion
 

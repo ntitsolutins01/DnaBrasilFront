@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 using WebApp.Authorization;
 using WebApp.Configuration;
 using WebApp.Dto;
@@ -72,7 +71,7 @@ public class CursoController : BaseController
             SetNotifyMessage(notify, message);
             SetCrudMessage(crud);
             var tiposcursos = new SelectList(ApiClientFactory.Instance.GetTipoCursosAll(), "Id", "Nome");
-            var coordenadores = new SelectList(ApiClientFactory.Instance.GetUsuarioAll().Where(x => x.Perfil.Id == (int)EnumPerfil.Coordenador), "Id", "Nome");
+            var coordenadores = new SelectList(ApiClientFactory.Instance.GetUsuarioAll().Where(x => x.Perfil.Id == (int)EnumPerfil.CoordenadorEad), "Id", "Nome");
 
 
             return View(new CursoModel()
@@ -109,6 +108,8 @@ public class CursoController : BaseController
                 CargaHoraria = Convert.ToInt32(collection["cargaHoraria"].ToString())
             };
 
+
+
             string? filePath;
             string? fileName;
             string extension = ".jpg";
@@ -116,6 +117,8 @@ public class CursoController : BaseController
                 Guid.NewGuid().ToString(),
                 extension
             );
+
+            long size = collection.Files.Sum(f => f.Length);
 
             foreach (var file in collection.Files)
             {
@@ -247,7 +250,7 @@ public class CursoController : BaseController
     public Task<CursoDto> GetCursoById(int id)
     {
         var result = ApiClientFactory.Instance.GetCursoById(id);
-        var coordenadores = new SelectList(ApiClientFactory.Instance.GetUsuarioAll().Where(x => x.Perfil.Id == (int)EnumPerfil.Coordenador), "Id", "Nome", result.CoordenadorId);
+        var coordenadores = result.CoordenadorId == null ? null : new SelectList(ApiClientFactory.Instance.GetUsuarioAll().Where(x => x.Perfil.Id == (int)EnumPerfil.CoordenadorEad), "Id", "Nome", result.CoordenadorId);
         result.ListCoordenadores = coordenadores;
 
         return Task.FromResult(result);

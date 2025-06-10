@@ -8,7 +8,7 @@ namespace WebApp.ApiClient
     /// </summary>
     public partial class DnaApiClient
     {
-	    private const string ResourceRanking = "Rankings";
+        private const string ResourceRanking = "Rankings";
 
         #region Main Methods
 
@@ -17,10 +17,10 @@ namespace WebApp.ApiClient
         /// </summary>
         /// <param name="command">Objeto para inclusão de Ranking</param>
         /// <returns>Id do curso Ranking</returns>
-        public Task<long> CreateRanking (RankingModel.CreateUpdateRankingCommand command)
+        public Task<long> CreateRanking(RankingModel.CreateUpdateRankingCommand command)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceRanking }"));
+                $"{ResourceRanking}"));
             return Post(requestUrl, command);
         }
 
@@ -30,10 +30,10 @@ namespace WebApp.ApiClient
         /// <param name="id">Id de alteração de Ranking</param>
         /// <param name="command">Objeto de alteração de Ranking </param>
         /// <returns>Retorna true ou false</returns>
-        public Task<bool> UpdateRanking (int id, RankingModel.CreateUpdateRankingCommand command)
+        public Task<bool> UpdateRanking(int id, RankingModel.CreateUpdateRankingCommand command)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceRanking }/{id}"));
+                $"{ResourceRanking}/{id}"));
             return Put(requestUrl, command);
         }
 
@@ -43,10 +43,10 @@ namespace WebApp.ApiClient
         /// </summary>
         /// <param name="id">Id de exclusão de Ranking</param>
         /// <returns>Retorna true ou false</returns>
-        public Task<bool> DeleteRanking (int id)
+        public Task<bool> DeleteRanking(int id)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceRanking }/{id}"));
+                $"{ResourceRanking}/{id}"));
             return Delete<bool>(requestUrl);
         }
 

@@ -1,12 +1,10 @@
-﻿using System.Collections;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Extensions.Primitives;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using WebApp.Dto;
 
 namespace WebApp.Models
 {
-	public class EventoModel
-	{
+    public class EventoModel
+    {
         public string EstadoId { get; set; }
         public SelectList ListEstados { get; set; }
         public string MunicipioId { get; set; }
@@ -22,15 +20,15 @@ namespace WebApp.Models
 
 
         public class CreateUpdateEventoCommand
-		{
-			public int Id { get; set; }
+        {
+            public int Id { get; set; }
             public int LocalidadeId { get; init; }
             public string? Titulo { get; init; }
             public string? Descricao { get; init; }
             public string? DataEvento { get; init; }
             public bool Status { get; set; } = true;
-           
+
         }
-	}
+    }
 
 }

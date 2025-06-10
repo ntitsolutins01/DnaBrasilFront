@@ -8,7 +8,7 @@ namespace WebApp.ApiClient
     /// </summary>
     public partial class DnaApiClient
     {
-	    private const string ResourceTipoParceria = "TipoParcerias";
+        private const string ResourceTipoParceria = "TipoParcerias";
 
         #region Main Methods
 

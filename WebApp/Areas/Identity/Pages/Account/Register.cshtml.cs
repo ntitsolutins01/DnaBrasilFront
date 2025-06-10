@@ -7,9 +7,8 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Options;
-using WebApp.Areas.Identity.Models;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using WebApp.Configuration;
 using WebApp.Data;
 using WebApp.Dto;
@@ -37,8 +36,8 @@ namespace WebApp.Areas.Identity.Pages.Account
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender, 
-            RoleManager<IdentityRole> roleManager, 
+            IEmailSender emailSender,
+            RoleManager<IdentityRole> roleManager,
             ApplicationDbContext db,
             IHostingEnvironment host)
         {
@@ -112,8 +111,8 @@ namespace WebApp.Areas.Identity.Pages.Account
             var etnias = new SelectList(list, "IdNome", "Nome");
             ListEtnias = etnias;
 
-            var linhasAcoes = new SelectList(ApiClientFactory.Instance.GetLinhasAcoesAll(), "Id", "Nome");
-            ListModalidades = linhasAcoes;
+            var modalidades = new SelectList(ApiClientFactory.Instance.GetModalidadeAll(), "Id", "Nome");
+            ListModalidades = modalidades;
 
             var deficiencias = new SelectList(ApiClientFactory.Instance.GetDeficienciaAll().Where(x => x.Status), "Id", "Nome");
             ListDeficiencia = deficiencias;
@@ -125,7 +124,6 @@ namespace WebApp.Areas.Identity.Pages.Account
             var commandAluno = new AlunoModel.CreateUpdateDadosAlunoCommand()
             {
                 MunicipioId = collection["ddlMunicipio"] == "" ? null : Convert.ToInt32(collection["ddlMunicipio"].ToString()),
-                FomentoId = collection["ddlFomento"] == "" ? null : Convert.ToInt32(collection["ddlFomento"].ToString()),
                 LocalidadeId = collection["ddlLocalidade"] == "" ? null : Convert.ToInt32(collection["ddlLocalidade"].ToString()),
                 DeficienciaId = collection["ddlDeficiencia"] == "" ? null : Convert.ToInt32(collection["ddlDeficiencia"].ToString()),
                 Endereco = collection["endereco"] == "" ? null : collection["endereco"].ToString(),
@@ -141,58 +139,70 @@ namespace WebApp.Areas.Identity.Pages.Account
                 DeficienciasIds = collection["ddlDeficiencia"] == "" ? null : collection["ddlDeficiencia"].ToString(),
                 Habilitado = true,
                 Status = true,
-                AutorizacaoSaida = Convert.ToBoolean(collection["autorizado"].ToString()),
                 UtilizacaoImagem = Convert.ToBoolean(collection["utilizacaoImagem"].ToString()),
                 ParticipacaoProgramaCompartilhamentoDados = Convert.ToBoolean(collection["participacao"].ToString()),
-                CopiaDocAlunoResponsavel = Convert.ToBoolean(collection["copiaDoc"].ToString()),
                 AutorizacaoConsentimentoAssentimento = collection["agreeterms"].ToString() != "",
-                ProfissionalId = collection["ddlProfissional"] == "" ? null : Convert.ToInt32(collection["ddlProfissional"].ToString())
+                FomentoId = ApiClientFactory.Instance.GetFomentoByLocalidadeId(Convert.ToInt32(collection["ddlLocalidade"].ToString())).Id,
+                ModalidadesIds = collection["ddlModalidadeDesejada"] == "" ? null : collection["ddlModalidadeDesejada"].ToString(),
             };
 
-            var newUser = new IdentityUser { UserName = commandAluno.Email, Email = commandAluno.Email };
-            var aspNetUser = await _userManager.CreateAsync(newUser, "12345678");
 
-            StringBuilder msg = new StringBuilder();
-            if (!aspNetUser.Succeeded)
+            var validaAluno = await ApiClientFactory.Instance.GetAlunosByFilter(new AlunosFilterDto()
             {
-                foreach (var error in aspNetUser.Errors)
-                {
-                    ModelState.AddModelError(string.Empty, error.Description);
-                    msg.AppendLine(error.Description);
-                }
+                Nome = commandAluno.Nome,
+                DataNascimento = commandAluno.DtNascimento,
+                Cpf = commandAluno.Cpf
+            });
 
-                // Se chegamos até aqui, algo falhou, exiba novamente o formulário
-                //return Page();
-                return RedirectToPage("Register", new { notify = (int)EnumNotify.Error, message = msg });
+            if (validaAluno.Alunos.Any())
+            {
+                return RedirectToPage("Register", new { notify = (int)EnumNotify.Error, message = $"Já existe um aluno cadastrado com estas informações." });
             }
 
-            var includedUserId = _userManager.Users.FirstOrDefault(x => x.Email == newUser.Email).Id;
+            //var newUser = new IdentityUser { UserName = commandAluno.Email, Email = commandAluno.Email };
+            //var aspNetUser = await _userManager.CreateAsync(newUser, "12345678");
 
-            var perfil = ApiClientFactory.Instance.GetPerfilById((int)EnumPerfil.Aluno);
+            //StringBuilder msg = new StringBuilder();
+            //if (!aspNetUser.Succeeded)
+            //{
+            //    foreach (var error in aspNetUser.Errors)
+            //    {
+            //        ModelState.AddModelError(string.Empty, error.Description);
+            //        msg.AppendLine(error.Description);
+            //    }
 
-            var command = new UsuarioModel.CreateUpdateUsuarioCommand
-            {
-                Email = collection["email"].ToString(),
-                Nome = collection["nome"].ToString(),
-                CpfCnpj = collection["cpf"].ToString(),
-                AspNetUserId = includedUserId,
-                AspNetRoleId = perfil.AspNetRoleId,
-                PerfilId = perfil.Id,
-                MunicipioId = (int)commandAluno.MunicipioId,
-                TipoPessoa = "pf"
-			};
-            
-            var usu = await ApiClientFactory.Instance.CreateUsuario(command);
+            //    // Se chegamos até aqui, algo falhou, exiba novamente o formulário
+            //    //return Page();
+            //    return RedirectToPage("Register", new { notify = (int)EnumNotify.Error, message = msg });
+            //}
 
-            var userRole = _roleManager.Roles.FirstOrDefault(x => x.Id == perfil.AspNetRoleId).Name;
+            //var includedUserId = _userManager.Users.FirstOrDefault(x => x.Email == newUser.Email).Id;
 
-            await _userManager.AddToRoleAsync(newUser, userRole);
+            //var perfil = ApiClientFactory.Instance.GetPerfilById((int)EnumPerfil.Aluno);
 
-            commandAluno.AspNetUserId = command.AspNetUserId;
+            //var command = new UsuarioModel.CreateUpdateUsuarioCommand
+            //{
+            //    Email = collection["email"].ToString(),
+            //    Nome = collection["nome"].ToString(),
+            //    CpfCnpj = collection["cpf"].ToString(),
+            //    //AspNetUserId = includedUserId,
+            //    AspNetRoleId = perfil.AspNetRoleId,
+            //    PerfilId = perfil.Id,
+            //    MunicipioId = (int)commandAluno.MunicipioId,
+            //    TipoPessoa = "pf"
+            //};
 
-			var alunoId = await ApiClientFactory.Instance.CreateDados(commandAluno);
-            
-            SendNewUserEmail(newUser, command.Email, command.Nome);
+            //var usu = await ApiClientFactory.Instance.CreateUsuario(command);
+
+            //var userRole = _roleManager.Roles.FirstOrDefault(x => x.Id == perfil.AspNetRoleId).Name;
+
+            //await _userManager.AddToRoleAsync(newUser, userRole);
+
+            //commandAluno.AspNetUserId = command.AspNetUserId;
+
+            var alunoId = await ApiClientFactory.Instance.CreateDados(commandAluno);
+
+            //SendNewUserEmail(newUser, command.Email, command.Nome);
 
             string returnUrl = null;
             returnUrl ??= Url.Content("~/");

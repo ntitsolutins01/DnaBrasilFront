@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using WebApp.Dto;
 
 namespace WebApp.Models
@@ -34,12 +33,12 @@ namespace WebApp.Models
         public class CreateUpdateProfissionalCommand
         {
             public int Id { get; set; }
-            public  string? AspNetUserId { get; set; }
-            public  string? Nome { get; set; }
+            public string? AspNetUserId { get; set; }
+            public string? Nome { get; set; }
             public string? DtNascimento { get; set; }
             public string? Email { get; set; }
             public string? Sexo { get; set; }
-            public  string? Cpf { get; set; }
+            public string? Cpf { get; set; }
             public string? Telefone { get; set; }
             public string? Celular { get; set; }
             public string? Endereco { get; set; }

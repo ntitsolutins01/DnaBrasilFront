@@ -9,11 +9,11 @@ using WebApp.Utility;
 
 namespace WebApp.Controllers
 {
-	/// <summary>
-	/// Controle Modulo
-	/// </summary>
-	public class ModuloController : BaseController
-	{
+    /// <summary>
+    /// Controle Modulo
+    /// </summary>
+    public class ModuloController : BaseController
+    {
         #region Parametros
 
         private readonly IOptions<UrlSettings> _appSettings;

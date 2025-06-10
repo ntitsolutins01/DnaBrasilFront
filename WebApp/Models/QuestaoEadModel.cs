@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Extensions.Primitives;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using WebApp.Dto;
 
 namespace WebApp.Models
@@ -16,7 +14,7 @@ namespace WebApp.Models
 
 
         public string AulaId { get; set; }
-        public SelectList ListAulas {get; set; }
+        public SelectList ListAulas { get; set; }
         public string ModuloEadId { get; set; }
         public SelectList ListModulosEad { get; set; }
         public string CursoId { get; set; }

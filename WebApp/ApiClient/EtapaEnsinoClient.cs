@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using WebApp.Dto;
-using WebApp.Models;
+﻿using WebApp.Dto;
 
 namespace WebApp.ApiClient
 {

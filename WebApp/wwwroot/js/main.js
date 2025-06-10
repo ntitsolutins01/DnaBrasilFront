@@ -57,8 +57,8 @@ var Site = {
                     title: title,
                     text: text,
                     type: style,
-                    //addclass: 'stack-bottomright',
-                    //stack: stack_bottomright
+                    addclass: 'stack_bar_top',
+                    stack: stack_bar_top
                 };
                 break;
             default:

@@ -1,8 +1,4 @@
-﻿using System.Collections.Specialized;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using WebApp.Data;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using WebApp.Dto;
 
 namespace WebApp.Models
@@ -28,7 +24,7 @@ namespace WebApp.Models
         public SelectList ListContratos { get; set; }
         public SelectList ListCategorias { get; set; }
 
-		public class CreateUpdateEstudanteCommand
+        public class CreateUpdateEstudanteCommand
         {
             public string Id { get; set; }
             public string Nome { get; set; }

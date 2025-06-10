@@ -1,6 +1,7 @@
-using System.Drawing.Printing;
+using Newtonsoft.Json;
 using WebApp.Dto;
 using WebApp.Models;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace WebApp.ApiClient
 {
@@ -154,7 +155,7 @@ namespace WebApp.ApiClient
         /// </summary>
         /// <param name="id">id que busca Desempenho por Aluno</param>
         /// <returns>retorna lista de Desempenho por Aluno</returns>
-        public DesempenhoDto GetDesempenhoByAluno(int id)
+        public DesempenhoDto GetDesempenhoByAluno(int? id)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
                 $"{ResourceLaudo}/Desempenho/{id}"));
@@ -173,7 +174,33 @@ namespace WebApp.ApiClient
             return GetFiltro(requestUrl, searchFilter);
         }
 
-        #endregion
+        /// <summary>
+        /// Busca Laudos Resumidos por Filtro
+        /// </summary>
+        /// <param name="searchFilter">filtro para pesquisa de Laudos Resumidos</param>
+        /// <returns>retorna a lista de Laudos Resumidos por Filtro</returns>
+        public Task<LaudosResumidosFilterDto?> GetLaudosResumidosByFilter(LaudosResumidosFilterDto searchFilter)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceLaudo}/ResumidosFilter"));
+            return GetFiltro(requestUrl, searchFilter);
+        }
+
+        /// <summary>
+        /// Processa o gabarito realizado pelo aluno
+        /// </summary>
+        /// <param name="imagemBytes">Imagem do gabarito</param>
+        /// <returns>Retorna respostas do gabarito</returns>
+        public async Task<Dictionary<string, object>> ProcessarGabarito(byte[] imagemBytes)
+        {
+            var requestUrl = CreateRequestUri($"{ResourceLaudo}/ProcessarGabarito");
+
+            return await PostDict(requestUrl, imagemBytes);
+        }
 
     }
+
+
+    #endregion
+
 }

@@ -76,7 +76,7 @@ public class AtividadeController : BaseController
 
             var linhasAcoes = new SelectList(ApiClientFactory.Instance.GetLinhasAcoesAll(), "Id", "Nome");
 
-            var categorias = new SelectList(ApiClientFactory.Instance.GetCategoriasAll().Select(s=> new { Id = s.Id, Codigo = s.Codigo + " - " + s.Nome}), "Id", "Codigo");
+            var categorias = new SelectList(ApiClientFactory.Instance.GetCategoriasAll().Select(s => new { Id = s.Id, Codigo = s.Codigo + " - " + s.Nome }), "Id", "Codigo");
 
             var model = new AtividadeModel()
             {
@@ -240,6 +240,6 @@ public class AtividadeController : BaseController
         return Task.FromResult(result);
     }
 
-    
+
     #endregion
 }

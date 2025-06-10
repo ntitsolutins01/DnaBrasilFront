@@ -1,20 +1,20 @@
 using System.Security.Claims;
+using System.Text;
+using System.Text.Encodings.Web;
+using System.Text.RegularExpressions;
+using log4net;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
-using System.Text.Encodings.Web;
+using WebApp.Authorization;
+using WebApp.Configuration;
 using WebApp.Enumerators;
 using WebApp.Factory;
+using WebApp.Identity;
 using WebApp.Models;
 using WebApp.Utility;
-using System.Text;
-using System.Text.RegularExpressions;
-using WebApp.Configuration;
-using WebApp.Identity;
-using WebApp.Authorization;
-using log4net;
 
 namespace WebApp.Controllers
 {
@@ -145,6 +145,8 @@ namespace WebApp.Controllers
                         });
                 }
 
+                var status = collection["status"].ToString();
+
                 var command = new UsuarioModel.CreateUpdateUsuarioCommand
                 {
                     Email = collection["email"].ToString(),
@@ -152,7 +154,8 @@ namespace WebApp.Controllers
                     CpfCnpj = collection["cpf"].ToString(),
                     TipoPessoa = collection["tipoPessoa"].ToString(),
                     MunicipioId = Convert.ToInt32(collection["ddlMunicipio"].ToString()),
-                    LocalidadeId = Convert.ToInt32(collection["ddlLocalidade"].ToString())
+                    LocalidadeId = Convert.ToInt32(collection["ddlLocalidade"].ToString()),
+                    Status = status != ""
                 };
 
 
@@ -271,6 +274,7 @@ namespace WebApp.Controllers
                 await _userManager.RemoveFromRoleAsync(user, currentRole.Name);
                 await _userManager.AddToRoleAsync(user, role.Name);
 
+                var status = collection["status"].ToString();
 
                 var command = new UsuarioModel.CreateUpdateUsuarioCommand
                 {
@@ -283,7 +287,8 @@ namespace WebApp.Controllers
                     AspNetUserId = usuario.AspNetUserId,
                     AspNetRoleId = perfil.AspNetRoleId,
                     MunicipioId = Convert.ToInt32(collection["ddlMunicipio"].ToString()),
-                    LocalidadeId = Convert.ToInt32(collection["ddlLocalidade"].ToString())
+                    LocalidadeId = Convert.ToInt32(collection["ddlLocalidade"].ToString()),
+                    Status = status != ""
                 };
 
                 await ApiClientFactory.Instance.UpdateUsuario(id, command);

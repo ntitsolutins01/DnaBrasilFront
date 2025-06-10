@@ -3,10 +3,10 @@
     public class AlunoDto
     {
         public int Id { get; set; }
-        public  string? AspNetUserId { get; set; }
-        public  string Nome { get; set; }
-        public  string Email { get; set; }
-        public  string DtNascimento { get; set; }
+        public string? AspNetUserId { get; set; }
+        public string Nome { get; set; }
+        public string Email { get; set; }
+        public string DtNascimento { get; set; }
         public string NomeMae { get; set; }
         public string NomePai { get; set; }
         public string Cpf { get; set; }
@@ -33,7 +33,6 @@
         //public VocacionalDto Vocaiconal { get; set; }
         public byte[]? Image { get; set; }
         public byte[]? QrCode { get; set; }
-        public string? Modalidades { get; set; }
 
         #region SearchFilter
         public string Sexo { get; set; }
@@ -49,6 +48,11 @@
         public string NomePerfil { get; set; }
         public string DescricaoPerfil { get; set; }
         public string? ModalidadesIds { get; set; }
+        public string? Modalidades { get; set; }
+        public string? SerieTurma { get; init; }
+        public string? SerieId { get; set; }
+        public string? EtapaId { get; set; }
+        public string? SerieNome { get; set; }
 
         #endregion
     }

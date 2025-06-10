@@ -1,15 +1,13 @@
-﻿using System.Collections;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Extensions.Primitives;
 using WebApp.Dto;
 
 namespace WebApp.Models
 {
-	public class NotaModel
-	{
-		public NotaDto Nota { get; set; }
-		public List<NotaDto> Notas { get; set; }
+    public class NotaModel
+    {
+        public NotaDto Nota { get; set; }
+        public List<NotaDto> Notas { get; set; }
         public SelectList ListEstados { get; set; }
         public string EstadoId { get; set; }
         public SelectList ListMunicipios { get; set; }
@@ -20,12 +18,12 @@ namespace WebApp.Models
         public string AlunoId { get; set; }
         public SelectList ListDisciplinas { get; set; }
         public string DisciplinaId { get; set; }
-       
+
 
 
         public class CreateUpdateNotaCommand
-		{
-			public int Id { get; set; }
+        {
+            public int Id { get; set; }
             public string? AlunoId { get; set; }
             public string? DisciplinaId { get; set; }
             public decimal? PrimeiroBimestre { get; set; }
@@ -41,8 +39,8 @@ namespace WebApp.Models
 
             [Column(TypeName = "decimal(10,2)")]
             public bool Status { get; set; } = true;
-           
+
         }
-	}
+    }
 
 }

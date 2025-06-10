@@ -97,7 +97,7 @@
                             <div class="col-sm-9">
                                 <input type="text" name="nome" :value="editDto.Nome" class="form-control"
                                        maxlength="150"
-                                       title="Por favor informe o nome do Tipo de Material." required/>
+                                       title="Por favor informe o nome do Grupo de Material." required/>
                             </div>
                         </div>
                     </div>
@@ -133,31 +133,31 @@
         (function ($) {
 
             'use strict';
-            var crub = @ViewBag.CrudMessage;
+            var crud = @ViewBag.CrudMessage;
 
-            if (crub === 1) {
+            if (crud === 1) {
                 new PNotify({
                     title: 'Métrica',
                     text: 'Cadastro realizado com sucesso!',
                     type: 'success'
                 });
-                crub = 0;
-            } else if (crub === 2) {
+                crud = 0;
+            } else if (crud === 2) {
                 new PNotify({
                     title: 'Métrica',
                     text: 'Dados alterados com sucesso.',
                     type: 'warning',
                     icon: 'fa fa-pencil'
                 });
-                crub = 0;
-            } else if (crub === 3) {
+                crud = 0;
+            } else if (crud === 3) {
                 new PNotify({
                     title: 'Métrica',
                     text: 'Registro excluído com sucesso.',
                     type: 'error',
                     icon: 'fa fa-trash-o'
                 });
-                crub = 0;
+                crud = 0;
             }
 
 
@@ -170,21 +170,21 @@
                     text: messagem,
                     type: 'success'
                 });
-                crub = 0;
+                crud = 0;
             } else if (notify === 1) {
                 new PNotify({
                     title: 'Métrica',
                     text: messagem,
                     type: 'warning'
                 });
-                crub = 0;
+                crud = 0;
             } else if (notify === 2) {
                 new PNotify({
                     title: 'Métrica',
                     text: messagem,
                     type: 'error'
                 });
-                crub = 0;
+                crud = 0;
             }
 
             if ($.isFunction($.fn['tooltip'])) {

@@ -1,10 +1,10 @@
 var vm = new Vue({
     el: "#vLaudo",
     data: {
-        loading: false,
+        loading: false
     },
     mounted: function () {
-        var self = this;
+
         (function ($) {
             'use strict';
 
@@ -37,8 +37,13 @@ var vm = new Vue({
 
                     var datatableInit = function () {
 
+                        $('#datatable-default').DataTable().destroy();
+
                         $('#datatable-default').dataTable({
-                            order: [[0, 'desc']],
+                            order: [[2, 'asc']],
+                            rowGroup: {
+                                dataSrc: 2
+                            },
                             dom: '<"row"<"col-lg-6"l><"col-lg-6"f>><"table-responsive"t>p',
                             "language": {
                                 "sEmptyTable": "Nenhum registro encontrado",
@@ -159,6 +164,7 @@ var vm = new Vue({
                         });
                 });
 
+                //clique de escolha do select
                 $("#ddlLocalidade").change(function () {
                     var id = $("#ddlLocalidade").val();
 
@@ -187,6 +193,223 @@ var vm = new Vue({
                             }
                         });
                 });
+
+                //clique de escolha do select
+                $("#ddlEstadoGabarito").change(function () {
+                    var sigla = $("#ddlEstadoGabarito").val();
+
+                    var url = "../../DivisaoAdministrativa/GetMunicipioByUf?uf=" + sigla;
+
+                    $.getJSON(url,
+                        function (data) {
+                            if (data.length > 0) {
+                                var items = '<option value="">Selecionar Municipio</option>';
+                                $("#ddlMunicipioGabarito").empty;
+                                $.each(data,
+                                    function (i, row) {
+                                        items += "<option value='" + row.value + "'>" + row.text + "</option>";
+                                    });
+                                $("#ddlMunicipioGabarito").html(items);
+                            }
+                            else {
+                                new PNotify({
+                                    title: 'Estado',
+                                    text: data,
+                                    type: 'warning'
+                                });
+                            }
+                        });
+                });
+
+                //clique de escolha do select
+                $("#ddlMunicipioGabarito").change(function () {
+                    var id = $("#ddlMunicipioGabarito").val();
+
+                    var url = "../../Localidade/GetLocalidadeByMunicipio?id=" + id;
+
+                    $.getJSON(url,
+                        function (data) {
+                            if (data.length > 0) {
+                                var items = '<option value="">Selecionar Localidade</option>';
+                                $("#ddlLocalidadeGabarito").empty;
+                                $.each(data,
+                                    function (i, row) {
+                                        items += "<option value='" + row.value + "'>" + row.text + "</option>";
+                                    });
+                                $("#ddlLocalidadeGabarito").html(items);
+                            }
+                            else {
+                                new PNotify({
+                                    title: 'Localidades',
+                                    text: 'Localidades não encontradas.',
+                                    type: 'warning'
+                                });
+                            }
+                        });
+                });
+
+                //clique de escolha do select
+                $("#ddlLocalidadeGabarito").change(function () {
+
+                    var localidadeId = $("#ddlLocalidadeGabarito").val();
+                    var gabarito = $("#ddlGabaritoModal").select2('data')[0].id;
+
+                    //if (gabarito === "") {
+
+                    //    //Valida form para Impressão do Gabarito
+                    //    $("#formImprimirGabarito").valid();
+
+                    //    new PNotify({
+                    //        title: 'Laudo',
+                    //        text: 'Por favor selecione o gabarito',
+                    //        type: 'warning'
+                    //    });
+                    //    return;
+                    //}
+
+                    var etapaId = 0;
+                    var serie = "";
+
+                    switch (gabarito) {
+                        case "3LP":
+                        case "3MT":
+                            etapaId = 3;
+                            serie = "3ª SÉRIE";
+                            break;
+                        case "5LP":
+                        case "5MT":
+                            etapaId = 1;
+                            serie = "5º ANO";
+                            break;
+                        case "9LP":
+                        case "9MT":
+                            etapaId = 2;
+                            serie = "9º ANO";
+                            break;
+                    }
+
+                    var url = "../../Serie/GetTurmasByLocalidadeIdEtapaIdSerie/";
+
+                    axios.get(url, {
+                        params: {
+                            localidadeId: localidadeId,
+                            etapaId: etapaId,
+                            serie: serie
+                        }
+                    }).then(result => {
+                        if (result.data && result.data.length > 0) {
+                            var items = '<option value="">Selecionar Turma</option>';
+                            $("#ddlTurma").empty;
+                            $.each(result.data,
+                                function (i, row) {
+                                    items += "<option value='" + row.value + "'>" + row.text + "</option>";
+                                });
+                            $("#ddlTurma").html(items);
+                        } else {
+                            new PNotify({
+                                title: 'Aluno',
+                                text: 'Turmas não encontradas.',
+                                type: 'warning'
+                            });
+                        }
+                    }).catch(error => {
+                        Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
+                    }).finally(function () {
+                        // sempre será executado
+                    });
+                });
+
+                //Valida form para Impressão do Gabarito
+                $("#formImprimirGabarito").validate({
+                    highlight: function (label) {
+                        $(label).closest('.form-group').removeClass('has-success').addClass('has-error');
+                    },
+                    success: function (label) {
+                        $(label).closest('.form-group').removeClass('has-error');
+                        label.remove();
+                    },
+                    errorPlacement: function (error, element) {
+                        var placement = element.closest('.input-group');
+                        if (!placement.get(0)) {
+                            placement = element;
+                        }
+                        if (error.text() !== '') {
+                            placement.after(error);
+                        }
+                    }
+                });
+
+                //Valida form para Upload do Gabarito
+                $("#formUploadGabarito").validate({
+                    highlight: function (label) {
+                        $(label).closest('.form-group').removeClass('has-success').addClass('has-error');
+                    },
+                    success: function (label) {
+                        $(label).closest('.form-group').removeClass('has-error');
+                        label.remove();
+                    },
+                    errorPlacement: function (error, element) {
+                        var placement = element.closest('.input-group');
+                        if (!placement.get(0)) {
+                            placement = element;
+                        }
+                        if (error.text() !== '') {
+                            placement.after(error);
+                        }
+                    }
+                });
+
+                // Código para processar o gabarito antes de liberar o upload
+                $("#btnProcessarGabarito").click(function (e) {
+                    e.preventDefault();
+                    var fileInput = $("#arquivo")[0];
+                    var file = fileInput.files[0];
+                    if (!file) {
+                        alert("Selecione um arquivo de gabarito!");
+                        return;
+                    }
+                    var formData = new FormData();
+                    formData.append("imagem", file);
+
+                    $("#respostasReconhecidas").html("<span class='text-info'>Processando, aguarde...</span>");
+                    $("#btnProcessarGabarito").prop("disabled", true);
+
+                    $.ajax({
+                        url: "../Laudo/ProcessarGabarito",
+                        type: "POST",
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: function (res) {
+                            var html = "<b>Matrícula reconhecida:</b> " + (res.matricula || "<i>Não reconhecida</i>") + "<br/><b>Respostas:</b><ul>";
+                            if (res.respostas) { 
+                                for (var q in res.respostas) {
+                                    html += "<li><b>Questão " + q + "</b>: " + res.respostas[q] + "</li>";
+                                }
+                                html += "</ul>";
+                                $("#respostasReconhecidas").html(html);
+                                $("#btnSalvarGabarito").prop("disabled", false);
+                            } else if (res.erro) {
+                                $("#respostasReconhecidas").html("<span class='text-danger'>" + res.erro + "</span>");
+                            }
+                        },
+                        error: function () {
+                            $("#respostasReconhecidas").html("<span class='text-danger'>Erro ao processar gabarito!</span>");
+                        },
+                        complete: function () {
+                            $("#btnProcessarGabarito").prop("disabled", false);
+                        }
+                    });
+                });
+
+                // Impede o submit antes de processar
+                $("#formUploadGabarito").submit(function (e) {
+                    if ($("#btnSalvarGabarito").is(":disabled")) {
+                        e.preventDefault();
+                        alert("Primeiro processe o gabarito antes de salvar!");
+                    }
+                });
+
             }
 
             if (formid === "formEditLaudo") {
@@ -333,6 +556,42 @@ var vm = new Vue({
                 //mascara dos inputs 
                 var $numeric2 = $(".numeric2");
                 $numeric2.mask('00', { reverse: false });
+
+                // Configuração para campos de peso com separador decimal (000.00)
+                $(".numeric-peso").mask('000.00', {
+                    reverse: true,
+                    translation: {
+                        '.': { pattern: /[.]/, fallback: '.' },
+                        placeholder: "000.00"
+                    }
+                });
+
+                // Configuração para campos com duas casas antes do decimal (00.00)
+                $(".numeric-tempo").mask('00.00', {
+                    reverse: true,
+                    translation: {
+                        '.': { pattern: /[.]/, fallback: '.' },
+                        placeholder: "00.00"
+                    }
+                });
+
+                // Manter compatibilidade com código existente
+                $(".numeric").mask('000.00', {
+                    reverse: true,
+                    translation: {
+                        '.': { pattern: /[.]/, fallback: '.' },
+                        placeholder: "000.00"
+                    }
+                });
+
+                // Configuração correta para campos de peso com separador decimal
+                $(".numeric").mask('000.00', {
+                    reverse: true,
+                    translation: {
+                        '.': { pattern: /[.]/, fallback: '.' },
+                        placeholder: "000.00"
+                    }
+                });
 
                 $("#formEditLaudo").validate({
                     rules: {
@@ -564,18 +823,44 @@ var vm = new Vue({
                         function (data) {
                             $("#divIdade").show();
                             $("#spanIdade").text(data + " anos");
-                            if (data < 12) {
-                                $("#liQualidade").hide();
-                            }
-                            if (data < 14) {
+                            if (data >= 12) {
+                                $("#liQualidade").show();
                                 $("#liVocacional").hide();
                             }
+                            if (data >= 14) {
+                                $("#liQualidade").show();
+                                $("#liVocacional").show();
+                            }
+                            if (data <= 11) {
+                                $("#liQualidade").hide();
+                                $("#liVocacional").hide();
+                                $("#liEducacional3Lp").hide();
+                            }
+                                //$("#liEducacional3Lp").show();
                         });
                 });
 
                 //mascara dos inputs 
-                var $numeric = $(".numeric");
-                $numeric.mask('00.00', { reverse: false });
+                var $numeric2 = $(".numeric2");
+                $numeric2.mask('00', { reverse: false });
+
+                // Configuração para campos de peso com separador decimal (000.00)
+                $(".numeric").mask('000.00', {
+                    reverse: true,
+                    translation: {
+                        '.': { pattern: /[.]/, fallback: '.' },
+                        placeholder: "000.00"
+                    }
+                });
+
+                // Adicionar configuração para campos de tempo e valores menores (00.00)
+                $(".numeric-tempo").mask('00.00', {
+                    reverse: true,
+                    translation: {
+                        '.': { pattern: /[.]/, fallback: '.' },
+                        placeholder: "00.00"
+                    }
+                });
 
                 $("#formLaudo").validate({
                     rules: {

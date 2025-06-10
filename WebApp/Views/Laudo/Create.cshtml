@@ -1,438 +1,483 @@
 @model LaudoModel
 @{
-    ViewData["Title"] = "CreateLaudo";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+	ViewData["Title"] = "CreateLaudo";
+	Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <div class="row" id="vLaudo">
-    <div class="col-md-12">
-        @using (@Html.BeginForm("Create", "Laudo", FormMethod.Post, new { id = "formLaudo", @class = "form-horizontal" }))
-        {
-            <section class="panel">
-                <header class="panel-heading">
-                    <div class="panel-actions">
-                        <a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
-                    </div>
+	<div class="col-md-12">
+		@using (@Html.BeginForm("Create", "Laudo", FormMethod.Post, new { id = "formLaudo", @class = "form-horizontal" }))
+		{
+			<section class="panel">
+				<header class="panel-heading">
+					<div class="panel-actions">
+						<a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
+					</div>
 
-                    <h2 class="panel-title">Cadastro de Laudo do Aluno</h2>
-                </header>
-                <div class="panel-body">
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label text-sm-right pt-2">Estado <span class="required">*</span></label>
-                            <div class="col-md-4">
-                                <select class="form-control populate select2" name="ddlEstado" id="ddlEstado"
-                                        title="Por favor informe um Estado." required
-                                        asp-for="EstadoId" asp-items="Model.ListEstados">
-                                    <option value="">Selecionar Estado</option>
-                                </select>
-                            </div>
-                            <label class="col-sm-2 control-label text-sm-right pt-2">Município <span class="required">*</span></label>
-                            <div class="col-md-4">
-                                <select class="form-control populate select2" name="ddlMunicipio" id="ddlMunicipio"
-                                        title="Por favor informe um Municipio." required
-                                        asp-for="MunicipioId" asp-items="Model.ListMunicipios">
-                                    <option value="">Selecionar Município</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label text-sm-right pt-2">Localidade <span class="required">*</span></label>
-                            <div class="col-md-4">
-                                <select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade"
-                                        title="Por favor informe a localidade." required
-                                        asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
-                                    <option value="">Selecionar Localidade</option>
-                                </select>
-                            </div>
-                            <label class="col-sm-2 control-label text-sm-right pt-2">Profissional <span class="required">*</span></label>
-                            <div class="col-md-4">
-                                <select class="form-control populate select2" name="ddlProfissional" id="ddlProfissional"
-                                        title="Por favor informe o profissional." required
-                                        asp-for="ProfissionalId" asp-items="Model.ListProfissionais">
-                                    <option value="">Selecionar Profissional</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label text-sm-right pt-2">Aluno <span class="required">*</span></label>
-                            <div class="col-md-4">
-                                <select class="form-control populate select2" name="ddlAluno" id="ddlAluno"
-                                        title="Por favor informe um Aluno." required
-                                        asp-for="AlunoId" asp-items="Model.ListAlunos">
-                                    <option value="">Selecionar Aluno</option>
-                                </select>
-                            </div>
-                            <div id="divIdade" style="display: none">
-                                <label class="col-sm-2 control-label text-sm-right pt-2">Idade </label>
-                                <div class="col-md-4" style="padding-top: 6px;">
-                                    <code style="font-size: 140%;"><span id="spanIdade"></span></code>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <br /><br />
-                    <div class="col-md-12">
-                        <div class="tabs tabs-vertical tabs-left">
-                            <ul class="nav nav-tabs col-sm-2 col-xs-4">
-                                <li class="active">
-                                    <a href="#saude" data-toggle="tab" aria-expanded="false">
-                                        <i class="fa fa-heartbeat" style="color: #d2322d;"></i>
-                                        <span style="color: #d2322d;">Saúde</span>
-                                    </a>
-                                </li>
-                                <li class="">
-                                    <a href="#talento-esportivo" data-toggle="tab" aria-expanded="true">
-                                        <i class="fa fa-trophy" style="color: #ed9c28;"></i>
-                                        <span style="color: #ed9c28;">Talento Esportivo</span>
-                                    </a>
-                                </li>
-                                <li class="">
-                                    <a href="#consumo-alimentar" data-toggle="tab" aria-expanded="false">
-                                        <i class="fa fa-cutlery" style="color: #47a447;"></i>
-                                        <span style="color: #47a447;">Consumo Alimentar</span>
-                                    </a>
-                                </li>
-                                <li class="">
-                                    <a href="#saude-bucal"
-                                       data-toggle="tab" aria-expanded="false">
-                                        <i class="fa fa-medkit" style="color: #5bc0de;"></i>
-                                        <span style="color: #5bc0de;">Saúde Bucal</span>
-                                    </a>
-                                </li>
+					<h2 class="panel-title">Cadastro de Laudo do Aluno</h2>
+				</header>
+				<div class="panel-body">
+					<div class="col-md-12">
+						<div class="form-group">
+							<label class="col-sm-2 control-label text-sm-right pt-2">Estado <span class="required">*</span></label>
+							<div class="col-md-4">
+								<select class="form-control populate select2" name="ddlEstado" id="ddlEstado"
+										title="Por favor informe um Estado." required
+										asp-for="EstadoId" asp-items="Model.ListEstados">
+									<option value="">Selecionar Estado</option>
+								</select>
+							</div>
+							<label class="col-sm-2 control-label text-sm-right pt-2">Município <span class="required">*</span></label>
+							<div class="col-md-4">
+								<select class="form-control populate select2" name="ddlMunicipio" id="ddlMunicipio"
+										title="Por favor informe um Municipio." required
+										asp-for="MunicipioId" asp-items="Model.ListMunicipios">
+									<option value="">Selecionar Município</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label text-sm-right pt-2">Localidade <span class="required">*</span></label>
+							<div class="col-md-4">
+								<select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade"
+										title="Por favor informe a localidade." required
+										asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
+									<option value="">Selecionar Localidade</option>
+								</select>
+							</div>
+							<label class="col-sm-2 control-label text-sm-right pt-2">Profissional <span class="required">*</span></label>
+							<div class="col-md-4">
+								<select class="form-control populate select2" name="ddlProfissional" id="ddlProfissional"
+										title="Por favor informe o profissional." required
+										asp-for="ProfissionalId" asp-items="Model.ListProfissionais">
+									<option value="">Selecionar Profissional</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label text-sm-right pt-2">Aluno <span class="required">*</span></label>
+							<div class="col-md-4">
+								<select class="form-control populate select2" name="ddlAluno" id="ddlAluno"
+										title="Por favor informe um Aluno." required
+										asp-for="AlunoId" asp-items="Model.ListAlunos">
+									<option value="">Selecionar Aluno</option>
+								</select>
+							</div>
+							<div id="divIdade" style="display: none">
+								<label class="col-sm-2 control-label text-sm-right pt-2">Idade </label>
+								<div class="col-md-4" style="padding-top: 6px;">
+									<code style="font-size: 140%;"><span id="spanIdade"></span></code>
+								</div>
+							</div>
+						</div>
+					</div>
+					<br /><br />
+					<div class="col-md-12">
+						<div class="tabs tabs-vertical tabs-left">
+							<ul class="nav nav-tabs col-sm-2 col-xs-4">
+								<li class="active">
+									<a href="#saude" data-toggle="tab" aria-expanded="false">
+										<i class="fa fa-heartbeat" style="color: #d2322d;"></i>
+										<span style="color: #d2322d;">Saúde</span>
+									</a>
+								</li>
+								<li class="">
+									<a href="#talento-esportivo" data-toggle="tab" aria-expanded="true">
+										<i class="fa fa-trophy" style="color: #ed9c28;"></i>
+										<span style="color: #ed9c28;">Talento Esportivo</span>
+									</a>
+								</li>
+								<li class="">
+									<a href="#consumo-alimentar" data-toggle="tab" aria-expanded="false">
+										<i class="fa fa-cutlery" style="color: #47a447;"></i>
+										<span style="color: #47a447;">Consumo Alimentar</span>
+									</a>
+								</li>
+								<li class="">
+									<a href="#saude-bucal"
+									   data-toggle="tab" aria-expanded="false">
+										<i class="fa fa-medkit" style="color: #5bc0de;"></i>
+										<span style="color: #5bc0de;">Saúde Bucal</span>
+									</a>
+								</li>
 
-                                <li class="" id="liQualidade">
-                                    <a href="#qualidade-vida" data-toggle="tab" aria-expanded="false">
-                                        <i class="fa fa-thumbs-up" style="color: #00a4a9;"></i>
-                                        <span style="color: #00a4a9;">Qualidade de Vida</span>
-                                    </a>
-                                </li>
+								<li class="" id="liQualidade" style="display: none;">
+									<a href="#qualidade-vida" data-toggle="tab" aria-expanded="false">
+										<i class="fa fa-thumbs-up" style="color: #00a4a9;"></i>
+										<span style="color: #00a4a9;">Qualidade de Vida</span>
+									</a>
+								</li>
 
-                                <li class="" id="liVocacional">
-                                    <a href="#vocacional"
-                                       data-toggle="tab" aria-expanded="false">
-                                        <i class="fa fa-star" style="color: #9c27b0;"></i>
-                                        <span style="color: #9c27b0;">Vocacional</span>
-                                    </a>
-                                </li>
-                            </ul>
-                            <div class="tab-content">
-                                <!-- CAMPO DE SAÚDE -->
-                                <div id="saude" class="tab-pane active">
-                                    <div class="row form-group">
-                                        <div>
-                                            <label class="col-sm-2 control-label"><strong>Altura (cm) </strong></label>
-                                            <div class="col-sm-4">
-                                                <input type="number" class="form-control" id="alturaSaude" name="alturaSaude" maxlength="3" placeholder="000"
-                                                       required title="Favor informe Altura (cm)" />
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <label class="col-sm-3 control-label"><strong>Massa Corporal (kg) </strong></label>
-                                            <div class="col-sm-3">
-                                                <input type="text" class="form-control numeric2" id="massaCorporalSaude" name="massaCorporalSaude" maxlength="5" placeholder="00.00"
-                                                       required title="Favor informe Massa Corporal (kg)" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row form-group">
-                                        <div>
-                                            <label class="col-sm-2 control-label"><strong>Envergadura (cm)</strong></label>
-                                            <div class="col-sm-4">
-                                                <input type="number" class="form-control" id="envergaduraSaude" name="envergaduraSaude" maxlength="3" placeholder="000"
-                                                       required title="Favor informe Envergadura (cm)" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- CAMPO DE TALENTO ESPORTIVO -->
-                                <div id="talento-esportivo" class="tab-pane">
-                                    <div class="row form-group">
-                                        <div>
-                                            <label class="col-sm-2 control-label"><strong>Altura (cm) </strong></label>
-                                            <div class="col-sm-3">
-                                                <input type="number" class="form-control" id="altura" name="altura" maxlength="3" placeholder="000"
-                                                       required title="Favor informe Altura (cm)" />
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <label class="col-sm-3 control-label"><strong>Massa Corporal (kg)</strong></label>
-                                            <div class="col-sm-3">
-                                                <input type="number" class="form-control" id="massaCorporal" name="massaCorporal" maxlength="5" placeholder="00.00"
-                                                       required title="Favor informe Massa Corporal (kg)" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row form-group">
-                                        <div>
-                                            <label class="col-sm-2 control-label"><strong>Preensão Manual (kg)</strong></label>
-                                            <div class="col-sm-3">
-                                                <input type="number" class="form-control" id="preensaoManual" name="preensaoManual" maxlength="2" placeholder="00"
-                                                       required title="Favor informe Preensão Manual (kg)" />
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <label class="col-sm-3 control-label"><strong>Flexibilidade (cm)</strong></label>
-                                            <div class="col-sm-3">
-                                                <input type="number" class="form-control" id="flexibilidade" name="flexibilidade" maxlength="3" placeholder="000"
-                                                       required title="Favor informe Flexibilidade (cm)" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row form-group">
-                                        <div>
-                                            <label class="col-sm-2 control-label"><strong>Impulsão Horizontal (cm)</strong></label>
-                                            <div class="col-sm-3">
-                                                <input type="number" class="form-control" id="impulsaoHorizontal" name="impulsaoHorizontal" maxlength="3" placeholder="000"
-                                                       required title="Favor informe Impulsão Horizontal (cm)" />
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <label class="col-sm-3 control-label"><strong>Teste de Velocidade 20m (seg)</strong></label>
-                                            <div class="col-sm-3">
-                                                <div class="input-group">
-                                                    <span class="input-group-addon">
-                                                        <i class="fa fa-clock-o"></i>
-                                                    </span>
-                                                    @* <input type="text" id="testeVelocidade" name="testeVelocidade" value="00:00" data-plugin-timepicker class="form-control" data-plugin-options='{ "showMeridian": false, "explicitMode": true, "setDefaultTime": false }'> *@
-                                                    <input type="text" class="form-control numeric" id="testeVelocidade" name="testeVelocidade" maxlength="5" placeholder="00.00"
-                                                           required title="Favor informe Teste de Velocidade 20m (seg)" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row form-group">
-                                        <div>
-                                            <label class="col-sm-2 control-label"><strong>Aptidão Física (mLO2/min)</strong></label>
-                                            <div class="col-sm-3">
-                                                <input type="text" class="form-control numeric" id="aptidaoFisica" name="aptidaoFisica" maxlength="5" placeholder="00.00"
-                                                       required title="Favor informe Aptidão Física (mLO2/min)" />
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <label class="col-sm-3 control-label"><strong>Agilidade (seg)</strong></label>
-                                            <div class="col-sm-3">
-                                                <div class="input-group">
-                                                    <span class="input-group-addon">
-                                                        <i class="fa fa-clock-o"></i>
-                                                    </span>
-                                                    @* <input type="text" id="agilidade" name="agilidade" value="00:00" data-plugin-timepicker class="form-control" data-plugin-options='{ "showMeridian": false, "explicitMode": true , "setDefaultTime": false }'> *@
-                                                    <input type="text" class="form-control numeric" id="agilidade" name="agilidade" maxlength="5" placeholder="00.00"
-                                                           required title="Favor informe Agilidade (seg)" />
+								<li class="" id="liVocacional" style="display: none;">
+									<a href="#vocacional"
+									   data-toggle="tab" aria-expanded="false">
+										<i class="fa fa-star" style="color: #9c27b0;"></i>
+										<span style="color: #9c27b0;">Vocacional</span>
+									</a>
+								</li>
 
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row form-group">
-                                        <div>
-                                            <label class="col-sm-2 control-label"><strong>Abdominal</strong></label>
-                                            <div class="col-sm-3">
-                                                <div class="radio-custom radio-success">
-                                                    <input id="abdominalSim" name="rdbAbdominal" type="radio" value="true" required title="Por favor selecione uma opção." />
-                                                    <label for="abdominalSim">Sim</label>
-                                                </div>
-                                                <div class="radio-custom radio-danger">
-                                                    <input id="abdominalNao" name="rdbAbdominal" type="radio" value="false" required title="Por favor selecione uma opção." />
-                                                    <label for="abdominalNao">Não</label>
-                                                </div>
-                                                <label class="error" for="rdbAbdominal"></label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- CAMPO DE VOCACIONAL -->
-                                <div id="vocacional" class="tab-pane">
-                                    @for (var index = 0; index < Model.ListQuestionarioVocacional.Count; index++)
-                                    {
-                                        var item = Model.ListQuestionarioVocacional[index];
-                                        <div class="form-group">
-                                            <div class="col-sm-12">
-                                                <label class="control-label">
-                                                    <strong>@item.Questao - @item.Pergunta</strong>
-                                                </label>
-                                                <input type="hidden" id="perguntaVocacional_@item.Id" />
-                                            </div>
-                                            <div class="col-sm-12">
-                                                @foreach (var resp in @item.Respostas)
-                                                {
-                                                    <div class="radio-custom radio-default col-sm-3">
-                                                        <input id="respVocacional_@resp.Id" name="nomeRespVocacional_@index" type="radio" value="@resp.Id"
-                                                               required title="Por favor selecione uma opção." />
-                                                        <label for="respVocacional_@resp.Id">@resp.RespostaQuestionario</label>
-                                                    </div>
-                                                }
-                                                <label class="error" for="nomeRespVocacional_@index"></label>
-                                            </div>
-                                        </div>
-                                    }
+								@* <li class="" id="liEducacional3Lp" style="display: none;">
+									<a href="#educacional3Lp"
+									   data-toggle="tab" aria-expanded="false">
+										<i class="fa fa-file-text" style="color: #78909c;"></i>
+										<span style="color: #78909c;">Educacional</span>
+									</a>
+								</li> *@
+							</ul>
+							<div class="tab-content">
+								<!-- CAMPO DE SAÚDE -->
+								<div id="saude" class="tab-pane active">
+									<div class="row form-group">
+										<div>
+											<label class="col-sm-2 control-label"><strong>Altura (cm) </strong></label>
+											<div class="col-sm-4">
+												<input type="number" class="form-control" id="alturaSaude" name="alturaSaude" maxlength="3" placeholder="000"
+													   required title="Favor informe Altura (cm)" />
+											</div>
+										</div>
+										<div>
+											<label class="col-sm-3 control-label"><strong>Massa Corporal (kg) </strong></label>
+											<div class="col-sm-3">
+												<input type="text" class="form-control numeric" id="massaCorporalSaude" name="massaCorporalSaude"
+													   maxlength="6" placeholder="000.00" required
+													   title="Favor informe Massa Corporal (kg)" />
+											</div>
+										</div>
+									</div>
+									<div class="row form-group">
+										<div>
+											<label class="col-sm-2 control-label"><strong>Envergadura (cm)</strong></label>
+											<div class="col-sm-4">
+												<input type="number" class="form-control" id="envergaduraSaude" name="envergaduraSaude" maxlength="3" placeholder="000"
+													   required title="Favor informe Envergadura (cm)" />
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- CAMPO DE TALENTO ESPORTIVO -->
+								<div id="talento-esportivo" class="tab-pane">
+									<div class="row form-group">
+										<div>
+											<label class="col-sm-2 control-label"><strong>Altura (cm) </strong></label>
+											<div class="col-sm-3">
+												<input type="number" class="form-control" id="altura" name="altura" maxlength="3" placeholder="000"
+													   required title="Favor informe Altura (cm)" />
+											</div>
+										</div>
+										<div>
+											<label class="col-sm-3 control-label"><strong>Massa Corporal (kg)</strong></label>
+											<div class="col-sm-3">
+												<input type="text" class="form-control numeric" id="massaCorporal" name="massaCorporal"
+													   maxlength="6" placeholder="000.00" required
+													   title="Favor informe Massa Corporal (kg)" />
+											</div>
+										</div>
+									</div>
+									<div class="row form-group">
+										<div>
+											<label class="col-sm-2 control-label"><strong>Preensão Manual (kg)</strong></label>
+											<div class="col-sm-3">
+												<input type="number" class="form-control" id="preensaoManual" name="preensaoManual" maxlength="2" placeholder="00"
+													   required title="Favor informe Preensão Manual (kg)" />
+											</div>
+										</div>
+										<div>
+											<label class="col-sm-3 control-label"><strong>Flexibilidade (cm)</strong></label>
+											<div class="col-sm-3">
+												<input type="number" class="form-control" id="flexibilidade" name="flexibilidade" maxlength="3" placeholder="000"
+													   required title="Favor informe Flexibilidade (cm)" />
+											</div>
+										</div>
+									</div>
+									<div class="row form-group">
+										<div>
+											<label class="col-sm-2 control-label"><strong>Impulsão Horizontal (cm)</strong></label>
+											<div class="col-sm-3">
+												<input type="number" class="form-control" id="impulsaoHorizontal" name="impulsaoHorizontal" maxlength="3" placeholder="000"
+													   required title="Favor informe Impulsão Horizontal (cm)" />
+											</div>
+										</div>
+										<div>
+											<label class="col-sm-3 control-label"><strong>Teste de Velocidade 20m (seg)</strong></label>
+											<div class="col-sm-3">
+												<div class="input-group">
+													<span class="input-group-addon">
+														<i class="fa fa-clock-o"></i>
+													</span>
+													<input type="text" class="form-control numeric-tempo" id="testeVelocidade" name="testeVelocidade"
+														   maxlength="5" placeholder="00.00" required
+														   title="Favor informe Teste de Velocidade 20m (seg)" />
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row form-group">
+										<div>
+											<label class="col-sm-2 control-label"><strong>Aptidão Física (mLO2/min)</strong></label>
+											<div class="col-sm-3">
+												<input type="text" class="form-control numeric-tempo" id="aptidaoFisica" name="aptidaoFisica"
+													   maxlength="5" placeholder="00.00" required
+													   title="Favor informe Aptidão Física (mLO2/min)" />
+											</div>
+										</div>
+										<div>
+											<label class="col-sm-3 control-label"><strong>Agilidade (seg)</strong></label>
+											<div class="col-sm-3">
+												<div class="input-group">
+													<span class="input-group-addon">
+														<i class="fa fa-clock-o"></i>
+													</span>
+													<input type="text" class="form-control numeric-tempo" id="agilidade" name="agilidade"
+														   maxlength="5" placeholder="00.00" required
+														   title="Favor informe Agilidade (seg)" />
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row form-group">
+										<div>
+											<label class="col-sm-2 control-label"><strong>Abdominal</strong></label>
+											<div class="col-sm-3">
+												<div class="radio-custom radio-success">
+													<input id="abdominalSim" name="rdbAbdominal" type="radio" value="true" required title="Por favor selecione uma opção." />
+													<label for="abdominalSim">Sim</label>
+												</div>
+												<div class="radio-custom radio-danger">
+													<input id="abdominalNao" name="rdbAbdominal" type="radio" value="false" required title="Por favor selecione uma opção." />
+													<label for="abdominalNao">Não</label>
+												</div>
+												<label class="error" for="rdbAbdominal"></label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- CAMPO DE VOCACIONAL -->
+								<div id="vocacional" class="tab-pane">
+									@for (var index = 0; index < Model.ListQuestionarioVocacional.Count; index++)
+									{
+										var item = Model.ListQuestionarioVocacional[index];
+										<div class="form-group">
+											<div class="col-sm-12">
+												<label class="control-label" style="padding-bottom: 10px;">
+													<strong>@item.Questao - @item.Pergunta</strong>
+												</label>
+												<input type="hidden" id="perguntaVocacional_@item.Id" />
+											</div>
+											<div class="col-sm-12">
+												@foreach (var resp in @item.Respostas)
+												{
+													<div class="radio-custom radio-default col-sm-12">
+														<input id="respVocacional_@resp.Id" name="nomeRespVocacional_@index" type="radio" value="@resp.Id"
+															   required title="Por favor selecione uma opção." />
+														<label for="respVocacional_@resp.Id">@resp.RespostaQuestionario</label>
+													</div>
+												}
+												<label class="error" for="nomeRespVocacional_@index"></label>
+											</div>
+										</div>
+									}
 
-                                </div>
+								</div>
 
-                                <!-- CAMPO DE QUALIDADE DE VIDA -->
-                                <div id="qualidade-vida" class="tab-pane">
-                                    @for (var index = 0; index < Model.ListQuestionarioQualidadeVida.Count; index++)
-                                    {
-                                        var item = Model.ListQuestionarioQualidadeVida[index];
-                                        <div class="form-group">
-                                            <div class="col-sm-12">
-                                                <label class="control-label">
-                                                    <strong>@item.Questao - @item.Pergunta</strong>
-                                                </label>
-                                                <input type="hidden" id="perguntaQualidadeVida_@item.Id" />
-                                            </div>
-                                            <div class="col-sm-12">
-                                                @foreach (var resp in @item.Respostas)
-                                                {
-                                                    <div class="radio-custom radio-default col-sm-2">
-                                                        <input id="respQualidadeVida_@resp.Id" name="nomeRespQualidadeVida_@index" type="radio" value="@resp.Id"
-                                                               required title="Por favor selecione uma opção." />
-                                                        <label for="respQualidadeVida_@resp.Id">@resp.RespostaQuestionario</label>
-                                                    </div>
-                                                }
-                                                <label class="error" for="nomeRespQualidadeVida_@index"></label>
-                                            </div>
-                                        </div>
-                                    }
-                                </div>
+								<!-- CAMPO DE QUALIDADE DE VIDA -->
+								<div id="qualidade-vida" class="tab-pane">
+									@for (var index = 0; index < Model.ListQuestionarioQualidadeVida.Count; index++)
+									{
+										var item = Model.ListQuestionarioQualidadeVida[index];
+										<div class="form-group">
+											<div class="col-sm-12">
+												<label class="control-label" style="padding-bottom: 10px;">
+													<strong>@item.Questao - @item.Pergunta</strong>
+												</label>
+												<input type="hidden" id="perguntaQualidadeVida_@item.Id" />
+											</div>
+											<div class="col-sm-12">
+												@foreach (var resp in @item.Respostas)
+												{
+													<div class="radio-custom radio-default col-sm-12">
+														<input id="respQualidadeVida_@resp.Id" name="nomeRespQualidadeVida_@index" type="radio" value="@resp.Id"
+															   required title="Por favor selecione uma opção." />
+														<label for="respQualidadeVida_@resp.Id">@resp.RespostaQuestionario</label>
+													</div>
+												}
+												<label class="error" for="nomeRespQualidadeVida_@index"></label>
+											</div>
+										</div>
+									}
+								</div>
 
-                                <!-- CAMPO DE CONSUMO ALIMENTAR -->
-                                <div id="consumo-alimentar" class="tab-pane">
-                                    @for (var index = 0; index < Model.ListQuestionarioConsumoAlimentar.Count; index++)
-                                    {
-                                        var item = Model.ListQuestionarioConsumoAlimentar[index];
-                                        <div class="form-group">
-                                            <div class="col-sm-12">
-                                                <label class="control-label">
-                                                    <strong>@item.Questao - @item.Pergunta</strong>
-                                                </label>
-                                                <input type="hidden" id="perguntaConsumoAlimentar_@item.Id" />
-                                            </div>
-                                            <div class="col-sm-12">
-                                                @foreach (var resp in @item.Respostas)
-                                                {
-                                                    <div class="radio-custom radio-default col-sm-3">
-                                                        <input id="respConsumoAlimentar_@resp.Id" name="nomeRespConsumoAlimentar_@index" type="radio" value="@resp.Id"
-                                                               required title="Por favor selecione uma opção." />
-                                                        <label for="respConsumoAlimentar_@resp.Id">@resp.RespostaQuestionario</label>
-                                                    </div>
-                                                }
-                                                <label class="error" for="nomeRespConsumoAlimentar_@index"></label>
-                                            </div>
-                                        </div>
-                                    }
-                                </div>
+								<!-- CAMPO DE CONSUMO ALIMENTAR -->
+								<div id="consumo-alimentar" class="tab-pane">
+									@for (var index = 0; index < Model.ListQuestionarioConsumoAlimentar.Count; index++)
+									{
+										var item = Model.ListQuestionarioConsumoAlimentar[index];
+										<div class="form-group">
+											<div class="col-sm-12">
+												<label class="control-label" style="padding-bottom: 10px;">
+													<strong>@item.Questao - @item.Pergunta</strong>
+												</label>
+												<input type="hidden" id="perguntaConsumoAlimentar_@item.Id" />
+											</div>
+											<div class="col-sm-12">
+												@foreach (var resp in @item.Respostas)
+												{
+													<div class="radio-custom radio-default col-sm-12">
+														<input id="respConsumoAlimentar_@resp.Id" name="nomeRespConsumoAlimentar_@index" type="radio" value="@resp.Id"
+															   required title="Por favor selecione uma opção." />
+														<label for="respConsumoAlimentar_@resp.Id">@resp.RespostaQuestionario</label>
+													</div>
+												}
+												<label class="error" for="nomeRespConsumoAlimentar_@index"></label>
+											</div>
+										</div>
+									}
+								</div>
 
-                                <!-- CAMPO DE SAÚDE BUCAL -->
-                                <div id="saude-bucal" class="tab-pane">
-                                    @for (var index = 0; index < Model.ListQuestionarioSaudeBucal.Count; index++)
-                                    {
-                                        var item = Model.ListQuestionarioSaudeBucal[index];
-                                        <div class="form-group">
-                                            <div class="col-sm-12">
-                                                <label class="control-label">
-                                                    <strong>@item.Questao - @item.Pergunta</strong>
-                                                </label>
-                                            </div>
-                                            <div class="col-sm-12">
-                                                @foreach (var resp in @item.Respostas)
-                                                {
-                                                    <div class="radio-custom radio-default col-sm-3">
-                                                        <input id="respSaudeBucal_@resp.Id" name="nomeRespSaudeBucal_@index" type="radio" value="@resp.Id"
-                                                               required title="Por favor selecione uma opção." />
-                                                        <label for="respSaudeBucal_@resp.Id">@resp.RespostaQuestionario</label>
-                                                    </div>
-                                                }
-                                                <label class="error" for="nomeRespSaudeBucal_@index"></label>
-                                            </div>
-                                        </div>
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <footer class="panel-footer">
-                    <div class="row">
-                        <div class="col-md-9 col-md-offset-3">
-                            <a href="@Url.Action("Index", "Laudo")" class="btn btn-dark pull-right" style="margin-left: 5px;margin-right: 5px;"><i class="fa fa-reply"></i> &nbsp;&nbsp;Voltar</a>
-                            <button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;"><i class="fa fa-remove"></i> &nbsp;&nbsp;Cancelar</button>
-                            <button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
-                        </div>
-                    </div>
-                </footer>
-            </section>
-        }
-    </div>
+								<!-- CAMPO DE SAÚDE BUCAL -->
+								<div id="saude-bucal" class="tab-pane">
+									@for (var index = 0; index < Model.ListQuestionarioSaudeBucal.Count; index++)
+									{
+										var item = Model.ListQuestionarioSaudeBucal[index];
+										<div class="form-group">
+											<div class="col-sm-12">
+												<label class="control-label" style="padding-bottom: 10px;">
+													<strong>@item.Questao - @item.Pergunta</strong>
+												</label>
+											</div>
+											<div class="col-sm-12">
+												@foreach (var resp in @item.Respostas)
+												{
+													<div class="radio-custom radio-default col-sm-12">
+														<input id="respSaudeBucal_@resp.Id" name="nomeRespSaudeBucal_@index" type="radio" value="@resp.Id"
+															   required title="Por favor selecione uma opção." />
+														<label for="respSaudeBucal_@resp.Id">@resp.RespostaQuestionario</label>
+													</div>
+												}
+												<label class="error" for="nomeRespSaudeBucal_@index"></label>
+											</div>
+										</div>
+									}
+								</div>
+
+								<!-- CAMPO DE EDUCACIONAL 3a ANO LINGUA PORTUGUESA -->
+								@* <div id="educacional3Lp" class="tab-pane">
+									@for (var index = 0; index < Model.ListQuestionarioEducacional3Lp.Count; index++)
+									{
+										var item = Model.ListQuestionarioEducacional3Lp[index];
+										<div class="form-group">
+											<div class="col-sm-12">
+												<label class="control-label"style="padding-bottom: 10px;">
+													<strong>@item.Questao - @item.Pergunta</strong>
+												</label>
+											</div><br/>
+											<div class="col-sm-12">
+												@{
+													var alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
+													for (var i = 0; i < item.Respostas.Count; i++)
+													{
+														var resp = item.Respostas[i];
+
+														<div class="input-group mb-md">
+															<span class="input-group-addon">
+																<input id="respEducacional3Lp_@(resp.Id)" name="nomeEducacional3Lp_@(index)" type="radio" value="@resp.Id"
+																       required title="Por favor selecione uma opção."/>
+															</span>
+															<span class="input-group-addon">@(alpha[i]).</span>
+															<input type="text" class="form-control" value="@resp.RespostaQuestionario" disabled>
+														</div>
+													}
+												}
+												
+											</div>
+										</div>
+										<label class="error" for="nomeRespEducacional3Lp_@(index)"></label>
+									}
+								</div> *@
+							</div>
+						</div>
+					</div>
+				</div>
+				<footer class="panel-footer">
+					<div class="row">
+						<div class="col-md-9 col-md-offset-3">
+							<a href="@Url.Action("Index", "Laudo")" class="btn btn-dark pull-right" style="margin-left: 5px;margin-right: 5px;"><i class="fa fa-reply"></i> &nbsp;&nbsp;Voltar</a>
+							<button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;"><i class="fa fa-remove"></i> &nbsp;&nbsp;Cancelar</button>
+							<button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
+						</div>
+					</div>
+				</footer>
+			</section>
+		}
+	</div>
 </div>
 
 
 @section CssSpecificVendor {
-    <link rel="stylesheet" href="~/assets/vendor/select2/css/select2.css" />
-    <link rel="stylesheet" href="~/assets/vendor/select2-bootstrap-theme/select2-bootstrap.min.css" />
-    <link rel="stylesheet" href="~/assets/vendor/datatables/media/css/dataTables.bootstrap4.css" />
+	<link rel="stylesheet" href="~/assets/vendor/select2/css/select2.css" />
+	<link rel="stylesheet" href="~/assets/vendor/select2-bootstrap-theme/select2-bootstrap.min.css" />
+	<link rel="stylesheet" href="~/assets/vendor/datatables/media/css/dataTables.bootstrap4.css" />
 }
 @section Scripts {
-    <script src="~/assets/vendor/ios7-switch/ios7-switch.js"></script>
-    <script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
-    <script src="~/assets/vendor/select2/js/select2.js"></script>
-    <script src="~/assets/vendor/jquery-mask/jquery.maskMoney.js"></script>
-    <script src="~/assets/vendor/jquery-mask/jquery.mask.js"></script>
-    <script src="~/assets/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
-    <script src="~/assets/vendor/datatables/media/js/dataTables.bootstrap4.min.js"></script>
-    <script src="~/js/formatTable.js"></script>
-    <script src="~/js/laudo.js"></script>
-    <script>
+	<script src="~/assets/vendor/ios7-switch/ios7-switch.js"></script>
+	<script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
+	<script src="~/assets/vendor/select2/js/select2.js"></script>
+	<script src="~/assets/vendor/jquery-mask/jquery.maskMoney.js"></script>
+	<script src="~/assets/vendor/jquery-mask/jquery.mask.js"></script>
+	<script src="~/assets/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
+	<script src="~/assets/vendor/datatables/media/js/dataTables.bootstrap4.min.js"></script>
+	<script src="~/js/formatTable.js"></script>
+	<script src="~/js/laudo.js"></script>
+	<script>
 
-        (function ($) {
+		(function ($) {
 
-            'use strict';
-            var crud = @ViewBag.CrudMessage;
+			'use strict';
+			var crud = @ViewBag.CrudMessage;
 
-            if (crud === 1) {
-                new PNotify({
-                    title: 'Laudo',
-                    text: 'Cadastro realizado com sucesso!',
-                    type: 'success'
-                });
-            } else if (crud === 2) {
-                new PNotify({
-                    title: 'Laudo',
-                    text: 'Dados alterados com sucesso.',
-                    type: 'warning'
-                });
-            } else if (crud === 3) {
-                new PNotify({
-                    title: 'Laudo',
-                    text: 'Registro excluído com sucesso.',
-                    type: 'error'
-                });
-            }
+			if (crud === 1) {
+				new PNotify({
+					title: 'Laudo',
+					text: 'Cadastro realizado com sucesso!',
+					type: 'success'
+				});
+			} else if (crud === 2) {
+				new PNotify({
+					title: 'Laudo',
+					text: 'Dados alterados com sucesso.',
+					type: 'warning'
+				});
+			} else if (crud === 3) {
+				new PNotify({
+					title: 'Laudo',
+					text: 'Registro excluído com sucesso.',
+					type: 'error'
+				});
+			}
 
-            var notify = @ViewBag.NotifyMessage;
-            var messagem = '@ViewBag.Notify';
+			var notify = @ViewBag.NotifyMessage;
+			var messagem = '@ViewBag.Notify';
 
-            if (notify === 0) {
-                new PNotify({
-                    title: 'Laudo',
-                    text: messagem,
-                    type: 'success'
-                });
-            } else if (notify === 1) {
-                new PNotify({
-                    title: 'Laudo',
-                    text: messagem,
-                    type: 'warning'
-                });
-            } else if (notify === 2) {
-                new PNotify({
-                    title: 'Laudo',
-                    text: messagem,
-                    type: 'error'
-                });
-            }
+			if (notify === 0) {
+				new PNotify({
+					title: 'Laudo',
+					text: messagem,
+					type: 'success'
+				});
+			} else if (notify === 1) {
+				new PNotify({
+					title: 'Laudo',
+					text: messagem,
+					type: 'warning'
+				});
+			} else if (notify === 2) {
+				new PNotify({
+					title: 'Laudo',
+					text: messagem,
+					type: 'error'
+				});
+			}
 
-        }).apply(this, [jQuery]);
-    </script>
+		}).apply(this, [jQuery]);
+	</script>
 }
 
 

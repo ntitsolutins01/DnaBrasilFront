@@ -6,7 +6,7 @@
         public string? Descricao { get; set; }
         public string? Turma { get; set; }
         public string? Serie { get; set; }
-        public  int AlunoId { get; set; }
+        public int AlunoId { get; set; }
 
     }
 }

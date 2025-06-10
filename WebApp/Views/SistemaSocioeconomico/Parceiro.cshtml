@@ -70,11 +70,11 @@
                             <td class="actions text-center">
                                 <a data-toggle="tooltip" data-placement="top" title="Editar" asp-action="EditParceiro" asp-controller="SistemaSocioeconomico"
                                    asp-route-id="@item.Id" class="on-default edit-row" style='color: #FF9800'><i class="fa fa-pencil"></i></a>
-                                @if (item.Alunos!.Any())
-                                {
+                                @* @if (item.Alunos!.Any())
+                                { *@
                                     <a data-toggle="tooltip" data-placement="top" title="Lista de alunos solicitados" href='javascript:(crud.PendentesModal(@item.Id))'
                                        class="on-default remove-row" style="cursor: pointer;color: #43A047 "><i class="fa fa-group"></i></a>
-                                }
+                                @* } *@
                                 
                                 @if (!item.Habilitado)
                                 {
@@ -222,22 +222,22 @@
         (function ($) {
 
             'use strict';
-            var crub = @ViewBag.CrudMessage;
+            var crud = @ViewBag.CrudMessage;
 
-            if (crub === 1) {
+            if (crud === 1) {
                 new PNotify({
                     title: 'Parceiro',
                     text: 'Cadastro realizado com sucesso!',
                     type: 'success'
                 });
-            } else if (crub === 2) {
+            } else if (crud === 2) {
                 new PNotify({
                     title: 'Parceiro',
                     text: 'Dados alterados com sucesso.',
                     type: 'warning',
                     icon: 'fa fa-pencil'
                 });
-            } else if (crub === 3) {
+            } else if (crud === 3) {
                 new PNotify({
                     title: 'Parceiro',
                     text: 'Registro excluído com sucesso.',
@@ -256,21 +256,21 @@
                     text: messagem,
                     type: 'success'
                 });
-                crub = 0;
+                crud = 0;
             } else if (notify === 1) {
                 new PNotify({
                     title: 'Parceiro',
                     text: messagem,
                     type: 'warning'
                 });
-                crub = 0;
+                crud = 0;
             } else if (notify === 2) {
                 new PNotify({
                     title: 'Parceiro',
                     text: messagem,
                     type: 'error'
                 });
-                crub = 0;
+                crud = 0;
             }
             if ($.isFunction($.fn['tooltip'])) {
                 $('[data-toggle=tooltip],[rel=tooltip]').tooltip({ container: 'body' });

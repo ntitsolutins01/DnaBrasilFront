@@ -5,6 +5,7 @@
         public int Id { get; set; }
         public string AspNetUserId { get; set; }
         public string Nome { get; set; }
+        public string? NomeAluno { get; set; }
         public string Email { get; set; }
         public string DtNascimento { get; set; }
         public bool Status { get; set; }
@@ -14,14 +15,14 @@
         public byte[] ByteImage { get; set; }
         public byte[] QrCode { get; set; }
         public string ModalidadeLinhaAcao { get; set; }
-
+        public string? SerieTurma { get; set; }
         public string MunicipioEstado { get; set; }
         public string NomeLocalidade { get; set; }
 
         public MunicipioDto Municipio { get; set; }
         public LocalidadeDto Localidade { get; set; }
         public bool Convidado { get; set; }
-        public bool PossuiLaudo { get; set; }
+        public bool PossuiLaudoFinalizado { get; set; }
         public string? Modalidades { get; set; }
 
         #region SearchFilter

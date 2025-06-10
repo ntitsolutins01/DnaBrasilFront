@@ -18,7 +18,7 @@ namespace WebApp.Areas.Identity.Pages.Account
 
         [BindProperty] public InputModel Input { get; set; }
 
-        public IActionResult OnGet(string code = null, string email=null)
+        public IActionResult OnGet(string code = null, string email = null)
         {
             //if (code == null)
             //{
@@ -38,7 +38,7 @@ namespace WebApp.Areas.Identity.Pages.Account
         }
 
         public async Task<IActionResult> OnPostAsync()
-         {
+        {
             if (!ModelState.IsValid) return Page();
 
             var user = await _userManager.FindByEmailAsync(Input.Email);
@@ -70,7 +70,8 @@ namespace WebApp.Areas.Identity.Pages.Account
             public string Password { get; set; }
 
             [DataType(DataType.Password)]
-            [Display(Name = "Confirm password")] [Compare("Password", ErrorMessage = "As senhas informadas não conferem.")]
+            [Display(Name = "Confirm password")]
+            [Compare("Password", ErrorMessage = "As senhas informadas não conferem.")]
             public string ConfirmPassword { get; set; }
 
             public string Code { get; set; }

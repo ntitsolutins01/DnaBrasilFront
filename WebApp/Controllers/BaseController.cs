@@ -1,10 +1,6 @@
-﻿using Infraero.Relprev.CrossCutting.Enumerators;
+﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
-using WebApp.Authorization;
 using WebApp.Enumerators;
-using WebApp.Factory;
-using WebApp.Identity;
 using WebApp.Models;
 
 namespace WebApp.Controllers

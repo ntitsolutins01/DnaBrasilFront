@@ -121,7 +121,6 @@
                 </section>
             </div>
         </div>
-
         <div class="row">
             <div class="col-lg-12">
                 <section class="panel">
@@ -328,7 +327,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                @using (@Html.BeginForm("Imprimir", "ControlePresenca", FormMethod.Post, new { id = "formImprimir", @class = "form-horizontal" }))
+                @using (@Html.BeginForm("ImprimirFrequencia", "ControlePresenca", FormMethod.Post, new { id = "formImprimir", @class = "form-horizontal" }))
                 {
                     <div class="modal-body">
                         <input type="hidden" id="itemId" name="itemId" />
@@ -404,31 +403,31 @@
         (function ($) {
 
             'use strict';
-            var crub = @ViewBag.CrudMessage;
+            var crud = @ViewBag.CrudMessage;
 
-            if (crub === 1) {
+            if (crud === 1) {
                 new PNotify({
                     title: 'Controle de Presenca',
                     text: 'Cadastro realizado com sucesso!',
                     type: 'success'
                 });
-                crub = 0;
-            } else if (crub === 2) {
+                crud = 0;
+            } else if (crud === 2) {
                 new PNotify({
                     title: 'ControlePresenca',
                     text: 'Dados alterados com sucesso.',
                     type: 'warning',
                     icon: 'fa fa-pencil'
                 });
-                crub = 0;
-            } else if (crub === 3) {
+                crud = 0;
+            } else if (crud === 3) {
                 new PNotify({
                     title: 'ControlePresenca',
                     text: 'Registro excluído com sucesso.',
                     type: 'error',
                     icon: 'fa fa-trash-o'
                 });
-                crub = 0;
+                crud = 0;
             }
 
 
@@ -441,21 +440,21 @@
                     text: messagem,
                     type: 'success'
                 });
-                crub = 0;
+                crud = 0;
             } else if (notify === 1) {
                 new PNotify({
                     title: 'ControlePresenca',
                     text: messagem,
                     type: 'warning'
                 });
-                crub = 0;
+                crud = 0;
             } else if (notify === 2) {
                 new PNotify({
                     title: 'ControlePresenca',
                     text: messagem,
                     type: 'error'
                 });
-                crub = 0;
+                crud = 0;
             }
 
             if ($.isFunction($.fn['tooltip'])) {

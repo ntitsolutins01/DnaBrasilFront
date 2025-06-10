@@ -1,6 +1,4 @@
-﻿using System.Collections;
-
-namespace WebApp.Dto
+﻿namespace WebApp.Dto
 {
     public class QuestionarioDto
     {

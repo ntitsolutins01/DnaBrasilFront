@@ -1,19 +1,16 @@
-﻿using System.Collections;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Extensions.Primitives;
-using WebApp.Dto;
+﻿using WebApp.Dto;
 
 namespace WebApp.Models
 {
-	public class ControleAcessoAulaModel
-	{
+    public class ControleAcessoAulaModel
+    {
 
         public ControleAcessoAulaDto ControleAcessoAula { get; set; }
         public List<ControleAcessoAulaDto> ControlesAcessosAulas { get; set; }
 
         public class CreateUpdateControleAcessoAulaCommand
-		{
-			public int Id { get; set; }
+        {
+            public int Id { get; set; }
             public required int AulaId { get; init; }
             public bool IdentificacaoAluno { get; init; }
             public bool AulaRequisito { get; init; }
@@ -23,8 +20,8 @@ namespace WebApp.Models
             public required string DataLiberacao { get; init; }
             public required string DataEncerramento { get; init; }
             public bool Status { get; set; }
-           
+
         }
-	}
+    }
 
 }

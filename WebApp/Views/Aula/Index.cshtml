@@ -36,27 +36,34 @@
                         @foreach (var item in Model.Aulas)
 							{ 
 								<tr>
-									<td class="text-center" style="width:20px;">@Html.DisplayFor(modelItem => item.Id)</td>
-									<td class="text-center">@Html.DisplayFor(modelItem => item.NomeProfessor)</td>
-									<td class="text-center">@Html.DisplayFor(modelItem => item.TituloModuloEad)</td>
-									<td class="text-center">@Html.DisplayFor(modelItem => item.Titulo)</td>
-									<td class="text-center">@Html.DisplayFor(modelItem => item.Descricao)</td>
+									<td class="actions text-center" style="width:20px;">@Html.DisplayFor(modelItem => item.Id)</td>
+									<td class="actions text-center" style="width:250px;">@Html.DisplayFor(modelItem => item.NomeProfessor)</td>
+									<td class="actions text-center">@Html.DisplayFor(modelItem => item.TituloModuloEad)</td>
+									<td class="actions text-center">@Html.DisplayFor(modelItem => item.Titulo)</td>
+									<td class="actions text-center">@Html.DisplayFor(modelItem => item.Descricao)</td>
 									@if (item.Status)
 									{
-										<td class="text-center"><span class="label label-success">ATIVO</span></td>
+										<td class="actions text-center"><span class="label label-success">ATIVO</span></td>
 									}
 									else
 									{
-										<td class="text-center"><span class="label label-danger">INATIVO</span></td>
+										<td class="actions text-center"><span class="label label-danger">INATIVO</span></td>
 									}
-									<td class="actions text-center">
+									<td class="actions text-center" style="width:100px;">
+										<a data-toggle="tooltip" data-placement="top" title="Visualizar Vídeo" href='javascript:(crud.VisualizarVideoModal(@item.Id))'
+										   class="on-default info-row" style="cursor: pointer;color: #7B1FA2"><i class="fa fa-film"></i></a>
+										
+										<a href="#" data-id="@item.Id" data-toggle="modal" data-target="#mdUpload"
+										   data-toggle="tooltip" data-placement="top" title="Upload Vídeo"
+										   class="on-default edit-row" style='color: #303F9F'><i class="fa fa-upload"></i></a>
+
 										<a data-toggle="tooltip" data-placement="top" title="Editar"
 										   href='javascript:(crud.EditModal(@item.Id))'
 										   class="on-default edit-row" style='color: #FF9800'>
 											<i class="fa fa-pencil"></i>
 										</a>
 										<a data-toggle="tooltip" data-placement="top" title="Excluir" href='javascript:(crud.DeleteModal(@item.Id))'
-										   class="on-default remove-row" style="cursor: pointer;color: #F44336"><i class="fa fa-trash"></i></a>
+										   class="on-default remove-row" style="cursor: pointer; color: #F44336"><i class="fa fa-trash"></i></a>
 									</td>
 								</tr>
 								}
@@ -104,89 +111,130 @@
 				</div>
 				@using (@Html.BeginForm("Edit", "Aula", FormMethod.Post, new { id = "formEditAula", @class = "form-horizontal", @enctype = "multipart/form-data" }))
 				{
-                    <div class="modal-body">
-                        <input type="hidden" name="editAulaId" :value="editDto.Id"/>
-                        <div class="form-group row">
-                            <label class="col-sm-3 control-label text-sm-right pt-2">Professor <span class="required">*</span></label>
-                            <div class="col-sm-9">
-                                <select class="form-control populate select2" name="ddlProfessor" id="ddlProfessor" style="width:100%"
-                                        required title="Por favor selecione o professor">
-                                    <option value="">Selecionar Professor</option>
-                                </select>
-                            </div>
-                        </div>
-                            <div class="form-group row">
-                                <label class="col-sm-3 control-label text-sm-right pt-2">Titulo da Aula <span class="required">*</span></label>
-                                <div class="col-sm-9">
-                                    <input type="text" name="nome" :value="editDto.Titulo" class="form-control"
-                                           maxlength="150"
-                                           title="Por favor informe o nome do curso." required/>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label text-sm-right pt-2">Descrição </label>
-                                <div class="col-sm-9">
-                                    <textarea class="form-control" rows="7" maxlength="500" name="descricao" v-model="editDto.Descricao" id="descricao"></textarea>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">Video</label>
-                                <div class="col-sm-9">
-                                    <div class="fileupload fileupload-new" data-provides="fileupload">
-                                        <div class="input-append">
-                                            <div class="uneditable-input">
-                                                <i class="fa fa-file fileupload-exists"></i>
-                                                <span class="fileupload-preview">{{ editDto.NomeMaterial }}</span>
-                                            </div>
-                                            <span class="btn btn-default btn-file">
-                                                <span class="fileupload-exists">Alterar</span>
-                                                <span class="fileupload-new">Selecionar Arquivo</span>
-                                                <input type="file" id="video" name="video" />
-                                            </span>
-                                            <a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload">Remover</a>
-                                        </div>
-                                        <div v-if="editDto.NomeMaterial" class="mt-2">
-                                            <code>Material Didático atual: {{ editDto.NomeMaterial }}</code>
-                                        </div>
-                                    </div>
-                                </div>
-                                <label class="col-sm-3 control-label">Material Didático</label>
-                                <div class="col-sm-9">
-                                    <div class="fileupload fileupload-new" data-provides="fileupload">
-                                        <div class="input-append">
-                                            <div class="uneditable-input">
-                                                <i class="fa fa-file fileupload-exists"></i>
-                                                <span class="fileupload-preview">{{ editDto.NomeVideo }}</span>
-                                            </div>
-                                            <span class="btn btn-default btn-file">
-                                                <span class="fileupload-exists">Alterar</span>
-                                                <span class="fileupload-new">Selecionar Arquivo</span>
-                                                <input type="file" id="arquivo" name="arquivo"/>
-                                            </span>
-                                            <a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload">Remover</a>
-                                        </div>
-                                        <div v-if="editDto.NomeMaterial" class="mt-2">
-                                            <code>Material Didático atual: {{ editDto.NomeMaterial }}</code>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-sm-3 control-label text-sm-right pt-2">Status</label>
-                                <div class="col-md-9">
-                                    <div class="switch switch-sm switch-primary">
-                                        <div v-show="editDto.Status">
-                                            <input type="checkbox" id="editStatus" name="editStatus" data-plugin-ios-switch checked="checked"/>
-                                        </div>
-                                        <div v-show="!editDto.Status">
-                                            <input type="checkbox" id="editStatus" name="editStatus" data-plugin-ios-switch/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+					<div class="modal-body">
+						<input type="hidden" name="editAulaId" :value="editDto.Id"/>
+						<div class="form-group row">
+							<label class="col-sm-3 control-label text-sm-right pt-2">Professor <span class="required">*</span></label>
+							<div class="col-sm-9">
+								<select class="form-control populate select2" name="ddlProfessor" id="ddlProfessor" style="width:100%"
+								        required title="Por favor selecione o professor">
+									<option value="">Selecionar Professor</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-sm-3 control-label text-sm-right pt-2">Titulo da Aula <span class="required">*</span></label>
+							<div class="col-sm-9">
+								<input type="text" name="nome" :value="editDto.Titulo" class="form-control"
+								       maxlength="150"
+								       title="Por favor informe o nome do curso." required/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label text-sm-right pt-2">Descrição </label>
+							<div class="col-sm-9">
+								<textarea class="form-control" rows="7" maxlength="500" name="descricao" v-model="editDto.Descricao" id="descricao"></textarea>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label">Video</label>
+							<div class="col-sm-9">
+								<div class="fileupload fileupload-new" data-provides="fileupload">
+									<div class="input-append">
+										<div class="uneditable-input">
+											<i class="fa fa-file fileupload-exists"></i>
+											<span class="fileupload-preview">{{ editDto.NomeMaterial }}</span>
+										</div>
+										<span class="btn btn-default btn-file">
+											<span class="fileupload-exists">Alterar</span>
+											<span class="fileupload-new">Selecionar Arquivo</span>
+											<input type="file" id="video" name="video" />
+										</span>
+										<a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload">Remover</a>
+									</div>
+									<div v-if="editDto.NomeMaterial" class="mt-2">
+										<code>Material Didático atual: {{ editDto.NomeMaterial }}</code>
+									</div>
+								</div>
+							</div>
+							<label class="col-sm-3 control-label">Material Didático</label>
+							<div class="col-sm-9">
+								<div class="fileupload fileupload-new" data-provides="fileupload">
+									<div class="input-append">
+										<div class="uneditable-input">
+											<i class="fa fa-file fileupload-exists"></i>
+											<span class="fileupload-preview">{{ editDto.NomeVideo }}</span>
+										</div>
+										<span class="btn btn-default btn-file">
+											<span class="fileupload-exists">Alterar</span>
+											<span class="fileupload-new">Selecionar Arquivo</span>
+											<input type="file" id="arquivo" name="arquivo"/>
+										</span>
+										<a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload">Remover</a>
+									</div>
+									<div v-if="editDto.NomeMaterial" class="mt-2">
+										<code>Material Didático atual: {{ editDto.NomeMaterial }}</code>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-sm-3 control-label text-sm-right pt-2">Status</label>
+							<div class="col-md-9">
+								<div class="switch switch-sm switch-primary">
+									<div v-show="editDto.Status">
+										<input type="checkbox" id="editStatus" name="editStatus" data-plugin-ios-switch checked="checked"/>
+									</div>
+									<div v-show="!editDto.Status">
+										<input type="checkbox" id="editStatus" name="editStatus" data-plugin-ios-switch/>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 					<div class="modal-footer">
 						<button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-remove"></i> &nbsp;&nbsp;Cancelar</button>
+						<button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
+					</div>
+				}
+			</div>
+		</div>
+	</div>
+	<!-- Modal -->
+	<div class="modal fade" id="mdUpload" tabindex="-1" role="dialog" aria-labelledby="mdUploadLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="mdUploadLabel">
+						<i class="fa fa-upload"></i> &nbsp;&nbsp;<strong>Upload Video</strong>
+					</h5>
+				</div>
+				@using (@Html.BeginForm("Upload", "Aula", FormMethod.Post, new { id = "formUploadVideo", @class = "form-horizontal", @enctype = "multipart/form-data" }))
+				{
+					<div class="modal-body">
+						<input type="hidden" id="aulaId" name="aulaId" />
+						<div class="form-group mb-lg">
+							<label class="col-sm-2 control-label">Video</label>
+							<div class="col-sm-10">
+								<div class="fileupload fileupload-new" data-provides="fileupload">
+									<div class="input-append">
+										<div class="uneditable-input">
+											<i class="fa fa-file fileupload-exists"></i>
+											<span class="fileupload-preview"></span>
+										</div>
+										<span class="btn btn-default btn-file">
+											<span class="fileupload-exists">Alterar</span>
+											<span class="fileupload-new">Selecionar Arquivo</span>
+											<input type="file" id="arquivoVideo" name="arquivoVideo" accept=".mp4,.avi" v-on:change="ValidateFileType()" />
+										</span>
+										<a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload">Remover</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-remove"></i> &nbsp;&nbsp;Fechar</button>
 						<button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
 					</div>
 				}
@@ -217,31 +265,31 @@
 		(function ($) {
 
 			'use strict';
-			var crub = @ViewBag.CrudMessage;
+			var crud = @ViewBag.CrudMessage;
 
-			if (crub === 1) {
+			if (crud === 1) {
 				new PNotify({
-					title: 'Métrica',
+					title: 'Aula',
 					text: 'Cadastro realizado com sucesso!',
 					type: 'success'
 				});
-				crub = 0;
-			} else if (crub === 2) {
+				crud = 0;
+			} else if (crud === 2) {
 				new PNotify({
-					title: 'Métrica',
+					title: 'Aula',
 					text: 'Dados alterados com sucesso.',
 					type: 'warning',
 					icon: 'fa fa-pencil'
 				});
-				crub = 0;
-			} else if (crub === 3) {
+				crud = 0;
+			} else if (crud === 3) {
 				new PNotify({
-					title: 'Métrica',
+					title: 'Aula',
 					text: 'Registro excluído com sucesso.',
 					type: 'error',
 					icon: 'fa fa-trash-o'
 				});
-				crub = 0;
+				crud = 0;
 			}
 
 
@@ -250,25 +298,25 @@
 
 			if (notify === 0) {
 				new PNotify({
-					title: 'Métrica',
+					title: 'Aula',
 					text: messagem,
 					type: 'success'
 				});
-				crub = 0;
+				crud = 0;
 			} else if (notify === 1) {
 				new PNotify({
-					title: 'Métrica',
+					title: 'Aula',
 					text: messagem,
 					type: 'warning'
 				});
-				crub = 0;
+				crud = 0;
 			} else if (notify === 2) {
 				new PNotify({
-					title: 'Métrica',
+					title: 'Aula',
 					text: messagem,
 					type: 'error'
 				});
-				crub = 0;
+				crud = 0;
 			}
 
 			if ($.isFunction($.fn['tooltip'])) {

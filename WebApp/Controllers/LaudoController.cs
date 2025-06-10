@@ -1,20 +1,19 @@
+using ClosedXML.Excel;
+using log4net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
+using WebApp.Authorization;
 using WebApp.Configuration;
+using WebApp.Dto;
 using WebApp.Enumerators;
 using WebApp.Factory;
+using WebApp.Identity;
 using WebApp.Models;
 using WebApp.Utility;
-using WebApp.Authorization;
 using Claim = WebApp.Identity.Claim;
-using WebApp.Identity;
-using Microsoft.AspNetCore.Authorization;
-using WebApp.Dto;
-using ClosedXML.Excel;
-using System.Diagnostics;
-using DocumentFormat.OpenXml.Presentation;
-using log4net;
 
 namespace WebApp.Controllers
 {
@@ -70,12 +69,15 @@ namespace WebApp.Controllers
                 }
 
                 SelectList alunos = null;
+                //SelectList turmas = null;
 
                 if (usu.LocalidadeId != null)
                 {
                     var resultAlunos = ApiClientFactory.Instance.GetAlunosByLocalidadeId(Convert.ToInt32(usu.LocalidadeId));
 
                     alunos = new SelectList(resultAlunos, "Id", "Nome");
+
+                    //turmas = new SelectList(ApiClientFactory.Instance.GetTurmasByLocalidadeId(Convert.ToInt32(usu.LocalidadeId)));
                 }
 
                 var tiposLaudos = new SelectList(ApiClientFactory.Instance.GetTiposLaudoAll(), "Id", "Nome");
@@ -117,7 +119,8 @@ namespace WebApp.Controllers
                     ListLocalidades = localidades!,
                     ListDeficiencias = deficiencias,
                     ListAlunos = alunos,
-                    SearchFilter = searchFilter
+                    SearchFilter = searchFilter,
+                    //ListTurmas = turmas
                 };
 
                 return View(model);
@@ -133,14 +136,14 @@ namespace WebApp.Controllers
         [ClaimsAuthorize(ClaimType.Laudo, Claim.Detalhar)]
         public async Task<ActionResult> Details(int id)
         {
-            var laudo = ApiClientFactory.Instance.GetLaudoByAluno(id);
+            var laudo = ApiClientFactory.Instance.GetLaudoById(id);
 
             var consumoAlimentar = laudo.ConsumoAlimentarId == null ? null : ApiClientFactory.Instance.GetConsumoAlimentarById((int)laudo.ConsumoAlimentarId);
             var saudeBucal = laudo.SaudeBucalId == null ? null : ApiClientFactory.Instance.GetConsumoAlimentarById((int)laudo.SaudeBucalId);
 
-            var aluno = await ApiClientFactory.Instance.GetAlunoById(id);
+            var aluno = await ApiClientFactory.Instance.GetAlunoById((int)laudo.AlunoId);
             var profissional = laudo.ProfissionalId == null ? null : ApiClientFactory.Instance.GetProfissionalById(Convert.ToInt32(aluno.ProfissionalId));
-            var talentoEsportivo = laudo.TalentoEsportivoId == null ? null : ApiClientFactory.Instance.GetTalentoEsportivoByAluno((int)laudo.AlunoId!);
+            var talentoEsportivo = laudo.TalentoEsportivoId == null ? null : ApiClientFactory.Instance.GetTalentoEsportivoById((int)laudo.TalentoEsportivoId!);
             var encaminhamentoImc = laudo.SaudeId == null ? null : ApiClientFactory.Instance.GetEncaminhamentoBySaudeId(Convert.ToInt32(laudo.SaudeId));
             var qualidadeDeVida = laudo.QualidadeDeVidaId == null ? null : ApiClientFactory.Instance.GetEncaminhamentoByQualidadeDeVidaId((int)laudo.QualidadeDeVidaId);
             var vocacional = laudo.VocacionalId == null ? null : ApiClientFactory.Instance.GetEncaminhamentoByVocacional();
@@ -169,14 +172,14 @@ namespace WebApp.Controllers
         //[ClaimsAuthorize(ClaimType.Laudo, Claim.Ver)]
         public async Task<ActionResult> Report(int id)
         {
-            var laudo = ApiClientFactory.Instance.GetLaudoByAluno(id);
+            var laudo = ApiClientFactory.Instance.GetLaudoById(id);
 
             var consumoAlimentar = laudo.ConsumoAlimentarId == null ? null : ApiClientFactory.Instance.GetConsumoAlimentarById((int)laudo.ConsumoAlimentarId);
             var saudeBucal = laudo.SaudeBucalId == null ? null : ApiClientFactory.Instance.GetSaudeBucalById((int)laudo.SaudeBucalId);
 
-            var aluno = await ApiClientFactory.Instance.GetAlunoById(id);
+            var aluno = await ApiClientFactory.Instance.GetAlunoById((int)laudo.AlunoId);
             var profissional = laudo.ProfissionalId == null ? null : ApiClientFactory.Instance.GetProfissionalById(Convert.ToInt32(aluno.ProfissionalId));
-            var talentoEsportivo = laudo.TalentoEsportivoId == null ? null : ApiClientFactory.Instance.GetTalentoEsportivoByAluno((int)laudo.AlunoId!);
+            var talentoEsportivo = laudo.TalentoEsportivoId == null ? null : ApiClientFactory.Instance.GetTalentoEsportivoById((int)laudo.TalentoEsportivoId!);
             var encaminhamentoImc = laudo.SaudeId == null ? null : ApiClientFactory.Instance.GetEncaminhamentoBySaudeId(Convert.ToInt32(laudo.SaudeId));
             var qualidadeDeVida = laudo.QualidadeDeVidaId == null ? null : ApiClientFactory.Instance.GetEncaminhamentoByQualidadeDeVidaId((int)laudo.QualidadeDeVidaId);
             var vocacional = laudo.VocacionalId == null ? null : ApiClientFactory.Instance.GetEncaminhamentoByVocacional();
@@ -184,6 +187,33 @@ namespace WebApp.Controllers
             var encaminhamentoSaudeBucal = laudo.SaudeBucalId == null ? null : ApiClientFactory.Instance.GetEncaminhamentoById((int)saudeBucal.Encaminhamento.Id);
             var desempenho = ApiClientFactory.Instance.GetDesempenhoByAluno(Convert.ToInt32(laudo.AlunoId));
             var modalidade = ApiClientFactory.Instance.GetModalidadeById(Convert.ToInt32(laudo.ModalidadeId));
+
+            var percentual = new PercentualLaudoDto();
+
+            if (laudo.Ordem != 1)
+            {
+                var laudoAnterior = await ApiClientFactory.Instance.GetLaudosByFilter(new LaudosFilterDto
+                {
+                    AlunoId = laudo.AlunoId.ToString(),
+                    Ordem = laudo.Ordem - 1,
+                    PageNumber = 1,
+                    PageSize = 10
+                });
+
+                var talentoEsportivoAnterior = ApiClientFactory.Instance.GetTalentoEsportivoById((int)laudoAnterior.Laudos.Items.First().TalentoEsportivoId);
+
+                percentual.PreensaoManual = (decimal)((talentoEsportivoAnterior.PreensaoManual - talentoEsportivo.PreensaoManual) / talentoEsportivoAnterior.PreensaoManual * 100);
+                percentual.Flexibilidade = (decimal)((talentoEsportivoAnterior.Flexibilidade - talentoEsportivo.Flexibilidade) / talentoEsportivoAnterior.Flexibilidade * 100);
+                percentual.ImpulsaoHorizontal = (decimal)((talentoEsportivoAnterior.ImpulsaoHorizontal - talentoEsportivo.ImpulsaoHorizontal) / talentoEsportivoAnterior.ImpulsaoHorizontal * 100);
+                percentual.Velocidade = (decimal)((talentoEsportivoAnterior.Velocidade - talentoEsportivo.Velocidade) / talentoEsportivoAnterior.Velocidade * 100);
+                percentual.AptidaoFisica = (decimal)((talentoEsportivoAnterior.Vo2Max - talentoEsportivo.Vo2Max) / talentoEsportivoAnterior.Vo2Max * 100);
+                percentual.Agilidade = (decimal)((talentoEsportivoAnterior.ShuttleRun - talentoEsportivo.ShuttleRun) / talentoEsportivoAnterior.ShuttleRun * 100);
+                percentual.Imc = (decimal)((talentoEsportivoAnterior.Imc - talentoEsportivo.Imc) / talentoEsportivoAnterior.Imc * 100);
+
+
+            }
+
+            var tiposLaudos = ApiClientFactory.Instance.GetTiposLaudoAll();
 
             var model = new LaudoModel()
             {
@@ -196,7 +226,13 @@ namespace WebApp.Controllers
                 EncaminhamentoSaudeBucal = encaminhamentoSaudeBucal,
                 EncaminhamentoConsumoAlimentar = encaminhamentoConsumoAlimentar,
                 Desempenho = desempenho,
-                Modalidade = modalidade
+                Modalidade = modalidade,
+                Percentual = percentual,
+                TipoLaudoQualidadeVidaDescricao = tiposLaudos.First(x=> x.Id == (int)EnumTipoLaudo.QualidadeVida).Descricao,
+                TipoLaudoConsumoAlimentarDescricao = tiposLaudos.First(x=> x.Id == (int)EnumTipoLaudo.ConsumoAlimentar).Descricao,
+                TipoLaudoSaudeBucalDescricao = tiposLaudos.First(x=> x.Id == (int)EnumTipoLaudo.SaudeBucal).Descricao,
+                TipoLaudoVocacionalDescricao = tiposLaudos.First(x=> x.Id == (int)EnumTipoLaudo.Vocacional).Descricao
+
             };
             return View(model);
         }
@@ -221,6 +257,8 @@ namespace WebApp.Controllers
                     ApiClientFactory.Instance.GetQuestionarioByTipoLaudo((int)EnumTipoLaudo.ConsumoAlimentar).OrderBy(o => o.Questao).ToList();
                 var questionarioSaudeBucal =
                     ApiClientFactory.Instance.GetQuestionarioByTipoLaudo((int)EnumTipoLaudo.SaudeBucal).OrderBy(o => o.Questao).ToList();
+                var questionarioEducacional3Lp =
+                    ApiClientFactory.Instance.GetQuestionarioByTipoLaudo((int)EnumTipoLaudo.Educacional3Lp).OrderBy(o => o.Questao).ToList();
 
                 var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome", usu.Uf);
 
@@ -246,7 +284,9 @@ namespace WebApp.Controllers
 
                 if (usu.LocalidadeId != null)
                 {
-                    var resultAlunos = ApiClientFactory.Instance.GetAlunosByLocalidadeId(Convert.ToInt32(usu.LocalidadeId)).Where(x => x.PossuiLaudo == false);
+                    var resultAlunos = ApiClientFactory.Instance
+                        .GetAlunosByLocalidadeId(Convert.ToInt32(usu.LocalidadeId))
+                        .Where(x => x.PossuiLaudoFinalizado);
 
                     alunos = new SelectList(resultAlunos, "Id", "Nome");
 
@@ -262,6 +302,7 @@ namespace WebApp.Controllers
                     ListQuestionarioQualidadeVida = questionarioQualidadeVida,
                     ListQuestionarioConsumoAlimentar = questionarioConsumoAlimentar,
                     ListQuestionarioSaudeBucal = questionarioSaudeBucal,
+                    ListQuestionarioEducacional3Lp = questionarioEducacional3Lp,
                     ListEstados = estados,
                     ListMunicipios = municipios!,
                     ListLocalidades = localidades!,
@@ -289,10 +330,17 @@ namespace WebApp.Controllers
                     return RedirectToAction(nameof(Create), new { notify = (int)EnumNotify.Error, message = "Favor Informar o Aluno." });
                 }
 
+                int ordem;
+
+                var existLaudo = ApiClientFactory.Instance.GetLaudoByAluno(Convert.ToInt32(collection["ddlAluno"].ToString()));
+
+                ordem = existLaudo == null ? 1 : (int)(existLaudo.Ordem + 1)!;
+
                 var command = new LaudoModel.CreateUpdateLaudoCommand
-                {
-                    AlunoId = Convert.ToInt32(collection["ddlAluno"].ToString())
-                };
+                    {
+                        AlunoId = Convert.ToInt32(collection["ddlAluno"].ToString()),
+                        Ordem = ordem
+                    };
 
                 var listVocacional = (from item in collection where item.Key.Contains("nomeRespVocacional") select item.Value).Select(v => (string)v).ToList();
 
@@ -388,13 +436,16 @@ namespace WebApp.Controllers
                         : Convert.ToInt32(collection["ddlAluno"].ToString()),
                     EnvergaduraSaude = collection["envergaduraSaude"] == ""
                         ? null
-                        : Convert.ToDecimal(collection["envergaduraSaude"].ToString()),
+                        : decimal.Parse(collection["envergaduraSaude"].ToString().Replace(".", ","),
+                            System.Globalization.CultureInfo.GetCultureInfo("pt-BR")),
                     MassaCorporalSaude = collection["massaCorporalSaude"] == ""
                         ? null
-                        : Convert.ToDecimal(collection["massaCorporalSaude"].ToString()),
+                        : decimal.Parse(collection["massaCorporalSaude"].ToString().Replace(".", ","),
+                            System.Globalization.CultureInfo.GetCultureInfo("pt-BR")),
                     AlturaSaude = collection["alturaSaude"] == ""
                         ? null
-                        : Convert.ToDecimal(collection["alturaSaude"].ToString()),
+                        : decimal.Parse(collection["alturaSaude"].ToString().Replace(".", ","),
+                            System.Globalization.CultureInfo.GetCultureInfo("pt-BR")),
                     StatusSaude = "F"
                 };
 
@@ -411,14 +462,22 @@ namespace WebApp.Controllers
                 {
                     ProfissionalId = collection["ddlProfissional"] == "" ? null : Convert.ToInt32(collection["ddlProfissional"].ToString()),
                     AlunoId = collection["ddlAluno"] == "" ? null : Convert.ToInt32(collection["ddlAluno"].ToString()),
-                    Altura = collection["altura"] == "" ? null : Convert.ToDecimal(collection["altura"].ToString()),
-                    MassaCorporal = collection["massaCorporal"] == "" ? null : Convert.ToDecimal(collection["massaCorporal"].ToString()),
-                    PreensaoManual = collection["preensaoManual"] == "" ? null : Convert.ToDecimal(collection["preensaoManual"].ToString()),
-                    Flexibilidade = collection["flexibilidade"] == "" ? null : Convert.ToDecimal(collection["flexibilidade"].ToString()),
-                    ImpulsaoHorizontal = collection["impulsaoHorizontal"] == "" ? null : Convert.ToDecimal(collection["impulsaoHorizontal"].ToString()),
-                    Velocidade = collection["testeVelocidade"] == "" ? null : Convert.ToDecimal(collection["testeVelocidade"].ToString()),
-                    AptidaoFisica = collection["aptidaoFisica"] == "" ? null : Convert.ToDecimal(collection["aptidaoFisica"].ToString()),
-                    Agilidade = collection["agilidade"] == "" ? null : Convert.ToDecimal(collection["agilidade"].ToString()),
+                    Altura = collection["altura"] == "" ? null : decimal.Parse(collection["altura"].ToString().Replace(".", ","),
+                                                         System.Globalization.CultureInfo.GetCultureInfo("pt-BR")),
+                    MassaCorporal = collection["massaCorporal"] == "" ? null : decimal.Parse(collection["massaCorporal"].ToString().Replace(".", ","),
+                                                             System.Globalization.CultureInfo.GetCultureInfo("pt-BR")),
+                    PreensaoManual = collection["preensaoManual"] == "" ? null : decimal.Parse(collection["preensaoManual"].ToString().Replace(".", ","),
+                                                                 System.Globalization.CultureInfo.GetCultureInfo("pt-BR")),
+                    Flexibilidade = collection["flexibilidade"] == "" ? null : decimal.Parse(collection["flexibilidade"].ToString().Replace(".", ","),
+                                                            System.Globalization.CultureInfo.GetCultureInfo("pt-BR")),
+                    ImpulsaoHorizontal = collection["impulsaoHorizontal"] == "" ? null : decimal.Parse(collection["impulsaoHorizontal"].ToString().Replace(".", ","),
+                                                                      System.Globalization.CultureInfo.GetCultureInfo("pt-BR")),
+                    Velocidade = collection["testeVelocidade"] == "" ? null : decimal.Parse(collection["testeVelocidade"].ToString().Replace(".", ","),
+                                                           System.Globalization.CultureInfo.GetCultureInfo("pt-BR")),
+                    AptidaoFisica = collection["aptidaoFisica"] == "" ? null : decimal.Parse(collection["aptidaoFisica"].ToString().Replace(".", ","),
+                                                             System.Globalization.CultureInfo.GetCultureInfo("pt-BR")),
+                    Agilidade = collection["agilidade"] == "" ? null : decimal.Parse(collection["agilidade"].ToString().Replace(".", ","),
+                                                         System.Globalization.CultureInfo.GetCultureInfo("pt-BR")),
                     Abdominal = Convert.ToBoolean(collection["rdbAbdominal"]),
                     StatusTalentosEsportivos = "F"
                 };
@@ -433,7 +492,7 @@ namespace WebApp.Controllers
                         .Encaminhamento;
 
                     var modalidade = ApiClientFactory.Instance.GetModalidadeAll()
-                        .FirstOrDefault(x => x.Nome.Contains(encaminhamento.Nome));
+                        .FirstOrDefault(x => encaminhamento.Nome.Contains(x.Nome));
 
                     command.ModalidadeId = modalidade!.Id;
 
@@ -638,7 +697,8 @@ namespace WebApp.Controllers
                             : Convert.ToDecimal(collection["envergaduraSaude"].ToString()),
                         MassaCorporalSaude = collection["massaCorporalSaude"] == ""
                             ? null
-                            : Convert.ToDecimal(collection["massaCorporalSaude"].ToString()),
+                            : decimal.Parse(collection["massaCorporalSaude"].ToString().Replace(".", ","),
+                                System.Globalization.CultureInfo.GetCultureInfo("pt-BR")),
                         AlturaSaude = collection["alturaSaude"] == ""
                             ? null
                             : Convert.ToDecimal(collection["alturaSaude"].ToString()),
@@ -667,7 +727,7 @@ namespace WebApp.Controllers
                         StatusSaude = "F"
                     };
 
-                    commandSaude.Id = (int)await ApiClientFactory.Instance.CreateSaude(commandSaude);
+                    command.SaudeId = (int)await ApiClientFactory.Instance.CreateSaude(commandSaude);
                 }
 
                 if (laudo.TalentoEsportivoId != null)
@@ -679,14 +739,22 @@ namespace WebApp.Controllers
                         Id = (int)laudo.TalentoEsportivoId,
                         ProfissionalId = talentoEsportivo.ProfissionalId,
                         AlunoId = (int)laudo.AlunoId,
-                        Altura = collection["altura"] == "" ? null : Convert.ToDecimal(collection["altura"].ToString()),
-                        MassaCorporal = collection["massaCorporal"] == "" ? null : Convert.ToDecimal(collection["massaCorporal"].ToString()),
-                        PreensaoManual = collection["preensaoManual"] == "" ? null : Convert.ToDecimal(collection["preensaoManual"].ToString()),
-                        Flexibilidade = collection["flexibilidade"] == "" ? null : Convert.ToDecimal(collection["flexibilidade"].ToString()),
-                        ImpulsaoHorizontal = collection["impulsaoHorizontal"] == "" ? null : Convert.ToDecimal(collection["impulsaoHorizontal"].ToString()),
-                        Velocidade = collection["testeVelocidade"] == "" ? null : Convert.ToDecimal(collection["testeVelocidade"].ToString()),
-                        AptidaoFisica = collection["aptidaoFisica"] == "" ? null : Convert.ToDecimal(collection["aptidaoFisica"].ToString()),
-                        Agilidade = collection["agilidade"] == "" ? null : Convert.ToDecimal(collection["agilidade"].ToString()),
+                        Altura = collection["altura"] == "" ? null : decimal.Parse(collection["altura"].ToString().Replace(".", ","),
+                                                                       System.Globalization.CultureInfo.GetCultureInfo("pt-BR")),
+                        MassaCorporal = collection["massaCorporal"] == "" ? null : decimal.Parse(collection["massaCorporal"].ToString().Replace(".", ","),
+                                                                           System.Globalization.CultureInfo.GetCultureInfo("pt-BR")),
+                        PreensaoManual = collection["preensaoManual"] == "" ? null : decimal.Parse(collection["preensaoManual"].ToString().Replace(".", ","),
+                                                                           System.Globalization.CultureInfo.GetCultureInfo("pt-BR")),
+                        Flexibilidade = collection["flexibilidade"] == "" ? null : decimal.Parse(collection["flexibilidade"].ToString().Replace(".", ","),
+                                                                          System.Globalization.CultureInfo.GetCultureInfo("pt-BR")),
+                        ImpulsaoHorizontal = collection["impulsaoHorizontal"] == "" ? null : decimal.Parse(collection["impulsaoHorizontal"].ToString().Replace(".", ","),
+                                                                                  System.Globalization.CultureInfo.GetCultureInfo("pt-BR")),
+                        Velocidade = collection["testeVelocidade"] == "" ? null : decimal.Parse(collection["testeVelocidade"].ToString().Replace(".", ","),
+                                                                          System.Globalization.CultureInfo.GetCultureInfo("pt-BR")),
+                        AptidaoFisica = collection["aptidaoFisica"] == "" ? null : decimal.Parse(collection["aptidaoFisica"].ToString().Replace(".", ","),
+                                                                           System.Globalization.CultureInfo.GetCultureInfo("pt-BR")),
+                        Agilidade = collection["agilidade"] == "" ? null : decimal.Parse(collection["agilidade"].ToString().Replace(".", ","),
+                                                                        System.Globalization.CultureInfo.GetCultureInfo("pt-BR")),
                         Abdominal = Convert.ToBoolean(collection["rdbAbdominal"]),
                         StatusTalentosEsportivos = "F"
                     };
@@ -726,7 +794,26 @@ namespace WebApp.Controllers
                         StatusTalentosEsportivos = "F"
                     };
 
-                    command.TalentoEsportivoId = (int)await ApiClientFactory.Instance.CreateTalentoEsportivo(commandTalentoEsportivo);
+                    if (commandTalentoEsportivo.Altura != null && commandTalentoEsportivo.MassaCorporal != null && commandTalentoEsportivo.PreensaoManual != null &&
+                        commandTalentoEsportivo.Flexibilidade != null && commandTalentoEsportivo.ImpulsaoHorizontal != null && commandTalentoEsportivo.Velocidade != null &&
+                        commandTalentoEsportivo.AptidaoFisica != null && commandTalentoEsportivo.Agilidade != null)
+                    {
+                        command.TalentoEsportivoId = (int)await ApiClientFactory.Instance.CreateTalentoEsportivo(commandTalentoEsportivo);
+
+                        var encaminhamento = ApiClientFactory.Instance.GetTalentoEsportivoById((int)command.TalentoEsportivoId)
+                            .Encaminhamento;
+
+                        var modalidade = ApiClientFactory.Instance.GetModalidadeAll()
+                            .FirstOrDefault(x => x.Nome.Contains(encaminhamento.Nome));
+
+                        command.ModalidadeId = modalidade!.Id;
+
+                    }
+                    else
+                    {
+                        return RedirectToAction(nameof(Create), new { notify = (int)EnumNotify.Error, message = "Favor informar todos os campos de Talento Esportivo." });
+                    }
+
                 }
 
                 await ApiClientFactory.Instance.UpdateLaudo(command.Id, command);
@@ -857,7 +944,7 @@ namespace WebApp.Controllers
                 bool possuiFotoValue = bool.TryParse(possuiFoto, out var pfoto) ? pfoto : false;
                 bool finalizadoValue = bool.TryParse(finalizado, out var fin) ? fin : false;
 
-                var searchFilter = new LaudosFilterDto
+                var searchFilter = new LaudosResumidosFilterDto
                 {
                     UsuarioEmail = usuario,
                     FomentoId = ddlFomento,
@@ -869,67 +956,19 @@ namespace WebApp.Controllers
                     DeficienciaId = ddlDeficiencia,
                     PossuiFoto = possuiFotoValue,
                     Finalizado = finalizadoValue,
-                    PageNumber = 1,
-#if DEBUG
-                    PageSize = 2000
-#else
-            PageSize = 1000
-#endif
+
                 };
 
-                var result = await ApiClientFactory.Instance.GetLaudosByFilter(searchFilter);
+                var result = await ApiClientFactory.Instance.GetLaudosResumidosByFilter(searchFilter);
 
-                if (result?.Laudos?.Items == null || !result.Laudos.Items.Any())
+                //var lista = result.LaudosResumidos.Where(x => x.Idade >= 14 && x.StatusLaudo == "F").ToList();
+
+                var model = new LaudoResumidoModel()
                 {
-                    return View(new List<LaudoModel>()); // Retorna uma lista vazia
-                }
+                    ListLaudosResumidos = result.LaudosResumidos.ToList()
+                };
 
-                var laudoModels = new List<LaudoModel>();
-
-                foreach (var laudo in result.Laudos.Items)
-                {
-                    var aluno = await ApiClientFactory.Instance.GetAlunoById((int)laudo.AlunoId);
-                    if (aluno == null)
-                    {
-                        continue; // Pular este laudo e ir para o próximo
-                    }
-
-                    var profissional = string.IsNullOrEmpty(aluno.ProfissionalId) || aluno.ProfissionalId == "0" ? null :
-                        ApiClientFactory.Instance.GetProfissionalById(Convert.ToInt32(aluno.ProfissionalId));
-                    var talentoEsportivo = laudo.TalentoEsportivoId == null ? null :
-                        ApiClientFactory.Instance.GetTalentoEsportivoByAluno((int)laudo.AlunoId);
-                    var encaminhamentoImc = laudo.SaudeId == null ? null :
-                        ApiClientFactory.Instance.GetEncaminhamentoBySaudeId(Convert.ToInt32(laudo.SaudeId));
-                    var qualidadeDeVida = laudo.QualidadeDeVidaId == null ? null :
-                        ApiClientFactory.Instance.GetEncaminhamentoByQualidadeDeVidaId((int)laudo.QualidadeDeVidaId);
-                    var vocacional = laudo.VocacionalId == null ? null :
-                        ApiClientFactory.Instance.GetEncaminhamentoByVocacional();
-                    var encaminhamentoConsumoAlimentar = laudo.ConsumoAlimentarId == null ? null :
-                        ApiClientFactory.Instance.GetEncaminhamentoByConsumoAlimentarId((int)laudo.ConsumoAlimentarId);
-                    var encaminhamentoSaudeBucal = laudo.SaudeBucalId == null ? null :
-                        ApiClientFactory.Instance.GetEncaminhamentoBySaudeBucalId((int)laudo.SaudeBucalId);
-                    var desempenho = (laudo.AlunoId == null || laudo.AlunoId == 0) ? null :
-                        ApiClientFactory.Instance.GetDesempenhoByAluno(Convert.ToInt32(laudo.AlunoId));
-                    var modalidade = (laudo.ModalidadeId == null || laudo.ModalidadeId == 0) ? null :
-                        ApiClientFactory.Instance.GetModalidadeById(Convert.ToInt32(laudo.ModalidadeId));
-
-                    laudoModels.Add(new LaudoModel
-                    {
-                        Laudo = laudo,
-                        Aluno = aluno,
-                        Profissional = profissional,
-                        TalentoEsportivo = talentoEsportivo,
-                        EncaminhamentoImc = encaminhamentoImc,
-                        ListQualidadeDeVida = qualidadeDeVida,
-                        ListVocacional = vocacional,
-                        EncaminhamentoSaudeBucal = encaminhamentoSaudeBucal,
-                        EncaminhamentoConsumoAlimentar = encaminhamentoConsumoAlimentar,
-                        Desempenho = desempenho,
-                        Modalidade = modalidade
-                    });
-                }
-
-                return View(laudoModels);
+                return View(model);
             }
             catch (Exception e)
             {
@@ -1072,5 +1111,141 @@ namespace WebApp.Controllers
             }
         }
 
+
+
+        /// <summary>
+        /// Impreção de Gabaritos do SAEB para Alunos de uma certa localidade
+        /// </summary>
+        /// <param name="ddlEstadoGabarito">Gabarito do SAEB</param>
+        /// <param name="ddlMunicipioGabarito">Id do município</param>
+        /// <param name="ddlLocalidadeGabarito">Id da localidade</param>
+        /// <param name="ddlAlunoGabarito">Id do Aluno</param>
+        /// <returns>Retorna a lista de Alunos</returns>
+        [ClaimsAuthorize(ClaimType.Laudo, Claim.Consultar)]
+        public async Task<IActionResult> PrintGabarito(IFormCollection collection)
+        {
+            try
+            {
+                var searchFilter = new AlunosFilterDto()
+                {
+                    Estado = collection["ddlEstadoGabarito"],
+                    MunicipioId = collection["ddlMunicipioGabarito"],
+                    LocalidadeId = collection["ddlLocalidadeGabarito"],
+                    AlunoId = collection["ddlAlunoGabarito"],
+                    SerieId = collection["ddlTurma"] 
+                } ;
+
+                var result = await ApiClientFactory.Instance.GetAlunosByFilter(searchFilter);
+
+                var textoGabarito = "";
+                var anoGabarito = "";
+
+                switch (collection["ddlGabarito"])
+                {
+                    case "3LP":
+                        textoGabarito = "LÍNGUA PORTUGUESA";
+                        anoGabarito = " 3ª Série do Ensino Médio";
+                        break;
+                    case "3MT":
+                        textoGabarito = "MATEMÁTICA";
+                        anoGabarito = " 3ª Série do Ensino Médio";
+                        break;
+                    case "5LP":
+                        textoGabarito = "LÍNGUA PORTUGUESA";
+                        anoGabarito = " 5º Ano do Ensino Médio";
+                        break;
+                    case "5MT":
+                        textoGabarito = "MATEMÁTICA";
+                        anoGabarito = " 5º Ano do Ensino Médio";
+                        break;
+                    case "9LP":
+                        textoGabarito = "LÍNGUA PORTUGUESA";
+                        anoGabarito = " 9º Ano do Ensino Médio";
+                        break;
+                    case "9MT":
+                        textoGabarito = "MATEMÁTICA";
+                        anoGabarito = " 9º Ano do Ensino Médio";
+                        break;
+                }
+
+                var model = new AlunoModel()
+                {
+                    Alunos = result.Alunos.ToList(),
+                    TextGabarito = textoGabarito,
+                    AnoGabarito = anoGabarito
+                };
+
+                return View(model);
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = e.Message });
+            }
+        }
+
+        /// <summary>
+        /// Ação de Upload de Foto do Gabarito
+        /// </summary>
+        /// <param name="collection">Arquivo de upload realizado</param>
+        /// <returns>Retorna mensagem de upload realizado através do parametro notfy e message</returns>
+        [HttpPost]
+        //[ClaimsAuthorize(ClaimType.Laudo, Claim.Upload)]
+        public async Task<IActionResult> ProcessarGabarito(IFormCollection collection)
+        {
+            try
+            {
+                _logger.Info($"Ação de processamento do gabarito - Laudo.ProcessarGabarito");
+
+                byte[]? byteImage = null;
+                foreach (var file in collection.Files)
+                {
+                    if (file.Length <= 0) continue;
+                    using var ms = new MemoryStream();
+                    await file.CopyToAsync(ms);
+                    byteImage = ms.ToArray();
+                    break;
+                }
+
+                if (byteImage == null)
+                    return Json(new { erro = "Nenhuma imagem foi enviada." });
+
+                var resultado = await ApiClientFactory.Instance.ProcessarGabarito(byteImage);
+
+                Dictionary<string, string> respostasDict;
+
+                if (resultado["respostas"] is Dictionary<string, object> respostasObj)
+                {
+                    respostasDict = respostasObj.ToDictionary(
+                        kvp => kvp.Key,
+                        kvp => kvp.Value?.ToString() ?? ""
+                    );
+                }
+                else if (resultado["respostas"] is Newtonsoft.Json.Linq.JObject respostasJObj)
+                {
+                    respostasDict = respostasJObj.ToObject<Dictionary<string, string>>();
+                }
+                else if (resultado["respostas"] is string respostasJson)
+                {
+                    respostasDict = JsonConvert.DeserializeObject<Dictionary<string, string>>(respostasJson);
+                }
+                else
+                {
+                    respostasDict = resultado["respostas"] as Dictionary<string, string>;
+                }
+
+                return Json(new
+                {
+                    sucesso = true,
+                    matricula = resultado["matricula"],
+                    respostas = respostasDict
+                });
+
+            }
+            catch (Exception e)
+            {
+                _logger.Error($"Ação de upload de foto do gabarito - Laudo.ProcessarGabarito: {e.Message}");
+                return Json(new { sucesso = false, erro = e.Message });
+            }
+        }
     }
 }

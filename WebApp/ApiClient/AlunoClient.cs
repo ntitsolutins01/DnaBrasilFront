@@ -1,5 +1,4 @@
-﻿using DocumentFormat.OpenXml.Office2010.Excel;
-using WebApp.Dto;
+﻿using WebApp.Dto;
 using WebApp.Models;
 
 namespace WebApp.ApiClient
@@ -142,11 +141,11 @@ namespace WebApp.ApiClient
         /// </summary>
         /// <param name="email">email</param>
         /// <returns>Retorna uma lista de Email</returns>
-        public AlunoDto GetAlunoByEmail(string email)
+        public AlunoDto? GetAlunoByEmail(string email)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
                 $"{ResourceAlunos}/Email/{email}"));
-            return Get<AlunoDto>(requestUrl);
+            return Get<AlunoDto?>(requestUrl);
         }
 
         /// <summary>
@@ -222,18 +221,6 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
-        /// Busca todos os alunos de um curso
-        /// </summary>
-        /// <param name="id">Id do curso</param>
-        /// <returns>Retorna lista dos alunoscursos</returns>
-        public List<AlunoCursoDto> GetAlunosCursosByCursoId(int cursoId)
-        {
-            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceAlunos}/AlunoCurso/{cursoId}"));
-            return Get<List<AlunoCursoDto>>(requestUrl);
-        }
-
-        /// <summary>
         /// Busca todos os alunos de um aula
         /// </summary>
         /// <param name="id">Id do aula</param>
@@ -245,6 +232,17 @@ namespace WebApp.ApiClient
             return Get<List<AlunoAulaDto>>(requestUrl);
         }
 
+        /// <summary>
+        /// Busca Aluno por Cpf
+        /// </summary>
+        /// <param name="cpf">cpf do aluno</param>
+        /// <returns>retona true ou false</returns>
+        public async Task<bool> GetAlunoByCpf(string cpf)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceUsuario}/Cpf/{cpf}"));
+            return Get<bool>(requestUrl);
+        }
         #endregion
     }
 }

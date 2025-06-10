@@ -82,7 +82,7 @@ public class TipoCursoController : BaseController
     /// <param name="collection">coleção de dados para inclusao de Tipo Curso</param>
     /// <returns>retorna mensagem de inclusao através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.TipoCurso, Identity.Claim.Incluir)]
-	[HttpPost]
+    [HttpPost]
     public async Task<ActionResult> Create(IFormCollection collection)
     {
         try
@@ -109,7 +109,7 @@ public class TipoCursoController : BaseController
     /// <param name="collection">coleção de dados para alteração de Tipo Curso</param>
     /// <returns>retorna mensagem de alteração através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.TipoCurso, Identity.Claim.Alterar)]
-	public async Task<ActionResult> Edit(IFormCollection collection)
+    public async Task<ActionResult> Edit(IFormCollection collection)
     {
         try
         {
@@ -137,7 +137,7 @@ public class TipoCursoController : BaseController
     /// <param name="collection">coleção de dados para exclusão de Tipo Curso</param>
     /// <returns>retorna mensagem de exclusão através do parametro crud</returns>
 	[ClaimsAuthorize(ClaimType.TipoCurso, Identity.Claim.Excluir)]
-	public ActionResult Delete(int id)
+    public ActionResult Delete(int id)
     {
         try
         {
@@ -149,16 +149,16 @@ public class TipoCursoController : BaseController
             return RedirectToAction(nameof(Index));
         }
     }
-	#endregion
+    #endregion
 
-	#region Get Methods
+    #region Get Methods
 
-	/// <summary>
-	/// Busca de Tipo de Curdo  por id
-	/// </summary>
-	/// <param name="id">identificador do Tipo de Curso</param>
-	/// <returns>retorna o tipo de curso</returns>
-	public Task<TiposCursoDto> GetTipoCursoById(int id)
+    /// <summary>
+    /// Busca de Tipo de Curdo  por id
+    /// </summary>
+    /// <param name="id">identificador do Tipo de Curso</param>
+    /// <returns>retorna o tipo de curso</returns>
+    public Task<TiposCursoDto> GetTipoCursoById(int id)
     {
         var result = ApiClientFactory.Instance.GetTipoCursoById(id);
 

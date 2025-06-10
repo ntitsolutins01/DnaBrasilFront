@@ -1,6 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Net.Mail;
-using System.Net.Mime;
 using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -29,7 +27,7 @@ namespace WebApp.Areas.Identity.Pages.Account
         public ForgotPasswordModel(UserManager<IdentityUser> userManager, IEmailSender emailSender,
             IWebHostEnvironment host,
             ApplicationDbContext db,
-            IOptions<ParametersModel> parameters, 
+            IOptions<ParametersModel> parameters,
             IOptions<UrlSettings> appSettings)
         {
             _userManager = userManager;
@@ -38,7 +36,7 @@ namespace WebApp.Areas.Identity.Pages.Account
             _db = db;
             _parameters = parameters;
             _appSettings = appSettings;
-            ApplicationSettings.WebApiUrl = _appSettings.Value.WebApiBaseUrl;   
+            ApplicationSettings.WebApiUrl = _appSettings.Value.WebApiBaseUrl;
         }
 
         [BindProperty] public InputModel Input { get; set; }
@@ -54,8 +52,8 @@ namespace WebApp.Areas.Identity.Pages.Account
                     return Page();
                 }
                 //|| !await _userManager.IsEmailConfirmedAsync(user))
-                    // Don't reveal that the user does not exist or is not confirmed
-                    //return RedirectToPage("./ForgotPasswordConfirmation");
+                // Don't reveal that the user does not exist or is not confirmed
+                //return RedirectToPage("./ForgotPasswordConfirmation");
                 var usuario = await ApiClientFactory.Instance.GetUsuarioByEmail(Input.Email);
 
                 await SendForgotPasswordEmail(user, Input.Email, usuario.Nome);

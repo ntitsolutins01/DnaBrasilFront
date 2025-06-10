@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-
-namespace WebApp.Dto
+﻿namespace WebApp.Dto
 {
     public class AlunoAulaDto
     {

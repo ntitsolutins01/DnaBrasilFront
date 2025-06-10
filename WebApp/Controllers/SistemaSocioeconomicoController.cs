@@ -1,22 +1,20 @@
 using System.Text.Encodings.Web;
-using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
+using WebApp.Authorization;
 using WebApp.Configuration;
 using WebApp.Dto;
 using WebApp.Enumerators;
 using WebApp.Factory;
+using WebApp.Identity;
 using WebApp.Models;
 using WebApp.Utility;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization;
-using WebApp.Identity;
-using WebApp.Authorization;
 using Claim = WebApp.Identity.Claim;
-using WebApp.Authorization;
+using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
 namespace WebApp.Controllers
 {
@@ -32,8 +30,8 @@ namespace WebApp.Controllers
         public SistemaSocioeconomicoController(
             IOptions<UrlSettings> appSettings,
             IEmailSender emailSender,
-            UserManager<IdentityUser> userManager, 
-            IHostingEnvironment host, 
+            UserManager<IdentityUser> userManager,
+            IHostingEnvironment host,
             RoleManager<IdentityRole> roleManager)
         {
             _emailSender = emailSender;
@@ -63,7 +61,7 @@ namespace WebApp.Controllers
             catch (Exception e)
             {
                 Console.Write(e.StackTrace);
-                return RedirectToAction(nameof(Parceiro), new { notify = (int)EnumNotify.Error, message = $"Erro ao executar esta ação. Favor entrar em contato com o administrador do sistema. {e.Message}"  });
+                return RedirectToAction(nameof(Parceiro), new { notify = (int)EnumNotify.Error, message = $"Erro ao executar esta ação. Favor entrar em contato com o administrador do sistema. {e.Message}" });
 
             }
 
@@ -77,7 +75,7 @@ namespace WebApp.Controllers
                 SetNotifyMessage(notify, message);
                 SetCrudMessage(crud);
 
-                
+
                 var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome");
 
 
@@ -106,10 +104,10 @@ namespace WebApp.Controllers
                 var command = new ParceiroModel.CreateUpdateParceiroCommand
                 {
 
-                    Nome =  collection["nome"].ToString(),
-                    RazaoSocial =  collection["razaoSocial"].ToString(),
-                    NomeContato =  collection["nomeContato"].ToString(),
-                    TipoPessoa =  collection["tipoPessoa"].ToString(),
+                    Nome = collection["nome"].ToString(),
+                    RazaoSocial = collection["razaoSocial"].ToString(),
+                    NomeContato = collection["nomeContato"].ToString(),
+                    TipoPessoa = collection["tipoPessoa"].ToString(),
                     CpfCnpj = collection["tipoPessoa"].ToString() == "pf" ? collection["cpf"].ToString() : collection["cnpj"].ToString(),
                     Telefone = collection["numTelefone"].ToString() == "" ? null : collection["numTelefone"].ToString(),
                     Celular = collection["numCelular"].ToString() == "" ? null : collection["numCelular"].ToString(),
@@ -148,7 +146,7 @@ namespace WebApp.Controllers
                     var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome", parceiro.Uf);
                     var municipios = new SelectList(ApiClientFactory.Instance.GetMunicipiosByUf(parceiro.Uf), "Id", "Nome", parceiro.MunicipioId);
 
-                    return View(new ParceiroModel() { ListEstados = estados, Parceiro = parceiro, ListMunicipios = municipios});
+                    return View(new ParceiroModel() { ListEstados = estados, Parceiro = parceiro, ListMunicipios = municipios });
                 }
 
             }
@@ -401,10 +399,10 @@ namespace WebApp.Controllers
         {
             try
             {
-                
+
 
                 var alunos = await ApiClientFactory.Instance.GetAlunosByFilter(new AlunosFilterDto()
-                    { MunicipioId = "5570" });
+                { MunicipioId = "5570" });
 
                 var model = new ParceiroModel() { Alunos = alunos!.Alunos! };
 

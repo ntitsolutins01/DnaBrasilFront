@@ -70,7 +70,8 @@ namespace WebApp.Areas.Identity.Pages.Account.Manage
             public string Password { get; set; }
 
             [DataType(DataType.Password)]
-            [Display(Name = "Confirm password")] [Compare("Password", ErrorMessage = "As senhas informadas não conferem.")]
+            [Display(Name = "Confirm password")]
+            [Compare("Password", ErrorMessage = "As senhas informadas não conferem.")]
             public string ConfirmPassword { get; set; }
             public string Code { get; set; }
         }
