@@ -19,6 +19,9 @@ namespace WebApp.Dto
         public bool PossuiFoto { get; set; }
         public string? SerieId { get; set; }
         public string? AlunoId { get; set; }
+        public string? DataNascimento { get; set; }
+        public string? Email { get; set; }
+        public string? Cpf { get; set; }
 
 
         #endregion
