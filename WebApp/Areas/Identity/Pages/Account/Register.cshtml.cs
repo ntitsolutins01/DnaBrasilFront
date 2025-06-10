@@ -110,8 +110,8 @@ namespace WebApp.Areas.Identity.Pages.Account
             var etnias = new SelectList(list, "IdNome", "Nome");
             ListEtnias = etnias;
 
-            var linhasAcoes = new SelectList(ApiClientFactory.Instance.GetLinhasAcoesAll(), "Id", "Nome");
-            ListModalidades = linhasAcoes;
+            var modalidades = new SelectList(ApiClientFactory.Instance.GetModalidadeAll(), "Id", "Nome");
+            ListModalidades = modalidades;
 
             var deficiencias = new SelectList(ApiClientFactory.Instance.GetDeficienciaAll().Where(x => x.Status), "Id", "Nome");
             ListDeficiencia = deficiencias;
@@ -123,7 +123,6 @@ namespace WebApp.Areas.Identity.Pages.Account
             var commandAluno = new AlunoModel.CreateUpdateDadosAlunoCommand()
             {
                 MunicipioId = collection["ddlMunicipio"] == "" ? null : Convert.ToInt32(collection["ddlMunicipio"].ToString()),
-                FomentoId = collection["ddlFomento"] == "" ? null : Convert.ToInt32(collection["ddlFomento"].ToString()),
                 LocalidadeId = collection["ddlLocalidade"] == "" ? null : Convert.ToInt32(collection["ddlLocalidade"].ToString()),
                 DeficienciaId = collection["ddlDeficiencia"] == "" ? null : Convert.ToInt32(collection["ddlDeficiencia"].ToString()),
                 Endereco = collection["endereco"] == "" ? null : collection["endereco"].ToString(),
@@ -139,13 +138,23 @@ namespace WebApp.Areas.Identity.Pages.Account
                 DeficienciasIds = collection["ddlDeficiencia"] == "" ? null : collection["ddlDeficiencia"].ToString(),
                 Habilitado = true,
                 Status = true,
-                AutorizacaoSaida = Convert.ToBoolean(collection["autorizado"].ToString()),
                 UtilizacaoImagem = Convert.ToBoolean(collection["utilizacaoImagem"].ToString()),
                 ParticipacaoProgramaCompartilhamentoDados = Convert.ToBoolean(collection["participacao"].ToString()),
-                CopiaDocAlunoResponsavel = Convert.ToBoolean(collection["copiaDoc"].ToString()),
                 AutorizacaoConsentimentoAssentimento = collection["agreeterms"].ToString() != "",
-                ProfissionalId = collection["ddlProfissional"] == "" ? null : Convert.ToInt32(collection["ddlProfissional"].ToString())
             };
+
+
+            var validaAluno = await ApiClientFactory.Instance.GetAlunosByFilter(new AlunosFilterDto()
+            {
+                Nome = commandAluno.Nome,
+                DataNascimento = commandAluno.DtNascimento,
+                Cpf = commandAluno.Cpf
+            });
+
+            if (validaAluno.Alunos.Any())
+            {
+                return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = "Já existe um aluno cadastrado com estas informações." });
+            }
 
             var newUser = new IdentityUser { UserName = commandAluno.Email, Email = commandAluno.Email };
             var aspNetUser = await _userManager.CreateAsync(newUser, "12345678");

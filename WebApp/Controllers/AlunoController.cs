@@ -507,7 +507,6 @@ namespace WebApp.Controllers
                 {
                     Nome = command.Nome,
                     DataNascimento = command.DtNascimento,
-                    Email = command.Email,
                     Cpf = command.Cpf
                 });
 
