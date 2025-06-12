@@ -233,7 +233,7 @@
 									}
 									<td class="actions text-center">
 										<a data-toggle="tooltip" data-placement="top" title="Editar" asp-action="Edit" asp-controller="Laudo" asp-route-id="@item.Id" class="on-default edit-row" style='color: #FF9800'><i class="fa fa-pencil"></i></a>
-										<a href="#" data-id="@item.Id" data-toggle="modal" data-target="#mdUpload"
+										<a href="#" data-id="@item.Id" data-alunoid="@item.AlunoId" data-localidadeid="@item.LocalidadeId" data-toggle="modal" data-target="#mdUpload"
 										   data-toggle="tooltip" data-placement="top" title="Upload Gabarito"
 										   class="on-default edit-row" style='color: #303F9F'><i class="fa fa-upload"></i></a>
 										<a data-toggle="tooltip" data-placement="top" title="Avaliação Completa" asp-action="Details" asp-controller="Laudo" asp-route-id="@item.Id" class="on-default edit-row" style='color: #d2322d'><i class="fa fa-bar-chart"></i></a>
@@ -259,15 +259,26 @@
 				@using (@Html.BeginForm("Upload", "Laudo", FormMethod.Post, new { id = "formUploadGabarito", @class = "form-horizontal", @enctype = "multipart/form-data" }))
 				{
 					<div class="modal-body">
+						<input type="hidden" id="alunoId" name="alunoId" />
+						<div class="form-group mb-lg">
+							<label class="col-sm-2 control-label">Profissional: <span class="required text-danger">*</span></label>
+							<div class="col-md-10">
+								<select class="form-control populate select2" name="ddlProfissionalUpload" id="ddlProfissionalUpload"
+								        title="Por favor informe o profissional." required style="width: 100%"
+								        asp-for="ProfissionalId" asp-items="Model.ListProfissionais">
+									<option value="">Selecionar Profissional</option>
+								</select>
+							</div>
+						</div>
 						<div class="form-group mb-lg">
 							<label class="col-sm-2 control-label">Gabarito: <span class="required text-danger">*</span></label>
 							<div class="col-md-10">
 								<select class="form-control populate select2"
-										name="ddlGabarito"
-										id="ddlGabarito"
-										style="width:100%"
-										title="Por favor selecione o gabarito."
-										required>
+								        name="ddlGabarito"
+								        id="ddlGabarito"
+								        style="width: 100%"
+								        title="Por favor selecione o gabarito."
+								        required>
 									<option value="">Selecionar Gabarito</option>
 									<option value="3LP">LÍNGUA PORTUGUESA 3ª Série do Ensino Médio</option>
 									<option value="3MT">MATEMÁTICA 3ª Série do Ensino Médio</option>
@@ -290,7 +301,7 @@
 										<span class="btn btn-default btn-file">
 											<span class="fileupload-exists">Alterar</span>
 											<span class="fileupload-new">Selecionar Gabarito</span>
-											<input type="file" id="arquivo" name="arquivo" required title="Por favor selecione o arquivo" />
+											<input type="file" id="arquivo" name="arquivo" required title="Por favor selecione o arquivo"/>
 										</span>
 										<a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload">Remover</a>
 									</div>
@@ -307,9 +318,9 @@
 						<button type="button" class="btn btn-info pull-right" id="btnProcessarGabarito" style="margin-left: 10px;">
 							<i class="fa fa-magic"></i> &nbsp;&nbsp;Processar Gabarito
 						</button>
-						@* <button type="submit" class="btn btn-success pull-right" id="btnSalvarGabarito" disabled style="margin-left: 10px;">
+						<button type="submit" class="btn btn-success pull-right" id="btnSalvarGabarito" disabled style="margin-left: 10px;">
                             <i class="fa fa-save"></i> &nbsp;&nbsp;Salvar
-                        </button> *@
+                        </button>
 						<button type="reset" class="btn btn-danger pull-right" data-dismiss="modal">
 							<i class="fa fa-remove"></i> &nbsp;&nbsp;Fechar
 						</button>
