@@ -449,7 +449,7 @@
                                     </li>
                                 }
 
-                                @* @if ((await AuthorizationService.AuthorizeAsync(User, ModuloAccess.ControleFrequenciaEscolar)).Succeeded)
+                                @if ((await AuthorizationService.AuthorizeAsync(User, ModuloAccess.ControleFrequenciaEscolar)).Succeeded)
                                 {
                                     <li class="nav-parent nav-expanded">
                                         <a href="@Url.Action("Index", "ControleFrequenciaEscolar")">
@@ -457,7 +457,7 @@
                                             <span>Frequência Escolar</span>
                                         </a>
                                     </li>
-                                } *@
+                                }
 
                                 @if ((await AuthorizationService.AuthorizeAsync(User, ModuloAccess.ControleMaterial)).Succeeded)
                                 {
