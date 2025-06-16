@@ -67,5 +67,14 @@ namespace WebApp.Models
             public int? ModalidadeId { get; set; }
             public int? Ordem { get; set; }
         }
+
+        public class CreateUpdateEducacionalCommand
+        {
+            public int ProfissionalId { get; init; }
+            public int AlunoId { get; init; }
+            public string Gabarito { get; init; }
+            public string Respostas { get; init; }
+            public string StatusEducacional { get; init; }
+        }
     }
 }
