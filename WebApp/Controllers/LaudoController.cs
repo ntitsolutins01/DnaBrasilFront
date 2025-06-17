@@ -1247,5 +1247,28 @@ namespace WebApp.Controllers
                 return Json(new { sucesso = false, erro = e.Message });
             }
         }
+
+        /// <summary>
+        /// Ação de Upload de Foto do Gabarito
+        /// </summary>
+        /// <param name="collection">Arquivo de upload realizado</param>
+        /// <returns>Retorna mensagem de upload realizado através do parametro notfy e message</returns>
+        [HttpPost]
+        //[ClaimsAuthorize(ClaimType.Laudo, Claim.Upload)]
+        public async Task<IActionResult> Upload(IFormCollection collection)
+        {
+            try
+            {
+                _logger.Info($"Ação de processamento do gabarito - Laudo.ProcessarGabarito");
+
+
+                return Json("");
+            }
+            catch (Exception e)
+            {
+                _logger.Error($"Ação de upload ... - Laudo.Upload: {e.Message}");
+                return Json(new { sucesso = false, erro = e.Message });
+            }
+        }
     }
 }

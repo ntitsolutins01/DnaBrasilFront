@@ -27,6 +27,45 @@ var vm = new Vue({
 
             }).apply(this, [jQuery]);
 
+            //acionado quando o modal está prestes a ser mostrado
+            $('#mdUpload').on('show.bs.modal', function (e) {
+
+                //get data-id attribute of the clicked element
+                var id = $(e.relatedTarget).data('id');
+                var alunoId = $(e.relatedTarget).data('alunoid');
+                var localidadeId = $(e.relatedTarget).data('localidadeid');
+
+                $("input[name='id']").val(id);
+                $("input[name='alunoId']").val(alunoId);
+                $("input[name='localidadeid']").val(localidadeId);
+
+                console.log("laudoId: " + id + " - alunoId: " + alunoId + " - localidadeId: " + localidadeId);
+
+                var urlProfissional = "../../Profissional/GetProfissionaisByLocalidade";
+
+                $.getJSON(urlProfissional,
+                    { id: localidadeId },
+                    function (data) {
+                        if (data.length > 0) {
+                            var items = '<option value="">Selecionar Profissional</option>';
+                            $("#ddlProfissional").empty;
+                            $.each(data,
+                                function (i, row) {
+                                    items += "<option value='" + row.value + "'>" + row.text + "</option>";
+                                });
+                            $("#ddlProfissional").html(items);
+                        }
+                        else {
+                            new PNotify({
+                                title: 'Profissional',
+                                text: 'Profissional não encontrados.',
+                                type: 'warning'
+                            });
+                        }
+                    });
+
+            });
+
             var formid = $('form')[1].id;
 
             if (formid === "formPesquisarLaudo") {
