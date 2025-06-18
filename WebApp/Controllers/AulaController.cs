@@ -198,55 +198,58 @@ public class AulaController : BaseController
                 Titulo = collection["nome"].ToString(),
                 Descricao = collection["descricao"].ToString(),
                 Status = collection["editStatus"].ToString() == "" ? false : true,
-                ProfessorId = Convert.ToInt32(collection["ddlProfessor"].ToString())
+                ProfessorId = Convert.ToInt32(collection["ddlProfessor"].ToString()),
+                Ordem = Convert.ToInt32(collection["ordem"].ToString()),
+                Video = collection["video"].ToString(),
+                Material = collection["material"].ToString()
             };
 
-            string aulasPath = Path.Combine(_host.WebRootPath, "Aulas");
-            if (!Directory.Exists(aulasPath))
-            {
-                Directory.CreateDirectory(aulasPath);
-            }
+            //string aulasPath = Path.Combine(_host.WebRootPath, "Aulas");
+            //if (!Directory.Exists(aulasPath))
+            //{
+            //    Directory.CreateDirectory(aulasPath);
+            //}
 
-            string? filePathMaterial = null;
-            string? fileNameMaterial = null;
-            string? filePathVideo = null;
-            string? fileNameVideo = null;
+            //string? filePathMaterial = null;
+            //string? fileNameMaterial = null;
+            //string? filePathVideo = null;
+            //string? fileNameVideo = null;
 
-            foreach (var file in collection.Files)
-            {
-                if (file.Length <= 0) continue;
+            //foreach (var file in collection.Files)
+            //{
+            //    if (file.Length <= 0) continue;
 
-                string extension = Path.GetExtension(file.FileName).ToLowerInvariant();
+            //    string extension = Path.GetExtension(file.FileName).ToLowerInvariant();
 
-                if (extension == ".jpg" || extension == ".png")
-                {
-                    string newFileNameMaterial = Path.ChangeExtension(Guid.NewGuid().ToString(), extension);
-                    filePathMaterial = Path.Combine(aulasPath, newFileNameMaterial);
-                    fileNameMaterial = Path.GetFileName(file.FileName);
+            //    if (extension == ".jpg" || extension == ".png")
+            //    {
+            //        string newFileNameMaterial = Path.ChangeExtension(Guid.NewGuid().ToString(), extension);
+            //        filePathMaterial = Path.Combine(aulasPath, newFileNameMaterial);
+            //        fileNameMaterial = Path.GetFileName(file.FileName);
 
-                    command.Material = filePathMaterial;
-                    command.NomeMaterial = fileNameMaterial;
+            //        command.Material = filePathMaterial;
+            //        command.NomeMaterial = fileNameMaterial;
 
-                    using (var fileStream = new FileStream(filePathMaterial, FileMode.Create))
-                    {
-                        await file.CopyToAsync(fileStream);
-                    }
-                }
-                else if (extension == ".mp4" || extension == ".avi")
-                {
-                    string newFileNameVideo = Path.ChangeExtension(Guid.NewGuid().ToString(), extension);
-                    filePathVideo = Path.Combine(aulasPath, newFileNameVideo);
-                    fileNameVideo = Path.GetFileName(file.FileName);
+            //        using (var fileStream = new FileStream(filePathMaterial, FileMode.Create))
+            //        {
+            //            await file.CopyToAsync(fileStream);
+            //        }
+            //    }
+            //    else if (extension == ".mp4" || extension == ".avi")
+            //    {
+            //        string newFileNameVideo = Path.ChangeExtension(Guid.NewGuid().ToString(), extension);
+            //        filePathVideo = Path.Combine(aulasPath, newFileNameVideo);
+            //        fileNameVideo = Path.GetFileName(file.FileName);
 
-                    command.Video = filePathVideo;
-                    command.NomeVideo = fileNameVideo;
+            //        command.Video = filePathVideo;
+            //        command.NomeVideo = fileNameVideo;
 
-                    using (var fileStream = new FileStream(filePathVideo, FileMode.Create))
-                    {
-                        await file.CopyToAsync(fileStream);
-                    }
-                }
-            }
+            //        using (var fileStream = new FileStream(filePathVideo, FileMode.Create))
+            //        {
+            //            await file.CopyToAsync(fileStream);
+            //        }
+            //    }
+            //}
 
             await ApiClientFactory.Instance.UpdateAula(command.Id, command);
 

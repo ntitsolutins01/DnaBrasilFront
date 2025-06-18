@@ -602,6 +602,19 @@ namespace WebApp.Controllers
                     SerieId = collection["ddlTurma"] == "" ? null : Convert.ToInt32(collection["ddlTurma"].ToString())
                 };
 
+                var validaAluno = await ApiClientFactory.Instance.GetAlunosByFilter(new AlunosFilterDto()
+                {
+                    Nome = command.Nome,
+                    DataNascimento = command.DtNascimento,
+                    Cpf = command.Cpf
+                });
+
+                if (validaAluno.Alunos.Any())
+                {
+                    return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = "Já existe um aluno cadastrado com estas informações." });
+                }
+
+
                 foreach (var file in collection.Files)
                 {
                     if (file.Length <= 0) continue;
