@@ -144,11 +144,11 @@ namespace WebApp.Areas.Identity.Pages.Account
                         switch (userRole)
                         {
                             case UserRoles.Aluno:
-                                return RedirectToPage("Login", new
-                                {
-                                    notify = (int)EnumNotify.Success,
-                                    message = $"Este usuário não possui permissão de acesso ao sistema DNA."
-                                });
+                                //return RedirectToPage("Login", new
+                                //{
+                                //    notify = (int)EnumNotify.Success,
+                                //    message = $"Este usuário não possui permissão de acesso ao sistema DNA."
+                                //});
                                 returnUrl = Url.Content("~/Aluno/Profile");
                                 break;
                             case UserRoles.AdministradorEad:

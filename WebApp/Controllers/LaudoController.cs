@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using WebApp.Authorization;
 using WebApp.Configuration;
 using WebApp.Dto;
@@ -105,6 +106,7 @@ namespace WebApp.Controllers
                 };
 
                 var deficiencias = new SelectList(ApiClientFactory.Instance.GetDeficienciaAll(), "Id", "Nome", searchFilter.DeficienciaId);
+                var profissionais = new SelectList(ApiClientFactory.Instance.GetProfissionalAll(), "Id", "Nome");
 
                 var response = await ApiClientFactory.Instance.GetLaudosByFilter(searchFilter);
 
@@ -119,6 +121,7 @@ namespace WebApp.Controllers
                     ListDeficiencias = deficiencias,
                     ListAlunos = alunos,
                     SearchFilter = searchFilter,
+                    ListProfissionais = profissionais,
                     //ListTurmas = turmas
                 };
 
@@ -135,14 +138,14 @@ namespace WebApp.Controllers
         [ClaimsAuthorize(ClaimType.Laudo, Claim.Detalhar)]
         public async Task<ActionResult> Details(int id)
         {
-            var laudo = ApiClientFactory.Instance.GetLaudoByAluno(id);
+            var laudo = ApiClientFactory.Instance.GetLaudoById(id);
 
             var consumoAlimentar = laudo.ConsumoAlimentarId == null ? null : ApiClientFactory.Instance.GetConsumoAlimentarById((int)laudo.ConsumoAlimentarId);
             var saudeBucal = laudo.SaudeBucalId == null ? null : ApiClientFactory.Instance.GetConsumoAlimentarById((int)laudo.SaudeBucalId);
 
-            var aluno = await ApiClientFactory.Instance.GetAlunoById(id);
+            var aluno = await ApiClientFactory.Instance.GetAlunoById((int)laudo.AlunoId);
             var profissional = laudo.ProfissionalId == null ? null : ApiClientFactory.Instance.GetProfissionalById(Convert.ToInt32(aluno.ProfissionalId));
-            var talentoEsportivo = laudo.TalentoEsportivoId == null ? null : ApiClientFactory.Instance.GetTalentoEsportivoByAluno((int)laudo.AlunoId!);
+            var talentoEsportivo = laudo.TalentoEsportivoId == null ? null : ApiClientFactory.Instance.GetTalentoEsportivoById((int)laudo.TalentoEsportivoId!);
             var encaminhamentoImc = laudo.SaudeId == null ? null : ApiClientFactory.Instance.GetEncaminhamentoBySaudeId(Convert.ToInt32(laudo.SaudeId));
             var qualidadeDeVida = laudo.QualidadeDeVidaId == null ? null : ApiClientFactory.Instance.GetEncaminhamentoByQualidadeDeVidaId((int)laudo.QualidadeDeVidaId);
             var vocacional = laudo.VocacionalId == null ? null : ApiClientFactory.Instance.GetEncaminhamentoByVocacional();
@@ -171,14 +174,14 @@ namespace WebApp.Controllers
         //[ClaimsAuthorize(ClaimType.Laudo, Claim.Ver)]
         public async Task<ActionResult> Report(int id)
         {
-            var laudo = ApiClientFactory.Instance.GetLaudoByAluno(id);
+            var laudo = ApiClientFactory.Instance.GetLaudoById(id);
 
             var consumoAlimentar = laudo.ConsumoAlimentarId == null ? null : ApiClientFactory.Instance.GetConsumoAlimentarById((int)laudo.ConsumoAlimentarId);
             var saudeBucal = laudo.SaudeBucalId == null ? null : ApiClientFactory.Instance.GetSaudeBucalById((int)laudo.SaudeBucalId);
 
-            var aluno = await ApiClientFactory.Instance.GetAlunoById(id);
+            var aluno = await ApiClientFactory.Instance.GetAlunoById((int)laudo.AlunoId);
             var profissional = laudo.ProfissionalId == null ? null : ApiClientFactory.Instance.GetProfissionalById(Convert.ToInt32(aluno.ProfissionalId));
-            var talentoEsportivo = laudo.TalentoEsportivoId == null ? null : ApiClientFactory.Instance.GetTalentoEsportivoByAluno((int)laudo.AlunoId!);
+            var talentoEsportivo = laudo.TalentoEsportivoId == null ? null : ApiClientFactory.Instance.GetTalentoEsportivoById((int)laudo.TalentoEsportivoId!);
             var encaminhamentoImc = laudo.SaudeId == null ? null : ApiClientFactory.Instance.GetEncaminhamentoBySaudeId(Convert.ToInt32(laudo.SaudeId));
             var qualidadeDeVida = laudo.QualidadeDeVidaId == null ? null : ApiClientFactory.Instance.GetEncaminhamentoByQualidadeDeVidaId((int)laudo.QualidadeDeVidaId);
             var vocacional = laudo.VocacionalId == null ? null : ApiClientFactory.Instance.GetEncaminhamentoByVocacional();
@@ -186,6 +189,33 @@ namespace WebApp.Controllers
             var encaminhamentoSaudeBucal = laudo.SaudeBucalId == null ? null : ApiClientFactory.Instance.GetEncaminhamentoById((int)saudeBucal.Encaminhamento.Id);
             var desempenho = ApiClientFactory.Instance.GetDesempenhoByAluno(Convert.ToInt32(laudo.AlunoId));
             var modalidade = ApiClientFactory.Instance.GetModalidadeById(Convert.ToInt32(laudo.ModalidadeId));
+
+            var percentual = new PercentualLaudoDto();
+
+            if (laudo.Ordem != 1)
+            {
+                var laudoAnterior = await ApiClientFactory.Instance.GetLaudosByFilter(new LaudosFilterDto
+                {
+                    AlunoId = laudo.AlunoId.ToString(),
+                    Ordem = laudo.Ordem - 1,
+                    PageNumber = 1,
+                    PageSize = 10
+                });
+
+                var talentoEsportivoAnterior = ApiClientFactory.Instance.GetTalentoEsportivoById((int)laudoAnterior.Laudos.Items.First().TalentoEsportivoId);
+
+                percentual.PreensaoManual = (decimal)((talentoEsportivoAnterior.PreensaoManual - talentoEsportivo.PreensaoManual) / talentoEsportivoAnterior.PreensaoManual * 100);
+                percentual.Flexibilidade = (decimal)((talentoEsportivoAnterior.Flexibilidade - talentoEsportivo.Flexibilidade) / talentoEsportivoAnterior.Flexibilidade * 100);
+                percentual.ImpulsaoHorizontal = (decimal)((talentoEsportivoAnterior.ImpulsaoHorizontal - talentoEsportivo.ImpulsaoHorizontal) / talentoEsportivoAnterior.ImpulsaoHorizontal * 100);
+                percentual.Velocidade = (decimal)((talentoEsportivoAnterior.Velocidade - talentoEsportivo.Velocidade) / talentoEsportivoAnterior.Velocidade * 100);
+                percentual.AptidaoFisica = (decimal)((talentoEsportivoAnterior.Vo2Max - talentoEsportivo.Vo2Max) / talentoEsportivoAnterior.Vo2Max * 100);
+                percentual.Agilidade = (decimal)((talentoEsportivoAnterior.ShuttleRun - talentoEsportivo.ShuttleRun) / talentoEsportivoAnterior.ShuttleRun * 100);
+                percentual.Imc = (decimal)((talentoEsportivoAnterior.Imc - talentoEsportivo.Imc) / talentoEsportivoAnterior.Imc * 100);
+
+
+            }
+
+            var tiposLaudos = ApiClientFactory.Instance.GetTiposLaudoAll();
 
             var model = new LaudoModel()
             {
@@ -198,7 +228,13 @@ namespace WebApp.Controllers
                 EncaminhamentoSaudeBucal = encaminhamentoSaudeBucal,
                 EncaminhamentoConsumoAlimentar = encaminhamentoConsumoAlimentar,
                 Desempenho = desempenho,
-                Modalidade = modalidade
+                Modalidade = modalidade,
+                Percentual = percentual,
+                TipoLaudoQualidadeVidaDescricao = tiposLaudos.First(x=> x.Id == (int)EnumTipoLaudo.QualidadeVida).Descricao,
+                TipoLaudoConsumoAlimentarDescricao = tiposLaudos.First(x=> x.Id == (int)EnumTipoLaudo.ConsumoAlimentar).Descricao,
+                TipoLaudoSaudeBucalDescricao = tiposLaudos.First(x=> x.Id == (int)EnumTipoLaudo.SaudeBucal).Descricao,
+                TipoLaudoVocacionalDescricao = tiposLaudos.First(x=> x.Id == (int)EnumTipoLaudo.Vocacional).Descricao
+
             };
             return View(model);
         }
@@ -224,7 +260,7 @@ namespace WebApp.Controllers
                 var questionarioSaudeBucal =
                     ApiClientFactory.Instance.GetQuestionarioByTipoLaudo((int)EnumTipoLaudo.SaudeBucal).OrderBy(o => o.Questao).ToList();
                 var questionarioEducacional3Lp =
-                    ApiClientFactory.Instance.GetQuestionarioByTipoLaudo((int)EnumTipoLaudo.Educacional3Lp).OrderBy(o => o.Questao).ToList();
+                    ApiClientFactory.Instance.GetQuestionarioByTipoLaudo((int)EnumTipoLaudo.Educacional3LP).OrderBy(o => o.Questao).ToList();
 
                 var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome", usu.Uf);
 
@@ -1150,6 +1186,70 @@ namespace WebApp.Controllers
         }
 
         /// <summary>
+        /// Ação de Processamento de Foto do Gabarito
+        /// </summary>
+        /// <param name="collection">Arquivo de upload realizado</param>
+        /// <returns>Retorna um dicionario em json com as respostas reconhecidas</returns>
+        [HttpPost]
+        public async Task<IActionResult> ProcessarGabarito(IFormCollection collection)
+        {
+            try
+            {
+                _logger.Info($"Ação de processamento do gabarito - Laudo.ProcessarGabarito");
+
+                byte[]? byteImage = null;
+                foreach (var file in collection.Files)
+                {
+                    if (file.Length <= 0) continue;
+                    using var ms = new MemoryStream();
+                    await file.CopyToAsync(ms);
+                    byteImage = ms.ToArray();
+                    break;
+                }
+
+                if (byteImage == null)
+                    return Json(new { erro = "Nenhuma imagem foi enviada." });
+
+                var resultado = await ApiClientFactory.Instance.ProcessarGabarito(byteImage);
+
+                Dictionary<string, string> respostasDict;
+
+                if (resultado["respostas"] is Dictionary<string, object> respostasObj)
+                {
+                    respostasDict = respostasObj.ToDictionary(
+                        kvp => kvp.Key,
+                        kvp => kvp.Value?.ToString() ?? ""
+                    );
+                }
+                else if (resultado["respostas"] is Newtonsoft.Json.Linq.JObject respostasJObj)
+                {
+                    respostasDict = respostasJObj.ToObject<Dictionary<string, string>>();
+                }
+                else if (resultado["respostas"] is string respostasJson)
+                {
+                    respostasDict = JsonConvert.DeserializeObject<Dictionary<string, string>>(respostasJson);
+                }
+                else
+                {
+                    respostasDict = resultado["respostas"] as Dictionary<string, string>;
+                }
+
+                return Json(new
+                {
+                    sucesso = true,
+                    matricula = resultado["matricula"],
+                    respostas = respostasDict
+                });
+
+            }
+            catch (Exception e)
+            {
+                _logger.Error($"Ação de upload de foto do gabarito - Laudo.ProcessarGabarito: {e.Message}");
+                return Json(new { sucesso = false, erro = e.Message });
+            }
+        }
+
+        /// <summary>
         /// Ação de Upload de Foto do Gabarito
         /// </summary>
         /// <param name="collection">Arquivo de upload realizado</param>
@@ -1160,36 +1260,70 @@ namespace WebApp.Controllers
         {
             try
             {
-                _logger.Info($"Ação de upload de foto do gabarito - Laudo.Upload");
+                _logger.Info($"Ação de upload de foto do aluno - Aluno.Upload");
 
-                string filePath = null;
+                var matricula = Convert.ToInt32(collection["matriculaReconhecida"]);
+                var gabarito = "Educacional" + collection["ddlGabarito"];
 
-                var command = new LaudoModel.CreateUpdateLaudoCommand
-                {
-                    Id = Convert.ToInt32(collection["laudoId"]),
-                    AlunoId = 0
+                Enum.TryParse(gabarito, true, out EnumTipoLaudo enumValue);
+
+                var questionario = ApiClientFactory.Instance.GetQuestionarioByTipoLaudo((int)enumValue);
+
+                var alternativaParaIndice = new Dictionary<string, int> {
+                    { "A", 0 },
+                    { "B", 1 },
+                    { "C", 2 },
+                    { "D", 3 },
+                    { "E", 4 }
                 };
 
-                foreach (var file in collection.Files)
+                var respostaIds = new List<int>();
+                var respostasJson = collection["respostasReconhecidas"].ToString();
+                var respostasDict = JsonConvert.DeserializeObject<Dictionary<string, string>>(respostasJson);
+
+                foreach (var questao in questionario)
                 {
-                    if (file.Length <= 0) continue;
+                    string numeroQuestao = questao.Questao.ToString();
+                    if (!respostasDict.TryGetValue(numeroQuestao, out string alternativaMarcada) ||
+                        string.IsNullOrWhiteSpace(alternativaMarcada) ||
+                        !alternativaParaIndice.ContainsKey(alternativaMarcada.ToUpper()))
+                    {
+                        respostaIds.Add(0);
+                        continue;
+                    }
 
-                    //command.NomeFoto = System.IO.Path.GetFileName(collection.Files[0].FileName);
-
-                    using var ms = new MemoryStream();
-                    await file.CopyToAsync(ms);
-                    var byteIMage = ms.ToArray();
-                    //command.ByteImage = byteIMage;
+                    int indice = alternativaParaIndice[alternativaMarcada.ToUpper()];
+                    if (questao.Respostas.Count > indice)
+                    {
+                        var resposta = questao.Respostas[indice];
+                        respostaIds.Add(resposta.Id);
+                    }
+                    else
+                    {
+                        respostaIds.Add(0);
+                    }
                 }
 
-                //await ApiClientFactory.Instance.UpdateAlunoFoto(command.Id, command);
+                string respostasString = string.Join(",", respostaIds);
 
-                return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Success, mesage = "Upload realizado com sucesso." });
+
+                var command = new LaudoModel.CreateUpdateEducacionalCommand
+                {
+                    ProfissionalId = Convert.ToInt32(collection["ddlProfissional"].ToString()),
+                    Gabarito = gabarito,
+                    AlunoId = matricula,
+                    Respostas = respostasString,
+                    StatusEducacional = "F",
+                };
+
+                await ApiClientFactory.Instance.CreateEducacional(command);
+
+                return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Success, message = "Upload realizado com sucesso." });
             }
             catch (Exception e)
             {
-                _logger.Error($"Ação de upload de foto do gabarito - Laudo.Upload: {e.StackTrace}");
-                return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, mesage = e.Message });
+                _logger.Error($"Ação de upload de foto do aluno - Aluno.Upload: {e.StackTrace}");
+                return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = e.Message });
             }
         }
     }

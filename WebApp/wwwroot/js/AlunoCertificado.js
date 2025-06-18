@@ -519,7 +519,7 @@
                     self.aula = response.data;
                     self.selectedVideoUrl = "";
                     if (response.data.video != undefined) {
-                        self.selectedVideoUrl = "\\Aulas" + response.data.video.split("\\Aulas")[1];
+                        self.selectedVideoUrl = response.data.video;
                     }
 
                     $('#aulaAtualTitulo').text(response.data.titulo);

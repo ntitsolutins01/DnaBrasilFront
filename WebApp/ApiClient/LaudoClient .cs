@@ -1,5 +1,7 @@
+using Newtonsoft.Json;
 using WebApp.Dto;
 using WebApp.Models;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace WebApp.ApiClient
 {
@@ -184,7 +186,33 @@ namespace WebApp.ApiClient
             return GetFiltro(requestUrl, searchFilter);
         }
 
-        #endregion
+        /// <summary>
+        /// Processa o gabarito realizado pelo aluno
+        /// </summary>
+        /// <param name="imagemBytes">Imagem do gabarito</param>
+        /// <returns>Retorna respostas do gabarito</returns>
+        public async Task<Dictionary<string, object>> ProcessarGabarito(byte[] imagemBytes)
+        {
+            var requestUrl = CreateRequestUri($"{ResourceLaudo}/ProcessarGabarito");
+
+            return await PostDict(requestUrl, imagemBytes);
+        }
+
+        /// <summary>
+        /// Inclusão de Educacional
+        /// </summary>
+        /// <param name="command">Objeto de inclusão de Educacional</param>
+        /// <returns>Id de Educacional inserido</returns>
+        public Task<long> CreateEducacional(LaudoModel.CreateUpdateEducacionalCommand command)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"Educacionais"));
+            return Post(requestUrl, command);
+        }
 
     }
+
+
+    #endregion
+
 }
