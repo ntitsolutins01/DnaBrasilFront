@@ -198,6 +198,18 @@ namespace WebApp.ApiClient
             return await PostDict(requestUrl, imagemBytes);
         }
 
+        /// <summary>
+        /// Inclusão de Educacional
+        /// </summary>
+        /// <param name="command">Objeto de inclusão de Educacional</param>
+        /// <returns>Id de Educacional inserido</returns>
+        public Task<long> CreateEducacional(LaudoModel.CreateUpdateEducacionalCommand command)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"Educacionais"));
+            return Post(requestUrl, command);
+        }
+
     }
 
 

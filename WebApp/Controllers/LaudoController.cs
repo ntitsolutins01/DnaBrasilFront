@@ -106,6 +106,7 @@ namespace WebApp.Controllers
                 };
 
                 var deficiencias = new SelectList(ApiClientFactory.Instance.GetDeficienciaAll(), "Id", "Nome", searchFilter.DeficienciaId);
+                var profissionais = new SelectList(ApiClientFactory.Instance.GetProfissionalAll(), "Id", "Nome");
 
                 var response = await ApiClientFactory.Instance.GetLaudosByFilter(searchFilter);
 
@@ -120,6 +121,7 @@ namespace WebApp.Controllers
                     ListDeficiencias = deficiencias,
                     ListAlunos = alunos,
                     SearchFilter = searchFilter,
+                    ListProfissionais = profissionais,
                     //ListTurmas = turmas
                 };
 
@@ -258,7 +260,7 @@ namespace WebApp.Controllers
                 var questionarioSaudeBucal =
                     ApiClientFactory.Instance.GetQuestionarioByTipoLaudo((int)EnumTipoLaudo.SaudeBucal).OrderBy(o => o.Questao).ToList();
                 var questionarioEducacional3Lp =
-                    ApiClientFactory.Instance.GetQuestionarioByTipoLaudo((int)EnumTipoLaudo.Educacional3Lp).OrderBy(o => o.Questao).ToList();
+                    ApiClientFactory.Instance.GetQuestionarioByTipoLaudo((int)EnumTipoLaudo.Educacional3LP).OrderBy(o => o.Questao).ToList();
 
                 var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome", usu.Uf);
 
@@ -1184,12 +1186,11 @@ namespace WebApp.Controllers
         }
 
         /// <summary>
-        /// Ação de Upload de Foto do Gabarito
+        /// Ação de Processamento de Foto do Gabarito
         /// </summary>
         /// <param name="collection">Arquivo de upload realizado</param>
-        /// <returns>Retorna mensagem de upload realizado através do parametro notfy e message</returns>
+        /// <returns>Retorna um dicionario em json com as respostas reconhecidas</returns>
         [HttpPost]
-        //[ClaimsAuthorize(ClaimType.Laudo, Claim.Upload)]
         public async Task<IActionResult> ProcessarGabarito(IFormCollection collection)
         {
             try
@@ -1255,19 +1256,74 @@ namespace WebApp.Controllers
         /// <returns>Retorna mensagem de upload realizado através do parametro notfy e message</returns>
         [HttpPost]
         //[ClaimsAuthorize(ClaimType.Laudo, Claim.Upload)]
-        public async Task<IActionResult> Upload(IFormCollection collection)
+        public async Task<ActionResult> Upload(IFormCollection collection)
         {
             try
             {
-                _logger.Info($"Ação de processamento do gabarito - Laudo.ProcessarGabarito");
+                _logger.Info($"Ação de upload de foto do aluno - Aluno.Upload");
+
+                var matricula = Convert.ToInt32(collection["matriculaReconhecida"]);
+                var gabarito = "Educacional" + collection["ddlGabarito"];
+
+                Enum.TryParse(gabarito, true, out EnumTipoLaudo enumValue);
+
+                var questionario = ApiClientFactory.Instance.GetQuestionarioByTipoLaudo((int)enumValue);
+
+                var alternativaParaIndice = new Dictionary<string, int> {
+                    { "A", 0 },
+                    { "B", 1 },
+                    { "C", 2 },
+                    { "D", 3 },
+                    { "E", 4 }
+                };
+
+                var respostaIds = new List<int>();
+                var respostasJson = collection["respostasReconhecidas"].ToString();
+                var respostasDict = JsonConvert.DeserializeObject<Dictionary<string, string>>(respostasJson);
+
+                foreach (var questao in questionario)
+                {
+                    string numeroQuestao = questao.Questao.ToString();
+                    if (!respostasDict.TryGetValue(numeroQuestao, out string alternativaMarcada) ||
+                        string.IsNullOrWhiteSpace(alternativaMarcada) ||
+                        !alternativaParaIndice.ContainsKey(alternativaMarcada.ToUpper()))
+                    {
+                        respostaIds.Add(0);
+                        continue;
+                    }
+
+                    int indice = alternativaParaIndice[alternativaMarcada.ToUpper()];
+                    if (questao.Respostas.Count > indice)
+                    {
+                        var resposta = questao.Respostas[indice];
+                        respostaIds.Add(resposta.Id);
+                    }
+                    else
+                    {
+                        respostaIds.Add(0);
+                    }
+                }
+
+                string respostasString = string.Join(",", respostaIds);
 
 
-                return Json("");
+                var command = new LaudoModel.CreateUpdateEducacionalCommand
+                {
+                    ProfissionalId = Convert.ToInt32(collection["ddlProfissional"].ToString()),
+                    Gabarito = gabarito,
+                    AlunoId = matricula,
+                    Respostas = respostasString,
+                    StatusEducacional = "F",
+                };
+
+                await ApiClientFactory.Instance.CreateEducacional(command);
+
+                return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Success, message = "Upload realizado com sucesso." });
             }
             catch (Exception e)
             {
-                _logger.Error($"Ação de upload ... - Laudo.Upload: {e.Message}");
-                return Json(new { sucesso = false, erro = e.Message });
+                _logger.Error($"Ação de upload de foto do aluno - Aluno.Upload: {e.StackTrace}");
+                return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = e.Message });
             }
         }
     }

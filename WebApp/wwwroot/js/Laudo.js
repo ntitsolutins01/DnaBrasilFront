@@ -420,20 +420,26 @@ var vm = new Vue({
                         contentType: false,
                         processData: false,
                         success: function (res) {
-                            var html = "<b>Matrícula reconhecida:</b> " + (res.matricula || "<i>Não reconhecida</i>") + "<br/><b>Respostas:</b><ul>";
-                            if (res.respostas) { 
+                            if (res.sucesso) {
+                                var html = "<b>Matrícula reconhecida:</b> " + (res.matricula || "<i>Não reconhecida</i>") + "<br/><b>Respostas:</b><ul>";
                                 for (var q in res.respostas) {
-                                    html += "<li><b>Questão " + q + "</b>: " + res.respostas[q] + "</li>";
+                                    html += "<li><b>Questão " + q + ":</b> " + (res.respostas[q] || "<i>Não marcada</i>") + "</li>";
                                 }
                                 html += "</ul>";
                                 $("#respostasReconhecidas").html(html);
                                 $("#btnSalvarGabarito").prop("disabled", false);
-                            } else if (res.erro) {
-                                $("#respostasReconhecidas").html("<span class='text-danger'>" + res.erro + "</span>");
+
+                                $("#matriculaReconhecidaHidden").val(res.matricula || "");
+                                $("#respostasReconhecidasHidden").val(JSON.stringify(res.respostas));
+                            } else {
+                                var mensagem = "Erro ao processar o gabarito. Por favor verifique a iluminação e enquadramento da imagem.";                              
+                                $("#respostasReconhecidas").html("<span class='text-danger'>" + mensagem + "</span>");
+                                $("#btnSalvarGabarito").prop("disabled", true);
                             }
+
                         },
                         error: function () {
-                            $("#respostasReconhecidas").html("<span class='text-danger'>Erro ao processar gabarito!</span>");
+                            $("#respostasReconhecidas").html("<span class='text-danger'>Erro interno ao processar gabarito.</span>");
                         },
                         complete: function () {
                             $("#btnProcessarGabarito").prop("disabled", false);
