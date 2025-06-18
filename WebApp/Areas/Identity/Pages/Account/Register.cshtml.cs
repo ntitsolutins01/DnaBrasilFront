@@ -137,8 +137,8 @@ namespace WebApp.Areas.Identity.Pages.Account
                 NomeMae = collection["nomeMae"] == "" ? null : collection["nomeMae"].ToString(),
                 NomeResponsavel = collection["nomeResp"] == "" ? null : collection["nomeResp"].ToString(),
                 DeficienciasIds = collection["ddlDeficiencia"] == "" ? null : collection["ddlDeficiencia"].ToString(),
-                Habilitado = true,
-                Status = true,
+                Habilitado = false, //nao habilitado no sistema até concluir o cadastro do aluno
+                Status = true, //pré-inscrição
                 UtilizacaoImagem = Convert.ToBoolean(collection["utilizacaoImagem"].ToString()),
                 ParticipacaoProgramaCompartilhamentoDados = Convert.ToBoolean(collection["participacao"].ToString()),
                 AutorizacaoConsentimentoAssentimento = collection["agreeterms"].ToString() != "",

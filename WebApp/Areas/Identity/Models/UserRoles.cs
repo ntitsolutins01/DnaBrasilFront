@@ -3,6 +3,7 @@
     public static class UserRoles
     {
         public const string Administrador = "Administrador";
+        public const string AdministradorConsulta = "AdministradorConsulta";
         public const string AdministradorEad = "AdministradorEad";
         public const string Aluno = "Aluno";
         public const string Parceiro = "Parceiro";
