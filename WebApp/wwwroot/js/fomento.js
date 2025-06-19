@@ -2,114 +2,170 @@
     el: "#vFomento",
     data: {
         loading: false,
-        editDto: { Nome: "", Codigo: "", Status: "", DtIni: "", DtFim: "" }
+        editDto: { Nome: "", Codigo: "", Status: "", DtIni: "", DtFim: "", FomentoId: "" }
     },
     mounted: function () {
         var self = this;
         (function ($) {
             'use strict';
 
+            //skin select
+            var $select = $(".select2").select2({
+                allowClear: true
+            });
+
+            $(".select2").each(function () {
+                var $this = $(this),
+                    opts = {};
+
+                var pluginOptions = $this.data('plugin-options');
+                if (pluginOptions)
+                    opts = pluginOptions;
+
+                $this.themePluginSelect2(opts);
+            });
+
+            $select.on('change', function () {
+                $(this).trigger('blur');
+            });
+
+            //skin MultiSelect
+            (function (theme, $) {
+
+                theme = theme || {};
+
+                var instanceName = '__multiselect';
+
+                var PluginMultiSelect = function ($el, opts) {
+                    return this.initialize($el, opts);
+                };
+
+                PluginMultiSelect.defaults = {
+                    templates: {
+                        filter: '<div class="input-group"><span class="input-group-addon"><i class="fa fa-search"></i></span><input class="form-control multiselect-search" type="text"></div>'
+                    }
+                };
+
+                PluginMultiSelect.prototype = {
+                    initialize: function ($el, opts) {
+                        if ($el.data(instanceName)) {
+                            return this;
+                        }
+
+                        this.$el = $el;
+
+                        this
+                            .setData()
+                            .setOptions(opts)
+                            .build();
+
+                        return this;
+                    },
+
+                    setData: function () {
+                        this.$el.data(instanceName, this);
+
+                        return this;
+                    },
+
+                    setOptions: function (opts) {
+                        this.options = $.extend(true, {}, PluginMultiSelect.defaults, opts);
+
+                        return this;
+                    },
+
+                    build: function () {
+                        this.$el.multiselect(this.options);
+
+                        return this;
+                    }
+                };
+
+                // expose to scope
+                $.extend(theme, {
+                    PluginMultiSelect: PluginMultiSelect
+                });
+
+                // jquery plugin
+                $.fn.themePluginMultiSelect = function (opts) {
+                    return this.each(function () {
+                        var $this = $(this);
+
+                        if ($this.data(instanceName)) {
+                            return $this.data(instanceName);
+                        } else {
+                            return new PluginMultiSelect($this, opts);
+                        }
+
+                    });
+                }
+
+            }).apply(this, [window.theme, jQuery]);
+
+
+
+            $("#ddlEstadoVincularLocalidades").change(function () {
+                var sigla = $("#ddlEstadoVincularLocalidades").val();
+
+                var url = "../DivisaoAdministrativa/GetMunicipioByUf?uf=" + sigla;
+
+                var ddlSource = "#ddlMunicipio";
+
+                $.getJSON(url,
+                    { id: $(ddlSource).val() },
+                    function (data) {
+                        if (data.length > 0) {
+                            var items = '<option value="">Selecionar Municipio</option>';
+                            $("#ddlMunicipioVincularLocalidades").empty;
+                            $.each(data,
+                                function (i, row) {
+                                    items += "<option value='" + row.value + "'>" + row.text + "</option>";
+                                });
+                            $("#ddlMunicipioVincularLocalidades").html(items);
+                        }
+                        else {
+                            new PNotify({
+                                title: 'Fomento',
+                                text: 'Municípios não encontrados.',
+                                type: 'warning'
+                            });
+                        }
+                    });
+            });
+
+            //clique de escolha do select
+            $("#ddlMunicipioVincularLocalidades").change(function () {
+                var id = $("#ddlMunicipioVincularLocalidades").val();
+
+                var url = "../../Localidade/GetLocalidadeByMunicipio";
+
+                $.getJSON(url,
+                    { id: id },
+                    function (data) {
+                        if (data.length > 0) {
+                            var items = '<option value="">Selecionar Localidade</option>';
+
+                            for (var i = 0; i != data.length; i++) {
+                                $('select#ddlLocalidadeVincularLocalidades').append('<option value="' + data[i].value + '">' + data[i].text + '</option>');
+                            }
+
+                            $('select#ddlLocalidadeVincularLocalidades').multiselect('rebuild');
+                        }
+                        else {
+                            new PNotify({
+                                title: 'Localidades',
+                                text: 'Localidades não encontradas.',
+                                type: 'warning'
+                            });
+                        }
+                    }
+                );
+            });
+
             var formid = $('form')[1].id;
 
             if (formid === "formFomento") {
-
-                // MultiSelect
-                (function (theme, $) {
-
-                    theme = theme || {};
-
-                    var instanceName = '__multiselect';
-
-                    var PluginMultiSelect = function ($el, opts) {
-                        return this.initialize($el, opts);
-                    };
-
-                    PluginMultiSelect.defaults = {
-                        templates: {
-                            filter: '<div class="input-group"><span class="input-group-addon"><i class="fa fa-search"></i></span><input class="form-control multiselect-search" type="text"></div>'
-                        }
-                    };
-
-                    PluginMultiSelect.prototype = {
-                        initialize: function ($el, opts) {
-                            if ($el.data(instanceName)) {
-                                return this;
-                            }
-
-                            this.$el = $el;
-
-                            this
-                                .setData()
-                                .setOptions(opts)
-                                .build();
-
-                            return this;
-                        },
-
-                        setData: function () {
-                            this.$el.data(instanceName, this);
-
-                            return this;
-                        },
-
-                        setOptions: function (opts) {
-                            this.options = $.extend(true, {}, PluginMultiSelect.defaults, opts);
-
-                            return this;
-                        },
-
-                        build: function () {
-                            this.$el.multiselect(this.options);
-
-                            return this;
-                        }
-                    };
-
-                    // expose to scope
-                    $.extend(theme, {
-                        PluginMultiSelect: PluginMultiSelect
-                    });
-
-                    // jquery plugin
-                    $.fn.themePluginMultiSelect = function (opts) {
-                        return this.each(function () {
-                            var $this = $(this);
-
-                            if ($this.data(instanceName)) {
-                                return $this.data(instanceName);
-                            } else {
-                                return new PluginMultiSelect($this, opts);
-                            }
-
-                        });
-                    }
-
-                }).apply(this, [window.theme, jQuery]);
-
-                var $select = $(".select2").select2({
-                    allowClear: true
-                });
-
-                $(".select2").each(function () {
-                    var $this = $(this),
-                        opts = {};
-
-                    var pluginOptions = $this.data('plugin-options');
-                    if (pluginOptions)
-                        opts = pluginOptions;
-
-                    $this.themePluginSelect2(opts);
-                });
-
-                /*
-                 * When you change the value the select via select2, it triggers
-                 * a 'change' event, but the jquery validation plugin
-                 * only re-validates on 'blur'*/
-
-                $select.on('change', function () {
-                    $(this).trigger('blur');
-                });
-
+                
 
                 $("#formFomento").validate({
                     highlight: function (label) {
@@ -551,6 +607,9 @@
             }).catch(error => {
                 Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
             });
+        },
+        VincularLocalidades: function (id) {
+            self.editDto.FomentoId = id;
         }
     }
 });
@@ -559,11 +618,16 @@ var crud = {
     DeleteModal: function (id) {
         $('input[name="FomentoId"]').attr('value', id);
         $('#mdDeleteFomento').modal('show');
-        vm.DeleteFomento(id)
+        vm.DeleteFomento(id);
     },
     EditModal: function (id) {
         $('input[name="FomentoId"]').attr('value', id);
         $('#mdEditFomento').modal('show');
-        vm.EditFomento(id)
+        vm.EditFomento(id);
+    },
+    VincularLocalidadesModal: function (id) {
+        $('input[name="fomentoId"]').attr('value', id);
+        $('#mdVincularLocalidades').modal('show');
+        vm.VincularLocalidades(id);
     }
 };

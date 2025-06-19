@@ -101,5 +101,17 @@ namespace WebApp.ApiClient
         }
 
         #endregion
+
+        /// <summary>
+        /// Vicula localidades a um fomento
+        /// </summary>
+        /// <param name="command">Objeto para vinculação de localidades a um Fomento</param>
+        /// <returns>Id de Fomento vinculado</returns>
+        public Task<long> CreateFomentoLocalidades(FomentoModel.CreateUpdateFomentoCommand command)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceFomento}/VincularLocalidades"));
+            return Post(requestUrl, command);
+        }
     }
 }
