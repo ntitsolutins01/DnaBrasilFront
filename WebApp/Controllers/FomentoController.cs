@@ -233,7 +233,29 @@ namespace WebApp.Controllers
                 return Task.FromResult(Json(ex));
             }
         }
-    }
 
-    #endregion
+        #endregion
+
+        #region Custom Methods
+        /// <summary>
+        /// Ação de Vincular localidades a um fomento
+        /// </summary>
+        /// <param name="collection">coleção de dados para vicular localidades a um Fomento</param>
+        /// <returns>retorna mensagem de inclusao através do parametro crud</returns>
+        [HttpPost]
+        public async Task<ActionResult> VincularLocalidades(IFormCollection collection)
+        {
+            var command = new FomentoModel.CreateUpdateFomentoCommand
+            {
+                FomentoId = Convert.ToInt32(collection["fomentoId"].ToString()),
+                LocalidadesIds = collection["ddlLocalidadeVincularLocalidades"].ToString()
+            };
+
+            await ApiClientFactory.Instance.CreateFomentoLocalidades(command);
+
+            return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Success, message = $"Vínculo realizado com sucesso." });
+        }
+
+        #endregion
+    }
 }

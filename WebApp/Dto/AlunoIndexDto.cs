@@ -24,6 +24,7 @@
         public bool Convidado { get; set; }
         public bool PossuiLaudoFinalizado { get; set; }
         public string? Modalidades { get; set; }
+        public List<DocumentoAlunoDto>? Documentos { get; set; }
 
         #region SearchFilter
         public string Sexo { get; set; }
