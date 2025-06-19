@@ -319,7 +319,7 @@
     }
 
     $(document).ready(function () {
-        showNotification();
+        //showNotification();
     });
 
 }).apply(this, [jQuery]);
