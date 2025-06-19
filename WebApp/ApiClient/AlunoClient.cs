@@ -244,5 +244,17 @@ namespace WebApp.ApiClient
             return Get<bool>(requestUrl);
         }
         #endregion
+
+        /// <summary>
+        /// Inclusão de documentos do aluno
+        /// </summary>
+        /// <param name="list">Lista de documentos</param>
+        /// <returns>Id do aluno com documentos inseridos</returns>
+        public Task<long> CreateDocumentosAluno(List<CreateDocumentoAlunoDto> list)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceAlunos}/Documentos"));
+            return Post(requestUrl, list);
+        }
     }
 }

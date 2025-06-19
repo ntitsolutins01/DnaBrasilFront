@@ -23,6 +23,7 @@ using WebApp.Identity;
 using WebApp.Models;
 using WebApp.Utility;
 using Claim = WebApp.Identity.Claim;
+using Path = System.IO.Path;
 using Rectangle = iText.Kernel.Geom.Rectangle;
 
 namespace WebApp.Controllers
@@ -525,6 +526,33 @@ namespace WebApp.Controllers
                 command.QrCode = GeraQrCode(alunoId);
 
                 await ApiClientFactory.Instance.UpdateDados((int)alunoId, updateCommand);
+
+                string filePathDocumento = null;
+                string fileNameDocumento = null;
+
+                var list = new List<CreateDocumentoAlunoDto>();
+
+                foreach (var t in collection.Files)
+                {
+                    var file = t;
+                    if (file.Length <= 0) continue;
+                    fileNameDocumento = $"{alunoId}-{Guid.NewGuid()}.{Path.GetExtension(file.Name)}";
+                    filePathDocumento = Path.Combine(_host.WebRootPath, $"Documentos\\{fileNameDocumento}");
+
+                    if (!Directory.Exists(Path.Combine(_host.WebRootPath, $"Documentos")))
+                        Directory.CreateDirectory(Path.Combine(_host.WebRootPath, $"Documentos"));
+
+                    using Stream fileStream = new FileStream(filePathDocumento, FileMode.Create);
+                    await file.CopyToAsync(fileStream);
+
+                    list.Add(new CreateDocumentoAlunoDto()
+                    {
+                        AlunoId = (int)alunoId,
+                        NomeDocumento = fileNameDocumento,
+                        Url = filePathDocumento
+                    });
+                }
+                await ApiClientFactory.Instance.CreateDocumentosAluno(list);
 
                 return RedirectToAction(nameof(Index), new { id = alunoId, crud = (int)EnumCrud.Created });
 
