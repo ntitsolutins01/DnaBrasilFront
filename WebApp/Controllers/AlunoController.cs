@@ -1,4 +1,5 @@
 using System.Drawing;
+using System.IO.Compression;
 using System.Text.RegularExpressions;
 using iText.IO.Image;
 using iText.Kernel.Colors;
@@ -536,7 +537,7 @@ namespace WebApp.Controllers
                 {
                     var file = t;
                     if (file.Length <= 0) continue;
-                    fileNameDocumento = $"{alunoId}-{Guid.NewGuid()}.{Path.GetExtension(file.Name)}";
+                    fileNameDocumento = $"{alunoId}-{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
                     filePathDocumento = Path.Combine(_host.WebRootPath, $"Documentos\\{fileNameDocumento}");
 
                     if (!Directory.Exists(Path.Combine(_host.WebRootPath, $"Documentos")))
@@ -618,17 +619,7 @@ namespace WebApp.Controllers
                     SerieId = collection["ddlTurma"] == "" ? null : Convert.ToInt32(collection["ddlTurma"].ToString())
                 };
 
-                var validaAluno = await ApiClientFactory.Instance.GetAlunosByFilter(new AlunosFilterDto()
-                {
-                    Nome = command.Nome,
-                    DataNascimento = command.DtNascimento,
-                    Cpf = command.Cpf
-                });
-
-                if (validaAluno.Alunos.Any())
-                {
-                    return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = "Já existe um aluno cadastrado com estas informações." });
-                }
+                
 
 
                 foreach (var file in collection.Files)
@@ -1848,6 +1839,102 @@ namespace WebApp.Controllers
             {
                 return Task.FromResult(Json(ex.Message));
             }
+        }
+
+        #endregion
+
+        #region Custom Methods
+
+        /// <summary>
+        /// Ação de Upload de documentos do aluno
+        /// </summary>
+        /// <param name="collection">Lista de documentos a serem cadastrados</param>
+        /// <returns>Retorna mensagem de Upload realizado através do parametro notfy e message</returns>
+        [HttpPost]
+        [ClaimsAuthorize(ClaimType.Aluno, Claim.Upload)]
+        public async Task<ActionResult> UploadDocumentos(IFormCollection collection)
+        {
+            try
+            {
+                string filePath = null;
+                string fileName = null;
+
+                var list = new List<CreateDocumentoAlunoDto>();
+
+                foreach (var t in collection.Files)
+                {
+                    var file = t;
+                    if (file.Length <= 0) continue;
+                    fileName = $"{collection["alunoId"]}-{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+                    filePath = Path.Combine(_host.WebRootPath, $"Documentos\\{fileName}");
+
+                    if (!Directory.Exists(Path.Combine(_host.WebRootPath, $"Documentos")))
+                        Directory.CreateDirectory(Path.Combine(_host.WebRootPath, $"Documentos"));
+
+                    using Stream fileStream = new FileStream(filePath, FileMode.Create);
+                    await file.CopyToAsync(fileStream);
+
+                    list.Add(new CreateDocumentoAlunoDto()
+                    {
+                        AlunoId = Convert.ToInt32(collection["alunoId"]),
+                        NomeDocumento = fileName,
+                        Url = filePath
+                    });
+                }
+                await ApiClientFactory.Instance.CreateDocumentoAluno(list);
+
+                return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Success, message = "Upload de documentos realizado com sucesso." });
+            }
+            catch (Exception e)
+            {
+                Console.Write(e.StackTrace);
+                return RedirectToAction(nameof(Index), new { notify = EnumNotify.Error, mesage = e.Message });
+            }
+        }
+
+        /// <summary>
+        /// Ação de Download de documentos do aluno
+        /// </summary>
+        /// <param name="id">Id do aluno</param>
+        /// <returns>Retorna Documentos para Download</returns>
+        [ClaimsAuthorize(ClaimType.Aluno, Claim.Download)]
+        public ActionResult Download(int id)
+        {
+            var list = new List<FileContentResult>();
+
+            var files = ApiClientFactory.Instance.GetDocumentosAllByAlunoId(id);
+
+            MemoryStream outms = new MemoryStream();
+
+            using (ZipArchive zar = new ZipArchive(outms, ZipArchiveMode.Create, false))
+            {
+                foreach (var file in files)
+                {
+                    var filePath = Path.Combine(_host.WebRootPath, $"Documentos\\{file.NomeDocumento}");
+
+                    if (!System.IO.File.Exists(filePath))
+                    {
+                        return RedirectToAction(nameof(Index),
+                            new { notify = (int)EnumNotify.Warning, message = "Documentos não encontrado." });
+                    }
+
+                    var fileBytes = System.IO.File.ReadAllBytes(filePath);
+
+                    var fileName = file.NomeDocumento;
+
+                    byte[] unzipped = fileBytes;
+                    ZipArchiveEntry entry = zar.CreateEntry(fileName);
+                    using (Stream str = entry.Open())
+                    {
+                        str.Write(unzipped);
+                    }
+                }
+            }
+
+            var outdata = outms.ToArray();
+
+            var result = File(outdata, "application/zip", $"aluno-{id}.zip");
+            return result;
         }
 
         #endregion

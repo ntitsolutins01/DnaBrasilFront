@@ -9,6 +9,15 @@ var vm = new Vue({
         (function ($) {
             'use strict';
 
+            //triggered when modal is about to be shown
+            $('#mdUploadDocumentos').on('show.bs.modal', function (e) {
+
+                //get data-id attribute of the clicked element
+                var id = $(e.relatedTarget).data('id');
+
+                $("input[name='alunoId']").val(id);
+            });
+
             // iosSwitcher
             (function ($) {
 

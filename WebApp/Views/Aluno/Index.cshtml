@@ -1,539 +1,593 @@
 @model AlunoModel
 
 @{
-    ViewData["Title"] = "Alunos";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+	ViewData["Title"] = "Alunos";
+	Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div id="vPesquisarAluno">
-    <div class="row">
-        <div class="col-md-12">
-            @using (@Html.BeginForm("Index", "Aluno", FormMethod.Post, new { id = "formPesquisarAluno", @class = "form-horizontal" }))
-            {
-                <section class="panel">
-                    <header class="panel-heading">
-                        <div class="panel-actions">
-                            <a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
-                        </div>
-                        <h2 class="panel-title">Filtro de pesquisa</h2>
-                    </header>
-                    <div class="panel-body" id="pFiltro">
-                        <label class="col-sm-2 control-label">Fomento / Contrato: <span class="required">*</span></label>
-                        <div class="col-md-4 form-group">
-                            <select class="form-control populate select2" name="ddlFomento" id="ddlFomento" style="width:100%"
-                                    asp-for="FomentoId" asp-items="Model.ListFomentos">
-                                <option value="">Selecionar Fomento / Contrato</option>
-                            </select>
-                        </div>
-                        <label class="col-sm-2 control-label">Estado:</label>
-                        <div class="col-md-4 form-group">
-                            <select class="form-control populate select2" name="ddlEstado" id="ddlEstado" style="width:100%"
-                                    asp-for="EstadoId" asp-items="Model.ListEstados">
-                                <option value="">Selecionar Estado</option>
-                            </select>
-                        </div>
-                        <label class="col-sm-2 control-label">Municipio:</label>
-                        <div class="col-md-4 form-group">
-                            <select class="form-control populate select2" name="ddlMunicipio" id="ddlMunicipio" style="width:100%"
-                                    asp-for="MunicipioId" asp-items="Model.ListMunicipios">
-                                <option value="">Selecionar Municipio</option>
-                            </select>
-                        </div>
-                        <label class="col-sm-2 control-label">Localidade:</label>
-                        <div class="col-md-4 form-group">
-                            <select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade" style="width:100%"
-                                    asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
-                                <option value="">Selecionar Localidade</option>
-                            </select>
-                        </div>
+	<div class="row">
+		<div class="col-md-12">
+			@using (@Html.BeginForm("Index", "Aluno", FormMethod.Post, new { id = "formPesquisarAluno", @class = "form-horizontal" }))
+			{
+				<section class="panel">
+					<header class="panel-heading">
+						<div class="panel-actions">
+							<a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
+						</div>
+						<h2 class="panel-title">Filtro de pesquisa</h2>
+					</header>
+					<div class="panel-body" id="pFiltro">
+						<label class="col-sm-2 control-label">Fomento / Contrato: <span class="required">*</span></label>
+						<div class="col-md-4 form-group">
+							<select class="form-control populate select2" name="ddlFomento" id="ddlFomento" style="width:100%"
+									asp-for="FomentoId" asp-items="Model.ListFomentos">
+								<option value="">Selecionar Fomento / Contrato</option>
+							</select>
+						</div>
+						<label class="col-sm-2 control-label">Estado:</label>
+						<div class="col-md-4 form-group">
+							<select class="form-control populate select2" name="ddlEstado" id="ddlEstado" style="width:100%"
+									asp-for="EstadoId" asp-items="Model.ListEstados">
+								<option value="">Selecionar Estado</option>
+							</select>
+						</div>
+						<label class="col-sm-2 control-label">Municipio:</label>
+						<div class="col-md-4 form-group">
+							<select class="form-control populate select2" name="ddlMunicipio" id="ddlMunicipio" style="width:100%"
+									asp-for="MunicipioId" asp-items="Model.ListMunicipios">
+								<option value="">Selecionar Municipio</option>
+							</select>
+						</div>
+						<label class="col-sm-2 control-label">Localidade:</label>
+						<div class="col-md-4 form-group">
+							<select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade" style="width:100%"
+									asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
+								<option value="">Selecionar Localidade</option>
+							</select>
+						</div>
 
-                        <label class="col-sm-2 control-label">Profissional:</label>
-                        <div class="col-md-4 form-group">
-                            <select class="form-control populate select2" name="ddlProfissional" id="ddlProfissional"
-                                    title="Por favor informe o profissional." style="width:100%"
-                                    asp-for="ProfissionalId" asp-items="Model.ListProfissionais">
-                                <option value="">Selecionar Profissional</option>
-                            </select>
-                        </div>
-                        <label class="col-sm-2 control-label">Deficiencia:</label>
-                        <div class="col-md-4 form-group">
-                            <select class="form-control populate select2" name="ddlDeficiencia" id="ddlDeficiencia"
-                                    asp-for="DeficienciaId" asp-items="Model.ListDeficiencias">
-                                <option value="">Selecionar Deficiência</option>
-                            </select>
-                        </div>
-                        <label class="col-sm-2 control-label">Etnia:</label>
-                        <div class="col-md-4 form-group">
-                            <select class="form-control populate select2" name="ddlEtnia" id="ddlEtnia" style="width:100%"
-                                    title="Por favor selecione um etnia."
-                                    asp-for="EtniaId" asp-items="Model.ListEtnias">
-                                <option value="">Selecionar Etnia</option>
-                            </select>
-                        </div>
-                        <label class="col-sm-2 control-label">Sexo:</label>
-                        <div class="col-sm-4 form-group">
-                            <select class="form-control populate select2" name="ddlSexo" id="ddlSexo" style="width:100%"
-                                    title="Por favor selecione um sexo."
-                                    asp-for="SexoId" asp-items="Model.ListSexos">
-                                <option value="">Selecionar Sexo</option>
-                            </select>
-                        </div>
-                        <label class="col-sm-2 control-label text-sm-right pt-2">Nome:</label>
-                        <div class="col-sm-4 form-group">
-                            <input type="text" name="nome" id="nome" class="form-control" placeholder="Insira Nome"
-                                   maxlength="60"
-                                   title="Por favor informe um nome." />
-                        </div>
-                        <label class="col-sm-2 control-label text-sm-right pt-2">Matricula:</label>
-                        <div class="col-sm-4 form-group">
-                            <input type="text" name="matricula" id="matricula" class="form-control" placeholder="Insira Matricula"
-                                   maxlength="60"
-                                   title="Por favor informe a matricula." />
-                        </div>
-                        <label class="col-sm-2 control-label text-sm-right pt-2">Possui Foto: </label>
-                        <div class="col-md-1">
-                            <div class="switch switch-sm switch-primary">
-                                <input type="checkbox" id="possuiFoto" name="possuiFoto" data-plugin-ios-switch />
-                            </div>
-                        </div>
-                    </div>
-                    <footer class="panel-footer">
-                        <div class="form-group row">
-                            <!-- Primeiro alerta à esquerda -->
-                            <div class="col-sm-6 pull-left">
-                                <div class="alert alert-info" style="padding-bottom: 6px;padding-top: 6px; !important; margin-bottom: 0px; !important">
-                                    <strong>Info:</strong> Para impressão em lote selecione o filtro e clique em <a href="" class="alert-link">Impressão em Lote</a>.
-                                </div>
-                            </div>
+						<label class="col-sm-2 control-label">Profissional:</label>
+						<div class="col-md-4 form-group">
+							<select class="form-control populate select2" name="ddlProfissional" id="ddlProfissional"
+									title="Por favor informe o profissional." style="width:100%"
+									asp-for="ProfissionalId" asp-items="Model.ListProfissionais">
+								<option value="">Selecionar Profissional</option>
+							</select>
+						</div>
+						<label class="col-sm-2 control-label">Deficiencia:</label>
+						<div class="col-md-4 form-group">
+							<select class="form-control populate select2" name="ddlDeficiencia" id="ddlDeficiencia"
+									asp-for="DeficienciaId" asp-items="Model.ListDeficiencias">
+								<option value="">Selecionar Deficiência</option>
+							</select>
+						</div>
+						<label class="col-sm-2 control-label">Etnia:</label>
+						<div class="col-md-4 form-group">
+							<select class="form-control populate select2" name="ddlEtnia" id="ddlEtnia" style="width:100%"
+									title="Por favor selecione um etnia."
+									asp-for="EtniaId" asp-items="Model.ListEtnias">
+								<option value="">Selecionar Etnia</option>
+							</select>
+						</div>
+						<label class="col-sm-2 control-label">Sexo:</label>
+						<div class="col-sm-4 form-group">
+							<select class="form-control populate select2" name="ddlSexo" id="ddlSexo" style="width:100%"
+									title="Por favor selecione um sexo."
+									asp-for="SexoId" asp-items="Model.ListSexos">
+								<option value="">Selecionar Sexo</option>
+							</select>
+						</div>
+						<label class="col-sm-2 control-label text-sm-right pt-2">Nome:</label>
+						<div class="col-sm-4 form-group">
+							<input type="text" name="nome" id="nome" class="form-control" placeholder="Insira Nome"
+								   maxlength="60"
+								   title="Por favor informe um nome." />
+						</div>
+						<label class="col-sm-2 control-label text-sm-right pt-2">Matricula:</label>
+						<div class="col-sm-4 form-group">
+							<input type="text" name="matricula" id="matricula" class="form-control" placeholder="Insira Matricula"
+								   maxlength="60"
+								   title="Por favor informe a matricula." />
+						</div>
+						<label class="col-sm-2 control-label text-sm-right pt-2">Possui Foto: </label>
+						<div class="col-md-1">
+							<div class="switch switch-sm switch-primary">
+								<input type="checkbox" id="possuiFoto" name="possuiFoto" data-plugin-ios-switch />
+							</div>
+						</div>
+					</div>
+					<footer class="panel-footer">
+						<div class="form-group row">
+							<!-- Primeiro alerta à esquerda -->
+							<div class="col-sm-6 pull-left">
+								<div class="alert alert-info" style="padding-bottom: 6px;padding-top: 6px; !important; margin-bottom: 0px; !important">
+									<strong>Info:</strong> Para impressão em lote selecione o filtro e clique em <a href="" class="alert-link">Impressão em Lote</a>.
+								</div>
+							</div>
 
-                            <!-- Espaço entre alertas -->
-                            <div class="col-sm-8 pull-left">
-                                &nbsp;&nbsp;
-                            </div>
+							<!-- Espaço entre alertas -->
+							<div class="col-sm-8 pull-left">
+								&nbsp;&nbsp;
+							</div>
 
-                            <!-- Segundo alerta à esquerda -->
-                            <div class="col-sm-6 pull-left">
-                                <div class="alert alert-warning" style="padding-bottom: 6px;padding-top: 6px; !important; margin-bottom: 0px; !important">
-                                    <strong>Atenção:</strong> Lembre-se de selecionar o fomento e a localidade para que o sistema encontre a carteirinha corretamente.
-                                </div>
-                            </div>
+							<!-- Segundo alerta à esquerda -->
+							<div class="col-sm-6 pull-left">
+								<div class="alert alert-warning" style="padding-bottom: 6px;padding-top: 6px; !important; margin-bottom: 0px; !important">
+									<strong>Atenção:</strong> Lembre-se de selecionar o fomento e a localidade para que o sistema encontre a carteirinha corretamente.
+								</div>
+							</div>
 
-                            <!-- Botões à direita -->
-                            <div class="col-sm-2 pull-right">
-                                <button type="submit" class="btn btn-block btn-info pull-right">
-                                    <i class="fa fa-search"></i> &nbsp;&nbsp;Pesquisar
-                                </button>
-                            </div>
-                            <div class="col-sm-2 pull-right">
-                                <a id="btnImprimirLote" class="btn btn-block btn-warning pull-right">
-                                    <i class="fa fa-print"></i> &nbsp;&nbsp;Impressão em Lote
-                                </a>
-                            </div>
-                            @* <div class="col-sm-2 pull-right">
+							<!-- Botões à direita -->
+							<div class="col-sm-2 pull-right">
+								<button type="submit" class="btn btn-block btn-info pull-right">
+									<i class="fa fa-search"></i> &nbsp;&nbsp;Pesquisar
+								</button>
+							</div>
+							<div class="col-sm-2 pull-right">
+								<a id="btnImprimirLote" class="btn btn-block btn-warning pull-right">
+									<i class="fa fa-print"></i> &nbsp;&nbsp;Impressão em Lote
+								</a>
+							</div>
+							@* <div class="col-sm-2 pull-right">
                                 <a id="btnImprimirA4" class="btn btn-block btn-success pull-right">
                                     <i class="fa fa-file-pdf-o"></i> &nbsp;&nbsp;Impressão A4
                                 </a>
                             </div> *@
-                        </div>
-                    </footer>
-                </section>
-            }
-        </div>
-    </div>
+						</div>
+					</footer>
+				</section>
+			}
+		</div>
+	</div>
 
-    <section class="panel">
-        <header class="panel-heading">
-            <div class="panel-actions">
-                <a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
-            </div>
+	<section class="panel">
+		<header class="panel-heading">
+			<div class="panel-actions">
+				<a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
+			</div>
 
-            <h2 class="panel-title">Listagem de Alunos</h2>
+			<h2 class="panel-title">Listagem de Alunos</h2>
 
-        </header>
-        <div class="panel-body" id="pResult">
-            <div class="form-group row">
-                @{
-                    bool filtroVazio = string.IsNullOrEmpty(Model.SearchFilter.MunicipioId) ?
-                    string.IsNullOrEmpty(Model.SearchFilter.FomentoId) ?
-                    string.IsNullOrEmpty(Model.SearchFilter.LocalidadeId) ?
-                    string.IsNullOrEmpty(Model.SearchFilter.Sexo) ?
-                    string.IsNullOrEmpty(Model.SearchFilter.DeficienciaId) ?
-                    string.IsNullOrEmpty(Model.SearchFilter.Estado) ?
-                    string.IsNullOrEmpty(Model.SearchFilter.Etnia) ?
-                    string.IsNullOrEmpty(Model.SearchFilter.Nome) ?
-                    string.IsNullOrEmpty(Model.SearchFilter.Matricula) : false
-                    : false
-                    : false
-                    : false
-                    : false
-                    : false
-                    : false
-                    : false;
+		</header>
+		<div class="panel-body" id="pResult">
+			<div class="form-group row">
+				@{
+					bool filtroVazio = string.IsNullOrEmpty(Model.SearchFilter.MunicipioId) ?
+					string.IsNullOrEmpty(Model.SearchFilter.FomentoId) ?
+					string.IsNullOrEmpty(Model.SearchFilter.LocalidadeId) ?
+					string.IsNullOrEmpty(Model.SearchFilter.Sexo) ?
+					string.IsNullOrEmpty(Model.SearchFilter.DeficienciaId) ?
+					string.IsNullOrEmpty(Model.SearchFilter.Estado) ?
+					string.IsNullOrEmpty(Model.SearchFilter.Etnia) ?
+					string.IsNullOrEmpty(Model.SearchFilter.Nome) ?
+					string.IsNullOrEmpty(Model.SearchFilter.Matricula) : false
+					: false
+					: false
+					: false
+					: false
+					: false
+					: false
+					: false;
 
-                    /*
-                    <div class="col-sm-8 pull-left">
-                    <div class="alert alert-warning" style="padding-bottom: 6px;padding-top: 6px; !important; margin-bottom: 10px; !important">
-                    <strong>Atenção!</strong> Os alunos listados são referentes ao seu <a href="" class="alert-link">Estado/Município</a> de cadastro.
-                    </div>
-                    </div>
-                    */
+			/*
+			<div class="col-sm-8 pull-left">
+			<div class="alert alert-warning" style="padding-bottom: 6px;padding-top: 6px; !important; margin-bottom: 10px; !important">
+			<strong>Atenção!</strong> Os alunos listados são referentes ao seu <a href="" class="alert-link">Estado/Município</a> de cadastro.
+			</div>
+			</div>
+			*/
 
 
-                }
-                <div class="col-sm-2 pull-right">
-                    <a href="@Url.Action("Create", "Aluno")" id="addToTable" class="btn btn-block btn-primary pull-right"><i class="fa fa-plus"></i>  &nbsp;&nbsp;Novo Aluno </a>
-                </div>
+				}
+				<div class="col-sm-2 pull-right">
+					<a href="@Url.Action("Create", "Aluno")" id="addToTable" class="btn btn-block btn-primary pull-right"><i class="fa fa-plus"></i>  &nbsp;&nbsp;Novo Aluno </a>
+				</div>
 
-            </div>
-            <table class="table table-bordered table-striped mb-0" id="datatable-default">
-                <thead>
-                    <tr>
-                        <th class="text-center">Id</th>
-                        <th class="text-center">Nome</th>
-                        <th class="text-center">Email</th>
-                        <th class="text-center">Data de Nascimento</th>
-                        <th class="text-center">Status</th>
-                        <th class="text-center">Ações</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model.Alunos)
-                    {
-                        <tr>
-                            <td class="text-center">@Html.DisplayFor(modelItem => item.Id)</td>
-                            <td class="text-center">@Html.DisplayFor(modelItem => item.Nome)</td>
-                            <td class="text-center">@Html.DisplayFor(modelItem => item.Email)</td>
-                            <td class="text-center">@Html.DisplayFor(modelItem => item.DtNascimento)</td>
-                            @if (item.Status)
-                            {
-                                <td class="text-center"><span class="label label-success" style="display: block;">ATIVO</span></td>
-                            }
-                            else
-                            {
-                                <td class="text-center"><span class="label label-danger" style="display: block;">INATIVO</span></td>
-                            }
-                            <td class="actions text-center">
-                                <a data-toggle="tooltip" data-placement="top" title="Editar" asp-action="Edit" asp-controller="Aluno" asp-route-Id="@item.Id" class="on-default edit-row" style='color: #FF9800'><i class="fa fa-pencil"></i></a>
-                                <a data-toggle="tooltip" data-placement="top" title="Carteirinha"
-                                   href='javascript:(crud.CarterinhaModal(@item.Id))'
-                                   class="on-default edit-row" style='color: #8E24AA'>
-                                    <i class="fa fa-address-card-o"></i>
-                                </a>
+			</div>
+			<table class="table table-bordered table-striped mb-0" id="datatable-default">
+				<thead>
+					<tr>
+						<th class="text-center">Id</th>
+						<th class="text-center">Nome</th>
+						<th class="text-center">Email</th>
+						<th class="text-center">Data de Nascimento</th>
+						<th class="text-center">Status</th>
+						<th class="text-center">Ações</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (var item in Model.Alunos)
+					{
+					<tr>
+						<td class="text-center">@Html.DisplayFor(modelItem => item.Id)</td>
+						<td class="text-center">@Html.DisplayFor(modelItem => item.Nome)</td>
+						<td class="text-center">@Html.DisplayFor(modelItem => item.Email)</td>
+						<td class="text-center">@Html.DisplayFor(modelItem => item.DtNascimento)</td>
+						@if (item.Status)
+							{
+						<td class="text-center"><span class="label label-success" style="display: block;">ATIVO</span></td>
+							}
+							else
+							{
+						<td class="text-center"><span class="label label-danger" style="display: block;">INATIVO</span></td>
+							}
+						<td class="actions text-center">
+							<a data-toggle="tooltip" data-placement="top" title="Editar" asp-action="Edit" asp-controller="Aluno" asp-route-Id="@item.Id" class="on-default edit-row" style='color: #FF9800'><i class="fa fa-pencil"></i></a>
+							<a data-toggle="tooltip" data-placement="top" title="Carteirinha"
+							   href='javascript:(crud.CarterinhaModal(@item.Id))'
+							   class="on-default edit-row" style='color: #8E24AA'>
+								<i class="fa fa-address-card-o"></i>
+							</a>
 
-                                <a href="#" data-id="@item.Id" data-toggle="modal" data-target="#mdUpload"
-                                   data-toggle="tooltip" data-placement="top" title="Upload Foto"
-                                   class="on-default edit-row" style='color: #303F9F'><i class="fa fa-upload"></i></a>
+							<a href="#" data-id="@item.Id" data-toggle="modal" data-target="#mdUpload"
+							   data-toggle="tooltip" data-placement="top" title="Upload Foto"
+							   class="on-default edit-row" style='color: #303F9F'><i class="fa fa-upload"></i></a>
 
-                                <a data-toggle="tooltip" data-placement="top" title="Excluir" href='javascript:(crud.DeleteModal(@item.Id))'
-                                   class="on-default remove-row" style="cursor: pointer;color: #F44336"><i class="fa fa-trash"></i></a>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    </section>
-    
-    <!-- Modal Paginação Impressão em Lote -->
-    <div class="modal fade" id="mdPaginacaoImpressaoLote" tabindex="-1" role="dialog" aria-labelledby="mdPaginacaoImpressaoLoteLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="mdPaginacaoImpressaoLoteLabel">
-                        <i class="fa fa-print"></i> &nbsp;&nbsp;<strong>Impressão em Lote - Paginação</strong>
-                    </h5>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="alert alert-info">
-                                <strong>Info:</strong> Para evitar sobrecarga no servidor, a impressão é limitada a 20 carteirinhas por lote.
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <p><strong>Total de carteirinhas encontradas: </strong><span id="totalCarteirinhas">0</span></p>
-                            <p><strong>Total de páginas: </strong><span id="totalPaginas">0</span></p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label for="paginaAtual">Selecione a página para impressão:</label>
-                                <select id="paginaAtual" class="form-control">
-                                    <option value="1">Página 1</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="alert alert-warning">
-                                <strong>Atenção:</strong> Cada página contém até 20 carteirinhas.
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i> &nbsp;&nbsp;Cancelar</button>
-                    <button type="button" id="btnConfirmarImpressaoLote" class="btn btn-success"><i class="fa fa-print"></i> &nbsp;&nbsp;Imprimir</button>
-                </div>
-            </div>
-        </div>
-    </div>
+							<a data-toggle="tooltip" data-placement="top" title="Excluir" href='javascript:(crud.DeleteModal(@item.Id))'
+							   class="on-default remove-row" style="cursor: pointer;color: #F44336"><i class="fa fa-trash"></i></a>
 
-<link rel="stylesheet" href="~/assets/styles_Carteirinha/modal-carteirinha.css" />
+							<a href="#" data-id="@item.Id" data-toggle="modal" data-target="#mdUploadDocumentos"
+							   data-toggle="tooltip" data-placement="top" title="Upload Documentos"
+							   class="on-default edit-row" style='color:#148f77'><i class="fa fa-file-archive-o"></i></a>
 
-    <!-- Modal Carteirinha -->
-    <div class="modal fade" id="mdCarteirinhaAluno" tabindex="-1" role="dialog" aria-labelledby="mdCarteirinhaAlunoLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="mdCarteirinhaAlunoLabel">
-                        <i class="fa fa-address-card-o"></i> &nbsp;&nbsp;<strong>Carteirinha Aluno</strong>
-                    </h5>
-                </div>
-                <input type="hidden" name="carteirinhaAlunoId" :value="editDto.Id" />
-                <input type="hidden" id="fomentoId" name="fomentoId" value="editDto.FomentoId" />
-                <div class="modal-body">
-                    <div class="row" style="margin: 10px">
-                        <div class="tabs">
-                            <ul class="nav nav-tabs">
-                                <li class="active">
-                                    <a href="#frente" data-toggle="tab">Frente</a>
-                                </li>
-                                <li>
-                                    <a href="#verso" data-toggle="tab">Verso</a>
-                                </li>
-                            </ul>
-                            <div class="tab-content">
-                                <div id="frente" class="tab-pane active">
-                                    <div class="student-info">
-                                        <div class="info-row">
-                                            <label>NOME DO ESTUDANTE:</label>
-                                            <span>{{editDto.Nome}}</span>
-                                        </div>
-                                        <div class="info-row">
-                                            <label>DATA DE NASCIMENTO:</label>
-                                            <span>{{editDto.DtNascimento}}</span>
-                                        </div>
-                                        <div class="info-row">
-                                            <label>TELEFONE:</label>
-                                            <span>{{editDto.Telefone}}</span>
-                                        </div>
-                                        <div class="info-row">
-                                            <label>CPF:</label>
-                                            <span>{{editDto.Cpf}}</span>
-                                        </div>
-                                        <div class="info-row">
-                                            <label>MATRÍCULA:</label>
-                                            <span>{{editDto.Id}}</span>
-                                        </div>
-                                        <div class="activity-info">
-                                            {{editDto.Modalidades}}
-                                        </div>
-                                    </div>
-                                    <div class="photo-container">
-                                        <img :src="editDto.Image" alt="Foto do estudante" class="student-photo">
-                                    </div>
-                                    <div class="qr-code-container">
-                                        <img :src="editDto.QRCode" alt="QR Code" class="qr-code">
-                                    </div>
-                                </div>
-                                <div id="verso" class="tab-pane">
-                                    <div class="main-content-verso">
-                                        <div class="info-row-verso">
-                                            <label>MUNICÍPIO/ESTADO:</label>
-                                            <span>{{editDto.MunicipioEstado}}</span>
-                                        </div>
-                                        <div class="info-row-verso">
-                                            <label>UNIDADE ESCOLAR:</label>
-                                            <span>{{editDto.NomeLocalidade}}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-remove"></i> &nbsp;&nbsp;Fechar</button>
-                    <a data-toggle="tooltip"
-                       data-placement="top"
-                       title="Baixar PDF em CMYK"
-                       :href="'/Aluno/GerarPdfCarteirinha/' + editDto.Id + '?fomentoId=' + editDto.FomentoId"
-                       class="on-default edit-row btn btn-success pull-right"
-                       style="margin-left: 5px;"
-                       target="_blank">
-                        <i class="fa fa-print"></i> &nbsp;&nbsp;Imprimir Carteirinha
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Modal -->
-    <div class="modal fade" id="mdUpload" tabindex="-1" role="dialog" aria-labelledby="mdUploadLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="mdUploadLabel">
-                        <i class="fa fa-upload"></i> &nbsp;&nbsp;<strong>Upload Foto</strong>
-                    </h5>
-                </div>
-                @using (@Html.BeginForm("Upload", "Aluno", FormMethod.Post, new { id = "formUploadFoto", @class = "form-horizontal", @enctype = "multipart/form-data" }))
-                {
-                    <div class="modal-body">
-                        <input type="hidden" id="alunoId" name="alunoId" />
-                        <div class="form-group mb-lg">
-                            <label class="col-sm-2 control-label">Foto</label>
-                            <div class="col-sm-10">
-                                <div class="fileupload fileupload-new" data-provides="fileupload">
-                                    <div class="input-append">
-                                        <div class="uneditable-input">
-                                            <i class="fa fa-file fileupload-exists"></i>
-                                            <span class="fileupload-preview"></span>
-                                        </div>
-                                        <span class="btn btn-default btn-file">
-                                            <span class="fileupload-exists">Alterar</span>
-                                            <span class="fileupload-new">Selecionar Arquivos</span>
-                                            <input type="file" id="arquivo" name="arquivo" />
-                                        </span>
-                                        <a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload">Remover</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-remove"></i> &nbsp;&nbsp;Fechar</button>
-                        <button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
-                    </div>
-                }
-            </div>
-        </div>
-    </div>
-    <!-- Modal -->
-    <div class="modal fade" id="mdDeleteAluno" tabindex="-1" role="dialog" aria-labelledby="mdDeleteAlunoLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="mdDeleteAlunoLabel">
-                        <i class="fa fa-trash"></i> &nbsp;&nbsp;<strong>Exclusão de Aluno</strong>
-                    </h5>
-                </div>
-                <div class="modal-body">
-                    <div class="modal-icon">
-                        <i class="fa fa-question-circle"></i>
-                    </div>
-                    <div class="modal-text">
-                        <input type="hidden" id="deleteAlunoId" />
-                        <p class="mb-0">Tem certeza que deseja <b>excluir</b> esse registro?</p>
-                    </div>
-                    <div class="modal-wrapper">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-thumbs-o-down"></i> &nbsp;&nbsp;Não</button>
-                    <a id="deleteAlunoHref" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-thumbs-o-up"></i> &nbsp;&nbsp;Sim</a>
-                </div>
-            </div>
-        </div>
-    </div>
+							@if (item.Documentos.Any())
+							{
+
+							<a data-toggle="tooltip" data-placement="top" title="Download Documentos"
+							   asp-action="Download" asp-controller="Aluno" asp-route-id="@item.Id" class="on-default edit-row"
+							   style='color:#d4ac0d'><i class="fa fa-download" target="_blank"></i></a>
+
+							}
+						</td>
+					</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+	</section>
+
+	<!-- Modal Paginação Impressão em Lote -->
+	<div class="modal fade" id="mdPaginacaoImpressaoLote" tabindex="-1" role="dialog" aria-labelledby="mdPaginacaoImpressaoLoteLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="mdPaginacaoImpressaoLoteLabel">
+						<i class="fa fa-print"></i> &nbsp;&nbsp;<strong>Impressão em Lote - Paginação</strong>
+					</h5>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-12">
+							<div class="alert alert-info">
+								<strong>Info:</strong> Para evitar sobrecarga no servidor, a impressão é limitada a 20 carteirinhas por lote.
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<p><strong>Total de carteirinhas encontradas: </strong><span id="totalCarteirinhas">0</span></p>
+							<p><strong>Total de páginas: </strong><span id="totalPaginas">0</span></p>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<div class="form-group">
+								<label for="paginaAtual">Selecione a página para impressão:</label>
+								<select id="paginaAtual" class="form-control">
+									<option value="1">Página 1</option>
+								</select>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<div class="alert alert-warning">
+								<strong>Atenção:</strong> Cada página contém até 20 carteirinhas.
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i> &nbsp;&nbsp;Cancelar</button>
+					<button type="button" id="btnConfirmarImpressaoLote" class="btn btn-success"><i class="fa fa-print"></i> &nbsp;&nbsp;Imprimir</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<link rel="stylesheet" href="~/assets/styles_Carteirinha/modal-carteirinha.css" />
+
+	<!-- Modal Carteirinha -->
+	<div class="modal fade" id="mdCarteirinhaAluno" tabindex="-1" role="dialog" aria-labelledby="mdCarteirinhaAlunoLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="mdCarteirinhaAlunoLabel">
+						<i class="fa fa-address-card-o"></i> &nbsp;&nbsp;<strong>Carteirinha Aluno</strong>
+					</h5>
+				</div>
+				<input type="hidden" name="carteirinhaAlunoId" :value="editDto.Id" />
+				<input type="hidden" id="fomentoId" name="fomentoId" value="editDto.FomentoId" />
+				<div class="modal-body">
+					<div class="row" style="margin: 10px">
+						<div class="tabs">
+							<ul class="nav nav-tabs">
+								<li class="active">
+									<a href="#frente" data-toggle="tab">Frente</a>
+								</li>
+								<li>
+									<a href="#verso" data-toggle="tab">Verso</a>
+								</li>
+							</ul>
+							<div class="tab-content">
+								<div id="frente" class="tab-pane active">
+									<div class="student-info">
+										<div class="info-row">
+											<label>NOME DO ESTUDANTE:</label>
+											<span>{{editDto.Nome}}</span>
+										</div>
+										<div class="info-row">
+											<label>DATA DE NASCIMENTO:</label>
+											<span>{{editDto.DtNascimento}}</span>
+										</div>
+										<div class="info-row">
+											<label>TELEFONE:</label>
+											<span>{{editDto.Telefone}}</span>
+										</div>
+										<div class="info-row">
+											<label>CPF:</label>
+											<span>{{editDto.Cpf}}</span>
+										</div>
+										<div class="info-row">
+											<label>MATRÍCULA:</label>
+											<span>{{editDto.Id}}</span>
+										</div>
+										<div class="activity-info">
+											{{editDto.Modalidades}}
+										</div>
+									</div>
+									<div class="photo-container">
+										<img :src="editDto.Image" alt="Foto do estudante" class="student-photo">
+									</div>
+									<div class="qr-code-container">
+										<img :src="editDto.QRCode" alt="QR Code" class="qr-code">
+									</div>
+								</div>
+								<div id="verso" class="tab-pane">
+									<div class="main-content-verso">
+										<div class="info-row-verso">
+											<label>MUNICÍPIO/ESTADO:</label>
+											<span>{{editDto.MunicipioEstado}}</span>
+										</div>
+										<div class="info-row-verso">
+											<label>UNIDADE ESCOLAR:</label>
+											<span>{{editDto.NomeLocalidade}}</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-remove"></i> &nbsp;&nbsp;Fechar</button>
+					<a data-toggle="tooltip"
+					   data-placement="top"
+					   title="Baixar PDF em CMYK"
+					   :href="'/Aluno/GerarPdfCarteirinha/' + editDto.Id + '?fomentoId=' + editDto.FomentoId"
+					   class="on-default edit-row btn btn-success pull-right"
+					   style="margin-left: 5px;"
+					   target="_blank">
+						<i class="fa fa-print"></i> &nbsp;&nbsp;Imprimir Carteirinha
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Modal -->
+	<div class="modal fade" id="mdUpload" tabindex="-1" role="dialog" aria-labelledby="mdUploadLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="mdUploadLabel">
+						<i class="fa fa-upload"></i> &nbsp;&nbsp;<strong>Upload Foto</strong>
+					</h5>
+				</div>
+				@using (@Html.BeginForm("Upload", "Aluno", FormMethod.Post, new { id = "formUploadFoto", @class = "form-horizontal", @enctype = "multipart/form-data" }))
+			{
+				<div class="modal-body">
+					<input type="hidden" id="alunoId" name="alunoId" />
+					<div class="form-group mb-lg">
+						<label class="col-sm-2 control-label">Foto</label>
+						<div class="col-sm-10">
+							<div class="fileupload fileupload-new" data-provides="fileupload">
+								<div class="input-append">
+									<div class="uneditable-input">
+										<i class="fa fa-file fileupload-exists"></i>
+										<span class="fileupload-preview"></span>
+									</div>
+									<span class="btn btn-default btn-file">
+										<span class="fileupload-exists">Alterar</span>
+										<span class="fileupload-new">Selecionar Arquivos</span>
+										<input type="file" id="arquivo" name="arquivo" />
+									</span>
+									<a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload">Remover</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-remove"></i> &nbsp;&nbsp;Fechar</button>
+					<button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
+				</div>
+			}
+			</div>
+		</div>
+	</div>
+	<!-- Modal -->
+	<div class="modal fade" id="mdDeleteAluno" tabindex="-1" role="dialog" aria-labelledby="mdDeleteAlunoLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="mdDeleteAlunoLabel">
+						<i class="fa fa-trash"></i> &nbsp;&nbsp;<strong>Exclusão de Aluno</strong>
+					</h5>
+				</div>
+				<div class="modal-body">
+					<div class="modal-icon">
+						<i class="fa fa-question-circle"></i>
+					</div>
+					<div class="modal-text">
+						<input type="hidden" id="deleteAlunoId" />
+						<p class="mb-0">Tem certeza que deseja <b>excluir</b> esse registro?</p>
+					</div>
+					<div class="modal-wrapper">
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-thumbs-o-down"></i> &nbsp;&nbsp;Não</button>
+					<a id="deleteAlunoHref" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-thumbs-o-up"></i> &nbsp;&nbsp;Sim</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Modal -->
+	<div class="modal fade" id="mdUploadDocumentos" tabindex="-1" role="dialog" aria-labelledby="mdUploadDocumentosLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="mdUploadDocumentosLabel">
+						<i class="fa fa-file-archive-o"></i> &nbsp;&nbsp;<strong>Upload Documentos</strong>
+					</h5>
+				</div>
+				@using (@Html.BeginForm("UploadDocumentos", "Aluno", FormMethod.Post, new { id = "formUploadDocumentos", @class = "form-horizontal", @enctype = "multipart/form-data" }))
+			{
+				<div class="modal-body">
+					<input type="hidden" id="alunoId" name="alunoId" />
+					<div class="form-group mb-lg">
+						<label class="col-sm-2 control-label">Documentos</label>
+						<div class="col-sm-10">
+							<div class="fileupload fileupload-new" data-provides="fileupload">
+								<div class="input-append">
+									<div class="uneditable-input">
+										<i class="fa fa-file fileupload-exists"></i>
+										<span class="fileupload-preview"></span>
+									</div>
+									<span class="btn btn-default btn-file">
+										<span class="fileupload-exists">Alterar</span>
+										<span class="fileupload-new">Selecionar Arquivo</span>
+										<input type="file" id="documentosAluno" name="documentosAluno" multiple />
+									</span>
+									<a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload">Remover</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-remove"></i> &nbsp;&nbsp;Fechar</button>
+					<button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
+				</div>
+			}
+			</div>
+		</div>
+	</div>
 </div>
 
 @section CssSpecificVendor {
-    <link rel="stylesheet" href="~/assets/vendor/bootstrap-fileupload/bootstrap-fileupload.min.css" />
-    <link rel="stylesheet" href="~/assets/vendor/select2/css/select2.css" />
-    <link rel="stylesheet" href="~/assets/vendor/select2-bootstrap-theme/select2-bootstrap.min.css" />
-    <link rel="stylesheet" href="~/assets/vendor/datatables/media/css/dataTables.bootstrap4.css" />
-    <style>
-        .wholebody {
-            height: 289px;
-            width: 489px;
-            border: 2px solid #00001a;
-        }
-    </style>
+	<link rel="stylesheet" href="~/assets/vendor/bootstrap-fileupload/bootstrap-fileupload.min.css" />
+	<link rel="stylesheet" href="~/assets/vendor/select2/css/select2.css" />
+	<link rel="stylesheet" href="~/assets/vendor/select2-bootstrap-theme/select2-bootstrap.min.css" />
+	<link rel="stylesheet" href="~/assets/vendor/datatables/media/css/dataTables.bootstrap4.css" />
+	<style>
+		.wholebody {
+			height: 289px;
+			width: 489px;
+			border: 2px solid #00001a;
+		}
+	</style>
 }
 @section Scripts {
-    <script src="~/assets/vendor/bootstrap-fileupload/bootstrap-fileupload.min.js"></script>
-    <script src="~/assets/vendor/classy-qr/jquery.classyqr.js"></script>
-    <script src="~/assets/vendor/select2/js/select2.js"></script>
-    <script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
-    <script src="~/assets/vendor/ios7-switch/ios7-switch.js"></script>
-    <script src="~/assets/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
-    <script src="~/assets/vendor/datatables/media/js/dataTables.bootstrap4.min.js"></script>
-    <script src="~/js/formatTableMultiselect.js"></script>
-    <script src="~/js/alunos.js"></script>
+<script src="~/assets/vendor/bootstrap-fileupload/bootstrap-fileupload.min.js"></script>
+<script src="~/assets/vendor/classy-qr/jquery.classyqr.js"></script>
+<script src="~/assets/vendor/select2/js/select2.js"></script>
+<script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
+<script src="~/assets/vendor/ios7-switch/ios7-switch.js"></script>
+<script src="~/assets/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
+<script src="~/assets/vendor/datatables/media/js/dataTables.bootstrap4.min.js"></script>
+<script src="~/js/formatTableMultiselect.js"></script>
+<script src="~/js/alunos.js"></script>
 
-    <script>
-        // Nova função para gerar PDF CMYK
-        function gerarPdfCmykCarteirinha() {
-            const alunoId = $('#carteirinhaAlunoId').val();
-            const fomentoId = $('#fomentoId').val();
-            window.open(`/Aluno/GerarPdfCarteirinha/${alunoId}?fomentoId=${fomentoId}`, '_blank');
-        }
+<script>
+	// Nova função para gerar PDF CMYK
+	function gerarPdfCmykCarteirinha() {
+		const alunoId = $('#carteirinhaAlunoId').val();
+		const fomentoId = $('#fomentoId').val();
+		window.open(`/Aluno/GerarPdfCarteirinha/${alunoId}?fomentoId=${fomentoId}`, '_blank');
+	}
 
-        (function ($) {
+	(function ($) {
 
-            'use strict';
+		'use strict';
 
-            var crud = @ViewBag.CrudMessage;
+		var crud = @ViewBag.CrudMessage;
 
-            if (crud === 1) {
-                new PNotify({
-                    title: 'Aluno',
-                    text: 'Cadastro realizado com sucesso!',
-                    type: 'success'
-                });
-            } else if (crud === 2) {
-                new PNotify({
-                    title: 'Aluno',
-                    text: 'Dados alterados com sucesso.',
-                    type: 'warning',
-                    icon: 'fa fa-pencil'
-                });
-            } else if (crud === 3) {
-                new PNotify({
-                    title: 'Aluno',
-                    text: 'Registro excluído com sucesso.',
-                    type: 'error',
-                    icon: 'fa fa-trash-o'
-                });
-            }
+		if (crud === 1) {
+			new PNotify({
+				title: 'Aluno',
+				text: 'Cadastro realizado com sucesso!',
+				type: 'success'
+			});
+		} else if (crud === 2) {
+			new PNotify({
+				title: 'Aluno',
+				text: 'Dados alterados com sucesso.',
+				type: 'warning',
+				icon: 'fa fa-pencil'
+			});
+		} else if (crud === 3) {
+			new PNotify({
+				title: 'Aluno',
+				text: 'Registro excluído com sucesso.',
+				type: 'error',
+				icon: 'fa fa-trash-o'
+			});
+		}
 
 
-            var notify = @ViewBag.NotifyMessage;
-            var messagem = '@ViewBag.Notify';
+		var notify = @ViewBag.NotifyMessage;
+		var messagem = '@ViewBag.Notify';
 
-            if (notify === 0) {
-                new PNotify({
-                    title: 'Aluno',
-                    text: messagem,
-                    type: 'success'
-                });
-                crud = 0;
-            } else if (notify === 1) {
-                new PNotify({
-                    title: 'Aluno',
-                    text: messagem,
-                    type: 'warning'
-                });
-                crud = 0;
-            } else if (notify === 2) {
-                new PNotify({
-                    title: 'Aluno',
-                    text: messagem,
-                    type: 'error'
-                });
-                crud = 0;
-            }
+		if (notify === 0) {
+			new PNotify({
+				title: 'Aluno',
+				text: messagem,
+				type: 'success'
+			});
+			crud = 0;
+		} else if (notify === 1) {
+			new PNotify({
+				title: 'Aluno',
+				text: messagem,
+				type: 'warning'
+			});
+			crud = 0;
+		} else if (notify === 2) {
+			new PNotify({
+				title: 'Aluno',
+				text: messagem,
+				type: 'error'
+			});
+			crud = 0;
+		}
 
-            if ($.isFunction($.fn['tooltip'])) {
-                $('[data-toggle=tooltip],[rel=tooltip]').tooltip({ container: 'body' });
-            }
+		if ($.isFunction($.fn['tooltip'])) {
+			$('[data-toggle=tooltip],[rel=tooltip]').tooltip({ container: 'body' });
+		}
 
-        }).apply(this, [jQuery]);
-    </script>
+	}).apply(this, [jQuery]);
+</script>
 }
 
