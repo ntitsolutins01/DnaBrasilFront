@@ -171,6 +171,8 @@ namespace WebApp.Controllers
             return View(model);
         }
 
+        
+
         //[ClaimsAuthorize(ClaimType.Laudo, Claim.Ver)]
         public async Task<ActionResult> Report(int id)
         {
@@ -1260,7 +1262,7 @@ namespace WebApp.Controllers
         {
             try
             {
-                _logger.Info($"Ação de upload de foto do aluno - Aluno.Upload");
+                _logger.Info($"Ação de upload de foto do gabarito - Laudo.Upload");
 
                 var matricula = Convert.ToInt32(collection["matriculaReconhecida"]);
                 var gabarito = "Educacional" + collection["ddlGabarito"];
@@ -1322,7 +1324,22 @@ namespace WebApp.Controllers
             }
             catch (Exception e)
             {
-                _logger.Error($"Ação de upload de foto do aluno - Aluno.Upload: {e.StackTrace}");
+                _logger.Error($"Ação de upload de foto do gabarito - Laudo.Upload: {e.StackTrace}");
+                return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = e.Message });
+            }
+        }
+
+        public async Task<ActionResult> VisualizarGabarito(int id)
+        {
+            try
+            {
+                _logger.Info($"Ação de Visualiza rGabarito  do aluno - Laudo.VisualizarGabarito");
+
+                return View();
+            }
+            catch (Exception e)
+            {
+                _logger.Error($"Ação de visualizar gabarito do aluno - Laudoo.VisualizarGabarito: {e.StackTrace}");
                 return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = e.Message });
             }
         }
