@@ -533,12 +533,86 @@
         mostrarPdfNoViewer(pdfUrl) {
             $("#pdf-viewer").show();
             $("#pdf-viewer").empty();
-            if (window.renderPdfFile) {
-                renderPdfFile(pdfUrl, "pdf-viewer");
-            } else {
-                $("#pdf-viewer").html(`<iframe src="${pdfUrl}" width="100%" height="600px" style="border:none"></iframe>`);
+
+            $("#pdf-viewer").html(`
+                <div id="pdfjs-container" style="width:100%; min-height:600px; background:#eaeaea;">
+                    <canvas id="pdf-canvas" style="width:100%;"></canvas>
+                    <div id="pdf-controls" style="margin-top:10px; text-align:center;">
+                        <button id="pdf-prev" class="btn btn-sm btn-light">Anterior</button>
+                        <span id="pdf-page-info">Página <span id="pdf-page-num">1</span> de <span id="pdf-page-count">1</span></span>
+                        <button id="pdf-next" class="btn btn-sm btn-light">Próxima</button>
+                    </div>
+                </div>
+            `);
+
+            if (!window['pdfjsLib']) {
+                alert("pdfjsLib não encontrado. Verifique se incluiu o script correto do PDF.js em '/assets/vendor/pdfjs/build/pdf.js'!");
+                return;
             }
-        },
+
+            pdfjsLib.GlobalWorkerOptions.workerSrc = '/assets/vendor/pdfjs/build/pdf.worker.js';
+
+            let pdfDoc = null,
+                pageNum = 1,
+                pageRendering = false,
+                pageNumPending = null,
+                scale = 1.2,
+                canvas = document.getElementById('pdf-canvas'),
+                ctx = canvas.getContext('2d');
+
+            function renderPage(num) {
+                pageRendering = true;
+                pdfDoc.getPage(num).then(function (page) {
+                    var viewport = page.getViewport({ scale: scale });
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
+
+                    var renderContext = {
+                        canvasContext: ctx,
+                        viewport: viewport
+                    };
+                    var renderTask = page.render(renderContext);
+
+                    renderTask.promise.then(function () {
+                        pageRendering = false;
+                        if (pageNumPending !== null) {
+                            renderPage(pageNumPending);
+                            pageNumPending = null;
+                        }
+                    });
+                });
+
+                document.getElementById('pdf-page-num').textContent = num;
+            }
+
+            function queueRenderPage(num) {
+                if (pageRendering) {
+                    pageNumPending = num;
+                } else {
+                    renderPage(num);
+                }
+            }
+
+            function onPrevPage() {
+                if (pageNum <= 1) return;
+                pageNum--;
+                queueRenderPage(pageNum);
+            }
+            function onNextPage() {
+                if (pageNum >= pdfDoc.numPages) return;
+                pageNum++;
+                queueRenderPage(pageNum);
+            }
+
+            pdfjsLib.getDocument(pdfUrl).promise.then(function (pdfDoc_) {
+                pdfDoc = pdfDoc_;
+                document.getElementById('pdf-page-count').textContent = pdfDoc.numPages;
+                renderPage(pageNum);
+            });
+
+            document.getElementById('pdf-prev').addEventListener('click', onPrevPage);
+            document.getElementById('pdf-next').addEventListener('click', onNextPage);
+        }
     }
 });
 
