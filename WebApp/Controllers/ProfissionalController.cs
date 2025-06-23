@@ -27,12 +27,15 @@ namespace WebApp.Controllers
     [Authorize(Policy = ModuloAccess.Profissional)]
     public class ProfissionalController : BaseController
     {
+        #region Parametros
 
         private readonly IEmailSender _emailSender;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IWebHostEnvironment _host;
         private readonly ILog _logger;
+
+        #endregion
 
         #region Contructor
 
@@ -455,9 +458,9 @@ namespace WebApp.Controllers
         }
 
         /// <summary>
-        /// Açao de Inclusao de Habiliatar
+        /// Açao de Habiliatar um profissional no sistema
         /// </summary>
-        /// <param name="collection">Coleção de dados para Inclusao de Habiliatr</param>
+        /// <param name="collection">Coleção de dados para Habiliatr um profissional</param>
         /// <returns>Retorna mensagem de inclusao através do parametro crud</returns>
         [HttpPost]
         [ClaimsAuthorize(ClaimType.Profissional, Claim.Habilitar)]

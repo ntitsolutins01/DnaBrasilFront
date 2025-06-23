@@ -256,5 +256,12 @@ namespace WebApp.ApiClient
                 $"{ResourceAlunos}/Documentos"));
             return Post(requestUrl, list);
         }
+
+        public Task<bool> UpdateHabilitarAluno(int alunoId, AlunoModel.CreateUpdateDadosAlunoCommand command)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceAlunos}/Habilitar/{alunoId}"));
+            return Put(requestUrl, command);
+        }
     }
 }

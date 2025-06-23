@@ -372,6 +372,20 @@ var vm = new Vue({
         DeleteAluno: function (id) {
             var url = "Aluno/Delete/" + id; 
             $("#deleteAlunoHref").prop("href", url);
+        },
+        HabilitarAluno: function (id) {
+            var self = this;
+
+            axios.get("Aluno/GetAlunoById/?id=" + id).then(result => {
+
+                self.editDto.Id = result.data.id;
+                self.editDto.Nome = result.data.nome;
+                self.editDto.Cpf = result.data.cpf;
+                self.editDto.Email = result.data.email;
+
+            }).catch(error => {
+                Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
+            });
         }
     }
 });
@@ -385,5 +399,10 @@ var crud = {
         $('input[name="carteirinhaAlunoId"]').attr('value', id);
         $('#mdCarteirinhaAluno').modal('show');
         vm.CarteirinhaAluno(id);
+    },
+    HabilitarModal: function (id) {
+        $('input[name="habilitarAlunoId"]').attr('value', id);
+        $('#mdHabilitarAluno').modal('show');
+        vm.HabilitarAluno(id);
     }
 };

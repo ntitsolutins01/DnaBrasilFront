@@ -1,5 +1,6 @@
 using System.Drawing;
 using System.IO.Compression;
+using System.Text.Encodings.Web;
 using System.Text.RegularExpressions;
 using iText.IO.Image;
 using iText.Kernel.Colors;
@@ -11,6 +12,8 @@ using iText.Layout.Element;
 using iText.Layout.Properties;
 using log4net;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
@@ -37,9 +40,11 @@ namespace WebApp.Controllers
     {
         #region Parametros
 
-        private readonly IOptions<UrlSettings> _appSettings;
         private readonly IWebHostEnvironment _host;
         private readonly ILog _logger;
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly IEmailSender _emailSender;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
         #endregion
 
@@ -51,14 +56,22 @@ namespace WebApp.Controllers
         /// <param name="appSettings">configurações de urls do sistema</param>
         /// <param name="host">informações da aplicação em execução</param>
         /// <param name="logger">Log de mensagens da aplicação</param>
+        /// <param name="userManager">Gerenciador de Usuario</param>
+        /// <param name="emailSender">imlementacao de infraestrutura de identidade possa enviar emails de confirmação e redefinição de senha.</param>
+        /// <param name="roleManager">gerenciador de regras de permissoes</param>
         public AlunoController(IOptions<UrlSettings> appSettings,
             IWebHostEnvironment host,
-            ILog logger)
+            ILog logger, 
+            UserManager<IdentityUser> userManager,
+            IEmailSender emailSender,
+            RoleManager<IdentityRole> roleManager)
         {
-            _appSettings = appSettings;
-            ApplicationSettings.WebApiUrl = _appSettings.Value.WebApiBaseUrl;
+            ApplicationSettings.WebApiUrl = appSettings.Value.WebApiBaseUrl;
             _host = host;
             _logger = logger;
+            _userManager = userManager;
+            _emailSender = emailSender;
+            _roleManager = roleManager;
         }
         #endregion
 
@@ -1499,7 +1512,7 @@ namespace WebApp.Controllers
         /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
         /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
         /// <returns>Retorna mensagem de alteração através do parametro crud</returns>
-        [ClaimsAuthorize(ClaimType.Aluno, Claim.Alterar)]
+        //[ClaimsAuthorize(ClaimType.Aluno, Claim.Consultar)]
         public async Task<ActionResult> Profile(int id, int? crud, int? notify, string message = null)
         {
             try
@@ -1935,6 +1948,73 @@ namespace WebApp.Controllers
 
             var result = File(outdata, "application/zip", $"aluno-{id}.zip");
             return result;
+        }
+
+        /// <summary>
+        /// Açao de Habiliatar um aluno no sistema
+        /// </summary>
+        /// <param name="collection">Coleção de dados para Habiliatr um aluno</param>
+        /// <returns>Retorna mensagem de inclusao através do parametro crud</returns>
+        [HttpPost]
+        [ClaimsAuthorize(ClaimType.Aluno, Claim.Habilitar)]
+        public async Task<ActionResult> Habilitar(IFormCollection collection)
+        {
+            try
+            {
+                var alunoId = collection["habilitarAlunoId"].ToString();
+
+                var result = await ApiClientFactory.Instance.GetAlunoById(Convert.ToInt32(alunoId));
+
+                var command = new UsuarioModel.CreateUpdateUsuarioCommand
+                {
+                    Email = result.Email,
+                    Nome = result.Nome,
+                    CpfCnpj = result.Cpf,
+                    LocalidadeId = Convert.ToInt32(result.LocalidadeId),
+                    TipoPessoa = "PF",
+                    MunicipioId = Convert.ToInt32(result.MunicipioId),
+                    Status = true
+                };
+
+                var newUser = new IdentityUser { UserName = result.Id.ToString(), Email = command.Email };
+                var userCreated = await _userManager.CreateAsync(newUser, "12345678");
+
+                command.PerfilId = (int)EnumPerfil.Aluno;
+                var perfil = ApiClientFactory.Instance.GetPerfilById(command.PerfilId);
+
+                if (userCreated.Succeeded)
+                {
+                    var userRole = _roleManager.Roles.FirstOrDefault(x => x.Id == perfil.AspNetRoleId).Name;
+
+                    command.AspNetUserId = newUser.Id;
+                    command.AspNetRoleId = perfil.AspNetRoleId;
+                    command.PerfilId = perfil.Id;
+                    command.Status = true;
+
+                    var usuarioId = await ApiClientFactory.Instance.CreateUsuario(command);
+
+                    if (usuarioId != 0)
+                    {
+                        await _userManager.AddToRoleAsync(newUser, userRole);
+                        
+                        await ApiClientFactory.Instance.UpdateHabilitarAluno(Convert.ToInt32(alunoId), new AlunoModel.CreateUpdateDadosAlunoCommand(){ AspNetUserId = newUser.Id});
+                    }
+
+                    SendNewUserEmail(newUser, command.Email, command.Nome);
+
+                }
+
+                return RedirectToAction(nameof(Index), new { crud = (int)EnumCrud.Created });
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction(nameof(Index),
+                    new
+                    {
+                        notify = (int)EnumNotify.Error,
+                        message = "Erro ao criar usuário. Favor entrar em contato com o administrador do sistema."
+                    });
+            }
         }
 
         #endregion
@@ -2486,6 +2566,28 @@ namespace WebApp.Controllers
                 _logger.Error($"Erro ao verificar ambiente para geração de PDF CMYK: {ex.Message}", ex);
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Método para envio de email
+        /// </summary>
+        /// <param name="user">identidade do usuário</param>
+        /// <param name="email">email a ser enviado</param>
+        /// <param name="nome">nome da pessoa que receberá o email</param>
+        [ClaimsAuthorize(ClaimType.Usuario, Identity.Claim.Excluir)]
+        private async Task SendNewUserEmail(IdentityUser user, string email, string nome)
+        {
+            var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            var callbackUrl = Url.ActionLink("ResetPassword", "Identity/Account", new { code, email });
+
+            var message =
+                System.IO.File.ReadAllText(Path.Combine(_host.WebRootPath, "emailtemplates/ConfirmEmail.html"));
+            message = message.Replace("%NAME%", nome);
+            message = message.Replace("%CALLBACK%", HtmlEncoder.Default.Encode(callbackUrl.Replace("%2FAccount", "/Account")));
+
+            await _emailSender.SendEmailAsync(user.Email, "Primeiro acesso sistema Dna do Brasil",
+                message);
         }
         #endregion
     }
