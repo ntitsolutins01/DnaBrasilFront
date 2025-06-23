@@ -97,6 +97,8 @@ namespace WebApp.Controllers
                 SetCrudMessage(crud);
 
                 _logger.Info($"GetUsuarioByEmail");
+                //var aluno = await ApiClientFactory.Instance.GetAlunoById(Convert.ToInt32(usuario));
+
                 var usu = await ApiClientFactory.Instance.GetUsuarioByEmail(usuario);
 
                 var possuiFoto = collection["possuiFoto"].ToString();
@@ -1997,14 +1999,18 @@ namespace WebApp.Controllers
                     {
                         await _userManager.AddToRoleAsync(newUser, userRole);
                         
-                        await ApiClientFactory.Instance.UpdateHabilitarAluno(Convert.ToInt32(alunoId), new AlunoModel.CreateUpdateDadosAlunoCommand(){ AspNetUserId = newUser.Id});
+                        await ApiClientFactory.Instance.UpdateHabilitarAluno(Convert.ToInt32(alunoId), new AlunoModel.UpdateHabilitarAlunoCommand(){ AlunoId = Convert.ToInt32(alunoId), AspNetUserId = newUser.Id});
                     }
 
                     SendNewUserEmail(newUser, command.Email, command.Nome);
 
                 }
 
-                return RedirectToAction(nameof(Index), new { crud = (int)EnumCrud.Created });
+                return RedirectToAction(nameof(Index), new
+                {
+                    notify = (int)EnumNotify.Success,
+                    message = "Aluno habilitado com sucesso."
+                });
             }
             catch (Exception e)
             {

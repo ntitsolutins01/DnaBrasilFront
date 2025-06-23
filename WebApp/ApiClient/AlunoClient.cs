@@ -257,7 +257,13 @@ namespace WebApp.ApiClient
             return Post(requestUrl, list);
         }
 
-        public Task<bool> UpdateHabilitarAluno(int alunoId, AlunoModel.CreateUpdateDadosAlunoCommand command)
+        /// <summary>
+        /// Habilita aluno a operar no sistema
+        /// </summary>
+        /// <param name="alunoId">Id do ALuno</param>
+        /// <param name="command">Objeto para habilitar o Aluno</param>
+        /// <returns>Retorna true ou false</returns>
+        public Task<bool> UpdateHabilitarAluno(int alunoId, AlunoModel.UpdateHabilitarAlunoCommand command)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
                 $"{ResourceAlunos}/Habilitar/{alunoId}"));
