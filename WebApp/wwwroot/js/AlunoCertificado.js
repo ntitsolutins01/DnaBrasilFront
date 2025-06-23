@@ -3,13 +3,14 @@
     data: {
         loading: false,
         selectedVideoUrl: "",
+        selectedMaterialUrl: "",
         editDto: { Id: "" },
         aula: null,
-        aulas: []           
+        aulas: []
     },
     mounted: function () {
         const vm = this;
-        vm.aulas = []; 
+        vm.aulas = [];
 
         (function ($) {
             'use strict';
@@ -72,10 +73,6 @@
                     // Atualizar título da aula
                     var aulaTitulo = $(this).data('aula-titulo');
                     $('#aulaAtualTitulo').text(aulaTitulo);
-
-                    // Atualizar os materiais
-                    var materiaisJson = $(this).data('materiais');
-                    atualizarMateriais(materiaisJson);
 
                     // Habilitar botão de próxima aula se não for a última
                     var $proximaAula = $(this).closest('li').next('li').find('.aula-link');
@@ -142,57 +139,6 @@
                         }
                     }
                 });
-
-
-                // Função para atualizar a lista de materiais
-                function atualizarMateriais(materiaisJson) {
-                    // Limpar a lista atual
-                    $('#lista-materiais').empty();
-
-                    if (materiaisJson && materiaisJson.length > 0) {
-                        try {
-                            var materiais = JSON.parse(materiaisJson);
-
-                            if (materiais.length > 0) {
-                                materiais.forEach(function (material) {
-                                    var icon = 'fa-file-o';
-                                    var colorClass = '';
-
-                                    // Definir ícone com base no tipo de arquivo
-                                    if (material.url.endsWith('.pdf')) {
-                                        icon = 'fa-file-pdf-o';
-                                        colorClass = 'text-danger';
-                                    } else if (material.url.endsWith('.pptx') || material.url.endsWith('.ppt')) {
-                                        icon = 'fa-file-powerpoint-o';
-                                        colorClass = 'text-warning';
-                                    } else if (material.url.endsWith('.xlsx') || material.url.endsWith('.xls')) {
-                                        icon = 'fa-file-excel-o';
-                                        colorClass = 'text-success';
-                                    } else if (material.url.endsWith('.docx') || material.url.endsWith('.doc')) {
-                                        icon = 'fa-file-word-o';
-                                        colorClass = 'text-primary';
-                                    } else if (material.url.endsWith('.zip') || material.url.endsWith('.rar')) {
-                                        icon = 'fa-file-archive-o';
-                                        colorClass = 'text-warning';
-                                    }
-
-                                    var materialHtml = '<li class="list-group-item">' +
-                                        '<i class="fa ' + icon + ' ' + colorClass + ' mr-xs"></i>' +
-                                        '<a href="' + material.url + '" target="_blank">' + material.nome + '</a>' +
-                                        '</li>';
-
-                                    $('#lista-materiais').append(materialHtml);
-                                });
-                                return;
-                            }
-                        } catch (e) {
-                            console.error("Erro ao processar materiais JSON:", e);
-                        }
-                    }
-
-                    // Se não há materiais ou ocorreu um erro
-                    $('#lista-materiais').append('<li class="list-group-item text-center"><i class="fa fa-info-circle"></i> Nenhum material disponível para esta aula.</li>');
-                }
 
                 // Botão para marcar aula como concluída
                 $('#btnMarcarConcluido').on('click', function () {
@@ -516,10 +462,24 @@
             var self = this;
             axios.get("../../Aula/GetAulaById?id=" + id)
                 .then(response => {
+                    self.listarMateriais();
                     self.aula = response.data;
+                    self.listarMateriais();
                     self.selectedVideoUrl = "";
-                    if (response.data.video != undefined) {
-                        self.selectedVideoUrl = response.data.video;
+                    if (response.data.video !== undefined) {
+                        if (response.data.video.includes("\\Aulas")) {
+                            self.selectedVideoUrl = "\\Aulas" + response.data.video.split("\\Aulas")[1];
+                        } else if (response.data.video.includes("\\MaterialEAD")) {
+                            self.selectedVideoUrl = "\\MaterialEAD" + response.data.video.split("\\MaterialEAD")[1];
+                        }
+                    }
+
+                    if (response.data.material !== undefined) {
+                        if (response.data.material.includes("\\Aulas")) {
+                            self.selectedMaterialUrl = "\\Aulas" + response.data.material.split("\\Aulas")[1];
+                        } else if (response.data.material.includes("\\MaterialEAD")) {
+                            self.selectedMaterialUrl = "\\MaterialEAD" + response.data.material.split("\\MaterialEAD")[1];
+                        }
                     }
 
                     $('#aulaAtualTitulo').text(response.data.titulo);
@@ -528,10 +488,130 @@
                     if (player) {
                         player.load();
                     }
+
+                    self.listarMateriais();
+
                 })
                 .catch(error => {
                     console.error("Erro ao buscar aula:", error);
                 });
+        },
+        listarMateriais: function () {
+            $("#pdf-viewer").hide().empty();
+            const lista = $('#lista-materiais');
+            lista.empty();
+
+            if (!this.aula || !this.aula.material) {
+                lista.append('<li class="list-group-item text-center"><i class="fa fa-info-circle"></i> Nenhum material disponível para esta aula.</li>');
+                return;
+            }
+
+            const material = this.aula.material;
+            const nomeMaterial = this.aula.nomeMaterial;
+            let icon = 'fa-file-o';
+            let colorClass = '';
+
+            icon = 'fa-file-pdf-o';
+            colorClass = 'text-danger';
+
+            const caminho = "\\MaterialEAD" + material.split("\\MaterialEAD")[1];
+            const url = "http://localhost:5166" + caminho.replace(/\\/g, "/");
+
+            lista.append(`
+                <li class="list-group-item">
+                    <i class="fa ${icon} ${colorClass} mr-xs"></i>
+                    <a href="#" class="visualizar-pdf" data-pdf-url="${url}">${nomeMaterial}</a>
+                </li>
+            `);
+
+            lista.find('.visualizar-pdf').on('click', function (e) {
+                e.preventDefault();
+                const pdfUrl = $(this).data('pdf-url');
+                vm.mostrarPdfNoViewer(pdfUrl);
+            });
+        },
+        mostrarPdfNoViewer(pdfUrl) {
+            $("#pdf-viewer").show();
+            $("#pdf-viewer").empty();
+
+            $("#pdf-viewer").html(`
+                <div id="pdfjs-container" style="width:100%; min-height:600px; background:#eaeaea;">
+                    <canvas id="pdf-canvas" style="width:100%;"></canvas>
+                    <div id="pdf-controls" style="margin-top:10px; text-align:center;">
+                        <button id="pdf-prev" class="btn btn-sm btn-light">Anterior</button>
+                        <span id="pdf-page-info">Página <span id="pdf-page-num">1</span> de <span id="pdf-page-count">1</span></span>
+                        <button id="pdf-next" class="btn btn-sm btn-light">Próxima</button>
+                    </div>
+                </div>
+            `);
+
+            if (!window['pdfjsLib']) {
+                alert("pdfjsLib não encontrado. Verifique se incluiu o script correto do PDF.js em '/assets/vendor/pdfjs/build/pdf.js'!");
+                return;
+            }
+
+            pdfjsLib.GlobalWorkerOptions.workerSrc = '/assets/vendor/pdfjs/build/pdf.worker.js';
+
+            let pdfDoc = null,
+                pageNum = 1,
+                pageRendering = false,
+                pageNumPending = null,
+                scale = 1.2,
+                canvas = document.getElementById('pdf-canvas'),
+                ctx = canvas.getContext('2d');
+
+            function renderPage(num) {
+                pageRendering = true;
+                pdfDoc.getPage(num).then(function (page) {
+                    var viewport = page.getViewport({ scale: scale });
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
+
+                    var renderContext = {
+                        canvasContext: ctx,
+                        viewport: viewport
+                    };
+                    var renderTask = page.render(renderContext);
+
+                    renderTask.promise.then(function () {
+                        pageRendering = false;
+                        if (pageNumPending !== null) {
+                            renderPage(pageNumPending);
+                            pageNumPending = null;
+                        }
+                    });
+                });
+
+                document.getElementById('pdf-page-num').textContent = num;
+            }
+
+            function queueRenderPage(num) {
+                if (pageRendering) {
+                    pageNumPending = num;
+                } else {
+                    renderPage(num);
+                }
+            }
+
+            function onPrevPage() {
+                if (pageNum <= 1) return;
+                pageNum--;
+                queueRenderPage(pageNum);
+            }
+            function onNextPage() {
+                if (pageNum >= pdfDoc.numPages) return;
+                pageNum++;
+                queueRenderPage(pageNum);
+            }
+
+            pdfjsLib.getDocument(pdfUrl).promise.then(function (pdfDoc_) {
+                pdfDoc = pdfDoc_;
+                document.getElementById('pdf-page-count').textContent = pdfDoc.numPages;
+                renderPage(pageNum);
+            });
+
+            document.getElementById('pdf-prev').addEventListener('click', onPrevPage);
+            document.getElementById('pdf-next').addEventListener('click', onNextPage);
         }
     }
 });
