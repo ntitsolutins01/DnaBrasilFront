@@ -22,7 +22,7 @@ namespace WebApp.Areas.Identity.Pages.Account.Manage
         {
             if (email == null)
             {
-                return BadRequest("Email de usuário não cadastrado.");
+                return BadRequest("Usuário não cadastrado.");
             }
             if (code == null)
             {
@@ -40,7 +40,7 @@ namespace WebApp.Areas.Identity.Pages.Account.Manage
         {
             if (!ModelState.IsValid) return Page();
 
-            var user = await _userManager.FindByEmailAsync(Input.Email);
+            var user = await _userManager.FindByNameAsync(Input.Email);
             if (user == null)
             {
                 ModelState.AddModelError(string.Empty, "Usuário não cadastrado.");
@@ -60,8 +60,8 @@ namespace WebApp.Areas.Identity.Pages.Account.Manage
         public class InputModel
         {
             [Required]
-            [RegularExpression(@"^(([A-Za-z0-9]+_+)|([A-Za-z0-9]+\-+)|([A-Za-z0-9]+\.+)|([A-Za-z0-9]+\++))*[A-Za-z0-9]+@((\w+\-+)|(\w+\.))*\w{1,63}\.[a-zA-Z]{2,6}$", ErrorMessage = "O e-mail informado deve atender um formato padrão válido.")]
-            [EmailAddress] public string Email { get; set; }
+            //[RegularExpression(@"^(([A-Za-z0-9]+_+)|([A-Za-z0-9]+\-+)|([A-Za-z0-9]+\.+)|([A-Za-z0-9]+\++))*[A-Za-z0-9]+@((\w+\-+)|(\w+\.))*\w{1,63}\.[a-zA-Z]{2,6}$", ErrorMessage = "O e-mail informado deve atender um formato padrão válido.")]
+            public string Email { get; set; }
 
             [Required]
             [StringLength(100, ErrorMessage = "Formato de senha inválido, a senha deve conter no mínimo 8 digitos.",

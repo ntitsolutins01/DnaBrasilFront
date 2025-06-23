@@ -107,6 +107,12 @@ namespace WebApp.Models
             public required string AulaId { get; set; }
             public int? Progresso { get; set; }
         }
+
+        public class UpdateHabilitarAlunoCommand
+        {
+            public required int AlunoId { get; set; }
+            public required string AspNetUserId { get; set; }
+        }
     }
 
 }

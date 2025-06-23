@@ -108,10 +108,10 @@
     // basic
     $("#form").validate({
         rules: {
-            "Login.Email": {
-                required: true,
-                email: true
-            },
+            //"Login.Email": {
+            //    required: true,
+            //    email: true
+            //},
             "Login.Password": {
                 required: true,
                 minlength: 8
@@ -125,17 +125,16 @@
                 minlength: 8,
                 //equalTo: "#Input.Password"
             },
-            "Input.Email": {
-                required: true,
-                email: true
-            },
+            //"Input.Email": {
+            //    required: true
+            //},
             cpf: { cpf: true, required: true }
         },
         messages: {
-            "Login.Email": {
-                required: "Por favor informe seu usuário.",
-                email: "Formato de e-mail inválido."
-            },
+            //"Login.Email": {
+            //    required: "Por favor informe seu usuário.",
+            //    email: "Formato de e-mail inválido."
+            //},
             "Login.Password": {
                 required: "Por favor informe sua senha.",
                 minlength: jQuery.validator.format("Formato de senha inválido, a senha deve conter no mínimo 8 digitos.")
@@ -149,10 +148,9 @@
                 minlength: jQuery.validator.format("Formato de senha inválido, a senha deve conter no mínimo 8 digitos."),
                 //equalTo: "As senhas digitadas são diferentes. Por favor, repita a operação."
             },
-            "Input.Email": {
-                required: "Por favor informe seu e-mail.",
-                email: "Formato de e-mail inválido."
-            },
+            //"Input.Email": {
+            //    required: "Por favor informe seu usuário.",
+            //},
             cpf: { cpf: 'Formato de CPF inválido', required: "Por favor informe o número do CPF." }
         },
         highlight: function (label) {
