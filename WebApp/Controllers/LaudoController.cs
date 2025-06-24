@@ -1,3 +1,4 @@
+using Azure;
 using ClosedXML.Excel;
 using log4net;
 using Microsoft.AspNetCore.Authorization;
@@ -5,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using NuGet.Protocol.Core.Types;
 using WebApp.Authorization;
 using WebApp.Configuration;
 using WebApp.Dto;
@@ -13,6 +15,7 @@ using WebApp.Factory;
 using WebApp.Identity;
 using WebApp.Models;
 using WebApp.Utility;
+using WebApp.Views;
 using Claim = WebApp.Identity.Claim;
 
 namespace WebApp.Controllers
@@ -1318,6 +1321,30 @@ namespace WebApp.Controllers
                     StatusEducacional = "F",
                 };
 
+                string? filePath;
+                string? fileName;
+                string extension = ".jpg";
+                string newFileName = Path.ChangeExtension(
+                    Guid.NewGuid().ToString(),
+                    extension
+                );
+
+                foreach (var file in collection.Files)
+                {
+                    if (file.Length <= 0) continue;
+                    fileName = Path.GetFileName(collection.Files[0].FileName);
+                    filePath = Path.Combine(_host.WebRootPath, $"Gabaritos\\{newFileName}");
+
+                    if (!Directory.Exists(Path.Combine(_host.WebRootPath, $"Gabaritos")))
+                        Directory.CreateDirectory(Path.Combine(_host.WebRootPath, $"Gabaritos"));
+
+                    command.Imagem = filePath;
+                    command.NomeImagem = fileName;
+
+                    using Stream fileStream = new FileStream(filePath, FileMode.Create);
+                    await file.CopyToAsync(fileStream);
+                }
+
                 await ApiClientFactory.Instance.CreateEducacional(command);
 
                 return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Success, message = "Upload realizado com sucesso." });
@@ -1335,7 +1362,18 @@ namespace WebApp.Controllers
             {
                 _logger.Info($"Ação de Visualiza rGabarito  do aluno - Laudo.VisualizarGabarito");
 
-                return View();
+                var laudo = ApiClientFactory.Instance.GetLaudoById(id);
+                var educacionais = ApiClientFactory.Instance.GetEducacionaisAll()
+                    .Where(a => a.Aluno.Id == 33800)
+                    .ToList();
+
+                var model = new LaudoModel()
+                {
+                    AlunoId = laudo.AlunoId.ToString(),
+                    Educacionais = educacionais
+                };
+
+                return View(model);
             }
             catch (Exception e)
             {

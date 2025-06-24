@@ -51,6 +51,7 @@ namespace WebApp.Models
         public string TipoLaudoConsumoAlimentarDescricao { get; set; }
         public string TipoLaudoSaudeBucalDescricao { get; set; }
         public string TipoLaudoVocacionalDescricao { get; set; }
+        public List<EducacionalDto> Educacionais { get; set; }
 
         public class CreateUpdateLaudoCommand
         {
@@ -70,11 +71,13 @@ namespace WebApp.Models
 
         public class CreateUpdateEducacionalCommand
         {
-            public int ProfissionalId { get; init; }
-            public int AlunoId { get; init; }
-            public string Gabarito { get; init; }
-            public string Respostas { get; init; }
-            public string StatusEducacional { get; init; }
+            public int ProfissionalId { get; set; }
+            public int AlunoId { get; set; }
+            public string Gabarito { get; set; }
+            public string Respostas { get; set; }
+            public string StatusEducacional { get; set; }
+            public string? Imagem { get; set; }
+            public string? NomeImagem { get; set; }
         }
     }
 }
