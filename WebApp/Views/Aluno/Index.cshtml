@@ -192,7 +192,7 @@
 						<th class="text-center">Nome</th>
 						<th class="text-center">Email</th>
 						<th class="text-center">Data de Nascimento</th>
-						<th class="text-center">Status</th>
+						<th class="text-center">Habilitado?</th>
 						<th class="text-center">Ações</th>
 					</tr>
 				</thead>
@@ -204,13 +204,13 @@
 						<td class="text-center">@Html.DisplayFor(modelItem => item.Nome)</td>
 						<td class="text-center">@Html.DisplayFor(modelItem => item.Email)</td>
 						<td class="text-center">@Html.DisplayFor(modelItem => item.DtNascimento)</td>
-						@if (item.Status)
+						@if (item.Habilitado)
 							{
-						<td class="text-center"><span class="label label-success" style="display: block;">ATIVO</span></td>
+						<td class="text-center"><span class="label label-success" style="display: block;">HABILITADO</span></td>
 							}
 							else
 							{
-						<td class="text-center"><span class="label label-danger" style="display: block;">INATIVO</span></td>
+						<td class="text-center"><span class="label label-danger" style="display: block;">INABILITADO</span></td>
 							}
 						<td class="actions text-center">
 							<a data-toggle="tooltip" data-placement="top" title="Editar" asp-action="Edit" asp-controller="Aluno" asp-route-Id="@item.Id" class="on-default edit-row" style='color: #FF9800'><i class="fa fa-pencil"></i></a>
@@ -232,13 +232,19 @@
 							   class="on-default edit-row" style='color:#148f77'><i class="fa fa-file-archive-o"></i></a>
 
 							@if (item.Documentos.Any())
-							{
+				{
 
 							<a data-toggle="tooltip" data-placement="top" title="Download Documentos"
 							   asp-action="Download" asp-controller="Aluno" asp-route-id="@item.Id" class="on-default edit-row"
 							   style='color:#d4ac0d'><i class="fa fa-download" target="_blank"></i></a>
 
-							}
+				}
+							@if (!item.Habilitado)
+				{
+							<a data-toggle="tooltip" data-placement="top" title="Habilitar Aluno" href='javascript:(crud.HabilitarModal(@item.Id))'
+							   class="on-default remove-row" style="cursor: pointer;color: #3498db"><i class="fa fa-check-circle"></i></a>
+
+				}
 						</td>
 					</tr>
 					}
@@ -488,6 +494,57 @@
 				</div>
 				<div class="modal-footer">
 					<button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-remove"></i> &nbsp;&nbsp;Fechar</button>
+					<button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
+				</div>
+			}
+			</div>
+		</div>
+	</div>
+	<!-- Modal -->
+	<div class="modal fade" id="mdHabilitarAluno" tabindex="-1" role="dialog" aria-labelledby="mdHabilitarAlunoLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="mdHabilitarAlunoLabel">
+						<i class="fa fa-check-circle"></i> &nbsp;&nbsp;<strong>Habilitar Aluno</strong>
+					</h5>
+				</div>
+				@using (@Html.BeginForm("Habilitar", "Aluno", FormMethod.Post, new { id = "formHabilitarAluno", @class = "form-horizontal" }))
+			{
+				<input type="hidden" name="habilitarAlunoId" :value="editDto.Id" />
+
+				<div class="modal-body">
+					<div class="form-group">
+						<label class="col-sm-3 control-label">Nome</label>
+						<div class="col-sm-8">
+							<input type="text" id="nome" name="nome" class="form-control" readonly
+								   :value="editDto.Nome" />
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label">Email</label>
+						<div class="col-sm-8">
+							<input type="text" id="email" name="email" class="form-control" readonly
+								   :value="editDto.Email" />
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-sm-3 control-label">CPF</label>
+						<div class="col-sm-4">
+							<input type="text" id="cpfCnpj" name="cpfCnpj" class="form-control" readonly
+								   :value="editDto.Cpf" />
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-sm-3 control-label text-sm-right pt-2">Matrícula </label>
+						<div class="col-sm-4">
+							<input type="text" id="matricula" name="matricula" class="form-control" readonly
+								   title="Por favor informe a matrícula do aluno" :value="editDto.Id" />
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-remove"></i> &nbsp;&nbsp;Cancelar</button>
 					<button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
 				</div>
 			}
