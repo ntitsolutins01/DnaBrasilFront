@@ -1,0 +1,146 @@
+@model AlunoModel
+@{
+    ViewData["Title"] = "Responder Gabarito";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="vGabarito">
+    <div class="row">
+        <div class="col-lg-12">
+            @using (@Html.BeginForm("Upload", "Laudo", FormMethod.Post, new { id = "formUploadGabarito", @class = "form-horizontal", @enctype = "multipart/form-data" }))
+            {
+                <section class="panel">
+                    <header class="panel-heading">
+                        <div class="panel-actions">
+                            <a href="#" class="card-action card-action-toggle" data-card-toggle></a>
+                        </div>
+                        <h2 class="panel-title">Responder Gabarito</h2>
+                    </header>
+                    <div class="panel-body">
+                        <div class="form-group row">
+                            <!-- Página 1 -->
+                            <div class="page-container page1" style="max-width:50%; margin: 0 auto;">
+                                <div class="newContainer">
+                                    <!-- Header -->
+                                    <header class="report-header">
+                                        <div class="report-logo"></div>
+                                        <div class="report-title">
+                                            <span class="report-title-large">@Model.TextGabarito</span>
+                                            <span class="report-title-small">@Model.AnoGabarito</span>
+                                        </div>
+                                        <div class="report-icon"></div>
+                                    </header>
+
+                                    <!-- Seção de informações -->
+                                    <section class="info-section">
+                                        <!-- Container principal de informações -->
+                                        <div class="info-main">
+                                            <!-- Perfil -->
+                                            <div class="qrcode-side">
+                                                @if (Model.Aluno.ByteImage != null)
+                                                {
+                                                    var imgSrc = $"data:image/gif;base64,{Convert.ToBase64String(Model.Aluno.ByteImage)}";
+                                                    <img src="@imgSrc" alt="QRcode do Model.Aluno" class="qrcode-image" />
+                                                }
+                                                else
+                                                {
+                                                    <img src="/assets/images/qrcode.jpg" alt="QRcode padrão" class="qrcode-image" />
+                                                }
+                                            </div>
+
+                                            <!-- Informações do Model.Aluno -->
+                                            <div class="student-info">
+                                                <div class="info-row">
+                                                    <span class="info-label">ALUNO</span>
+                                                    <span class="info-value">@Model.Aluno.Nome</span>
+                                                </div>
+                                                <div class="info-row">
+                                                    <span class="info-label">MATRÍCULA</span>
+                                                    <span class="info-value">@Model.Aluno.Id</span>
+                                                </div>
+                                                <div class="info-row">
+                                                    <span class="info-label">MUNICIPIO/ESTADO</span>
+                                                    <span class="info-value">@Model.Aluno.MunicipioEstado</span>
+                                                </div>
+                                                <div class="info-row">
+                                                    <span class="info-label">UNIDADE ESCOLAR</span>
+                                                    <span class="info-value">@Model.Aluno.NomeLocalidade</span>
+                                                </div>
+                                                <!-- Linha dividida em duas colunas -->
+                                                <div class="info-row" style="display: flex; justify-content: space-between">
+                                                    <div style="display: flex; flex: 1">
+                                                        <span class="info-label">SÉRIE</span>
+                                                        <span class="info-value">@Model.Aluno.SerieTurma</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>
+
+                                    <!-- Seção do questionário -->
+                                    <section class="questionnaire-section">
+                                        <div class="questionnaire-grid">
+                                            <!-- Coluna 1: Questões 1-5 -->
+                                            @for (var i = 0; i < 3; i++) // Loop para criar 3 colunas de questões
+                                            {
+                                                <div class="question-column">
+                                                    <div class="question-header">
+                                                        <div class="option-header">A</div>
+                                                        <div class="option-header">B</div>
+                                                        <div class="option-header">C</div>
+                                                        <div class="option-header">D</div>
+                                                        <div class="option-header">E</div>
+                                                    </div>
+                                                    @for (var j = 1; j <= 5; j++)
+                                                    {
+                                                        var questionNumber = i * 5 + j; // Calcula o número sequencial da questão
+                                                        <div class="question-item">
+                                                            <div class="question-number">@questionNumber</div>
+                                                            <div class="answer-options">
+                                                                @{
+                                                                    var alternativas = new[] { "A", "B", "C", "D", "E" };
+                                                                }
+                                                                @for (var k = 0; k < 5; k++) // Loop para implementar as alternativas
+                                                                {
+                                                                    var alternative = alternativas[k];
+                                                                    <div class="answer-circle" onclick="selectAnswer(@questionNumber, '@alternative')"></div>
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            }
+                                        </div>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <footer class="panel-footer">
+                        <div class="row">
+                            <div class="col-md-9 col-md-offset-3">
+                                <a href="@Url.Action("Index", "Laudo")" class="btn btn-dark pull-right" style="margin-left: 5px;margin-right: 5px;"><i class="fa fa-reply"></i> &nbsp;&nbsp;Voltar</a>
+                                @* <button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;"><i class="fa fa-remove"></i> &nbsp;&nbsp;Cancelar</button> *@
+                                <button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
+                            </div>
+                        </div>
+                    </footer>
+                </section>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/assets/vendor/ios7-switch/ios7-switch.js"></script>
+    <script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
+    <script src="~/assets/assets_RF/index.js"></script>
+    <script src="~/js/Laudo.js"></script>
+}
+
+@section CssSpecificVendor {
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="~/assets/assets_RF/questionario.css" media="all" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+}
+

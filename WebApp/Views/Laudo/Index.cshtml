@@ -239,7 +239,15 @@
                                         <a data-toggle="tooltip" data-placement="top" title="Detalhamento Completo" asp-action="Details" asp-controller="Laudo" asp-route-id="@item.Id" class="on-default edit-row" style='color: #d2322d'><i class="fa fa-bar-chart"></i></a>
                                         <a data-toggle="tooltip" data-placement="top" title="Laudo Completo" asp-action="Report" asp-controller="Laudo" asp-route-id="@item.Id" class="on-default edit-row" style='color: #47a447' target="_blank"><i class="fa fa-file-text"></i></a>
                                         <a data-toggle="tooltip" data-placement="top" title="Visualizar Gabarito" asp-action="VisualizarGabarito" asp-controller="Laudo" asp-route-id="@item.Id" class="on-default edit-row" style='color: #2874a6' target="_blank"><i class="fa fa-eye"></i></a>
-                                        <a data-toggle="tooltip" data-placement="top" title="Responder Gabarito" asp-action="ResponderGabarito" asp-controller="Laudo" asp-route-id="@item.Id" class="on-default edit-row" style='color:#17202a' target="_blank"><i class="fa fa-file-text"></i></a>
+                                        @* <a href="#" id="btnImprimirGabarito" data-toggle="modal" data-target="#mdPrintGabarito" class="btn btn-block btn-default pull-right">
+                                            <i class="fa fa-print"></i> &nbsp;&nbsp;Imprimir Gabaritos
+                                        </a> *@
+                                        <a data-toggle="tooltip" data-placement="top" title="Responder Gabarito"
+                                           href='javascript:(crud.RespostaModal(@item.Id))'
+                                           class="on-default edit-row" style='color: #17202a'>
+                                            <i class="fa fa-file-text"></i>
+                                        </a>
+                                        @* <a href="#" id="btnImprimirGabarito" data-toggle="modal" data-placement="top" title="Responder Gabarito" class="on-default edit-row" style='color:#17202a' data-target="#mdPrintGabarito"><i class="fa fa-file-text"></i></a> *@
                                     </td>
                                 </tr>
                             }
@@ -477,6 +485,47 @@
                     </div>
                     <div class="modal-footer">
                         <button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-remove"></i> &nbsp;&nbsp;Fechar</button>
+                        <button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="mdRespostaGabarito" tabindex="-1" role="dialog" aria-labelledby="mdRespostaGabaritoLabel" aria-hidden="true">
+        <div class="modal-dialog modal-md" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="mdRespostaGabaritoLabel">
+                        <i class="fa fa-pencil"></i> &nbsp;&nbsp;<strong>Responder Gabarito</strong>
+                    </h5>
+                </div>
+                @using (@Html.BeginForm("ResponderGabarito", "Laudo", FormMethod.Post, new { id = "formResponderGabarito", @class = "form-horizontal", @enctype = "multipart/form-data" }))
+                {
+                    <div class="modal-body">
+                        <input type="hidden" name="alunoId" :value="laudoDto.AlunoId" />
+                        <div class="form-group row">
+                            <label class="col-sm-2 control-label">Gabarito: <span class="required text-danger">*</span></label>
+                            <div class="col-md-10">
+                                <select class="form-control populate select2"
+                                        name="ddlGabarito"
+                                        id="ddlGabarito"
+                                        style="width:100%"
+                                        title="Por favor selecione o gabarito."
+                                        required>
+                                    <option value="">Selecionar Gabarito</option>
+                                    <option value="3LP">LÍNGUA PORTUGUESA 3ª Série do Ensino Médio</option>
+                                    <option value="3MT">MATEMÁTICA 3ª Série do Ensino Médio</option>
+                                    <option value="5LP">LÍNGUA PORTUGUESA 5º Ano do Ensino Fundamental</option>
+                                    <option value="5MT">MATEMÁTICA 5º Ano do Ensino Fundamental</option>
+                                    <option value="9LP">LÍNGUA PORTUGUESA 9º Ano do Ensino Fundamental</option>
+                                    <option value="9MT">MATEMÁTICA 9º Ano do Ensino Fundamental</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-remove"></i> &nbsp;&nbsp;Cancelar</button>
                         <button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
                     </div>
                 }

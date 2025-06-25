@@ -1,7 +1,8 @@
 var vm = new Vue({
     el: "#vLaudo",
     data: {
-        loading: false
+        loading: false,
+        laudoDto: { Id: "", AlunoId: ""}
     },
     mounted: function () {
 
@@ -1092,6 +1093,19 @@ var vm = new Vue({
             }
 
             window.open(url, '_blank');
+        },
+        RespostaGabarito: function (id) {
+            var self = this;
+
+            axios.get("../Laudo/GetLaudoById/?id=" + id).then(result => {
+
+                self.laudoDto.Id = result.data.id;
+                self.laudoDto.AlunoId = result.data.alunoId;
+
+
+            }).catch(error => {
+                Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
+            });
         }
     }
 });
@@ -1107,4 +1121,9 @@ var crud = {
     //    $('#mdEditLaudo').modal('show');
     //    vm.EditLaudo(id)
     //}
+    RespostaModal: function (id) {
+        $('input[name="LaudoId"]').attr('value', id);
+        $('#mdRespostaGabarito').modal('show');
+        vm.RespostaGabarito(id)
+    }
 };
