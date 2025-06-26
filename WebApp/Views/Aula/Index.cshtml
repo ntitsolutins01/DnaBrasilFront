@@ -126,7 +126,7 @@
 							<label class="col-sm-3 control-label text-sm-right pt-2">Titulo da Aula: <span class="required">*</span></label>
 							<div class="col-sm-9">
 								<input type="text" name="nome" :value="editDto.Titulo" class="form-control"
-								       maxlength="150"
+								       maxlength="250"
 								       title="Por favor informe o nome do curso." required/>
 							</div>
 						</div>
@@ -140,7 +140,7 @@
 							<label class="col-sm-3 control-label text-sm-right pt-2">Video: <span class="required">*</span></label>
 							<div class="col-sm-9">
 								<input type="text" name="video" :value="editDto.Video" class="form-control"
-									   maxlength="150" placeholder="eg.: file path"
+									   maxlength="1000" placeholder="eg.: file path"
 									   title="Por favor informe o file path do vídeo."  />
 							</div>
 						</div>
@@ -148,7 +148,7 @@
 							<label class="col-sm-3 control-label text-sm-right pt-2">Material Didático: <span class="required">*</span></label>
 							<div class="col-sm-9">
 								<input type="text" name="material" :value="editDto.Material" class="form-control"
-									   maxlength="150" placeholder="eg.: file path"
+									   maxlength="1000" placeholder="eg.: file path"
 									   title="Por favor informe o file path do material didático."  />
 							</div>
 						</div>

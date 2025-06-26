@@ -48,14 +48,17 @@ public class AlunoCursoCertificadoController : BaseController
     /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
     /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
     [ClaimsAuthorize(ClaimType.Curso, Identity.Claim.Consultar)]
-    public IActionResult Index(int? crud, int? notify, string message = null)
+    public async Task<IActionResult> Index(int? crud, int? notify, string message = null)
     {
         var usuario = User.Identity.Name;
 
         SetNotifyMessage(notify, message);
         SetCrudMessage(crud);
+        var aluno = new AlunoDto();
 
-        var aluno = ApiClientFactory.Instance.GetAlunoByEmail(usuario);
+        aluno = ApiClientFactory.Instance.GetAlunoByEmail(usuario) ??
+                await ApiClientFactory.Instance.GetAlunoById(Convert.ToInt32(usuario));
+
         var cursos = ApiClientFactory.Instance.GetCursosByAlunoId(aluno.Id);
         var certificados = ApiClientFactory.Instance.GetCertificadosByAlunoId(aluno.Id);
         var alunosCursos = ApiClientFactory.Instance.GetAlunoCursosByAlunoId(aluno.Id);

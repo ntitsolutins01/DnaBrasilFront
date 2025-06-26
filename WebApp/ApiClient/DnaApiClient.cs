@@ -153,8 +153,8 @@ namespace WebApp.ApiClient
             _httpClient.DefaultRequestHeaders.Accept
                 .Add(new MediaTypeWithQualityHeaderValue("application/json"));//ACCEPT header
 
-            //_httpClient.DefaultRequestHeaders.Authorization =
-            //    new AuthenticationHeaderValue("Bearer", "Your Oauth token");
+            _httpClient.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", "Your Oauth token");
         }
 
 

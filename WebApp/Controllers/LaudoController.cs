@@ -17,7 +17,7 @@ using Claim = WebApp.Identity.Claim;
 
 namespace WebApp.Controllers
 {
-    [Authorize(Policy = ModuloAccess.Laudo)]
+    //[Authorize(Policy = ModuloAccess.Laudo)]
     public class LaudoController : BaseController
     {
         private readonly IOptions<UrlSettings> _appSettings;
