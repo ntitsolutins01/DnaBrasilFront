@@ -35,7 +35,7 @@ var vm = new Vue({
             const queryString = window.location.pathname;
             const urlParams = queryString.split('/');
             
-            axios.get("Aluno/GetAlunoById/?id=" + urlParams[3])
+            axios.get("../../Aluno/GetAlunoById/?id=" + urlParams[3])
                 .then(result => {
                     self.editDto.Id = result.data.id;
                     self.editDto.FomentoId = result.data.fomentoId;
@@ -95,7 +95,7 @@ var vm = new Vue({
                     self.editDto.QRCode = 'data:image/jpeg;base64,' + result.data.qrCode;
 
                     // Após ter o fomentoId, buscar o modelo da carteirinha
-                    return axios.get("Aluno/GetModeloCarteirinhaByFomento?fomentoId=" + result.data.fomentoId);
+                    return axios.get("../../Aluno/GetModeloCarteirinhaByFomento?fomentoId=" + result.data.fomentoId);
                 })
                 .then(modeloResult => {
                     // Atualizar o background da frente com o nome da imagem retornado

@@ -192,28 +192,28 @@ namespace WebApp.Controllers
 
             var percentual = new PercentualLaudoDto();
 
-            if (laudo.Ordem != 1)
-            {
-                var laudoAnterior = await ApiClientFactory.Instance.GetLaudosByFilter(new LaudosFilterDto
-                {
-                    AlunoId = laudo.AlunoId.ToString(),
-                    Ordem = laudo.Ordem - 1,
-                    PageNumber = 1,
-                    PageSize = 10
-                });
+            //if (laudo.Ordem != 1)
+            //{
+            //    var laudoAnterior = await ApiClientFactory.Instance.GetLaudosByFilter(new LaudosFilterDto
+            //    {
+            //        AlunoId = laudo.AlunoId.ToString(),
+            //        Ordem = laudo.Ordem - 1,
+            //        PageNumber = 1,
+            //        PageSize = 10
+            //    });
 
-                var talentoEsportivoAnterior = ApiClientFactory.Instance.GetTalentoEsportivoById((int)laudoAnterior.Laudos.Items.First().TalentoEsportivoId);
+            //    var talentoEsportivoAnterior = ApiClientFactory.Instance.GetTalentoEsportivoById((int)laudoAnterior.Laudos.Items.First().TalentoEsportivoId);
 
-                percentual.PreensaoManual = (decimal)((talentoEsportivoAnterior.PreensaoManual - talentoEsportivo.PreensaoManual) / talentoEsportivoAnterior.PreensaoManual * 100);
-                percentual.Flexibilidade = (decimal)((talentoEsportivoAnterior.Flexibilidade - talentoEsportivo.Flexibilidade) / talentoEsportivoAnterior.Flexibilidade * 100);
-                percentual.ImpulsaoHorizontal = (decimal)((talentoEsportivoAnterior.ImpulsaoHorizontal - talentoEsportivo.ImpulsaoHorizontal) / talentoEsportivoAnterior.ImpulsaoHorizontal * 100);
-                percentual.Velocidade = (decimal)((talentoEsportivoAnterior.Velocidade - talentoEsportivo.Velocidade) / talentoEsportivoAnterior.Velocidade * 100);
-                percentual.AptidaoFisica = (decimal)((talentoEsportivoAnterior.Vo2Max - talentoEsportivo.Vo2Max) / talentoEsportivoAnterior.Vo2Max * 100);
-                percentual.Agilidade = (decimal)((talentoEsportivoAnterior.ShuttleRun - talentoEsportivo.ShuttleRun) / talentoEsportivoAnterior.ShuttleRun * 100);
-                percentual.Imc = (decimal)((talentoEsportivoAnterior.Imc - talentoEsportivo.Imc) / talentoEsportivoAnterior.Imc * 100);
+            //    percentual.PreensaoManual = (decimal)((talentoEsportivoAnterior.PreensaoManual - talentoEsportivo.PreensaoManual) / talentoEsportivoAnterior.PreensaoManual * 100);
+            //    percentual.Flexibilidade = (decimal)((talentoEsportivoAnterior.Flexibilidade - talentoEsportivo.Flexibilidade) / talentoEsportivoAnterior.Flexibilidade * 100);
+            //    percentual.ImpulsaoHorizontal = (decimal)((talentoEsportivoAnterior.ImpulsaoHorizontal - talentoEsportivo.ImpulsaoHorizontal) / talentoEsportivoAnterior.ImpulsaoHorizontal * 100);
+            //    percentual.Velocidade = (decimal)((talentoEsportivoAnterior.Velocidade - talentoEsportivo.Velocidade) / talentoEsportivoAnterior.Velocidade * 100);
+            //    percentual.AptidaoFisica = (decimal)((talentoEsportivoAnterior.Vo2Max - talentoEsportivo.Vo2Max) / talentoEsportivoAnterior.Vo2Max * 100);
+            //    percentual.Agilidade = (decimal)((talentoEsportivoAnterior.ShuttleRun - talentoEsportivo.ShuttleRun) / talentoEsportivoAnterior.ShuttleRun * 100);
+            //    percentual.Imc = (decimal)((talentoEsportivoAnterior.Imc - talentoEsportivo.Imc) / talentoEsportivoAnterior.Imc * 100);
 
 
-            }
+            //}
 
             var tiposLaudos = ApiClientFactory.Instance.GetTiposLaudoAll();
 

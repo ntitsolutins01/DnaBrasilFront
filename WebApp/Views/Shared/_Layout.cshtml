@@ -603,7 +603,7 @@
                                         </a>
                                     </li>
                                     <li class="nav-parent nav-expanded">
-                                        <a href="@Url.Action($"Carteirinha", "Aluno", new {id = laudoId})">
+                                            <a href="@Url.Action($"Carteirinha", "Aluno", new {id = Convert.ToInt32(User.Identity.Name)})">
                                             <i class="fa fa-address-card-o" aria-hidden="true"></i>
                                             <span>Minha Carteirinha</span>
                                         </a>

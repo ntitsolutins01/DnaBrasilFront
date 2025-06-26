@@ -243,14 +243,19 @@ public class AlunoCursoCertificadoController : BaseController
     /// <param name="aulaId">ID opcional da aula a ser exibida inicialmente</param>
     /// <returns>View com os detalhes do curso</returns>
     [ClaimsAuthorize(ClaimType.Curso, Identity.Claim.Consultar)]
-    public IActionResult DetalhesCurso(int id)
+    public async Task<IActionResult> DetalhesCurso(int id)
     {
         try
         {
             var usuario = User.Identity.Name;
 
-            var aluno = ApiClientFactory.Instance.GetAlunoByEmail(usuario);
+            var aluno = new AlunoDto();
+
+            aluno = ApiClientFactory.Instance.GetAlunoByEmail(usuario) ??
+                    await ApiClientFactory.Instance.GetAlunoById(Convert.ToInt32(usuario));
+
             var curso = ApiClientFactory.Instance.GetCursoById(id);
+
 
             var alunosCursos = ApiClientFactory.Instance.GetAlunosCursosByCursoId(id);
             var alunoCurso = alunosCursos.FirstOrDefault(ac => Convert.ToInt32(ac.AlunoId) == aluno.Id);
