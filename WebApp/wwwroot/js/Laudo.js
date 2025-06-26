@@ -2,7 +2,7 @@ var vm = new Vue({
     el: "#vLaudo",
     data: {
         loading: false,
-        laudoDto: { Id: "", AlunoId: ""}
+        laudoDto: { Id: "", AlunoId: "", ProfissionalId: ""}
     },
     mounted: function () {
 
@@ -1101,7 +1101,6 @@ var vm = new Vue({
 
                 self.laudoDto.Id = result.data.id;
                 self.laudoDto.AlunoId = result.data.alunoId;
-
 
             }).catch(error => {
                 Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);

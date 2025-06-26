@@ -100,13 +100,15 @@
                                                                 @{
                                                                     var alternativas = new[] { "A", "B", "C", "D", "E" };
                                                                 }
-                                                                @for (var k = 0; k < 5; k++) // Loop para implementar as alternativas
+                                                                @for (var k = 0; k < 5; k++)
                                                                 {
                                                                     var alternative = alternativas[k];
                                                                     <div class="answer-circle" onclick="selectAnswer(@questionNumber, '@alternative')"></div>
                                                                 }
                                                             </div>
+                                                            <input type="hidden" name="resposta_@questionNumber" id="resposta_@questionNumber" />
                                                         </div>
+
                                                     }
                                                 </div>
                                             }
@@ -116,6 +118,12 @@
                             </div>
                         </div>
                     </div>
+
+                    <input type="hidden" name="matriculaReconhecida" value="@Model.Aluno.Id" />
+                    <input type="hidden" name="ddlProfissional" value="@Model.ProfissionalId" />
+                    <input type="hidden" name="ddlGabarito" value="@Model.SiglaGabarito" />
+                    <input type="hidden" name="respostasReconhecidas" id="respostasString" />
+
                     <footer class="panel-footer">
                         <div class="row">
                             <div class="col-md-9 col-md-offset-3">
@@ -131,16 +139,40 @@
     </div>
 </div>
 
-@section Scripts {
-    <script src="~/assets/vendor/ios7-switch/ios7-switch.js"></script>
-    <script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
-    <script src="~/assets/assets_RF/index.js"></script>
-    <script src="~/js/Laudo.js"></script>
-}
-
 @section CssSpecificVendor {
     <link href="https://fonts.googleapis.com/css?family=Ubuntu&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="~/assets/assets_RF/questionario.css" media="all" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
 }
 
+@section Scripts {
+    <script src="~/assets/vendor/ios7-switch/ios7-switch.js"></script>
+    <script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
+    <script src="~/assets/assets_RF/index.js"></script>
+    <script src="~/js/Laudo.js"></script>
+
+    <script>
+            document.getElementById('formUploadGabarito').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            let respostasDict = {};
+            for (let i = 1; i <= 15; i++) {
+                let selecionado = document.getElementById('resposta_' + i);
+                respostasDict[i.toString()] = selecionado && selecionado.value ? selecionado.value : ""; // sempre string!
+            }
+            let respostasJson = JSON.stringify(respostasDict);
+
+            let hidden = document.getElementById('respostasString');
+            if (!hidden) {
+                hidden = document.createElement("input");
+                hidden.type = "hidden";
+                hidden.name = "respostasReconhecidas";
+                hidden.id = "respostasString";
+                this.appendChild(hidden);
+            }
+            hidden.value = respostasJson;
+
+            this.submit();
+        });
+    </script>
+}

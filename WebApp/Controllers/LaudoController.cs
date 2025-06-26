@@ -1364,7 +1364,7 @@ namespace WebApp.Controllers
 
                 var laudo = ApiClientFactory.Instance.GetLaudoById(id);
                 var educacionais = ApiClientFactory.Instance.GetEducacionaisAll()
-                    .Where(a => a.Aluno.Id == 33800)
+                    .Where(a => a.Aluno.Id == laudo.AlunoId)
                     .ToList();
 
                 var model = new LaudoModel()
@@ -1425,7 +1425,9 @@ namespace WebApp.Controllers
                 {
                     Aluno = aluno,
                     TextGabarito = textoGabarito,
-                    AnoGabarito = anoGabarito
+                    AnoGabarito = anoGabarito,
+                    SiglaGabarito = collection["ddlGabarito"],
+                    ProfissionalId = collection["ddlProfissional"]
                 };
 
                 return View(model);
