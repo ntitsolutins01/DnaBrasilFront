@@ -21,14 +21,18 @@
 
     <div class="dropdown-menu">
         <ul class="list-unstyled">
-            <li class="divider"></li>
-            @* <li>
-                <a role="menuitem" tabindex="-1" href="pages-user-profile.html"><i class="fa fa-user"></i> Meu Perfil</a>
-            </li> *@
-            <li>
-                <a role="menuitem" tabindex="-1" href="#" onclick="document.forms['nav-logout'].submit();"><i class="fa fa-power-off"></i> Sair</a>
-                <form class="form-inline" name="nav-logout" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new {area = ""})"></form>
-            </li>
+	        @**@<li class="divider"></li>
+             <li>
+                <a role="menuitem" tabindex="-1" href="@Url.Action("Profile", "Aluno", new {id = User.Identity.Name})"><i class="fa fa-user"></i> Meu Perfil</a>
+            </li>  
+	        <li class="divider"></li>
+	        <li>
+		        <a role="menuitem" tabindex="-1" href="#"><i class="fa fa-rocket"></i> Release 2.2.3</a>
+	        </li> 
+	        <li>
+		        <a role="menuitem" tabindex="-1" href="#" onclick="document.forms['nav-logout'].submit();"><i class="fa fa-power-off"></i> Sair</a>
+		        <form class="form-inline" name="nav-logout" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new {area = ""})"></form>
+	        </li>
         </ul>
     </div>
 </div>
