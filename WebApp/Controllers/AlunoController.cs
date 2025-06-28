@@ -35,7 +35,8 @@ namespace WebApp.Controllers
     /// <summary>
     /// Controle de Aluno
     /// </summary>
-    [Authorize(Policy = ModuloAccess.Aluno)]
+    //[Authorize(Policy = ModuloAccess.Aluno)]
+    //[Authorize(Policy = ModuloAccess.ProfileAluno)]
     public class AlunoController : BaseController
     {
         #region Parametros
@@ -2023,6 +2024,11 @@ namespace WebApp.Controllers
             }
         }
 
+        public async Task<ActionResult> Carteirinha()
+        {
+            return View();
+        }
+
         #endregion
 
         #region Private Methods
@@ -2596,5 +2602,7 @@ namespace WebApp.Controllers
                 message);
         }
         #endregion
+
+        
     }
 }

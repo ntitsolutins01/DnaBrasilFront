@@ -21,5 +21,6 @@
         public const string ControleFrequenciaEscolar = "ControleFrequenciaEscolar";
         public const string MeusCursos = "MeusCursos";
         public const string ControleInventario = "ControleInventario";
+        public const string ProfileAluno = "ProfileAluno";
     }
 }

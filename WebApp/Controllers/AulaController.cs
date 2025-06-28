@@ -192,7 +192,13 @@ public class AulaController : BaseController
     {
         try
         {
-            var command = new AulaModel.CreateUpdateAulaCommand
+            var uriMaterial = new Uri(collection["material"].ToString().Replace("\"", "").Replace("C:\\MaterialEAD\\", "C:\\inetpub\\wwwroot\\wwwroot\\MaterialEAD\\"));
+            var nomeMaterial = Path.GetFileName(uriMaterial.LocalPath);
+            var uriVideo = new Uri(collection["video"].ToString().Replace("\"", "").Replace("C:\\MaterialEAD\\", "C:\\inetpub\\wwwroot\\wwwroot\\MaterialEAD\\"));
+            var nomeVideo = Path.GetFileName(uriVideo.LocalPath);
+
+            AulaModel.CreateUpdateAulaCommand command;
+            command = new AulaModel.CreateUpdateAulaCommand
             {
                 Id = Convert.ToInt32(collection["editAulaId"]),
                 Titulo = collection["nome"].ToString(),
@@ -200,8 +206,10 @@ public class AulaController : BaseController
                 Status = collection["editStatus"].ToString() == "" ? false : true,
                 ProfessorId = Convert.ToInt32(collection["ddlProfessor"].ToString()),
                 Ordem = Convert.ToInt32(collection["ordem"].ToString()),
-                Video = collection["video"].ToString(),
-                Material = collection["material"].ToString()
+                Video = collection["video"].ToString().Replace("\"", "").Replace("C:\\MaterialEAD\\", "C:\\inetpub\\wwwroot\\wwwroot\\MaterialEAD\\"),
+                NomeVideo = nomeVideo,
+                Material = collection["material"].ToString().Replace("\"", "").Replace("C:\\MaterialEAD\\", "C:\\inetpub\\wwwroot\\wwwroot\\MaterialEAD\\"),
+                NomeMaterial = nomeMaterial
             };
 
             //string aulasPath = Path.Combine(_host.WebRootPath, "Aulas");
