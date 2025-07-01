@@ -38,7 +38,7 @@
                         <div class="col-md-8">
                             <!-- Player de vídeo -->
                             <div class="embed-responsive embed-responsive-16by9 mb-md">
-                                <video id="videoPlayer" class="embed-responsive-item" controls>
+                                <video id="videoPlayer" class="embed-responsive-item" controls controlsList="nodownload">
                                     <source :src="selectedVideoUrl" type="video/mp4" id="videoSource">
                                     Seu navegador não suporta a tag de vídeo.
                                 </video>
@@ -201,7 +201,7 @@
                                     <h4 class="panel-title"><i class="fa fa-cog mr-xs"></i> Opções</h4>
                                 </div>
                                 <div class="panel-body">
-                                    <a href="#" class="btn btn-default btn-block mb-xs">
+                                    <a href="@Url.Action("Index", "AlunoCursoCertificado")" class="btn btn-default btn-block mb-xs">
                                         <i class="fa fa-arrow-left"></i> Voltar para Meus Cursos
                                     </a>
 
@@ -258,15 +258,24 @@
             border-radius: 4px;
         }
 
-            .nav-list li a:hover {
-                background-color: #f5f5f5;
-                text-decoration: none;
-            }
+        .nav-list li a:hover {
+            background-color: #f5f5f5;
+            text-decoration: none;
+        }
 
-            .nav-list li a.active {
-                background-color: #eaeaea;
-                font-weight: bold;
-            }
+        .nav-list li a.active {
+            background-color: #eaeaea;
+            font-weight: bold;
+         }
+
+        video::-internal-media-controls-download-button {
+            display: none;
+        }
+
+        video::-webkit-media-controls-enclosure {
+            overflow: hidden;
+        }
+
     </style>
 }
 
