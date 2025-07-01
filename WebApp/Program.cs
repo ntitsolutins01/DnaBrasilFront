@@ -169,7 +169,6 @@ builder.Services.AddAuthorization(o =>
 
     o.AddPolicy(ModuloAccess.Aluno, policy =>
         policy.RequireAssertion(context =>
-            context.User.IsInRole(UserRoles.Aluno) ||
             context.User.IsInRole(UserRoles.AdministradorEad) ||
             context.User.IsInRole(UserRoles.Coordenador) ||
             context.User.IsInRole(UserRoles.Gestor) ||
@@ -200,6 +199,10 @@ builder.Services.AddAuthorization(o =>
             context.User.IsInRole(UserRoles.Gestor) ||
             context.User.IsInRole(UserRoles.AdministradorConsulta) ||
             context.User.IsInRole(UserRoles.Administrador)));
+
+    o.AddPolicy(ModuloAccess.ProfileAluno, policy =>
+        policy.RequireAssertion(context =>
+            context.User.IsInRole(UserRoles.Aluno)));
 
 
 

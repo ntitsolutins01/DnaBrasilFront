@@ -35,7 +35,8 @@ namespace WebApp.Controllers
     /// <summary>
     /// Controle de Aluno
     /// </summary>
-    [Authorize(Policy = ModuloAccess.Aluno)]
+    //[Authorize(Policy = ModuloAccess.Aluno)]
+    //[Authorize(Policy = ModuloAccess.ProfileAluno)]
     public class AlunoController : BaseController
     {
         #region Parametros
@@ -61,7 +62,7 @@ namespace WebApp.Controllers
         /// <param name="roleManager">gerenciador de regras de permissoes</param>
         public AlunoController(IOptions<UrlSettings> appSettings,
             IWebHostEnvironment host,
-            ILog logger, 
+            ILog logger,
             UserManager<IdentityUser> userManager,
             IEmailSender emailSender,
             RoleManager<IdentityRole> roleManager)
@@ -634,7 +635,7 @@ namespace WebApp.Controllers
                     SerieId = collection["ddlTurma"] == "" ? null : Convert.ToInt32(collection["ddlTurma"].ToString())
                 };
 
-                
+
 
 
                 foreach (var file in collection.Files)
@@ -1586,65 +1587,20 @@ namespace WebApp.Controllers
 
                 string filePath = null;
 
-                var status = collection["status"].ToString();
-                var habilitado = collection["habilitado"].ToString();
+                var alunoId = collection["alunoId"].ToString();
 
-                var command = new AlunoModel.CreateUpdateDadosAlunoCommand()
+                var updateCommand = new AlunoModel.CreateUpdateProfileAlunoCommand()
                 {
-                    Etnia = collection["ddlEtnia"] == "" ? null : collection["ddlEtnia"].ToString(),
-                    MunicipioId = collection["ddlMunicipio"] == "" ? null : Convert.ToInt32(collection["ddlMunicipio"].ToString()),
-                    ProfissionalId = collection["ddlProfissionalAluno"] == "" ? null : Convert.ToInt32(collection["ddlProfissionalAluno"].ToString()),
-                    FomentoId = collection["ddlFomento"] == "" ? null : Convert.ToInt32(collection["ddlFomento"].ToString()),
-                    DeficienciaId = collection["ddlDeficiencia"] == "" ? null : Convert.ToInt32(collection["ddlDeficiencia"].ToString()),
-                    LocalidadeId = collection["ddlLocalidade"] == "" ? null : Convert.ToInt32(collection["ddlLocalidade"].ToString()),
-                    Nome = collection["nome"] == "" ? null : collection["nome"].ToString(),
-                    DtNascimento = collection["DtNascimento"] == "" ? null : collection["DtNascimento"].ToString(),
-                    Email = collection["email"] == "" ? null : collection["email"].ToString(),
-                    Sexo = collection["ddlSexo"] == "" ? null : collection["ddlSexo"].ToString(),
-                    NomeMae = collection["nomeMae"] == "" ? null : collection["nomeMae"].ToString(),
-                    NomePai = collection["nomePai"] == "" ? null : collection["nomePai"].ToString(),
-                    Telefone = collection["numTelefone"] == "" ? null : collection["numTelefone"].ToString(),
-                    Cep = collection["cep"] == "" ? null : collection["cep"].ToString(),
-                    Celular = collection["numCelular"] == "" ? null : collection["numCelular"].ToString(),
-                    Cpf = collection["cpf"] == "" ? null : collection["cpf"].ToString(),
                     Endereco = collection["endereco"] == "" ? null : collection["endereco"].ToString(),
+                    Cep = collection["cep"] == "" ? null : collection["cep"].ToString(),
                     Numero = collection["numero"] == "" ? null : collection["numero"].ToString(),
                     Bairro = collection["bairro"] == "" ? null : collection["bairro"].ToString(),
-                    DeficienciasIds = collection["arrDeficiencias"] == "" ? null : collection["arrDeficiencias"].ToString(),
-                    Habilitado = habilitado != "",
-                    Status = status != "",
-                    NomeFoto = filePath,
-                    AutorizacaoSaida = Convert.ToBoolean(collection["autorizado"].ToString()),
-                    UtilizacaoImagem = Convert.ToBoolean(collection["utilizacaoImagem"].ToString()),
-                    ParticipacaoProgramaCompartilhamentoDados = Convert.ToBoolean(collection["participacao"].ToString()),
-                    CopiaDocAlunoResponsavel = Convert.ToBoolean(collection["copiaDoc"].ToString()),
-                    AutorizacaoConsentimentoAssentimento = collection["agreeterms"].ToString() != "",
-                    ModalidadesIds = collection["ddlModalidades"].ToString()
-
+                    Telefone = collection["numTelefone"] == "" ? null : collection["numTelefone"].ToString(),
+                    Celular = collection["numCelular"] == "" ? null : collection["numCelular"].ToString(),
+                    Email = collection["email"] == "" ? null : collection["numCelular"].ToString()
                 };
 
-                foreach (var file in collection.Files)
-                {
-                    if (file.Length <= 0) continue;
-
-                    command.NomeFoto = System.IO.Path.GetFileName(collection.Files[0].FileName);
-
-                    using (var ms = new MemoryStream())
-                    {
-                        file.CopyToAsync(ms);
-                        var byteIMage = ms.ToArray();
-                        command.ByteImage = byteIMage;
-                    }
-                }
-
-                var alunoId = await ApiClientFactory.Instance.CreateDados(command);
-
-                var updateCommand = command;
-
-                updateCommand.Id = (int)alunoId;
-                command.QrCode = GeraQrCode(alunoId);
-
-                await ApiClientFactory.Instance.UpdateDados((int)alunoId, updateCommand);
+                await ApiClientFactory.Instance.UpdateProfile(Convert.ToInt32(alunoId), updateCommand);
 
                 return RedirectToAction(nameof(Index), new { id = alunoId, crud = (int)EnumCrud.Created });
             }
@@ -1979,7 +1935,7 @@ namespace WebApp.Controllers
                 };
 
                 var newUser = new IdentityUser { UserName = result.Id.ToString(), Email = command.Email };
-                var userCreated = await _userManager.CreateAsync(newUser, "12345678");
+                var userCreated = await _userManager.CreateAsync(newUser, $"senha{result.Id.ToString()}");
 
                 command.PerfilId = (int)EnumPerfil.Aluno;
                 var perfil = ApiClientFactory.Instance.GetPerfilById(command.PerfilId);
@@ -1998,12 +1954,20 @@ namespace WebApp.Controllers
                     if (usuarioId != 0)
                     {
                         await _userManager.AddToRoleAsync(newUser, userRole);
-                        
-                        await ApiClientFactory.Instance.UpdateHabilitarAluno(Convert.ToInt32(alunoId), new AlunoModel.UpdateHabilitarAlunoCommand(){ AlunoId = Convert.ToInt32(alunoId), AspNetUserId = newUser.Id});
+
+                        await ApiClientFactory.Instance.UpdateHabilitarAluno(Convert.ToInt32(alunoId), new AlunoModel.UpdateHabilitarAlunoCommand() { AlunoId = Convert.ToInt32(alunoId), AspNetUserId = newUser.Id });
                     }
 
-                    SendNewUserEmail(newUser, command.Email, command.Nome);
-
+                    //SendNewUserEmail(newUser, command.Email, command.Nome);
+                }
+                else
+                {
+                    return RedirectToAction(nameof(Index),
+                        new
+                        {
+                            notify = (int)EnumNotify.Error,
+                            message = "Erro ao criar usuário. Favor entrar em contato com o administrador do sistema."
+                        });
                 }
 
                 return RedirectToAction(nameof(Index), new
@@ -2018,9 +1982,14 @@ namespace WebApp.Controllers
                     new
                     {
                         notify = (int)EnumNotify.Error,
-                        message = "Erro ao criar usuário. Favor entrar em contato com o administrador do sistema."
+                        message = $"Erro ao criar usuário. {e.Message}."
                     });
             }
+        }
+
+        public async Task<ActionResult> Carteirinha()
+        {
+            return View();
         }
 
         #endregion
@@ -2596,5 +2565,7 @@ namespace WebApp.Controllers
                 message);
         }
         #endregion
+
+        
     }
 }

@@ -1,202 +1,210 @@
-﻿@model WebApp.Models.AlunoCursoCertificadoModel
+﻿@using System.Security.Claims
+@using WebApp.Enumerators
+@using WebApp.Identity
+@model WebApp.Models.AlunoCursoCertificadoModel
 @{
-    ViewData["Title"] = "Meus Cursos";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+	ViewData["Title"] = "Meus Cursos";
+	Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div id="vAlunoCurso">
-    <div class="row mb-lg">
-        <div class="col-lg-12">
-            <h2 class="mt-none mb-sm text-dark">Meus Cursos e Certificados</h2>
-            <p class="mb-lg">Acompanhe seu progresso nos cursos e visualize seus certificados concluídos.</p>
-        </div>
-    </div>
+	<div class="row mb-lg">
+		<div class="col-lg-12">
+			<h2 class="mt-none mb-sm text-dark">Meus Cursos e Certificados</h2>
+			<p class="mb-lg">Acompanhe seu progresso nos cursos e visualize seus certificados concluídos.</p>
+		</div>
+	</div>
 
-    <div class="row">
-        <div class="col-lg-12">
-            <section class="panel">
-                <header class="panel-heading">
-                    <div class="panel-actions">
-                        <a href="#" class="card-action card-action-toggle" data-card-toggle></a>
-                    </div>
-                    <h2 class="panel-title">Gerenciamento de Aprendizado</h2>
-                </header>
+	<div class="row">
+		<div class="col-lg-12">
+			<section class="panel">
+				<header class="panel-heading">
+					<div class="panel-actions">
+						<a href="#" class="card-action card-action-toggle" data-card-toggle></a>
+					</div>
+					<h2 class="panel-title">Gerenciamento de Aprendizado</h2>
+				</header>
 
+				<div class="panel-body">
+					@{
+						var perfil = ((ClaimsIdentity)User.Identity).FindFirst(ClaimTypes.Role)?.Value;
+						if (perfil == EnumPerfil.Administrador.GetDescription())
+		                {
+			                <div class="form-group row">
+				                <div class="col-sm-2 pull-right">
+					                <a href="@Url.Action("CreateAlunoCertificado", "AlunoCursoCertificado")" class="btn btn-block btn-success pull-right">
+						                <i class="fa fa-certificate"></i> Cadastrar Certificado
+					                </a>
+				                </div>
+				                <div class="col-sm-2 pull-right">
+					                <a href="@Url.Action("CreateAlunoCurso", "AlunoCursoCertificado")" class="btn btn-block btn-primary pull-right">
+						                <i class="fa fa-plus"></i> Cadastrar Curso
+					                </a>
+				                </div>
+			                </div>
+		                }
+	                }
                 <div class="panel-body">
-                    <div class="form-group row">
-                        <div class="col-sm-2 pull-right">
-                            <a href="@Url.Action("CreateAlunoCertificado", "AlunoCursoCertificado")" class="btn btn-block btn-success pull-right">
-                                <i class="fa fa-certificate"></i> Cadastrar Certificado
-                            </a>
-                        </div>
-                        <div class="col-sm-2 pull-right">
-                            <a href="@Url.Action("CreateAlunoCurso", "AlunoCursoCertificado")" class="btn btn-block btn-primary pull-right">
-                                <i class="fa fa-plus"></i> Cadastrar Curso
-                            </a>
-                        </div>
-                    </div>
+		                <div class="tabs">
+			                <ul class="nav nav-tabs tabs-primary">
+				                <li class="active">
+					                <a href="#overview" data-toggle="tab" aria-expanded="true">
+						                <i class="fa fa-book"></i> Meus Cursos
+					                </a>
+				                </li>
+				                <li class="">
+					                <a href="#edit" data-toggle="tab" aria-expanded="false">
+						                <i class="fa fa-certificate"></i> Meus Certificados
+					                </a>
+				                </li>
+			                </ul>
 
-                    <div class="panel-body">
-                        <div class="tabs">
-                            <ul class="nav nav-tabs tabs-primary">
-                                <li class="active">
-                                    <a href="#overview" data-toggle="tab" aria-expanded="true">
-                                        <i class="fa fa-book"></i> Meus Cursos
-                                    </a>
-                                </li>
-                                <li class="">
-                                    <a href="#edit" data-toggle="tab" aria-expanded="false">
-                                        <i class="fa fa-certificate"></i> Meus Certificados
-                                    </a>
-                                </li>
-                            </ul>
+			                <div class="tab-content">
+				                <div id="overview" class="tab-pane active">
+					                <div class="row">
+						                @if (Model.Cursos != null && Model.Cursos.Any())
+						                {
+							                foreach (var item in Model.Cursos)
+							                {
+								                var progresso = Model.AlunosCursos?
+									                .FirstOrDefault(ac => ac.CursoId == item.Id.ToString())
+									                .Progresso ?? 0;
 
-                            <div class="tab-content">
-                                <div id="overview" class="tab-pane active">
-                                    <div class="row">
-                                        @if (Model.Cursos != null && Model.Cursos.Any())
-                                        {
-                                            foreach (var item in Model.Cursos)
-                                            {
-                                                var progresso = Model.AlunosCursos?
-                                                .FirstOrDefault(ac => ac.CursoId == item.Id.ToString())
-                                                .Progresso ?? 0;
+								                string statusClasse = progresso == 0 ? "danger" :
+									                progresso == 100 ? "success" : "warning";
+								                string statusText = progresso == 0 ? "Não iniciado" :
+									                progresso == 100 ? "Concluído" : "Em andamento";
 
-                                                string statusClasse = progresso == 0 ? "danger" :
-                                                progresso == 100 ? "success" : "warning";
-                                                string statusText = progresso == 0 ? "Não iniciado" :
-                                                progresso == 100 ? "Concluído" : "Em andamento";
+								                <div class="col-md-12">
+									                <div class="card-box panel panel-featured-left panel-featured-primary">
+										                <div class="panel-body">
+											                <div class="widget-summary">
+												                <div class="widget-summary-col widget-summary-col-icon" style="width: 260px !important;">
+													                <div class="summary-icon" style="width: 250px !important;">
+														                @if (item.Imagem != null)
+														                {
+															                <img class="img-responsive img-thumbnail" src="~/Cursos/@Html.DisplayFor(modelItem => item.Imagem)" alt="@item.Titulo">
+														                }
+														                else
+														                {
+															                <i class="fa fa-graduation-cap fa-4x"></i>
+														                }
+													                </div>
+													                <div class="mt-sm text-center">
+														                <span class="label label-@statusClasse">@statusText</span>
+													                </div>
+												                </div>
 
-                                                <div class="col-md-12">
-                                                    <div class="card-box panel panel-featured-left panel-featured-primary">
-                                                        <div class="panel-body">
-                                                            <div class="widget-summary">
-                                                                <div class="widget-summary-col widget-summary-col-icon">
-                                                                    <div class="summary-icon">
-                                                                        @if (item.Imagem != null)
-                                                                        {
-                                                                            <img class="img-responsive img-thumbnail" src="~/Cursos/@Html.DisplayFor(modelItem => item.Imagem)" alt="@item.Titulo">
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            <i class="fa fa-graduation-cap fa-4x"></i>
-                                                                        }
-                                                                    </div>
-                                                                    <div class="mt-sm text-center">
-                                                                        <span class="label label-@statusClasse">@statusText</span>
-                                                                    </div>
-                                                                </div>
+												                <div class="widget-summary-col">
+													                <div class="summary">
+														                <h4 class="title">@item.Titulo</h4>
+														                <div class="info">
+															                <div class="progress light">
+																                <div class="progress-bar progress-bar-primary" role="progressbar"
+																                     aria-valuenow="@progresso" aria-valuemin="0"
+																                     aria-valuemax="100" style="width: @progresso%;">
+																	                @progresso%
+																                </div>
+															                </div>
+														                </div>
+													                </div>
 
-                                                                <div class="widget-summary-col">
-                                                                    <div class="summary">
-                                                                        <h4 class="title">@item.Titulo</h4>
-                                                                        <div class="info">
-                                                                            <div class="progress light">
-                                                                                <div class="progress-bar progress-bar-primary" role="progressbar"
-                                                                                     aria-valuenow="@progresso" aria-valuemin="0"
-                                                                                     aria-valuemax="100" style="width: @progresso%;">
-                                                                                    @progresso%
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
+													                <div class="curso-descricao">
+														                <p class="text-muted">@(item.Descricao)</p>
+													                </div>
 
-                                                                    <div class="curso-descricao">
-                                                                        <p class="text-muted">@(item.Descricao)</p>
-                                                                    </div>
-
-                                                                    <div class="summary-footer">
-                                                                        <hr class="solid mt-sm mb-sm">
-                                                                        <a href="@Url.Action("DetalhesCurso", "AlunoCursoCertificado", new { id = item.Id })"
-                                                                           class="btn @(progresso == 0 ? "btn-success" : "btn-primary") btn-sm">
-                                                                            <i class="fa @(progresso == 0 ? "fa-play-circle" : "fa-play")"></i> @(progresso == 0 ? "Iniciar" : "Continuar")
-                                                                        </a>
-                                                                        <a href="@Url.Action("DetalhesCurso", "AlunoCursoCertificado", new { id = item.Id })"
+													                <div class="summary-footer">
+														                <hr class="solid mt-sm mb-sm">
+														                <a href="@Url.Action("DetalhesCurso", "AlunoCursoCertificado", new { id = item.Id })"
+														                   class="btn @(progresso == 0 ? "btn-success" : "btn-primary") btn-sm">
+															                <i class="fa @(progresso == 0 ? "fa-play-circle" : "fa-play")"></i> @(progresso == 0 ? "Iniciar" : "Continuar")
+														                </a>
+														                @* <a href="@Url.Action("DetalhesCurso", "AlunoCursoCertificado", new { id = item.Id })"
                                                                            class="btn btn-default btn-sm">
                                                                             <i class="fa fa-info-circle"></i> Detalhes
-                                                                        </a>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            }
-                                        }
-                                        else
-                                        {
-                                            <div class="col-md-12">
-                                                <div class="alert alert-info">
-                                                    <p class="m-none"><i class="fa fa-info-circle mr-xs"></i> Você ainda não está inscrito em nenhum curso. Clique em "Cadastrar Curso" para começar.</p>
-                                                </div>
-                                            </div>
-                                        }
-                                    </div>
-                                </div>
+                                                                        </a> *@
+													                </div>
+												                </div>
+											                </div>
+										                </div>
+									                </div>
+								                </div>
+							                }
+						                }
+						                else
+						                {
+							                <div class="col-md-12">
+								                <div class="alert alert-info">
+									                <p class="m-none"><i class="fa fa-info-circle mr-xs"></i> Você ainda não está inscrito em nenhum curso. Clique em "Cadastrar Curso" para começar.</p>
+								                </div>
+							                </div>
+						                }
+					                </div>
+				                </div>
 
-                                <div id="edit" class="tab-pane">
-                                    <div class="row">
-                                        @if (Model.Certificados != null && Model.Certificados.Any())
-                                        {
-                                            foreach (var item in Model.Certificados)
-                                            {
-                                                <div class="col-md-12">
-                                                    <div class="card-box panel panel-featured-left panel-featured-tertiary">
-                                                        <div class="panel-body">
-                                                            <div class="widget-summary">
-                                                                <div class="widget-summary-col widget-summary-col-icon">
-                                                                    <div class="summary-icon">
-                                                                        @if (item.ImagemFrente != null)
-                                                                        {
-                                                                            <img class="img-responsive img-thumbnail" src="~/Certificados/@Html.DisplayFor(modelItem => item.ImagemFrente)" alt="Certificado">
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            <i class="fa fa-certificate fa-4x"></i>
-                                                                        }
-                                                                    </div>
-                                                                    <div class="mt-sm text-center">
-                                                                        <span class="label label-success">Concluído</span>
-                                                                    </div>
-                                                                </div>
+				                <div id="edit" class="tab-pane">
+					                <div class="row">
+						                @if (Model.Certificados != null && Model.Certificados.Any())
+						                {
+							                foreach (var item in Model.Certificados)
+							                {
+								                <div class="col-md-12">
+									                <div class="card-box panel panel-featured-left panel-featured-tertiary">
+										                <div class="panel-body">
+											                <div class="widget-summary">
+												                <div class="widget-summary-col widget-summary-col-icon">
+													                <div class="summary-icon">
+														                @if (item.ImagemFrente != null)
+														                {
+															                <img class="img-responsive img-thumbnail" src="~/Certificados/@Html.DisplayFor(modelItem => item.ImagemFrente)" alt="Certificado">
+														                }
+														                else
+														                {
+															                <i class="fa fa-certificate fa-4x"></i>
+														                }
+													                </div>
+													                <div class="mt-sm text-center">
+														                <span class="label label-success">Concluído</span>
+													                </div>
+												                </div>
 
-                                                                <div class="widget-summary-col">
-                                                                    <div class="summary">
-                                                                        <h4 class="title">@item.NomeImagemFrente</h4>
-                                                                        <p class="text-success"><i class="fa fa-check-circle"></i> Certificado emitido</p>
-                                                                    </div>
+												                <div class="widget-summary-col">
+													                <div class="summary">
+														                <h4 class="title">@item.NomeImagemFrente</h4>
+														                <p class="text-success"><i class="fa fa-check-circle"></i> Certificado emitido</p>
+													                </div>
 
-                                                                    <div class="summary-footer">
-                                                                        <hr class="solid mt-sm mb-sm">
-                                                                        <a href="@Url.Action("VisualizarCertificado", "AlunoCursoCertificado", new { id = item.Id })"
-                                                                           class="btn btn-primary btn-sm">
-                                                                            <i class="fa fa-eye"></i> Visualizar
-                                                                        </a>
-                                                                        <a href="@Url.Action("BaixarCertificado", "AlunoCursoCertificado", new { id = item.Id })"
-                                                                           class="btn btn-success btn-sm">
-                                                                            <i class="fa fa-download"></i> Baixar
-                                                                        </a>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            }
-                                        }
-                                        else
-                                        {
-                                            <div class="col-md-12">
-                                                <div class="alert alert-info">
-                                                    <p class="m-none"><i class="fa fa-info-circle mr-xs"></i> Você ainda não possui certificados. Complete um curso para receber seu certificado.</p>
-                                                </div>
-                                            </div>
-                                        }
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+													                <div class="summary-footer">
+														                <hr class="solid mt-sm mb-sm">
+														                <a href="@Url.Action("VisualizarCertificado", "AlunoCursoCertificado", new { id = item.Id })"
+														                   class="btn btn-primary btn-sm">
+															                <i class="fa fa-eye"></i> Visualizar
+														                </a>
+														                <a href="@Url.Action("BaixarCertificado", "AlunoCursoCertificado", new { id = item.Id })"
+														                   class="btn btn-success btn-sm">
+															                <i class="fa fa-download"></i> Baixar
+														                </a>
+													                </div>
+												                </div>
+											                </div>
+										                </div>
+									                </div>
+								                </div>
+							                }
+						                }
+						                else
+						                {
+							                <div class="col-md-12">
+								                <div class="alert alert-info">
+									                <p class="m-none"><i class="fa fa-info-circle mr-xs"></i> Você ainda não possui certificados. Complete um curso para receber seu certificado.</p>
+								                </div>
+							                </div>
+						                }
+					                </div>
+				                </div>
+			                </div>
+		                </div>
+	                </div>
                 </div>
             </section>
         </div>

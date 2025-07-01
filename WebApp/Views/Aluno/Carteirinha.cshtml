@@ -1,0 +1,108 @@
+﻿@{
+	ViewBag.Title = "Minha Carteirinha";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" href="~/assets/styles_Carteirinha/modal-carteirinha.css" />
+<div class="row" id="vCarteirinha">
+	<div class="col-md-2"></div>
+	<div class="col-md-8">
+		<div class="modal-body">
+			<div class="row" style="margin: 10px">
+				<div class="tabs">
+					<ul class="nav nav-tabs">
+						<li class="active">
+							<a href="#frente" data-toggle="tab">Frente</a>
+						</li>
+						<li>
+							<a href="#verso" data-toggle="tab">Verso</a>
+						</li>
+					</ul>
+					<div class="tab-content">
+						<div id="frente" class="tab-pane active">
+							<div class="student-info">
+								<div class="info-row">
+									<label>NOME DO ESTUDANTE:</label>
+									<span>{{editDto.Nome}}</span>
+								</div>
+								<div class="info-row">
+									<label>DATA DE NASCIMENTO:</label>
+									<span>{{editDto.DtNascimento}}</span>
+								</div>
+								<div class="info-row">
+									<label>TELEFONE:</label>
+									<span>{{editDto.Telefone}}</span>
+								</div>
+								<div class="info-row">
+									<label>CPF:</label>
+									<span>{{editDto.Cpf}}</span>
+								</div>
+								<div class="info-row">
+									<label>MATRÍCULA:</label>
+									<span>{{editDto.Id}}</span>
+								</div>
+								<div class="activity-info">
+									{{editDto.Modalidades}}
+								</div>
+							</div>
+							<div class="photo-container">
+								<img :src="editDto.Image" alt="Foto do estudante" class="student-photo">
+							</div>
+							<div class="qr-code-container">
+								<img :src="editDto.QRCode" alt="QR Code" class="qr-code">
+							</div>
+						</div>
+						<div id="verso" class="tab-pane">
+							<div class="main-content-verso">
+								<div class="info-row-verso">
+									<label>MUNICÍPIO/ESTADO:</label>
+									<span>{{editDto.MunicipioEstado}}</span>
+								</div>
+								<div class="info-row-verso">
+									<label>UNIDADE ESCOLAR:</label>
+									<span>{{editDto.NomeLocalidade}}</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-2"></div>
+</div>
+
+@section CssSpecificVendor {
+	<link rel="stylesheet" href="~/assets/vendor/datatables/media/css/dataTables.bootstrap4.css" />
+}
+@section Scripts {
+	<script src="~/assets/vendor/ios7-switch/ios7-switch.js"></script>
+	<script src="~/assets/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
+	<script src="~/assets/vendor/datatables/media/js/dataTables.bootstrap4.min.js"></script>
+	<script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
+	<script src="~/assets/vendor/classy-qr/jquery.classyqr.js"></script>
+	<script src="~/js/formatTable.js"></script>
+	<script src="~/js/Carteirinha.js"></script>
+	<script>
+
+
+		// iosSwitcher
+		(function ($) {
+
+			'use strict';
+
+			if (typeof Switch !== 'undefined' && $.isFunction(Switch)) {
+
+				$(function () {
+					$('[data-plugin-ios-switch]').each(function () {
+						var $this = $(this);
+
+						$this.themePluginIOS7Switch();
+					});
+				});
+
+			}
+
+		}).apply(this, [jQuery]);
+
+	</script>
+}
