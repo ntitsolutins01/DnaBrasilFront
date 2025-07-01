@@ -79,4 +79,9 @@ function selectAnswer(questionNumber, option) {
 
     // Adiciona seleção ao círculo clicado
     event.target.classList.add('selected');
+
+    let input = document.getElementById('resposta_' + questionNumber);
+    if (input) {
+        input.value = option;
+    }
 }

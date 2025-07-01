@@ -50,6 +50,7 @@ namespace WebApp.Models
         public UsuarioDto UsuarioLogado { get; set; }
         public string TextGabarito { get; set; }
         public string AnoGabarito { get; set; }
+        public string SiglaGabarito { get; set; }
 
         public class CreateUpdateDadosAlunoCommand
         {
