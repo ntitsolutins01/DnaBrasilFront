@@ -21,7 +21,7 @@ namespace WebApp.Enumerators
         [Description("3MT")]
         Educacional3MT = 11,
         [Description("5LP")]
-        Educacional5LT = 12,
+        Educacional5LP = 12,
         [Description("5MT")]
         Educacional5MT = 13,
         [Description("9LP")]
