@@ -206,11 +206,11 @@
 						<td class="text-center">@Html.DisplayFor(modelItem => item.DtNascimento)</td>
 						@if (item.Habilitado)
 							{
-						<td class="text-center"><span class="label label-success" style="display: block;">HABILITADO</span></td>
+						<td class="text-center"><span class="label label-success" >SIM</span></td>
 							}
 							else
 							{
-						<td class="text-center"><span class="label label-danger" style="display: block;">INABILITADO</span></td>
+						<td class="text-center"><span class="label label-danger" >NÃO</span></td>
 							}
 						<td class="actions text-center">
 							<a data-toggle="tooltip" data-placement="top" title="Editar" asp-action="Edit" asp-controller="Aluno" asp-route-Id="@item.Id" class="on-default edit-row" style='color: #FF9800'><i class="fa fa-pencil"></i></a>
