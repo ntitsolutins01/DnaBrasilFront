@@ -1597,7 +1597,7 @@ namespace WebApp.Controllers
                     Bairro = collection["bairro"] == "" ? null : collection["bairro"].ToString(),
                     Telefone = collection["numTelefone"] == "" ? null : collection["numTelefone"].ToString(),
                     Celular = collection["numCelular"] == "" ? null : collection["numCelular"].ToString(),
-                    Email = collection["email"] == "" ? null : collection["numCelular"].ToString()
+                    //Email = collection["email"] == "" ? null : collection["numCelular"].ToString()
                 };
 
                 await ApiClientFactory.Instance.UpdateProfile(Convert.ToInt32(alunoId), updateCommand);
