@@ -2,6 +2,7 @@
 @using NuGet.Configuration
 @using System.Security.Claims
 @using Microsoft.AspNetCore.Authorization
+@using WebApp.Factory
 @using WebApp.Identity
 @using WebApp.Services
 @inject IAuthorizationService AuthorizationService
@@ -258,8 +259,8 @@
                                 @* @if ((await AuthorizationService.AuthorizeAsync(User, "Dashboard")).Succeeded)
                                 {
                                 <p>This paragraph is displayed because you fulfilled PolicyName.</p>
-                                } *@
-                                @* @if ((await AuthorizationService.AuthorizeAsync(User, ModuloAccess.DashboardEad)).Succeeded)
+                                } 
+                                @if ((await AuthorizationService.AuthorizeAsync(User, ModuloAccess.DashboardEad)).Succeeded)
                                 {
                                     <li>
                                         <a href="@Url.Action("Index", "DashboardEad")">
@@ -267,7 +268,7 @@
                                             <span>Dashboard EAD</span>
                                         </a>
                                     </li>
-                                } *@
+                                }*@
                                 @if ((await AuthorizationService.AuthorizeAsync(User, ModuloAccess.Dashboard)).Succeeded)
                                 {
                                     <li>
@@ -449,7 +450,7 @@
                                     </li>
                                 }
 
-                                @* @if ((await AuthorizationService.AuthorizeAsync(User, ModuloAccess.ControleFrequenciaEscolar)).Succeeded)
+                                @if ((await AuthorizationService.AuthorizeAsync(User, ModuloAccess.ControleFrequenciaEscolar)).Succeeded)
                                 {
                                     <li class="nav-parent nav-expanded">
                                         <a href="@Url.Action("Index", "ControleFrequenciaEscolar")">
@@ -457,7 +458,7 @@
                                             <span>Frequência Escolar</span>
                                         </a>
                                     </li>
-                                } *@
+                                }
 
                                 @if ((await AuthorizationService.AuthorizeAsync(User, ModuloAccess.ControleMaterial)).Succeeded)
                                 {
@@ -547,11 +548,11 @@
                                                     Parceiros
                                                 </a>
                                             </li>
-                                            @* <li>
+                                            <li>
                                                 <a href="@Url.Action("SolicitacaoContato", "SistemaSocioeconomico")">
                                                     Solicitações de contato
                                                 </a>
-                                            </li> *@
+                                            </li>
                                         </ul>
                                     </li>
                                 }
@@ -590,6 +591,29 @@
                                             <span>Perfil</span>
                                         </a>
                                     </li>
+                                }
+
+                                @if ((await AuthorizationService.AuthorizeAsync(User, ModuloAccess.ProfileAluno)).Succeeded)
+                                {
+	                                var laudoId = ApiClientFactory.Instance.GetLaudoByAluno(Convert.ToInt32(User.Identity.Name)).Id;
+                                    <li class="nav-parent nav-expanded">
+                                        <a href="@Url.Action("Details", "Laudo", new {id = laudoId})">
+	                                        <i class="fa fa-file-text-o" aria-hidden="true"></i>
+                                            <span>Laudo</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-parent nav-expanded">
+                                            <a href="@Url.Action($"Carteirinha", "Aluno", new {id = Convert.ToInt32(User.Identity.Name)})">
+                                            <i class="fa fa-address-card-o" aria-hidden="true"></i>
+                                            <span>Minha Carteirinha</span>
+                                        </a>
+                                    </li>
+                                    @* <li class="nav-parent nav-expanded">
+                                        <a href="@Url.Action("Calendario", "Aluno")">
+                                            <i class="fa fa-calendar-check-o" aria-hidden="true"></i>
+                                            <span>Calendário</span>
+                                        </a>
+                                    </li> *@
                                 }
                             </ul>
                         </nav>

@@ -33,6 +33,7 @@
         //public VocacionalDto Vocaiconal { get; set; }
         public byte[]? Image { get; set; }
         public byte[]? QrCode { get; set; }
+        public List<DocumentoAlunoDto>? Documentos { get; set; }
 
         #region SearchFilter
         public string Sexo { get; set; }

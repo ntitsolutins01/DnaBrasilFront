@@ -4,7 +4,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div id="formFomento">
+<div id="vFomento">
     <div class="row">
         <div class="col-lg-12">
             <section class="panel">
@@ -53,11 +53,8 @@
 		                                <td class="text-center"><span class="label label-danger">INATIVO</span></td>
 	                                }
                                     <td class="actions text-center">
-                                        @* <a data-toggle="tooltip" data-placement="top" title="Editar"
-                                           href='javascript:(crud.EditModal(@item.Id))'
-                                           class="on-default edit-row" style='color: #FF9800'>
-                                            <i class="fa fa-pencil"></i>
-                                        </a> *@
+	                                    <a data-toggle="tooltip" data-placement="top" title="Vincular Localidades" href='javascript:(crud.VincularLocalidadesModal(@item.Id))'
+	                                       class="on-default remove-row" style="cursor: pointer;color: #7B1FA2"><i class="fa fa-link"></i></a>
                                         <a data-toggle="tooltip" data-placement="top" title="Editar" asp-action="Edit" asp-controller="Fomento" asp-route-Id="@item.Id" class="on-default edit-row" style='color: #FF9800'><i class="fa fa-pencil"></i></a>
                                         <a data-toggle="tooltip" data-placement="top" title="Excluir" href='javascript:(crud.DeleteModal(@item.Id))'
                                            class="on-default remove-row" style="cursor: pointer;color: #F44336"><i class="fa fa-trash"></i></a>
@@ -72,30 +69,83 @@
     </div>
     <!-- Modal -->
     <div class="modal fade" id="mdDeleteFomento" tabindex="-1" role="dialog" aria-labelledby="mdDeleteFomentoLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="mdDeleteFomentoLabel">
-                        <i class="fa fa-trash"></i> &nbsp;&nbsp;<strong>Exclusão de Fomento</strong>
-                    </h5>
-                </div>
-                <div class="modal-body">
-                    <div class="modal-icon">
-                        <i class="fa fa-question-circle"></i>
-                    </div>
-                    <div class="modal-text">
-                        <input type="hidden" id="deleteFomentoId" />
-                        <p class="mb-0">Tem certeza que deseja <b>excluir</b> esse registro?</p>
-                    </div>
-                    <div class="modal-wrapper">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-thumbs-o-down"></i> &nbsp;&nbsp;Não</button>
-                    <a id="deleteFomentoHref" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-thumbs-o-up"></i> &nbsp;&nbsp;Sim</a>
-                </div>
-            </div>
-        </div>
+	    <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+			    <div class="modal-header">
+				    <h5 class="modal-title" id="mdDeleteFomentoLabel">
+					    <i class="fa fa-trash"></i> &nbsp;&nbsp;<strong>Exclusão de Fomento</strong>
+				    </h5>
+			    </div>
+			    <div class="modal-body">
+				    <div class="modal-icon">
+					    <i class="fa fa-question-circle"></i>
+				    </div>
+				    <div class="modal-text">
+					    <input type="hidden" id="deleteFomentoId" />
+					    <p class="mb-0">Tem certeza que deseja <b>excluir</b> esse registro?</p>
+				    </div>
+				    <div class="modal-wrapper">
+				    </div>
+			    </div>
+			    <div class="modal-footer">
+				    <button type="submit" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-thumbs-o-down"></i> &nbsp;&nbsp;Não</button>
+				    <a id="deleteFomentoHref" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-thumbs-o-up"></i> &nbsp;&nbsp;Sim</a>
+			    </div>
+		    </div>
+	    </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="mdVincularLocalidades" role="dialog" aria-labelledby="mdVincularLocalidadesLabel" aria-hidden="true">
+	    <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+			    <div class="modal-header">
+				    <h5 class="modal-title" id="mdVincularLocalidadesLabel">
+					    <i class="fa fa-link"></i> &nbsp;&nbsp;<strong>Vincular Localidades</strong>
+				    </h5>
+			    </div>
+			    @using (@Html.BeginForm("VincularLocalidades", "Fomento", FormMethod.Post, new { id = "formVincularLocalidades", @class = "form-horizontal" }))
+			    {
+				    <input type="hidden" name="fomentoId" :value="editDto.FomentoId" />
+
+				    <div class="modal-body">
+					    <div class="form-group row">
+						    <label class="col-sm-2 control-label text-sm-right pt-2">Estado <span class="required">*</span></label>
+						    <div class="col-md-9">
+                                <select class="form-control populate select2" name="ddlEstadoVincularLocalidades" id="ddlEstadoVincularLocalidades"
+							            title="Por favor informe o estado." required style="width: 100%"
+							            asp-for="EstadoId" asp-items="Model.ListEstados">
+								    <option value="">Selecionar Estado</option>
+							    </select>
+						    </div>
+					    </div>
+
+                        <div class="form-group row">
+						    <label class="col-sm-2 control-label text-sm-right pt-2">Municipio <span class="required">*</span></label>
+						    <div class="col-md-9">
+                                <select class="form-control populate select2" name="ddlMunicipioVincularLocalidades" id="ddlMunicipioVincularLocalidades"
+                                        title="Por favor informe o municipio." required style="width: 100%"
+							            asp-for="MunicipioId" asp-items="Model.ListMunicipios">
+								    <option value="">Selecionar Municipio</option>
+							    </select>
+						    </div>
+					    </div>
+					    <div class="form-group row">
+						    <label class="col-sm-2 control-label text-sm-right pt-2">Localidade <span class="required">*</span></label>
+						    <div class="col-md-9">
+							    <select class="form-control" multiple="multiple" data-plugin-multiselect data-plugin-options='{ "maxHeight": 300, "enableCaseInsensitiveFiltering": true }'
+                                        name="ddlLocalidadeVincularLocalidades" id="ddlLocalidadeVincularLocalidades"
+							            title="Por favor informe a linha de ação." required style="width:100%">
+							    </select>
+						    </div>
+					    </div>
+				    </div>
+				    <div class="modal-footer">
+					    <button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-remove"></i> &nbsp;&nbsp;Cancelar</button>
+					    <button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
+				    </div>
+			    }
+		    </div>
+	    </div>
     </div>
     <!-- Modal 
     <div class="modal fade" id="mdEditFomento" tabindex="-1" role="dialog" aria-labelledby="mdEditFomentoLabel" aria-hidden="true">
@@ -195,16 +245,17 @@
     </div>-->
 </div>
 @section CssSpecificVendor {
-    <link rel="stylesheet" href="~/assets/vendor/select2/css/select2.css" />
+	<link rel="stylesheet" href="~/assets/vendor/select2/css/select2.css" />
+	<link rel="stylesheet" href="~/assets/vendor/select2-bootstrap-theme/select2-bootstrap.min.css" />
     <link rel="stylesheet" href="~/assets/vendor/datatables/media/css/dataTables.bootstrap4.css" />
     <link href="~/assets/vendor/bootstrap-datepicker/css/bootstrap-datepicker3.css" rel="stylesheet" />
 }
 @section Scripts {
+	<script src="~/assets/vendor/select2/js/select2.js"></script>
     <script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
     <script src="~/assets/vendor/ios7-switch/ios7-switch.js"></script>
     <script src="~/assets/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
     <script src="~/assets/vendor/datatables/media/js/dataTables.bootstrap4.min.js"></script>
-    <script src="~/assets/vendor/select2/js/select2.js"></script>
     <script src="~/js/formatTable.js"></script>
     <script src="~/js/Fomento.js"></script>
 

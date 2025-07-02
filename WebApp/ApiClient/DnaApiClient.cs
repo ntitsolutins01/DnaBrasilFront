@@ -50,6 +50,24 @@ namespace WebApp.ApiClient
             return Task.FromResult(JsonConvert.DeserializeObject<long>(data.Result));
         }
 
+        /// <summary>
+        /// Common method for making POST calls
+        /// </summary>
+        public async Task<Dictionary<string, object>> PostDict<T>(Uri requestUrl, T content)
+        {
+            addHeaders();
+            var httpContent = CreateHttpContent(content);
+            var response = await _httpClient.PostAsync(requestUrl.ToString(), httpContent);
+
+            response.EnsureSuccessStatusCode();
+
+            var responseString = await response.Content.ReadAsStringAsync();
+
+            var data = JsonConvert.DeserializeObject<Dictionary<string, object>>(responseString);
+
+            return data ?? new Dictionary<string, object>();
+        }
+
         public Task<T?> PostWithResponseBody<T>(Uri requestUrl, T content)
         {
             addHeaders();
@@ -135,8 +153,8 @@ namespace WebApp.ApiClient
             _httpClient.DefaultRequestHeaders.Accept
                 .Add(new MediaTypeWithQualityHeaderValue("application/json"));//ACCEPT header
 
-            //_httpClient.DefaultRequestHeaders.Authorization =
-            //    new AuthenticationHeaderValue("Bearer", "Your Oauth token");
+            _httpClient.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", "Your Oauth token");
         }
 
 

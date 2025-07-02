@@ -78,6 +78,7 @@
                                                 <i class="fa fa-info-circle mr-xs"></i> Selecione uma aula para ver os materiais disponíveis
                                             </li>
                                         </ul>
+                                        <div id="pdf-viewer" style="width:100%;min-height:600px;display:none;margin-top:20px"></div>
                                     </div>
                                 </div>
                             </div>
@@ -100,9 +101,9 @@
 
 
                                             var serializerOptions = new JsonSerializerOptions
-            {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-            };
+                                            {
+                                                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                                            };
 
                                             var alunoCurso = new
                                             {
@@ -139,11 +140,9 @@
                                         {
                                             foreach (var modulo in Model.Modulos)
                                             {
-                                                // Filter lessons that belong to the current module
                                                 var moduloAulas = Model.Aulas?.Where(a => a.ModuloEadId == modulo.Id).OrderBy(a => a.Ordem).ToList()
                                                 ?? new List<AulaDto>();
                                                 var collapseId = "collapseModulo" + modulo.Id;
-                                                // Expand the first module panel by default
                                                 var isExpanded = modulo.Equals(Model.Modulos.First()) ? "in" : "";
                                                 <div class="panel panel-accordion">
                                                     <div class="panel-heading">
@@ -278,6 +277,7 @@
     <script src="~/assets/vendor/jquery-mask/jquery.mask.js"></script>
     <script src="~/assets/vendor/ios7-switch/ios7-switch.js"></script>
     <script src="~/js/AlunoCertificado.js"></script>
+    <script src="~/assets/vendor/pdfjs/build/pdf.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {

@@ -16,8 +16,17 @@ namespace WebApp.Enumerators
         ConsumoAlimentar = 8,
         [Description("Saúde")]
         Saude = 9,
-        [Description("Educacional - LÍNGUA PORTUGUESA 3º Ano do Ensino Médio")]
-        Educacional3Lp = 10
-
+        [Description("3LP")]
+        Educacional3LP = 10,
+        [Description("3MT")]
+        Educacional3MT = 11,
+        [Description("5LP")]
+        Educacional5LP = 12,
+        [Description("5MT")]
+        Educacional5MT = 13,
+        [Description("9LP")]
+        Educacional9LP = 14,
+        [Description("9MT")]
+        Educacional9MT = 15
     }
 }

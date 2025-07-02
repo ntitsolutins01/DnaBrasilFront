@@ -1,0 +1,151 @@
+﻿@model AlunoModel
+
+@{
+    ViewBag.Title = "Gabarito Questionário SAEB";
+    Layout = "";
+}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, orientation=landscape" />
+    <title>QuestionarioAvaliativo-SAEB</title>
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="~/assets/assets_RF/index.css" media="all" />
+    <link rel="stylesheet" href="~/assets/assets_RF/questionario.css" media="all" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+</head>
+
+<body>
+    <!-- Barra de navegação fixa -->
+    <div class="navigation-bar">
+        <!-- Navegação de páginas -->
+        <div class="page-navigation">
+            <button class="nav-button" id="prevButton" onclick="previousPage()" title="Página Anterior">
+                <span class="material-icons">arrow_upward</span>
+            </button>
+            <div class="page-counter">
+                <span id="currentPage">0</span>
+                <span>/</span>
+                <span id="totalPages">0</span>
+            </div>
+            <button class="nav-button" id="nextButton" onclick="nextPage()" title="Próxima Página">
+                <span class="material-icons">arrow_downward</span>
+            </button>
+        </div>
+        <!-- Botões de ação -->
+        <div class="action-buttons">
+            <button class="action-button" onclick="printDocument()" title="Imprimir">
+                <span class="material-icons">print</span>
+            </button>
+            <button class="action-button" onclick="downloadDocument()" title="Baixar">
+                <span class="material-icons">download</span>
+            </button>
+        </div>
+    </div>
+
+    @foreach (var aluno in Model.Alunos)
+    {
+        <!-- Página 1 -->
+        <div class="page-container page1">
+            <div class="newContainer">
+                <!-- Header -->
+                <header class="report-header">
+                    <div class="report-logo"></div>
+                    <div class="report-title">
+                        <span class="report-title-large">@Model.TextGabarito</span>
+                        <span class="report-title-small">@Model.AnoGabarito</span>
+                    </div>
+                    <div class="report-icon"></div>
+                </header>
+
+                <!-- Seção de informações -->
+                <section class="info-section">
+                    <!-- Container principal de informações -->
+                    <div class="info-main">
+                        <!-- Perfil -->
+                        <div class="qrcode-side">
+                            @if (aluno.ByteImage != null)
+                            {
+                                var imgSrc = $"data:image/gif;base64,{Convert.ToBase64String(aluno.ByteImage)}";
+                                <img src="@imgSrc" alt="QRcode do aluno" class="qrcode-image" />
+                            }
+                            else
+                            {
+                                <img src="/assets/images/qrcode.jpg" alt="QRcode padrão" class="qrcode-image" />
+                            }
+                        </div>
+
+                        <!-- Informações do aluno -->
+                        <div class="student-info">
+                            <div class="info-row">
+                                <span class="info-label">ALUNO</span>
+                                <span class="info-value">@aluno.NomeAluno</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">MATRÍCULA</span>
+                                <span class="info-value">@aluno.Id</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">MUNICIPIO/ESTADO</span>
+                                <span class="info-value">@aluno.MunicipioEstado</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">UNIDADE ESCOLAR</span>
+                                <span class="info-value">@aluno.NomeLocalidade</span>
+                            </div>
+                            <!-- Linha dividida em duas colunas -->
+                            <div class="info-row" style="display: flex; justify-content: space-between">
+                                <div style="display: flex; flex: 1">
+                                    <span class="info-label">SÉRIE</span>
+                                    <span class="info-value">@aluno.SerieTurma</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Seção do questionário -->
+                <section class="questionnaire-section">
+                    <div class="questionnaire-grid">
+                        <!-- Coluna 1: Questões 1-5 -->
+                        @for (var i = 0; i < 3; i++) // Loop para criar 3 colunas de questões
+                        {
+                            <div class="question-column">
+                                <div class="question-header">
+                                    <div class="option-header">A</div>
+                                    <div class="option-header">B</div>
+                                    <div class="option-header">C</div>
+                                    <div class="option-header">D</div>
+                                    <div class="option-header">E</div>
+                                </div>
+                                @for (var j = 1; j <= 5; j++)
+                                {
+                                    var questionNumber = i * 5 + j; // Calcula o número sequencial da questão
+                                                                    <div class="question-item">
+                                                                        <div class="question-number">@questionNumber</div>
+                                                                        <div class="answer-options">
+                                            @{
+                                                var alternativas = new[] { "A", "B", "C", "D", "E" };
+                                            }
+                                            @for (var k = 0; k < 5; k++) // Loop para implementar as alternativas
+                                            {
+                                                var alternative = alternativas[k];
+                                                <div class="answer-circle" onclick="selectAnswer(@questionNumber, '@alternative')"></div>
+                                            }
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </div>
+                </section>
+            </div>
+        </div>
+    }
+
+    <script src="~/assets/assets_RF/index.js"></script>
+</body>
+</html>

@@ -332,41 +332,41 @@
                         <div class="cor-esporte" style="top: 0%;"></div>
                     </div>
                     <div class="container-indicadores">
-                        <div>
-                            <span>0%</span>
-                            <span>–</span>
-                            <span>Força de membros superiores</span>
-                        </div>
-                        <div>
-                            <span>0%</span>
-                            <span>–</span>
-                            <span>Flexibilidade Muscular</span>
-                        </div>
-                        <div>
-                            <span>0%</span>
-                            <span>–</span>
-                            <span>Força Explosiva de Membros Inferiores</span>
-                        </div>
-                        <div>
-                            <span>0%</span>
-                            <span>–</span>
-                            <span>Velocidade</span>
-                        </div>
-                        <div>
-                            <span>0%</span>
-                            <span>–</span>
-                            <span>Agilidade</span>
-                        </div>
-                        <div>
-                            <span>0%</span>
-                            <span>–</span>
-                            <span>Resistência Abdominal</span>
-                        </div>
-                        <div>
-                            <span>0%</span>
-                            <span>–</span>
-                            <span>Aptidão Cardiorrespiratória</span>
-                        </div>
+	                    <div>
+		                    <span>0%</span>
+		                    <span>–</span>
+		                    <span>Força de membros superiores</span>
+	                    </div>
+	                    <div>
+		                    <span>0%</span>
+		                    <span>–</span>
+		                    <span>Flexibilidade Muscular</span>
+	                    </div>
+	                    <div>
+		                    <span>0%</span>
+		                    <span>–</span>
+		                    <span>Força Explosiva de Membros Inferiores</span>
+	                    </div>
+	                    <div>
+		                    <span>0%</span>
+		                    <span>–</span>
+		                    <span>Velocidade</span>
+	                    </div>
+	                    <div>
+		                    <span>0%</span>
+		                    <span>–</span>
+		                    <span>Agilidade</span>
+	                    </div>
+	                    <div>
+		                    <span>0%</span>
+		                    <span>–</span>
+		                    <span>Resistência Abdominal</span>
+	                    </div>
+	                    <div>
+		                    <span>0%</span>
+		                    <span>–</span>
+		                    <span>Aptidão Cardiorrespiratória</span>
+	                    </div>
                     </div>
                     <div class="container-laudo-text">
                         <span>Profissional</span>
@@ -612,33 +612,11 @@
                     </div>
                     <div class="container-indicadores">
                         <div>
-                            <span>0%</span>
+                            <span>@Math.Round((decimal)Model.Percentual.Imc, 2) %</span>
                             <span>–</span>
-                            <span>Baixo Peso</span>
+                            <span> do índice de massa coorporal</span>
                         </div>
-                        <div>
-                            <span>0%</span>
-                            <span>–</span>
-                            <span>Acima do Peso</span>
-                        </div>
-                        <div>
-                            <span>0%</span>
-                            <span>–</span>
-                            <span>Pré-disposição à resistência à insulina</span>
-                        </div>
-                        <div>
-                            <span>0%</span>
-                            <span>–</span>
-                            <span>Índice Positivo de Saúde</span>
-                        </div>
-                        <div>
-                            <span>0%</span>
-                            <span>–</span>
-                            <span>
-                                Pré-disposição à desequilíbrios
-                                musculares
-                            </span>
-                        </div>
+                        
                     </div>
                     <div class="container-laudo-text">
                         <span>Profissional</span>
@@ -733,7 +711,7 @@
                     <div class="sideContainer">
                         <div class="cor-vida" style="top: 33.32%;"></div>
                     </div>
-                    <div class="container-indicadores">
+                    @* <div class="container-indicadores">
                         <div>
                             <span>0%</span>
                             <span>–</span>
@@ -774,7 +752,7 @@
                             <span>–</span>
                             <span>Contextos não favorecedores do desenvolvimento</span>
                         </div>
-                    </div>
+                    </div> *@
                     <div class="container-laudo-text">
                         <span>Profissional</span>
                         <span>
@@ -788,11 +766,7 @@
                             }
                         </span>
                         <span>
-                            O percentual abaixo apresenta a variação dos
-                            Indicadores frente ao histórico
-                            de Laudos preenchidos. Se o percentual for 0% é
-                            porque ou não houve variação ou este é o seu
-                            primeiro Laudo.
+                            @Model.TipoLaudoQualidadeVidaDescricao
                         </span>
                     </div>
                     <div class="laudo-title">
@@ -882,7 +856,7 @@
                     <div class="sideContainer">
                         <div class="cor-vocacao" style="top: 49.98%;"></div>
                     </div>
-                    <div class="container-indicadores">
+                    @* <div class="container-indicadores">
                         <div>
                             <span>0%</span>
                             <span>–</span>
@@ -913,7 +887,7 @@
                             <span>–</span>
                             <span>Ciências Contábeis e Administrativas</span>
                         </div>
-                    </div>
+                    </div> *@
                     <div class="container-laudo-text">
                         <span>Profissional</span>
                         <span>
@@ -927,11 +901,7 @@
                             }
                         </span>
                         <span>
-                            O percentual abaixo apresenta a variação dos
-                            Indicadores frente ao histórico
-                            de Laudos preenchidos. Se o percentual for 0% é
-                            porque ou não houve variação ou este é o seu
-                            primeiro Laudo.
+	                        @Model.TipoLaudoVocacionalDescricao
                         </span>
                     </div>
                     <div class="laudo-title">
@@ -1050,7 +1020,7 @@
                     <div class="sideContainer">
                         <div class="cor-alimento" style="top: 66.64%;"></div>
                     </div>
-                    <div class="container-indicadores">
+                    @* <div class="container-indicadores">
                         <div>
                             <span>0%</span>
                             <span>–</span>
@@ -1071,7 +1041,7 @@
                             <span>–</span>
                             <span>Hábitos Saudáveis</span>
                         </div>
-                    </div>
+                    </div> *@
                     <div class="container-laudo-text">
                         <span>Profissional</span>
                         <span>
@@ -1085,11 +1055,7 @@
                             }
                         </span>
                         <span>
-                            O percentual abaixo apresenta a variação dos
-                            Indicadores frente ao histórico
-                            de Laudos preenchidos. Se o percentual for 0% é
-                            porque ou não houve variação ou este é o seu
-                            primeiro Laudo.
+	                        @Model.TipoLaudoConsumoAlimentarDescricao
                         </span>
                     </div>
                     <div class="laudo-title">
@@ -1154,7 +1120,7 @@
                     <div class="sideContainer">
                         <div class="cor-bucal" style="top: 83.3%;"></div>
                     </div>
-                    <div class="container-indicadores">
+                    @* <div class="container-indicadores">
                         <div>
                             <span>0%</span>
                             <span>–</span>
@@ -1170,7 +1136,7 @@
                             <span>–</span>
                             <span>Muito Bom</span>
                         </div>
-                    </div>
+                    </div> *@
                     <div class="container-laudo-text">
                         <span>Profissional</span>
                         <span>
@@ -1184,11 +1150,7 @@
                             }
                         </span>
                         <span>
-                            O percentual abaixo apresenta a variação dos
-                            Indicadores frente ao histórico
-                            de Laudos preenchidos. Se o percentual for 0% é
-                            porque ou não houve variação ou este é o seu
-                            primeiro Laudo.
+	                        @Model.TipoLaudoSaudeBucalDescricao
                         </span>
                     </div>
                     <div class="laudo-title">

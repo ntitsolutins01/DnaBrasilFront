@@ -70,11 +70,11 @@
                             <td class="actions text-center">
                                 <a data-toggle="tooltip" data-placement="top" title="Editar" asp-action="EditParceiro" asp-controller="SistemaSocioeconomico"
                                    asp-route-id="@item.Id" class="on-default edit-row" style='color: #FF9800'><i class="fa fa-pencil"></i></a>
-                                @if (item.Alunos!.Any())
-                                {
+                                @* @if (item.Alunos!.Any())
+                                { *@
                                     <a data-toggle="tooltip" data-placement="top" title="Lista de alunos solicitados" href='javascript:(crud.PendentesModal(@item.Id))'
                                        class="on-default remove-row" style="cursor: pointer;color: #43A047 "><i class="fa fa-group"></i></a>
-                                }
+                                @* } *@
                                 
                                 @if (!item.Habilitado)
                                 {

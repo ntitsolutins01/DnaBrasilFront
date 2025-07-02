@@ -48,6 +48,9 @@ namespace WebApp.Models
         public int ProfessorProfissionalId { get; set; }
         public SelectList ListProfessoresProfissionais { get; set; }
         public UsuarioDto UsuarioLogado { get; set; }
+        public string TextGabarito { get; set; }
+        public string AnoGabarito { get; set; }
+        public string SiglaGabarito { get; set; }
 
         public class CreateUpdateDadosAlunoCommand
         {
@@ -104,6 +107,23 @@ namespace WebApp.Models
             public required int AlunoId { get; set; }
             public required string AulaId { get; set; }
             public int? Progresso { get; set; }
+        }
+
+        public class UpdateHabilitarAlunoCommand
+        {
+            public required int AlunoId { get; set; }
+            public required string AspNetUserId { get; set; }
+        }
+
+        public class CreateUpdateProfileAlunoCommand
+        {
+            public string? Telefone { get; set; }
+            public string? Celular { get; set; }
+            public string? Cep { get; set; }
+            public string? Endereco { get; set; }
+            public string? Numero { get; set; }
+            public string? Bairro { get; set; }
+            public string? Email { get; set; }
         }
     }
 

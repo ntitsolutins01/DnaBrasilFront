@@ -113,7 +113,7 @@ var vm = new Vue({
             if (extFile === "jpg" || extFile === "jpeg" || extFile === "png") {
                 //TO DO
             } else {
-                Site.Notification("Erro ao realizar Upload", "Somente arquivos jpg/jpeg e png são permitidos.", "error", 2);
+                Site.Notification("Erro ao realizar Upload", "Somente arquivos JPG/JPEG e PNG são permitidos.", "error", 2);
                 
             }   
         }
