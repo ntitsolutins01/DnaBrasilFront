@@ -27,6 +27,7 @@
                                 <th class="text-center">Capa do Curso</th>
                                 <th class="text-center">Tipo de Curso</th>
                                 <th class="text-center">Título do Curso</th>
+                                <th class="text-center">Carga Horária</th>
                                 <th class="text-center">Descrição</th>
                                 <th class="text-center">Coordenador</th>
                                 <th class="text-center">Status</th>
@@ -47,6 +48,7 @@
                                     </td>
                                     <td class="text-center" style="width:200px;">@Html.DisplayFor(modelItem => item.TituloTipoCurso)</td>
                                     <td class="text-center">@Html.DisplayFor(modelItem => item.Titulo)</td>
+                                    <td class="text-center">@Html.DisplayFor(modelItem => item.CargaHoraria)</td>
                                     <td class="text-center">@Html.DisplayFor(modelItem => item.Descricao)</td>
                                     <td class="text-center">@Html.DisplayFor(modelItem => item.NomeCoordenador)</td>
                                     @if (item.Status)

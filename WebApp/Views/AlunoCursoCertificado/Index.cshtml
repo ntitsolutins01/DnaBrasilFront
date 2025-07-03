@@ -113,6 +113,10 @@
 														                <p class="text-muted">@(item.Descricao)</p>
 													                </div>
 
+																	<div class="curso-descricao">
+																		<code class="mt-2">Carga horária: @(item.CargaHoraria)</code>
+													                </div>
+
 													                <div class="summary-footer">
 														                <hr class="solid mt-sm mb-sm">
 														                <a href="@Url.Action("DetalhesCurso", "AlunoCursoCertificado", new { id = item.Id })"
