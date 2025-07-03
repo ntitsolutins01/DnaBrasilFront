@@ -31,11 +31,12 @@
 						if (perfil == EnumPerfil.Administrador.GetDescription())
 		                {
 			                <div class="form-group row">
-				                <div class="col-sm-2 pull-right">
-					                <a href="@Url.Action("CreateAlunoCertificado", "AlunoCursoCertificado")" class="btn btn-block btn-success pull-right">
-						                <i class="fa fa-certificate"></i> Cadastrar Certificado
-					                </a>
-				                </div>
+                                @*<div class="col-sm-2 pull-right">
+                                    <a href="@Url.Action("CreateAlunoCertificado", "AlunoCursoCertificado")" class="btn btn-block btn-success pull-right">
+                                        <i class="fa fa-certificate"></i> Cadastrar Certificado
+                                    </a>
+                                </div>
+								*@
 				                <div class="col-sm-2 pull-right">
 					                <a href="@Url.Action("CreateAlunoCurso", "AlunoCursoCertificado")" class="btn btn-block btn-primary pull-right">
 						                <i class="fa fa-plus"></i> Cadastrar Curso
@@ -67,8 +68,7 @@
 							                foreach (var item in Model.Cursos)
 							                {
 								                var progresso = Model.AlunosCursos?
-									                .FirstOrDefault(ac => ac.CursoId == item.Id.ToString())
-									                .Progresso ?? 0;
+									                .FirstOrDefault(ac => ac.CursoId == item.Id.ToString()).Progresso ?? 0;
 
 								                string statusClasse = progresso == 0 ? "danger" :
 									                progresso == 100 ? "success" : "warning";
@@ -267,7 +267,7 @@
     <script src="~/assets/vendor/datatables/media/js/dataTables.bootstrap4.min.js"></script>
     <script src="~/js/formatTable.js"></script>
     <script src="~/js/AlunoCurso.js"></script>
-    <script src="~/js/AlunoCertificado.js"></script>
+    <script src="~/js/MeusCursosIndex.js"></script>
 
     <script>
         (function ($) {

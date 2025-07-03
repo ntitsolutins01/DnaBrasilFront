@@ -203,17 +203,15 @@ public class AlunoCursoCertificadoController : BaseController
                 {
                     AlunoId = model.AlunoId,
                     CursoId = model.CursoId,
-                    Progresso = Convert.ToInt32(model.Progresso)
+                    Progresso = model.Progresso
                 };
-
                 await ApiClientFactory.Instance.UpdateAlunoCurso(command.AlunoId, command.CursoId, command);
             }
-
             return NoContent();
         }
         catch (Exception e)
         {
-            return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = "Erro ao executar esta ação. Favor entrar em contato com o administrador do sistema." });
+            return StatusCode(500, "Erro interno");
         }
     }
 
