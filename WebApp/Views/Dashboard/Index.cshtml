@@ -1,63 +1,63 @@
 ﻿@model DashboardModel
 @{
-    ViewData["Title"] = "Dashboard";
+	ViewData["Title"] = "Dashboard";
 }
 <div id="vDashboard">
-    <div class="col-md-6 col-lg-12 col-xl-6">
-        <div class="row">
-            <form id="formDashboard" class="form-horizontal">
-                <section class="panel">
-                    <header class="panel-heading">
-                        <div class="panel-actions">
-                            <a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
-                        </div>
-                        <h2 class="panel-title">Filtro de pesquisa</h2>
-                    </header>
-                    <div class="panel-body" id="pFiltro">
-                        <label class="col-sm-2 control-label text-right">Fomento:</label>
-                        <div class="col-md-4 form-group">
-                            <select class="form-control populate select2" name="ddlFomento" id="ddlFomento" style="width:100%"
-                                    asp-for="FomentoId" asp-items="Model.ListFomentos">
-                                <option value="">Selecionar Fomento</option>
-                            </select>
-                        </div>
-                        <label class="col-sm-2 control-label text-right">Estado:</label>
-                        <div class="col-md-4 form-group">
-                            <select class="form-control populate select2" name="ddlEstado" id="ddlEstado" style="width:100%"
-                                    asp-for="EstadoId" asp-items="Model.ListEstados">
-                                <option value="">Selecionar Estado</option>
-                            </select>
-                        </div>
-                        <label class="col-sm-2 control-label text-right">Municipio:</label>
-                        <div class="col-md-4 form-group">
-                            <select class="form-control populate select2" name="ddlMunicipio" id="ddlMunicipio" style="width:100%"
-                                    asp-for="MunicipioId" asp-items="Model.ListMunicipios">
-                                <option value="">Selecionar Municipio</option>
-                            </select>
-                        </div>
-                        <label class="col-sm-2 control-label text-right">Localidade:</label>
-                        <div class="col-md-4 form-group">
-                            <select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade" style="width:100%"
-                                    asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
-                                <option value="">Selecionar Localidade</option>
-                            </select>
-                        </div>
-                        <label class="col-sm-2 control-label text-right">Deficiencia:</label>
-                        <div class="col-md-4 form-group">
-                            <select class="form-control populate select2" name="ddlDeficiencia" id="ddlDeficiencia"
-                                    asp-for="DeficienciaId" asp-items="Model.ListDeficiencias">
-                                <option value="">Selecionar Deficiência</option>
-                            </select>
-                        </div>
-                        <label class="col-sm-2 control-label text-right">Etnia:</label>
-                        <div class="col-md-4 form-group">
-                            <select class="form-control populate select2" name="ddlEtnia" id="ddlEtnia" style="width:100%"
-                                    title="Por favor selecione um etnia."
-                                    asp-for="EtniaId" asp-items="Model.ListEtnias">
-                                <option value="">Selecionar Etnia</option>
-                            </select>
-                        </div>
-                        @* <label class="col-sm-2 control-label text-right">Período:</label>
+	<div class="col-md-6 col-lg-12 col-xl-6">
+		<div class="row">
+			<form id="formDashboard" class="form-horizontal">
+				<section class="panel">
+					<header class="panel-heading">
+						<div class="panel-actions">
+							<a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
+						</div>
+						<h2 class="panel-title">Filtro de pesquisa</h2>
+					</header>
+					<div class="panel-body" id="pFiltro">
+						<label class="col-sm-2 control-label text-right">Fomento:</label>
+						<div class="col-md-4 form-group">
+							<select class="form-control populate select2" name="ddlFomento" id="ddlFomento" style="width:100%"
+									asp-for="FomentoId" asp-items="Model.ListFomentos">
+								<option value="">Selecionar Fomento</option>
+							</select>
+						</div>
+						<label class="col-sm-2 control-label text-right">Estado:</label>
+						<div class="col-md-4 form-group">
+							<select class="form-control populate select2" name="ddlEstado" id="ddlEstado" style="width:100%"
+									asp-for="EstadoId" asp-items="Model.ListEstados">
+								<option value="">Selecionar Estado</option>
+							</select>
+						</div>
+						<label class="col-sm-2 control-label text-right">Municipio:</label>
+						<div class="col-md-4 form-group">
+							<select class="form-control populate select2" name="ddlMunicipio" id="ddlMunicipio" style="width:100%"
+									asp-for="MunicipioId" asp-items="Model.ListMunicipios">
+								<option value="">Selecionar Municipio</option>
+							</select>
+						</div>
+						<label class="col-sm-2 control-label text-right">Localidade:</label>
+						<div class="col-md-4 form-group">
+							<select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade" style="width:100%"
+									asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
+								<option value="">Selecionar Localidade</option>
+							</select>
+						</div>
+						<label class="col-sm-2 control-label text-right">Deficiencia:</label>
+						<div class="col-md-4 form-group">
+							<select class="form-control populate select2" name="ddlDeficiencia" id="ddlDeficiencia"
+									asp-for="DeficienciaId" asp-items="Model.ListDeficiencias">
+								<option value="">Selecionar Deficiência</option>
+							</select>
+						</div>
+						<label class="col-sm-2 control-label text-right">Etnia:</label>
+						<div class="col-md-4 form-group">
+							<select class="form-control populate select2" name="ddlEtnia" id="ddlEtnia" style="width:100%"
+									title="Por favor selecione um etnia."
+									asp-for="EtniaId" asp-items="Model.ListEtnias">
+								<option value="">Selecionar Etnia</option>
+							</select>
+						</div>
+						@* <label class="col-sm-2 control-label text-right">Período:</label>
                         <div class="col-md-4 form-group">
                             <div class="input-group">
                                 <span class="input-group-addon">
@@ -78,730 +78,915 @@
                                        class="form-control">
                             </div>
                         </div> *@
-                    </div>
-                    <footer class="panel-footer">
-                        <div class="row">
-                            <div class="col-sm-2 pull-right">
-                                <button type="button" class="btn btn-block btn-primary pull-right" v-on:click="GetPesquisaDashboard()">
-                                    <i class="fa fa-search"></i> &nbsp;&nbsp;Pesquisar
-                                </button>
-                            </div>
-                        </div>
-                    </footer>
+					</div>
+					<footer class="panel-footer">
+						<div class="row">
+							<div class="col-sm-2 pull-right">
+								<button type="button" class="btn btn-block btn-primary pull-right" v-on:click="GetPesquisaDashboard()">
+									<i class="fa fa-search"></i> &nbsp;&nbsp;Pesquisar
+								</button>
+							</div>
+						</div>
+					</footer>
+				</section>
+			</form>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<section class="panel">
+				<header class="panel-heading">
+					<div class="panel-actions">
+						<a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
+					</div>
+
+					<h2 class="panel-title">Indicadores DNA</h2>
+				</header>
+				<div class="panel-body" id="pIndicadores">
+
+					<div class="col-md-4 col-xl-12">
+						<section class="panel">
+							<div class="panel-body bg-primary" style="background-color: #673AB7 !important">
+								<div class="widget-summary">
+									<div class="widget-summary-col widget-summary-col-icon">
+										<div class="summary-icon">
+											<i class="fa fa-bar-chart"></i>
+										</div>
+									</div>
+									<div class="widget-summary-col">
+										<div class="summary">
+											<h4 class="title">Avaliações DNA do Brasil</h4>
+											<div class="info">
+												<strong class="amount"><label id="avaliacoesDna">@Model.Dashboard.AvaliacoesDna</label></strong>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</section>
+					</div>
+					<div class="col-md-4 col-xl-12">
+						<section class="panel">
+							<div class="panel-body bg-primary" style="background-color: #F44336 !important">
+								<div class="widget-summary">
+									<div class="widget-summary-col widget-summary-col-icon">
+										<div class="summary-icon">
+											<i class="fa fa-file-text"></i>
+										</div>
+									</div>
+									<div class="widget-summary-col">
+										<div class="summary">
+											<h4 class="title">Laudos em andamento</h4>
+											<div class="info">
+												<strong class="amount"><label id="laudosAndamentos">@Model.Dashboard.LaudosAndamentos</label></strong>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</section>
+					</div>
+					<div class="col-md-4 col-xl-12">
+						<section class="panel">
+							<div class="panel-body bg-primary" style="background-color: #4CAF50 !important">
+								<div class="widget-summary">
+									<div class="widget-summary-col widget-summary-col-icon">
+										<div class="summary-icon">
+											<i class="fa fa-check-square"></i>
+										</div>
+									</div>
+									<div class="widget-summary-col">
+										<div class="summary">
+											<h4 class="title">Laudos Finalizados</h4>
+											<div class="info">
+												<strong class="amount"><label id="laudosFinalizados">@Model.Dashboard.LaudosFinalizados</label></strong>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</section>
+					</div>
+					<div class="col-md-4 col-xl-12">
+						<section class="panel">
+							<div class="panel-body bg-primary" style="background-color: #3F51B5 !important">
+								<div class="widget-summary">
+									<div class="widget-summary-col widget-summary-col-icon">
+										<div class="summary-icon">
+											<i class="fa fa-male"></i>
+										</div>
+									</div>
+									<div class="widget-summary-col">
+										<div class="summary">
+											<h4 class="title">Cadastros masculino</h4>
+											<div class="info">
+												<strong class="amount"><label id="cadastrosMasculinos">@Model.Dashboard.CadastrosMasculinos</label></strong>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</section>
+					</div>
+					<div class="col-md-4 col-xl-12">
+						<section class="panel">
+							<div class="panel-body bg-primary" style="background-color: #E91E63 !important">
+								<div class="widget-summary">
+									<div class="widget-summary-col widget-summary-col-icon">
+										<div class="summary-icon">
+											<i class="fa fa-female"></i>
+										</div>
+									</div>
+									<div class="widget-summary-col">
+										<div class="summary">
+											<h4 class="title">Cadastros feminino</h4>
+											<div class="info">
+												<strong class="amount"><label id="cadastrosFemininos">@Model.Dashboard.CadastrosFemininos</label></></strong>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</section>
+					</div>
+					<div class="col-md-4 col-xl-12">
+						<section class="panel">
+							<div class="panel-body bg-primary" style="background-color: #2196F3 !important">
+								<div class="widget-summary">
+									<div class="widget-summary-col widget-summary-col-icon">
+										<div class="summary-icon">
+											<i class="fa fa-users"></i>
+										</div>
+									</div>
+									<div class="widget-summary-col">
+										<div class="summary">
+											<h4 class="title">Alunos Cadastrados</h4>
+											<div class="info">
+												<strong class="amount"><label id="alunosCadastrados">@Model.Dashboard.AlunosCadastrados</label></></strong>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</section>
+					</div>
+					<div class="col-md-4 col-xl-12">
+						<section class="panel">
+							<div class="panel-body bg-primary" style="background-color: #3F51B5 !important">
+								<div class="widget-summary">
+									<div class="widget-summary-col widget-summary-col-icon">
+										<div class="summary-icon">
+											<i class="fa fa-id-card"></i>
+										</div>
+									</div>
+									<div class="widget-summary-col">
+										<div class="summary">
+											<h4 class="title">Laudos Masculino</h4>
+											<div class="info">
+												<strong class="amount"><label id="laudosMasculinos">@Model.Dashboard.LaudosMasculinos</label></strong>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</section>
+					</div>
+					<div class="col-md-4 col-xl-12">
+						<section class="panel">
+							<div class="panel-body bg-primary" style="background-color: #E91E63 !important">
+								<div class="widget-summary">
+									<div class="widget-summary-col widget-summary-col-icon">
+										<div class="summary-icon">
+											<i class="fa fa-id-card-o"></i>
+										</div>
+									</div>
+									<div class="widget-summary-col">
+										<div class="summary">
+											<h4 class="title">Laudos Feminino</h4>
+											<div class="info">
+												<strong class="amount"><label id="laudosFemininos">@Model.Dashboard.LaudosFemininos</label></strong>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</section>
+					</div>
+				</div>
+			</section>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<section class="panel">
+				<header class="panel-heading">
+					<div class="panel-actions">
+						<a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
+					</div>
+
+					<h2 class="panel-title">Indicadores</h2>
+				</header>
+				<div class="panel-body" id="pIndicadores">
+
+					<div class="col-md-4 col-xl-12">
+						<section class="panel">
+							<div class="panel-body bg-primary" style="background-color: #f44336 !important">
+								<div class="widget-summary">
+									<div class="widget-summary-col widget-summary-col-icon">
+										<div class="summary-icon">
+											<i class="fa fa-file-code-o"></i>
+										</div>
+									</div>
+									<div class="widget-summary-col">
+										<div class="summary">
+											<h4 class="title">Cursos Disponíveis</h4>
+											<div class="info">
+												<strong class="amount"><label id="avaliacoesDna">0</label></strong>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</section>
+					</div>
+					<div class="col-md-4 col-xl-12">
+						<section class="panel">
+							<div class="panel-body bg-primary" style="background-color: #fb8c00!important">
+								<div class="widget-summary">
+									<div class="widget-summary-col widget-summary-col-icon">
+										<div class="summary-icon">
+											<i class="fa fa-file-text"></i>
+										</div>
+									</div>
+									<div class="widget-summary-col">
+										<div class="summary">
+											<h4 class="title">Cursos em Andamento</h4>
+											<div class="info">
+												<strong class="amount"><label id="laudosAndamentos">@Model.DashboardEad.CursosEmAndamento</label></strong>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</section>
+					</div>
+					<div class="col-md-4 col-xl-12">
+						<section class="panel">
+							<div class="panel-body bg-primary" style="background-color: #4CAF50 !important">
+								<div class="widget-summary">
+									<div class="widget-summary-col widget-summary-col-icon">
+										<div class="summary-icon">
+											<i class="fa fa-file-archive-o"></i>
+										</div>
+									</div>
+									<div class="widget-summary-col">
+										<div class="summary">
+											<h4 class="title">Cursos Finalizados</h4>
+											<div class="info">
+												<strong class="amount"><label id="laudosFinalizados">0</label></strong>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</section>
+					</div>
+					<div class="col-md-4 col-xl-12">
+						<section class="panel">
+							<div class="panel-body bg-primary" style="background-color: #3F51B5 !important">
+								<div class="widget-summary">
+									<div class="widget-summary-col widget-summary-col-icon">
+										<div class="summary-icon">
+											<i class="fa fa-male"></i>
+										</div>
+									</div>
+									<div class="widget-summary-col">
+										<div class="summary">
+											<h4 class="title">Alunos Masculino</h4>
+											<div class="info">
+												<strong class="amount"><label id="cadastrosMasculinos">0</label></strong>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</section>
+					</div>
+					<div class="col-md-4 col-xl-12">
+						<section class="panel">
+							<div class="panel-body bg-primary" style="background-color: #E91E63 !important">
+								<div class="widget-summary">
+									<div class="widget-summary-col widget-summary-col-icon">
+										<div class="summary-icon">
+											<i class="fa fa-female"></i>
+										</div>
+									</div>
+									<div class="widget-summary-col">
+										<div class="summary">
+											<h4 class="title">Alunos Feminino</h4>
+											<div class="info">
+												<strong class="amount"><label id="cadastrosFemininos">0</label></></strong>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</section>
+					</div>
+					<div class="col-md-4 col-xl-12">
+						<section class="panel">
+							<div class="panel-body bg-primary" style="background-color: #2196F3 !important">
+								<div class="widget-summary">
+									<div class="widget-summary-col widget-summary-col-icon">
+										<div class="summary-icon">
+											<i class="fa fa-users"></i>
+										</div>
+									</div>
+									<div class="widget-summary-col">
+										<div class="summary">
+											<h4 class="title">Alunos Matriculados</h4>
+											<div class="info">
+												<strong class="amount"><label id="alunosCadastrados">0</label></></strong>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</section>
+					</div>
+					@* <div class="col-md-4 col-xl-12">
+                <section class="panel">
+                <div class="panel-body bg-primary" style="background-color: #3F51B5 !important">
+                <div class="widget-summary">
+                <div class="widget-summary-col widget-summary-col-icon">
+                <div class="summary-icon">
+                <i class="fa fa-id-card"></i>
+                </div>
+                </div>
+                <div class="widget-summary-col">
+                <div class="summary">
+                <h4 class="title">Laudos Masculino</h4>
+                <div class="info">
+                <strong class="amount"><label id="laudosMasculinos">0</label></strong>
+                </div>
+                </div>
+                </div>
+                </div>
+                </div>
                 </section>
-            </form>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <section class="panel">
-                <header class="panel-heading">
-                    <div class="panel-actions">
-                        <a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
-                    </div>
-
-                    <h2 class="panel-title">Indicadores</h2>
-                </header>
-                <div class="panel-body" id="pIndicadores">
-
-                    <div class="col-md-4 col-xl-12">
-                        <section class="panel">
-                            <div class="panel-body bg-primary" style="background-color: #673AB7 !important">
-                                <div class="widget-summary">
-                                    <div class="widget-summary-col widget-summary-col-icon">
-                                        <div class="summary-icon">
-                                            <i class="fa fa-bar-chart"></i>
-                                        </div>
-                                    </div>
-                                    <div class="widget-summary-col">
-                                        <div class="summary">
-                                            <h4 class="title">Avaliações DNA do Brasil</h4>
-                                            <div class="info">
-                                                <strong class="amount"><label id="avaliacoesDna">@Model.Dashboard.AvaliacoesDna</label></strong>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-                    </div>
-                    <div class="col-md-4 col-xl-12">
-                        <section class="panel">
-                            <div class="panel-body bg-primary" style="background-color: #F44336 !important">
-                                <div class="widget-summary">
-                                    <div class="widget-summary-col widget-summary-col-icon">
-                                        <div class="summary-icon">
-                                            <i class="fa fa-file-text"></i>
-                                        </div>
-                                    </div>
-                                    <div class="widget-summary-col">
-                                        <div class="summary">
-                                            <h4 class="title">Laudos em andamento</h4>
-                                            <div class="info">
-                                                <strong class="amount"><label id="laudosAndamentos">@Model.Dashboard.LaudosAndamentos</label></strong>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-                    </div>
-                    <div class="col-md-4 col-xl-12">
-                        <section class="panel">
-                            <div class="panel-body bg-primary" style="background-color: #4CAF50 !important">
-                                <div class="widget-summary">
-                                    <div class="widget-summary-col widget-summary-col-icon">
-                                        <div class="summary-icon">
-                                            <i class="fa fa-check-square"></i>
-                                        </div>
-                                    </div>
-                                    <div class="widget-summary-col">
-                                        <div class="summary">
-                                            <h4 class="title">Laudos Finalizados</h4>
-                                            <div class="info">
-                                                <strong class="amount"><label id="laudosFinalizados">@Model.Dashboard.LaudosFinalizados</label></strong>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-                    </div>
-                    <div class="col-md-4 col-xl-12">
-                        <section class="panel">
-                            <div class="panel-body bg-primary" style="background-color: #3F51B5 !important">
-                                <div class="widget-summary">
-                                    <div class="widget-summary-col widget-summary-col-icon">
-                                        <div class="summary-icon">
-                                            <i class="fa fa-male"></i>
-                                        </div>
-                                    </div>
-                                    <div class="widget-summary-col">
-                                        <div class="summary">
-                                            <h4 class="title">Cadastros masculino</h4>
-                                            <div class="info">
-                                                <strong class="amount"><label id="cadastrosMasculinos">@Model.Dashboard.CadastrosMasculinos</label></strong>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-                    </div>
-                    <div class="col-md-4 col-xl-12">
-                        <section class="panel">
-                            <div class="panel-body bg-primary" style="background-color: #E91E63 !important">
-                                <div class="widget-summary">
-                                    <div class="widget-summary-col widget-summary-col-icon">
-                                        <div class="summary-icon">
-                                            <i class="fa fa-female"></i>
-                                        </div>
-                                    </div>
-                                    <div class="widget-summary-col">
-                                        <div class="summary">
-                                            <h4 class="title">Cadastros feminino</h4>
-                                            <div class="info">
-                                                <strong class="amount"><label id="cadastrosFemininos">@Model.Dashboard.CadastrosFemininos</label></></strong>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-                    </div>
-                    <div class="col-md-4 col-xl-12">
-                        <section class="panel">
-                            <div class="panel-body bg-primary" style="background-color: #2196F3 !important">
-                                <div class="widget-summary">
-                                    <div class="widget-summary-col widget-summary-col-icon">
-                                        <div class="summary-icon">
-                                            <i class="fa fa-users"></i>
-                                        </div>
-                                    </div>
-                                    <div class="widget-summary-col">
-                                        <div class="summary">
-                                            <h4 class="title">Alunos Cadastrados</h4>
-                                            <div class="info">
-                                                <strong class="amount"><label id="alunosCadastrados">@Model.Dashboard.AlunosCadastrados</label></></strong>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-                    </div>
-                    <div class="col-md-4 col-xl-12">
-                        <section class="panel">
-                            <div class="panel-body bg-primary" style="background-color: #3F51B5 !important">
-                                <div class="widget-summary">
-                                    <div class="widget-summary-col widget-summary-col-icon">
-                                        <div class="summary-icon">
-                                            <i class="fa fa-id-card"></i>
-                                        </div>
-                                    </div>
-                                    <div class="widget-summary-col">
-                                        <div class="summary">
-                                            <h4 class="title">Laudos Masculino</h4>
-                                            <div class="info">
-                                                <strong class="amount"><label id="laudosMasculinos">@Model.Dashboard.LaudosMasculinos</label></strong>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-                    </div>
-                    <div class="col-md-4 col-xl-12">
-                        <section class="panel">
-                            <div class="panel-body bg-primary" style="background-color: #E91E63 !important">
-                                <div class="widget-summary">
-                                    <div class="widget-summary-col widget-summary-col-icon">
-                                        <div class="summary-icon">
-                                            <i class="fa fa-id-card-o"></i>
-                                        </div>
-                                    </div>
-                                    <div class="widget-summary-col">
-                                        <div class="summary">
-                                            <h4 class="title">Laudos Feminino</h4>
-                                            <div class="info">
-                                                <strong class="amount"><label id="laudosFemininos">@Model.Dashboard.LaudosFemininos</label></strong>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-                    </div>
                 </div>
-            </section>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <section class="panel">
-                <header class="panel-heading">
-                    <div class="panel-actions">
-                        <a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
-                    </div>
-
-                    <h2 class="panel-title">Controle de Presença</h2>
-                </header>
-                <div class="panel-body" id="pControlePresenca">
-                    <div id="containerPresenca"></div>
+                <div class="col-md-4 col-xl-12">
+                <section class="panel">
+                <div class="panel-body bg-primary" style="background-color: #E91E63 !important">
+                <div class="widget-summary">
+                <div class="widget-summary-col widget-summary-col-icon">
+                <div class="summary-icon">
+                <i class="fa fa-id-card-o"></i>
                 </div>
-            </section>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-5 col-md-12">
-            <section class="panel">
-                <header class="panel-heading">
-                    <div class="panel-actions">
-                        <a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
-                    </div>
-
-                    <h2 class="panel-title">Laudos</h2>
-                </header>
-                <div class="panel-body" id="pLaudosPeriodo">
-                    <div id="containerLaudos"></div>
                 </div>
-            </section>
-        </div>
-
-        <div class="col-lg-7 col-md-12">
-            <section class="panel">
-                <header class="panel-heading">
-                    <div class="panel-actions">
-                        <a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
-                    </div>
-                    <h2 class="panel-title">Status dos Laudos</h2>
-                </header>
-                <div class="panel-body" id="pStatusLaudos">
-                    <div class="table-responsive">
-                        <table class="table table-striped mb-none">
-                            <thead>
-                                <tr>
-                                    <th>Tipo de Laudo</th>
-                                    <th>Finalizados</th>
-                                    <th>Em Andamento</th>
-                                    <th>Progresso</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><span class="label label-success" style="background-color: #d2322d !important">Saúde</span></td>
-                                    <td>
-                                        <label id="totSaudeFinalizado">@Model.Dashboard.StatusLaudos.TotSaudeFinalizado</label>
-                                    </td>
-                                    <td>
-                                        <label id="totSaudeAndamento">@Model.Dashboard.StatusLaudos.TotSaudeAndamento</label>
-                                    </td>
-                                    <td>
-                                        <div class="progress progress-sm progress-half-rounded m-none mt-xs light">
-                                            <div id="progressoSaude" class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: @Model.Dashboard.StatusLaudos.ProgressoSaude%;">
-                                                <label id="vlProgressoSaude">
-                                                    @Model.Dashboard.StatusLaudos.ProgressoSaude %
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><span class="label label-success" style="background-color: #ed9c28 !important">Talento Esportivo</span></td>
-                                    <td>
-                                        <label id="totTalentoEsportivoFinalizado">@Model.Dashboard.StatusLaudos.TotTalentoEsportivoFinalizado</label>
-                                    </td>
-                                    <td><label id="totTalentoEsportivoAndamento">@Model.Dashboard.StatusLaudos.TotTalentoEsportivoAndamento</label></td>
-                                    <td>
-                                        <div class="progress progress-sm progress-half-rounded m-none mt-xs light">
-                                            <div id="progressoTalentoEsportivo" class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: @Model.Dashboard.StatusLaudos.ProgressoTalentoEsportivo%;">
-                                                <label id="vlProgressoTalentoEsportivo">
-                                                    @Model.Dashboard.StatusLaudos.ProgressoTalentoEsportivo %
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><span class="label label-warning" style="background-color: #47a447 !important">Hábitos Alimentares</span></td>
-                                    <td>
-                                        <label id="totConsumoAlimentarFinalizado">@Model.Dashboard.StatusLaudos.TotConsumoAlimentarFinalizado</label>
-                                    </td>
-                                    <td>
-                                        <label id="totConsumoAlimentarAndamento">@Model.Dashboard.StatusLaudos.TotConsumoAlimentarAndamento</label>
-                                    </td>
-                                    <td>
-                                        <div class="progress progress-sm progress-half-rounded m-none mt-xs light">
-                                            <div id="progressoConsumoAlimentar" class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: @Model.Dashboard.StatusLaudos.ProgressoConsumoAlimentar%;">
-                                                <label id="vlProgressoConsumoAlimentar">@Model.Dashboard.StatusLaudos.ProgressoConsumoAlimentar %</label>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><span class="label label-danger" style="background-color: #5bc0de !important">Saude Bucal</span></td>
-                                    <td>
-                                        <label id="totSaudeBucalFinalizado">
-                                            @Model.Dashboard.StatusLaudos.TotSaudeBucalFinalizado
-                                        </label>
-                                    </td>
-                                    <td>
-                                        <label id="totSaudeBucalAndamento">
-                                            @Model.Dashboard.StatusLaudos.TotSaudeBucalAndamento
-                                        </label>
-                                    </td>
-                                    <td>
-                                        <div class="progress progress-sm progress-half-rounded m-none mt-xs light">
-                                            <div id="progressoSaudeBucal" class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: @Model.Dashboard.StatusLaudos.ProgressoSaudeBucal%;">
-                                                <label id="vlProgressoSaudeBucal">
-                                                    @Model.Dashboard.StatusLaudos.ProgressoSaudeBucal %
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><span class="label label-warning" style="background-color: #00a4a9 !important">Qualidade de vida</span></td>
-                                    <td>
-                                        <label id="totQualidadeDeVidaFinalizado">
-                                            @Model.Dashboard.StatusLaudos.TotQualidadeDeVidaFinalizado
-                                        </label>
-                                    </td>
-                                    <td>
-                                        <label id="totQualidadeDeVidaAndamento">
-                                            @Model.Dashboard.StatusLaudos.TotQualidadeDeVidaAndamento
-                                        </label>
-                                    </td>
-                                    <td>
-                                        <div class="progress progress-sm progress-half-rounded m-none mt-xs light">
-                                            <div id="progressoQualidadeDeVida" class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: @Model.Dashboard.StatusLaudos.ProgressoQualidadeDeVida%;">
-                                                <label id="vlProgressoQualidadeDeVida">
-                                                    @Model.Dashboard.StatusLaudos.ProgressoQualidadeDeVida %
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td><span class="label label-success" style="background-color: #a787c0 !important">Vocacional</span></td>
-                                    <td>
-                                        <label id="totVocacionalFinalizado">
-                                            @Model.Dashboard.StatusLaudos.TotVocacionalFinalizado
-                                        </label>
-                                    </td>
-                                    <td>
-                                        <label id="totVocacionalAndamento">
-                                            @Model.Dashboard.StatusLaudos.TotVocacionalAndamento
-                                        </label>
-                                    </td>
-                                    <td>
-                                        <div class="progress progress-sm progress-half-rounded m-none mt-xs light">
-                                            <div id="progressoVocacional" class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: @Model.Dashboard.StatusLaudos.ProgressoVocacional%;">
-                                                <label id="vlProgressoVocacional">
-                                                    @Model.Dashboard.StatusLaudos.ProgressoVocacional %
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-
-                            </tbody>
-                        </table>
-                    </div>
+                <div class="widget-summary-col">
+                <div class="summary">
+                <h4 class="title">Laudos Feminino</h4>
+                <div class="info">
+                <strong class="amount"><label id="laudosFemininos">0</label></strong>
                 </div>
-            </section>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <section class="panel">
-                <header class="panel-heading">
-                    <div class="panel-actions">
-                        <a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
-                    </div>
-
-                    <h2 class="panel-title">Evolutivo - Desempenho Físico-Motor</h2>
-                </header>
-                <div class="panel-body" id="pEvolutivo">
-                    <div id="containerEvolutivo"></div>
                 </div>
-            </section>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-5 col-md-12">
-            <section class="panel">
-                <header class="panel-heading">
-                    <div class="panel-actions">
-                        <a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
-                    </div>
-
-                    <h2 class="panel-title">Saúde (%)</h2>
-                    <p class="panel-subtitle">Percentual grafico de saúde dos alunos </p>
-                </header>
-                <div class="panel-body" id="pSaudePerc">
-                    <div id="containerSaudePercentual"></div>
                 </div>
-            </section>
-        </div>
-        <div class="col-lg-7 col-md-12">
-            <section class="panel">
-                <header class="panel-heading">
-                    <div class="panel-actions">
-                        <a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
-                    </div>
-
-                    <h2 class="panel-title">Saúde</h2>
-                    <p class="panel-subtitle">Totalizador de alunos por Sexo</p>
-                </header>
-                <div class="panel-body" id="pSaudeTot">
-                    <div class="table-responsive">
-                        <div id="containerSaudeSexo"></div>
-
-                    </div>
                 </div>
-            </section>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-5 col-md-12">
-            <section class="panel">
-                <header class="panel-heading">
-                    <div class="panel-actions">
-                        <a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
-                    </div>
-
-                    <h2 class="panel-title">Saúde Bucal (%)</h2>
-                    <p class="panel-subtitle">Percentual grafico de saúde bucal dos alunos </p>
-                </header>
-                <div class="panel-body" id="pSaudeBucalPerc">
-                    <div id="containerBucalPercentual"></div>
                 </div>
-            </section>
-        </div>
-        <div class="col-lg-7 col-md-12">
-            <section class="panel">
-                <header class="panel-heading">
-                    <div class="panel-actions">
-                        <a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
-                    </div>
+                </section>
+                </div> *@
+				</div>
+			</section>
+		</div>
+	</div>
 
-                    <h2 class="panel-title">Saúde Bucal</h2>
-                    <p class="panel-subtitle">Totalizador de alunos por saúde bucal</p>
-                </header>
-                <div class="panel-body" id="pSaudeBucalTot">
-                    <div class="table-responsive">
-                        <div id="containerBucal"></div>
+	<div class="row">
+		<div class="col-md-12">
+			<section class="panel">
+				<header class="panel-heading">
+					<div class="panel-actions">
+						<a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
+					</div>
 
-                    </div>
-                </div>
-            </section>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-5 col-md-12">
-            <section class="panel">
-                <header class="panel-heading">
-                    <div class="panel-actions">
-                        <a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
-                    </div>
+					<h2 class="panel-title">Controle de Presença</h2>
+				</header>
+				<div class="panel-body" id="pControlePresenca">
+					<div id="containerPresenca"></div>
+				</div>
+			</section>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-lg-5 col-md-12">
+			<section class="panel">
+				<header class="panel-heading">
+					<div class="panel-actions">
+						<a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
+					</div>
 
-                    <h2 class="panel-title">Talento Esportivo (%)</h2>
-                    <p class="panel-subtitle">Percentual grafico de talentos esportivos dos alunos </p>
-                </header>
-                <div class="panel-body" id="pTalentoPerc">
-                    <div id="containerTalentoPercentual"></div>
-                </div>
-            </section>
-        </div>
-        <div class="col-lg-7 col-md-12">
-            <section class="panel">
-                <header class="panel-heading">
-                    <div class="panel-actions">
-                        <a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
-                    </div>
+					<h2 class="panel-title">Laudos</h2>
+				</header>
+				<div class="panel-body" id="pLaudosPeriodo">
+					<div id="containerLaudos"></div>
+				</div>
+			</section>
+		</div>
 
-                    <h2 class="panel-title">Talento Esportivo</h2>
-                    <p class="panel-subtitle">Totalizador de alunos por talento</p>
-                </header>
-                <div class="panel-body">
-                    <div class="table-responsive">
-                        <div id="containerTalento"></div>
+		<div class="col-lg-7 col-md-12">
+			<section class="panel">
+				<header class="panel-heading">
+					<div class="panel-actions">
+						<a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
+					</div>
+					<h2 class="panel-title">Status dos Laudos</h2>
+				</header>
+				<div class="panel-body" id="pStatusLaudos">
+					<div class="table-responsive">
+						<table class="table table-striped mb-none">
+							<thead>
+								<tr>
+									<th>Tipo de Laudo</th>
+									<th>Finalizados</th>
+									<th>Em Andamento</th>
+									<th>Progresso</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><span class="label label-success" style="background-color: #d2322d !important">Saúde</span></td>
+									<td>
+										<label id="totSaudeFinalizado">@Model.Dashboard.StatusLaudos.TotSaudeFinalizado</label>
+									</td>
+									<td>
+										<label id="totSaudeAndamento">@Model.Dashboard.StatusLaudos.TotSaudeAndamento</label>
+									</td>
+									<td>
+										<div class="progress progress-sm progress-half-rounded m-none mt-xs light">
+											<div id="progressoSaude" class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: @Model.Dashboard.StatusLaudos.ProgressoSaude%;">
+												<label id="vlProgressoSaude">
+													@Model.Dashboard.StatusLaudos.ProgressoSaude %
+												</label>
+											</div>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td><span class="label label-success" style="background-color: #ed9c28 !important">Talento Esportivo</span></td>
+									<td>
+										<label id="totTalentoEsportivoFinalizado">@Model.Dashboard.StatusLaudos.TotTalentoEsportivoFinalizado</label>
+									</td>
+									<td><label id="totTalentoEsportivoAndamento">@Model.Dashboard.StatusLaudos.TotTalentoEsportivoAndamento</label></td>
+									<td>
+										<div class="progress progress-sm progress-half-rounded m-none mt-xs light">
+											<div id="progressoTalentoEsportivo" class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: @Model.Dashboard.StatusLaudos.ProgressoTalentoEsportivo%;">
+												<label id="vlProgressoTalentoEsportivo">
+													@Model.Dashboard.StatusLaudos.ProgressoTalentoEsportivo %
+												</label>
+											</div>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td><span class="label label-warning" style="background-color: #47a447 !important">Hábitos Alimentares</span></td>
+									<td>
+										<label id="totConsumoAlimentarFinalizado">@Model.Dashboard.StatusLaudos.TotConsumoAlimentarFinalizado</label>
+									</td>
+									<td>
+										<label id="totConsumoAlimentarAndamento">@Model.Dashboard.StatusLaudos.TotConsumoAlimentarAndamento</label>
+									</td>
+									<td>
+										<div class="progress progress-sm progress-half-rounded m-none mt-xs light">
+											<div id="progressoConsumoAlimentar" class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: @Model.Dashboard.StatusLaudos.ProgressoConsumoAlimentar%;">
+												<label id="vlProgressoConsumoAlimentar">@Model.Dashboard.StatusLaudos.ProgressoConsumoAlimentar %</label>
+											</div>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td><span class="label label-danger" style="background-color: #5bc0de !important">Saude Bucal</span></td>
+									<td>
+										<label id="totSaudeBucalFinalizado">
+											@Model.Dashboard.StatusLaudos.TotSaudeBucalFinalizado
+										</label>
+									</td>
+									<td>
+										<label id="totSaudeBucalAndamento">
+											@Model.Dashboard.StatusLaudos.TotSaudeBucalAndamento
+										</label>
+									</td>
+									<td>
+										<div class="progress progress-sm progress-half-rounded m-none mt-xs light">
+											<div id="progressoSaudeBucal" class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: @Model.Dashboard.StatusLaudos.ProgressoSaudeBucal%;">
+												<label id="vlProgressoSaudeBucal">
+													@Model.Dashboard.StatusLaudos.ProgressoSaudeBucal %
+												</label>
+											</div>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td><span class="label label-warning" style="background-color: #00a4a9 !important">Qualidade de vida</span></td>
+									<td>
+										<label id="totQualidadeDeVidaFinalizado">
+											@Model.Dashboard.StatusLaudos.TotQualidadeDeVidaFinalizado
+										</label>
+									</td>
+									<td>
+										<label id="totQualidadeDeVidaAndamento">
+											@Model.Dashboard.StatusLaudos.TotQualidadeDeVidaAndamento
+										</label>
+									</td>
+									<td>
+										<div class="progress progress-sm progress-half-rounded m-none mt-xs light">
+											<div id="progressoQualidadeDeVida" class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: @Model.Dashboard.StatusLaudos.ProgressoQualidadeDeVida%;">
+												<label id="vlProgressoQualidadeDeVida">
+													@Model.Dashboard.StatusLaudos.ProgressoQualidadeDeVida %
+												</label>
+											</div>
+										</div>
+									</td>
+								</tr>
 
-                    </div>
-                </div>
-            </section>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-5 col-md-12">
-            <section class="panel">
-                <header class="panel-heading">
-                    <div class="panel-actions">
-                        <a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
-                    </div>
+								<tr>
+									<td><span class="label label-success" style="background-color: #a787c0 !important">Vocacional</span></td>
+									<td>
+										<label id="totVocacionalFinalizado">
+											@Model.Dashboard.StatusLaudos.TotVocacionalFinalizado
+										</label>
+									</td>
+									<td>
+										<label id="totVocacionalAndamento">
+											@Model.Dashboard.StatusLaudos.TotVocacionalAndamento
+										</label>
+									</td>
+									<td>
+										<div class="progress progress-sm progress-half-rounded m-none mt-xs light">
+											<div id="progressoVocacional" class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: @Model.Dashboard.StatusLaudos.ProgressoVocacional%;">
+												<label id="vlProgressoVocacional">
+													@Model.Dashboard.StatusLaudos.ProgressoVocacional %
+												</label>
+											</div>
+										</div>
+									</td>
+								</tr>
 
-                    <h2 class="panel-title">Qualidade de Vida (%)</h2>
-                    <p class="panel-subtitle">Percentual grafico de qualidade de vida dos alunos </p>
-                </header>
-                <div class="panel-body" id="pQualidadeVidaPerc">
-                    <div id="containerQualidadePercentual"></div>
-                </div>
-            </section>
-        </div>
-        <div class="col-lg-7 col-md-12">
-            <section class="panel">
-                <header class="panel-heading">
-                    <div class="panel-actions">
-                        <a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
-                    </div>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</section>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<section class="panel">
+				<header class="panel-heading">
+					<div class="panel-actions">
+						<a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
+					</div>
 
-                    <h2 class="panel-title">Qualidade de Vida</h2>
-                    <p class="panel-subtitle">Totalizador de alunos por qualidade de vida</p>
-                </header>
-                <div class="panel-body" id="pQualidadeVidaTot">
-                    <div class="table-responsive">
-                        <div id="containerQualidade"></div>
+					<h2 class="panel-title">Evolutivo - Desempenho Físico-Motor</h2>
+				</header>
+				<div class="panel-body" id="pEvolutivo">
+					<div id="containerEvolutivo"></div>
+				</div>
+			</section>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-lg-5 col-md-12">
+			<section class="panel">
+				<header class="panel-heading">
+					<div class="panel-actions">
+						<a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
+					</div>
 
-                    </div>
-                </div>
-            </section>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-5 col-md-12">
-            <section class="panel">
-                <header class="panel-heading">
-                    <div class="panel-actions">
-                        <a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
-                    </div>
+					<h2 class="panel-title">Saúde (%)</h2>
+					<p class="panel-subtitle">Percentual grafico de saúde dos alunos </p>
+				</header>
+				<div class="panel-body" id="pSaudePerc">
+					<div id="containerSaudePercentual"></div>
+				</div>
+			</section>
+		</div>
+		<div class="col-lg-7 col-md-12">
+			<section class="panel">
+				<header class="panel-heading">
+					<div class="panel-actions">
+						<a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
+					</div>
 
-                    <h2 class="panel-title">Hábitos Alimentares (%)</h2>
-                    <p class="panel-subtitle">Percentual grafico de hábitos alimentares dos alunos </p>
-                </header>
-                <div class="panel-body" id="pConsumoAlimentarPerc">
-                    <div id="containerConsumoPercentual"></div>
-                </div>
-            </section>
-        </div>
-        <div class="col-lg-7 col-md-12">
-            <section class="panel">
-                <header class="panel-heading">
-                    <div class="panel-actions">
-                        <a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
-                    </div>
+					<h2 class="panel-title">Saúde</h2>
+					<p class="panel-subtitle">Totalizador de alunos por Sexo</p>
+				</header>
+				<div class="panel-body" id="pSaudeTot">
+					<div class="table-responsive">
+						<div id="containerSaudeSexo"></div>
 
-                    <h2 class="panel-title">Hábitos Alimentares</h2>
-                    <p class="panel-subtitle">Totalizador de alunos por hábitos alimentares</p>
-                </header>
-                <div class="panel-body" id="pConsumoAlimentarTot">
-                    <div class="table-responsive">
-                        <div id="containerConsumo"></div>
+					</div>
+				</div>
+			</section>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-lg-5 col-md-12">
+			<section class="panel">
+				<header class="panel-heading">
+					<div class="panel-actions">
+						<a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
+					</div>
 
-                    </div>
-                </div>
-            </section>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-5 col-md-12">
-            <section class="panel">
-                <header class="panel-heading">
-                    <div class="panel-actions">
-                        <a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
-                    </div>
+					<h2 class="panel-title">Saúde Bucal (%)</h2>
+					<p class="panel-subtitle">Percentual grafico de saúde bucal dos alunos </p>
+				</header>
+				<div class="panel-body" id="pSaudeBucalPerc">
+					<div id="containerBucalPercentual"></div>
+				</div>
+			</section>
+		</div>
+		<div class="col-lg-7 col-md-12">
+			<section class="panel">
+				<header class="panel-heading">
+					<div class="panel-actions">
+						<a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
+					</div>
 
-                    <h2 class="panel-title">Talento Vocacional (%)</h2>
-                    <p class="panel-subtitle">Percentual grafico de talento vocacional dos alunos </p>
-                </header>
-                <div class="panel-body" id="pVocacionalPerc">
-                    <div id="containerVocacionalPercentual"></div>
-                </div>
-            </section>
-        </div>
-        <div class="col-lg-7 col-md-12">
-            <section class="panel">
-                <header class="panel-heading">
-                    <div class="panel-actions">
-                        <a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
-                        
-                        <a v-on:click="GetRelatorioVocacional()" class="panel-action panel-action-print" data-panel-print style="cursor: pointer"></a>
-                    </div>
+					<h2 class="panel-title">Saúde Bucal</h2>
+					<p class="panel-subtitle">Totalizador de alunos por saúde bucal</p>
+				</header>
+				<div class="panel-body" id="pSaudeBucalTot">
+					<div class="table-responsive">
+						<div id="containerBucal"></div>
 
-                    <h2 class="panel-title">Talento Vocacional</h2>
-                    <p class="panel-subtitle">Totalizador de alunos por talento vocacional</p>
-                </header>
-                <div class="panel-body">
-                    <div class="table-responsive" id="pVocacionalTot">
-                        <div id="containerTalentoVocacional"></div>
+					</div>
+				</div>
+			</section>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-lg-5 col-md-12">
+			<section class="panel">
+				<header class="panel-heading">
+					<div class="panel-actions">
+						<a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
+					</div>
 
-                    </div>
-                </div>
-            </section>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-5 col-md-12">
-            <section class="panel">
-                <header class="panel-heading">
-                    <div class="panel-actions">
-                        <a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
-                    </div>
+					<h2 class="panel-title">Talento Esportivo (%)</h2>
+					<p class="panel-subtitle">Percentual grafico de talentos esportivos dos alunos </p>
+				</header>
+				<div class="panel-body" id="pTalentoPerc">
+					<div id="containerTalentoPercentual"></div>
+				</div>
+			</section>
+		</div>
+		<div class="col-lg-7 col-md-12">
+			<section class="panel">
+				<header class="panel-heading">
+					<div class="panel-actions">
+						<a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
+					</div>
 
-                    <h2 class="panel-title">Desempenho Físico Motor (%)</h2>
-                    <p class="panel-subtitle">Percentual grafico de desempenho físico motor dos alunos </p>
-                </header>
-                <div class="panel-body" id="pDesempenhoPerc">
-                    <div id="containerPercDesempenhoFisicoMotor"></div>
-                </div>
-            </section>
-        </div>
-        <div class="col-lg-7 col-md-12">
-            <section class="panel">
-                <header class="panel-heading">
-                    <div class="panel-actions">
-                        <a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
-                    </div>
+					<h2 class="panel-title">Talento Esportivo</h2>
+					<p class="panel-subtitle">Totalizador de alunos por talento</p>
+				</header>
+				<div class="panel-body">
+					<div class="table-responsive">
+						<div id="containerTalento"></div>
 
-                    <h2 class="panel-title">Desempenho Físico Motor</h2>
-                    <p class="panel-subtitle">Totalizador de alunos por desempenho físico motor</p>
-                </header>
-                <div class="panel-body" id="pDesempenhoTot">
-                    <div class="table-responsive">
-                        <div id="containerTotDesempenhoFisicoMotor"></div>
+					</div>
+				</div>
+			</section>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-lg-5 col-md-12">
+			<section class="panel">
+				<header class="panel-heading">
+					<div class="panel-actions">
+						<a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
+					</div>
 
-                    </div>
-                </div>
-            </section>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-5 col-md-12">
-            <section class="panel">
-                <header class="panel-heading">
-                    <div class="panel-actions">
-                        <a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
-                    </div>
+					<h2 class="panel-title">Qualidade de Vida (%)</h2>
+					<p class="panel-subtitle">Percentual grafico de qualidade de vida dos alunos </p>
+				</header>
+				<div class="panel-body" id="pQualidadeVidaPerc">
+					<div id="containerQualidadePercentual"></div>
+				</div>
+			</section>
+		</div>
+		<div class="col-lg-7 col-md-12">
+			<section class="panel">
+				<header class="panel-heading">
+					<div class="panel-actions">
+						<a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
+					</div>
 
-                    <h2 class="panel-title">Deficiências (%)</h2>
-                    <p class="panel-subtitle">Percentual grafico de deficiências dos alunos </p>
-                </header>
-                <div class="panel-body" id="pDeficienciaPerc">
-                    <div id="containerDeficienciaPercentual"></div>
-                </div>
-            </section>
-        </div>
-        <div class="col-lg-7 col-md-12">
-            <section class="panel">
-                <header class="panel-heading">
-                    <div class="panel-actions">
-                        <a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
-                    </div>
+					<h2 class="panel-title">Qualidade de Vida</h2>
+					<p class="panel-subtitle">Totalizador de alunos por qualidade de vida</p>
+				</header>
+				<div class="panel-body" id="pQualidadeVidaTot">
+					<div class="table-responsive">
+						<div id="containerQualidade"></div>
 
-                    <h2 class="panel-title">Deficiências</h2>
-                    <p class="panel-subtitle">Totalizador de alunos por deficiência</p>
-                </header>
-                <div class="panel-body" id="pDeficienciaTot">
-                    <div class="table-responsive">
-                        <div id="containerDeficiencia"></div>
+					</div>
+				</div>
+			</section>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-lg-5 col-md-12">
+			<section class="panel">
+				<header class="panel-heading">
+					<div class="panel-actions">
+						<a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
+					</div>
 
-                    </div>
-                </div>
-            </section>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-5 col-md-12">
-            <section class="panel">
-                <header class="panel-heading">
-                    <div class="panel-actions">
-                        <a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
-                    </div>
+					<h2 class="panel-title">Hábitos Alimentares (%)</h2>
+					<p class="panel-subtitle">Percentual grafico de hábitos alimentares dos alunos </p>
+				</header>
+				<div class="panel-body" id="pConsumoAlimentarPerc">
+					<div id="containerConsumoPercentual"></div>
+				</div>
+			</section>
+		</div>
+		<div class="col-lg-7 col-md-12">
+			<section class="panel">
+				<header class="panel-heading">
+					<div class="panel-actions">
+						<a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
+					</div>
 
-                    <h2 class="panel-title">Etnias (%)</h2>
-                    <p class="panel-subtitle">Percentual grafico de etnias dos alunos </p>
-                </header>
-                <div class="panel-body" id="pEtniaPerc">
-                    <div id="containerEtniaPercentual"></div>
-                </div>
-            </section>
-        </div>
-        <div class="col-lg-7 col-md-12">
-            <section class="panel">
-                <header class="panel-heading">
-                    <div class="panel-actions">
-                        <a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
-                    </div>
+					<h2 class="panel-title">Hábitos Alimentares</h2>
+					<p class="panel-subtitle">Totalizador de alunos por hábitos alimentares</p>
+				</header>
+				<div class="panel-body" id="pConsumoAlimentarTot">
+					<div class="table-responsive">
+						<div id="containerConsumo"></div>
 
-                    <h2 class="panel-title">Etnia</h2>
-                    <p class="panel-subtitle">Totalizador de alunos por etnia</p>
-                </header>
-                <div class="panel-body" id="pEtniaTot">
-                    <div class="table-responsive">
-                        <div id="containerEtnia"></div>
+					</div>
+				</div>
+			</section>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-lg-5 col-md-12">
+			<section class="panel">
+				<header class="panel-heading">
+					<div class="panel-actions">
+						<a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
+					</div>
 
-                    </div>
-                </div>
-            </section>
-        </div>
-    </div>
+					<h2 class="panel-title">Talento Vocacional (%)</h2>
+					<p class="panel-subtitle">Percentual grafico de talento vocacional dos alunos </p>
+				</header>
+				<div class="panel-body" id="pVocacionalPerc">
+					<div id="containerVocacionalPercentual"></div>
+				</div>
+			</section>
+		</div>
+		<div class="col-lg-7 col-md-12">
+			<section class="panel">
+				<header class="panel-heading">
+					<div class="panel-actions">
+						<a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
+
+						<a v-on:click="GetRelatorioVocacional()" class="panel-action panel-action-print" data-panel-print style="cursor: pointer"></a>
+					</div>
+
+					<h2 class="panel-title">Talento Vocacional</h2>
+					<p class="panel-subtitle">Totalizador de alunos por talento vocacional</p>
+				</header>
+				<div class="panel-body">
+					<div class="table-responsive" id="pVocacionalTot">
+						<div id="containerTalentoVocacional"></div>
+
+					</div>
+				</div>
+			</section>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-lg-5 col-md-12">
+			<section class="panel">
+				<header class="panel-heading">
+					<div class="panel-actions">
+						<a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
+					</div>
+
+					<h2 class="panel-title">Desempenho Físico Motor (%)</h2>
+					<p class="panel-subtitle">Percentual grafico de desempenho físico motor dos alunos </p>
+				</header>
+				<div class="panel-body" id="pDesempenhoPerc">
+					<div id="containerPercDesempenhoFisicoMotor"></div>
+				</div>
+			</section>
+		</div>
+		<div class="col-lg-7 col-md-12">
+			<section class="panel">
+				<header class="panel-heading">
+					<div class="panel-actions">
+						<a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
+					</div>
+
+					<h2 class="panel-title">Desempenho Físico Motor</h2>
+					<p class="panel-subtitle">Totalizador de alunos por desempenho físico motor</p>
+				</header>
+				<div class="panel-body" id="pDesempenhoTot">
+					<div class="table-responsive">
+						<div id="containerTotDesempenhoFisicoMotor"></div>
+
+					</div>
+				</div>
+			</section>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-lg-5 col-md-12">
+			<section class="panel">
+				<header class="panel-heading">
+					<div class="panel-actions">
+						<a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
+					</div>
+
+					<h2 class="panel-title">Deficiências (%)</h2>
+					<p class="panel-subtitle">Percentual grafico de deficiências dos alunos </p>
+				</header>
+				<div class="panel-body" id="pDeficienciaPerc">
+					<div id="containerDeficienciaPercentual"></div>
+				</div>
+			</section>
+		</div>
+		<div class="col-lg-7 col-md-12">
+			<section class="panel">
+				<header class="panel-heading">
+					<div class="panel-actions">
+						<a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
+					</div>
+
+					<h2 class="panel-title">Deficiências</h2>
+					<p class="panel-subtitle">Totalizador de alunos por deficiência</p>
+				</header>
+				<div class="panel-body" id="pDeficienciaTot">
+					<div class="table-responsive">
+						<div id="containerDeficiencia"></div>
+
+					</div>
+				</div>
+			</section>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-lg-5 col-md-12">
+			<section class="panel">
+				<header class="panel-heading">
+					<div class="panel-actions">
+						<a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
+					</div>
+
+					<h2 class="panel-title">Etnias (%)</h2>
+					<p class="panel-subtitle">Percentual grafico de etnias dos alunos </p>
+				</header>
+				<div class="panel-body" id="pEtniaPerc">
+					<div id="containerEtniaPercentual"></div>
+				</div>
+			</section>
+		</div>
+		<div class="col-lg-7 col-md-12">
+			<section class="panel">
+				<header class="panel-heading">
+					<div class="panel-actions">
+						<a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
+					</div>
+
+					<h2 class="panel-title">Etnia</h2>
+					<p class="panel-subtitle">Totalizador de alunos por etnia</p>
+				</header>
+				<div class="panel-body" id="pEtniaTot">
+					<div class="table-responsive">
+						<div id="containerEtnia"></div>
+
+					</div>
+				</div>
+			</section>
+		</div>
+	</div>
 </div>
 
 @section CssSpecificVendor {
-    <link rel="stylesheet" href="~/assets/vendor/select2/css/select2.css" />
-    <link rel="stylesheet" href="~/assets/vendor/select2-bootstrap-theme/select2-bootstrap.min.css" />
-    <link href="~/assets/vendor/bootstrap-datepicker/css/bootstrap-datepicker3.css" rel="stylesheet" />
+	<link rel="stylesheet" href="~/assets/vendor/select2/css/select2.css" />
+	<link rel="stylesheet" href="~/assets/vendor/select2-bootstrap-theme/select2-bootstrap.min.css" />
+	<link href="~/assets/vendor/bootstrap-datepicker/css/bootstrap-datepicker3.css" rel="stylesheet" />
 }
 @section Scripts {
-    <script src="~/assets/vendor/highcharts/highcharts.js"></script>
-    <script src="~/assets/vendor/highcharts/modules/variable-pie.js"></script>
-    <script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
-    <script src="~/assets/vendor/select2/js/select2.js"></script>
-    <script src="~/assets/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
-    <script src="~/assets/vendor/bootstrap-datepicker/locales/bootstrap-datepicker.pt-BR.min.js"></script>
-    <script src="~/js/dahsboard.js"></script>
-    <script>
+	<script src="~/assets/vendor/highcharts/highcharts.js"></script>
+	<script src="~/assets/vendor/highcharts/modules/variable-pie.js"></script>
+	<script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
+	<script src="~/assets/vendor/select2/js/select2.js"></script>
+	<script src="~/assets/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+	<script src="~/assets/vendor/bootstrap-datepicker/locales/bootstrap-datepicker.pt-BR.min.js"></script>
+	<script src="~/js/dahsboard.js"></script>
+	<script>
 
 
 
@@ -812,5 +997,5 @@
 
 
 
-    </script>
+	</script>
 }

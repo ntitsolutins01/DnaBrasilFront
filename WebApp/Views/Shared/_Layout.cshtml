@@ -595,13 +595,18 @@
 
                                 @if ((await AuthorizationService.AuthorizeAsync(User, ModuloAccess.ProfileAluno)).Succeeded)
                                 {
-	                                var laudoId = ApiClientFactory.Instance.GetLaudoByAluno(Convert.ToInt32(User.Identity.Name)).Id;
-                                    <li class="nav-parent nav-expanded">
-                                        <a href="@Url.Action("Details", "Laudo", new {id = laudoId})">
-	                                        <i class="fa fa-file-text-o" aria-hidden="true"></i>
-                                            <span>Laudo</span>
-                                        </a>
-                                    </li>
+	                                var laudo = ApiClientFactory.Instance.GetLaudoByAluno(Convert.ToInt32(User.Identity.Name));
+	                                if (laudo != null)
+	                                {
+		                                var laudoId = laudo.Id;
+		                                <li class="nav-parent nav-expanded">
+			                                <a href="@Url.Action("Details", "Laudo", new {id = laudoId})">
+				                                <i class="fa fa-file-text-o" aria-hidden="true"></i>
+				                                <span>Laudo</span>
+			                                </a>
+		                                </li>
+	                                }
+	                                
                                     <li class="nav-parent nav-expanded">
                                             <a href="@Url.Action($"Carteirinha", "Aluno", new {id = Convert.ToInt32(User.Identity.Name)})">
                                             <i class="fa fa-address-card-o" aria-hidden="true"></i>

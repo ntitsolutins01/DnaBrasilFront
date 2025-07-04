@@ -7,6 +7,7 @@ namespace WebApp.Dto
         public required int Id { get; set; }
         public required int ModuloEadId { get; set; }
         public required string NomeProfessor { get; set; }
+        public required string NomeCurso { get; set; }
         public required int ProfessorId { get; set; }
         public required string TituloModuloEad { get; set; }
         public required string Titulo { get; set; }
