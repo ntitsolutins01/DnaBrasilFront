@@ -233,9 +233,12 @@
                                     }
                                     <td class="actions text-center">
                                         <a data-toggle="tooltip" data-placement="top" title="Editar" asp-action="Edit" asp-controller="Laudo" asp-route-id="@item.Id" class="on-default edit-row" style='color: #FF9800'><i class="fa fa-pencil"></i></a>
-                                        <a href="#" data-id="@item.Id" data-toggle="modal" data-target="#mdUpload"
+                                        <a href="#" data-id="@item.Id" data-alunoid="@item.AlunoId" data-localidadeid="@item.LocalidadeId"
+                                           data-toggle="modal" data-target="#mdUpload"
                                            data-toggle="tooltip" data-placement="top" title="Upload Gabarito"
-                                           class="on-default edit-row" style='color: #303F9F'><i class="fa fa-upload"></i></a>
+                                           class="on-default edit-row" style='color: #303F9F'>
+                                            <i class="fa fa-upload"></i>
+                                        </a>
                                         <a data-toggle="tooltip" data-placement="top" title="Detalhamento Completo" asp-action="Details" asp-controller="Laudo" asp-route-id="@item.Id" class="on-default edit-row" style='color: #d2322d'><i class="fa fa-bar-chart"></i></a>
                                         <a data-toggle="tooltip" data-placement="top" title="Laudo Completo" asp-action="Report" asp-controller="Laudo" asp-route-id="@item.Id" class="on-default edit-row" style='color: #47a447' target="_blank"><i class="fa fa-file-text"></i></a>
                                         <a data-toggle="tooltip" data-placement="top" title="Visualizar Gabarito" asp-action="VisualizarGabarito" asp-controller="Laudo" asp-route-id="@item.Id" class="on-default edit-row" style='color: #2874a6' target="_blank"><i class="fa fa-eye"></i></a>

@@ -28,10 +28,8 @@ var vm = new Vue({
 
             }).apply(this, [jQuery]);
 
-            //acionado quando o modal está prestes a ser mostrado
             $('#mdUpload').on('show.bs.modal', function (e) {
 
-                //get data-id attribute of the clicked element
                 var id = $(e.relatedTarget).data('id');
                 var alunoId = $(e.relatedTarget).data('alunoid');
                 var localidadeId = $(e.relatedTarget).data('localidadeid');
@@ -40,8 +38,6 @@ var vm = new Vue({
                 $("input[name='alunoId']").val(alunoId);
                 $("input[name='localidadeid']").val(localidadeId);
 
-                console.log("laudoId: " + id + " - alunoId: " + alunoId + " - localidadeId: " + localidadeId);
-
                 var urlProfissional = "../../Profissional/GetProfissionaisByLocalidade";
 
                 $.getJSON(urlProfissional,
@@ -49,7 +45,7 @@ var vm = new Vue({
                     function (data) {
                         if (data.length > 0) {
                             var items = '<option value="">Selecionar Profissional</option>';
-                            $("#ddlProfissional").empty;
+                            $("#ddlProfissional").empty();
                             $.each(data,
                                 function (i, row) {
                                     items += "<option value='" + row.value + "'>" + row.text + "</option>";
@@ -59,7 +55,7 @@ var vm = new Vue({
                         else {
                             new PNotify({
                                 title: 'Profissional',
-                                text: 'Profissional não encontrados.',
+                                text: 'Profissionais não encontrados.',
                                 type: 'warning'
                             });
                         }
@@ -422,22 +418,43 @@ var vm = new Vue({
                         processData: false,
                         success: function (res) {
                             if (res.sucesso) {
-                                var html = "<b>Matrícula reconhecida:</b> " + (res.matricula || "<i>Não reconhecida</i>") + "<br/><b>Respostas:</b><ul>";
-                                for (var q in res.respostas) {
-                                    html += "<li><b>Questão " + q + ":</b> " + (res.respostas[q] || "<i>Não marcada</i>") + "</li>";
+                                var htmlMatricula = "<b>Matrícula reconhecida:</b> " + (res.matricula || "<i>Não reconhecida</i>") + "<br/><br/>";
+                                var htmlSelects = '<b>Respostas reconhecidas:</b><br/><div class="container-fluid">';
+                                var opcoes = ["A", "B", "C", "D", "E", "Inválido"];
+                                for (var i = 1; i <= 15; i++) {
+                                    if ((i - 1) % 3 === 0) {
+                                        if (i > 1) htmlSelects += '</div>';
+                                        htmlSelects += '<div class="row mb-2">';
+                                    }
+                                    var resposta = res.respostas[i] || "Inválido";
+                                    htmlSelects += `<div class="col-md-4 mb-2">
+                                        <label>Q${i}:</label>
+                                        <select class="form-control respostaCombo" data-questao="${i}">
+                                            ${opcoes.map(opt => `<option value="${opt}"${opt === resposta ? ' selected' : ''}>${opt}</option>`).join('')}
+                                        </select>
+                                    </div>`;
                                 }
-                                html += "</ul>";
-                                $("#respostasReconhecidas").html(html);
-                                $("#btnSalvarGabarito").prop("disabled", false);
+                                htmlSelects += '</div></div>';
 
+                                $("#respostasReconhecidas").html(htmlMatricula + htmlSelects);
+
+                                $(".respostaCombo").on("change", function () {
+                                    var respostas = {};
+                                    $(".respostaCombo").each(function () {
+                                        var q = $(this).data("questao");
+                                        respostas[q] = $(this).val();
+                                    });
+                                    $("#respostasReconhecidasHidden").val(JSON.stringify(respostas));
+                                });
+                                $(".respostaCombo").trigger("change");
+
+                                $("#btnSalvarGabarito").prop("disabled", false);
                                 $("#matriculaReconhecidaHidden").val(res.matricula || "");
-                                $("#respostasReconhecidasHidden").val(JSON.stringify(res.respostas));
                             } else {
-                                var mensagem = "Erro ao processar o gabarito. Por favor verifique a iluminação e enquadramento da imagem.";                              
+                                var mensagem = "Erro ao processar o gabarito. Por favor verifique a iluminação e enquadramento da imagem.";
                                 $("#respostasReconhecidas").html("<span class='text-danger'>" + mensagem + "</span>");
                                 $("#btnSalvarGabarito").prop("disabled", true);
                             }
-
                         },
                         error: function () {
                             $("#respostasReconhecidas").html("<span class='text-danger'>Erro interno ao processar gabarito.</span>");
@@ -455,7 +472,6 @@ var vm = new Vue({
                         alert("Primeiro processe o gabarito antes de salvar!");
                     }
                 });
-
             }
 
             if (formid === "formEditLaudo") {
