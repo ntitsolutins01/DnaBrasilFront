@@ -61,9 +61,12 @@ var vm = new Vue({
                         }
                     });
 
+                $("#matriculaReconhecidaGroup").hide();
+                $("#respostasReconhecidasGroup").hide();
             });
 
-            var formid = $('form')[1].id;
+            var forms = $('form');
+            var formid = forms.length > 1 ? forms[1].id : (forms.length > 0 ? forms[0].id : "");
 
             if (formid === "formPesquisarLaudo") {
 
@@ -418,25 +421,29 @@ var vm = new Vue({
                         processData: false,
                         success: function (res) {
                             if (res.sucesso) {
-                                var htmlMatricula = "<b>Matrícula reconhecida:</b> " + (res.matricula || "<i>Não reconhecida</i>") + "<br/><br/>";
-                                var htmlSelects = '<b>Respostas reconhecidas:</b><br/><div class="container-fluid">';
-                                var opcoes = ["A", "B", "C", "D", "E", "Inválido"];
-                                for (var i = 1; i <= 15; i++) {
-                                    if ((i - 1) % 3 === 0) {
-                                        if (i > 1) htmlSelects += '</div>';
-                                        htmlSelects += '<div class="row mb-2">';
-                                    }
-                                    var resposta = res.respostas[i] || "Inválido";
-                                    htmlSelects += `<div class="col-md-4 mb-2">
-                                        <label>Q${i}:</label>
-                                        <select class="form-control respostaCombo" data-questao="${i}">
-                                            ${opcoes.map(opt => `<option value="${opt}"${opt === resposta ? ' selected' : ''}>${opt}</option>`).join('')}
-                                        </select>
-                                    </div>`;
-                                }
-                                htmlSelects += '</div></div>';
+                                $("#matriculaReconhecidaGroup").show();
+                                $("#respostasReconhecidasGroup").show();
 
-                                $("#respostasReconhecidas").html(htmlMatricula + htmlSelects);
+                                $("#matriculaReconhecidaSpan").val(res.matricula || "Não reconhecida");
+
+                                var opcoes = ["A", "B", "C", "D", "E", "Inválida"];
+                                var totalRows = 5;
+                                var totalCols = 3;
+                                var opcoes = ["A", "B", "C", "D", "E", "Inválida"];
+                                for (var row = 0; row < totalRows; row++) {
+                                    var linhaHtml = "";
+                                    for (var col = 0; col < totalCols; col++) {
+                                        var qIndex = (col * totalRows) + row + 1;
+                                        var resposta = res.respostas[qIndex] || "Inválida";
+                                        linhaHtml += `<div class="col-md-4">
+                                            <label>Q${qIndex}</label>
+                                            <select class="form-control respostaCombo" data-questao="${qIndex}">
+                                                ${opcoes.map(opt => `<option value="${opt}"${opt === resposta ? ' selected' : ''}>${opt}</option>`).join('')}
+                                            </select>
+                                        </div>`;
+                                    }
+                                    $("#linhaRespostas" + (row + 1)).html(linhaHtml);
+                                }
 
                                 $(".respostaCombo").on("change", function () {
                                     var respostas = {};
@@ -451,8 +458,10 @@ var vm = new Vue({
                                 $("#btnSalvarGabarito").prop("disabled", false);
                                 $("#matriculaReconhecidaHidden").val(res.matricula || "");
                             } else {
+                                $("#matriculaReconhecidaGroup").hide();
+                                $("#respostasReconhecidasGroup").hide();
                                 var mensagem = "Erro ao processar o gabarito. Por favor verifique a iluminação e enquadramento da imagem.";
-                                $("#respostasReconhecidas").html("<span class='text-danger'>" + mensagem + "</span>");
+                                alert(mensagem);
                                 $("#btnSalvarGabarito").prop("disabled", true);
                             }
                         },
@@ -471,6 +480,11 @@ var vm = new Vue({
                         e.preventDefault();
                         alert("Primeiro processe o gabarito antes de salvar!");
                     }
+                });
+
+                $("#formUploadGabarito").on("submit", function (e) {
+                    $("#btnSalvarGabarito").prop("disabled", true);
+                    $("#btnProcessarGabarito").prop("disabled", true);
                 });
             }
 
