@@ -96,11 +96,16 @@ namespace WebApp.Controllers
                     list.Add(modulo.Nome, string.Join(",", listValue));
                 }
 
+                var status = collection["status"].ToString();
+                var ead = collection["ead"].ToString();
+
                 var command = new PerfilModel.CreateUpdateCommand()
                 {
                     Nome = collection["nome"].ToString(),
                     Descricao = collection["descricao"].ToString(),
-                    Claims = list
+                    Claims = list,
+                    Ead = ead != "",
+                    Status = status != "",
                 };
 
                 var adminRole = await _roleManager.FindByNameAsync(command.Nome);

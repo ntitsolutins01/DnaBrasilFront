@@ -233,9 +233,12 @@
                                     }
                                     <td class="actions text-center">
                                         <a data-toggle="tooltip" data-placement="top" title="Editar" asp-action="Edit" asp-controller="Laudo" asp-route-id="@item.Id" class="on-default edit-row" style='color: #FF9800'><i class="fa fa-pencil"></i></a>
-                                        <a href="#" data-id="@item.Id" data-toggle="modal" data-target="#mdUpload"
+                                        <a href="#" data-id="@item.Id" data-alunoid="@item.AlunoId" data-localidadeid="@item.LocalidadeId"
+                                           data-toggle="modal" data-target="#mdUpload"
                                            data-toggle="tooltip" data-placement="top" title="Upload Gabarito"
-                                           class="on-default edit-row" style='color: #303F9F'><i class="fa fa-upload"></i></a>
+                                           class="on-default edit-row" style='color: #303F9F'>
+                                            <i class="fa fa-upload"></i>
+                                        </a>
                                         <a data-toggle="tooltip" data-placement="top" title="Detalhamento Completo" asp-action="Details" asp-controller="Laudo" asp-route-id="@item.Id" class="on-default edit-row" style='color: #d2322d'><i class="fa fa-bar-chart"></i></a>
                                         <a data-toggle="tooltip" data-placement="top" title="Laudo Completo" asp-action="Report" asp-controller="Laudo" asp-route-id="@item.Id" class="on-default edit-row" style='color: #47a447' target="_blank"><i class="fa fa-file-text"></i></a>
                                         <a data-toggle="tooltip" data-placement="top" title="Visualizar Gabarito" asp-action="VisualizarGabarito" asp-controller="Laudo" asp-route-id="@item.Id" class="on-default edit-row" style='color: #2874a6' target="_blank"><i class="fa fa-eye"></i></a>
@@ -273,8 +276,8 @@
                         <input type="hidden" name="respostasReconhecidas" id="respostasReconhecidasHidden" />
 
                         <div class="form-group mb-lg">
-                            <label class="col-sm-3 control-label">Gabarito: <span class="required text-danger">*</span></label>
-                            <div class="col-md-9">
+                            <label class="col-sm-2 control-label">Gabarito:<span class="required text-danger">*</span></label>
+                            <div class="col-md-10">
                                 <select class="form-control populate select2"
                                         name="ddlGabarito"
                                         id="ddlGabarito"
@@ -292,8 +295,8 @@
                             </div>
                         </div>
                         <div class="form-group mb-lg">
-                            <label class="col-sm-3 control-label">Profissional: <span class="required text-danger">*</span></label>
-                            <div class="col-md-9">
+                            <label class="col-sm-2 control-label">Aplicador:<span class="required text-danger">*</span></label>
+                            <div class="col-md-10">
                                 <select class="form-control populate select2" name="ddlProfissional" id="ddlProfissional"
                                         title="Por favor informe o profissional." required style="width:100%"
                                         asp-for="ProfissionalId" asp-items="Model.ListProfissionais">
@@ -302,8 +305,8 @@
                             </div>
                         </div>
                         <div class="form-group mb-lg">
-                            <label class="col-sm-3 control-label">Arquivo: <span class="required text-danger">*</span></label>
-                            <div class="col-sm-9">
+                            <label class="col-sm-2 control-label">Arquivo:<span class="required text-danger">*</span></label>
+                            <div class="col-sm-10">
                                 <div class="fileupload fileupload-new" data-provides="fileupload">
                                     <div class="input-append">
                                         <div class="uneditable-input">
@@ -319,11 +322,44 @@
                                     </div>
                                 </div>
                             </div>
-                            <label class="col-sm-3 control-label">Respostas: </label>
-                            <div class="col-md-9">
-                                <div id="respostasReconhecidas" style="margin-top: 15px"></div>
+                        </div>
+                        <div id="matriculaReconhecidaGroup" class="form-group mb-lg" style="display:none;">
+                            <label class="col-sm-2 control-label">Matrícula:</label>
+                            <div class="col-md-10">
+                                <input type="text" id="matriculaReconhecidaSpan" readonly class="form-control" style="background: #fff;" />
                             </div>
-                            <label class="error" for="arquivo"></label>
+                        </div>
+                        <div id="respostasReconhecidasGroup" style="display:none;">
+                            <div class="form-group mb-lg">
+                                <label class="col-sm-2 control-label">Respostas:</label>
+                                <div class="col-md-10">
+                                    <div class="row" id="linhaRespostas1"></div>
+                                </div>
+                            </div>
+                            <div class="form-group mb-lg">
+                                <label class="col-sm-2 control-label"></label>
+                                <div class="col-md-10">
+                                    <div class="row" id="linhaRespostas2"></div>
+                                </div>
+                            </div>
+                            <div class="form-group mb-lg">
+                                <label class="col-sm-2 control-label"></label>
+                                <div class="col-md-10">
+                                    <div class="row" id="linhaRespostas3"></div>
+                                </div>
+                            </div>
+                            <div class="form-group mb-lg">
+                                <label class="col-sm-2 control-label"></label>
+                                <div class="col-md-10">
+                                    <div class="row" id="linhaRespostas4"></div>
+                                </div>
+                            </div>
+                            <div class="form-group mb-lg">
+                                <label class="col-sm-2 control-label"></label>
+                                <div class="col-md-10">
+                                    <div class="row" id="linhaRespostas5"></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">

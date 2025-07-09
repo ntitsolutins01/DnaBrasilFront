@@ -109,7 +109,7 @@
                                     <input type="text" id="email" name="email"
                                            v-model="params.email"
                                            class="form-control"
-                                           maxlength="40" style="z-index: auto;"
+                                           maxlength="100" style="z-index: auto;"
                                            title="Por favor informe um endereço eletrônico válido do usuário" required oninput="this.value = this.value.toLowerCase()" />@* v-on:blur="ExisteEmail" *@
                                 </div>
                             </div>
@@ -145,6 +145,7 @@
     <link rel="stylesheet" href="~/assets/vendor/select2-bootstrap-theme/select2-bootstrap.min.css" />
 }
 @section Scripts {
+	<script src="~/assets/vendor/ios7-switch/ios7-switch.js"></script>
     <script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
     <script src="~/assets/vendor/select2/js/select2.js"></script>
     <script src="~/assets/vendor/jquery-mask/jquery.mask.js"></script>

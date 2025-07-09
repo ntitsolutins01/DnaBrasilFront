@@ -42,6 +42,7 @@ namespace WebApp.Controllers
             };
 
             var dashboard = new DashboardDto();
+            var dashboardEad = new DashboardEadDto();
 
             var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentosAll(), "Id", "Nome", dashboard.FomentoId);
             var deficiencias = new SelectList(ApiClientFactory.Instance.GetDeficienciaAll().Where(x => x.Status), "Id", "Nome", dashboard.DeficienciaId);
@@ -75,6 +76,7 @@ namespace WebApp.Controllers
                 ListFomentos = fomentos,
                 ListEstados = estados,
                 Dashboard = dashboard,
+                DashboardEad = dashboardEad,
                 ListDeficiencias = deficiencias,
                 ListMunicipios = municipios!,
                 ListEtnias = etnias,

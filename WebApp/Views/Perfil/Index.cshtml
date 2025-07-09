@@ -1,4 +1,5 @@
-﻿@model WebApp.Models.PerfilModel
+﻿@using WebApp.Enumerators
+@model WebApp.Models.PerfilModel
 
 @{
     ViewData["Title"] = "Listagem de Perfis";
@@ -24,6 +25,7 @@
                         <thead>
                             <tr>
                                 <th class="text-center">Id</th>
+                                <th class="text-center">Tipo</th>
                                 <th class="text-center">Nome Perfil</th>
                                 <th class="text-center">Descrição do Perfil</th>
                                 <th class="text-center">Status</th>
@@ -36,6 +38,26 @@
                             {
                                 <tr>
                                     <td class="text-center" style="width:20px;">@Html.DisplayFor(modelItem => item.Id)</td>
+                                    @if (item.Ead)
+                                    {
+	                                    <td class="text-center"><span class="label label-primary">EAD</span></td>
+                                    }
+                                    else
+                                    {
+                                        if (item.Id == (int)EnumPerfil.Aluno)
+	                                    {
+		                                    <td class="text-center">
+			                                    <span class="label label-warning">DNA</span>
+			                                    <span class="label label-primary">EAD</span>
+		                                    </td>
+
+	                                    }
+                                        else
+                                        {
+	                                        <td class="text-center"><span class="label label-warning">DNA</span></td>
+
+                                        }
+                                    }
                                     <td class="text-center">@Html.DisplayFor(modelItem => item.Nome)</td>
                                     <td class="text-center">@Html.DisplayFor(modelItem => item.Descricao)</td>
                                     @if (item.Status)
