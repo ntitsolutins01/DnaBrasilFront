@@ -315,7 +315,7 @@
             colorClass = 'text-danger';
 
             const caminho = "\\MaterialEAD" + material.split("\\MaterialEAD")[1];
-            const url = "http://localhost:5166" + caminho.replace(/\\/g, "/");
+            const url = caminho.replace(/\\/g, "/");
 
             lista.append(`
                 <li class="list-group-item">
