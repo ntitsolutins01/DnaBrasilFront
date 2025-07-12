@@ -195,6 +195,7 @@ var vm = new Vue({
 
             var self = this;
             self.ShowLoad(true, "pIndicadores");
+            self.ShowLoad(true, "pIndicadoresEad");
             self.ShowLoad(true, "pControlePresenca");
             self.ShowLoad(true, "pLaudosPeriodo");
             self.ShowLoad(true, "pStatusLaudos");
@@ -254,6 +255,27 @@ var vm = new Vue({
                 Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
 
                 self.ShowLoad(false, "pIndicadores");
+            });
+
+            axios.post("Dashboard/GetIndicadoresEadByFilter", obj, axiosConfig).then(result => {
+                var self = this;
+                self.ShowLoad(true, "pIndicadoresEad");
+
+                $("#cursosDisponiveisEad").text(result.data.dashboardEad.cursosDisponiveis);
+                $("#cursosEmAndamentoEad").text(result.data.dashboardEad.cursosEmAndamento);
+                $("#cursosFinalizadosEad").text(result.data.dashboardEad.cursosFinalizados);
+                $("#cadastrosMasculinosEad").text(result.data.dashboardEad.cadastrosMasculinos);
+                $("#cadastrosFemininosEad").text(result.data.dashboardEad.cadastrosFemininos);
+                $("#alunosCadastradosEad").text(result.data.dashboardEad.alunosCadastrados);
+                //$("#laudosMasculinos").text(result.data.dashboard.laudosMasculinos);
+                //$("#laudosFemininos").text(result.data.dashboard.laudosFemininos);
+
+                self.ShowLoad(false, "pIndicadoresEad");
+
+            }).catch(error => {
+                Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
+
+                self.ShowLoad(false, "pIndicadoresEad");
             });
 
             axios.post("Dashboard/GetControlePresencaByFilter", obj, axiosConfig).then(result => {

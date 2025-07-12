@@ -75,6 +75,12 @@ namespace WebApp.ApiClient
                 $"{ResourceDashboard}/Indicadores"));
             return GetFiltro(requestUrl, searchFilter);
         }
+        public Task<DashboardEadDto?> GetIndicadoresEadByFilter(DashboardEadDto searchFilter)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceDashboard}/IndicadoresEad"));
+            return GetFiltro(requestUrl, searchFilter);
+        }
         public Task<DashboardDto?> GetControlePresencaByFilter(DashboardDto searchFilter)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,

@@ -123,6 +123,26 @@ namespace WebApp.Controllers
                 return Json(ex);
             }
         }
+        public async Task<JsonResult> GetIndicadoresEadByFilter([FromBody] DashboardEadDto search)
+        {
+            try
+            {
+                var dashboard = await ApiClientFactory.Instance.GetIndicadoresEadByFilter(search);
+
+                var model = new DashboardModel
+                {
+                    DashboardEad = dashboard,
+
+                };
+
+                return Json(model);
+
+            }
+            catch (Exception ex)
+            {
+                return Json(ex);
+            }
+        }
         public async Task<JsonResult> GetControlePresencaByFilter([FromBody] DashboardDto search)
         {
             try
