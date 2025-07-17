@@ -7,11 +7,12 @@ var vm = new Vue({
             ImagemFrente: "", HtmlFrente: "",
             ImagemVerso: "", HtmlVerso: "",
             NomeImagemFrente: "", NomeImagemVerso: "",
+            Fomento: "", Url: "", Nome: "",
             Status: true
         }
     },
     mounted: function () {
-        $('.select2').select2({ allowClear: true });
+        $('.select2').select2({ theme: "bootstrap" });
 
         $('[data-plugin-ios-switch]').each(function () {
             var $this = $(this);
@@ -47,6 +48,49 @@ var vm = new Vue({
             var url = "Certificado/Delete/" + id;
             $("#deleteCertificadoHref").prop("href", url);
         },
+        EditCertificado: function (id) {
+            var self = this;
+            self.editDto = {
+                Id: "",
+                Fomento: "",
+                Url: "",
+                Nome: "",
+                Status: true
+            };
+
+            axios.get("Certificado/GetCertificadoById/?id=" + id).then(result => {
+                self.$nextTick(() => {
+                    self.editDto = {
+                        Id: result.data.id,
+                        Fomento: result.data.fomento,
+                        Status: result.data.status,
+                        Url: result.data.url && result.data.url.includes("\\Certificados")
+                            ? "\\Certificados" + result.data.url.split("\\Certificados")[1]
+                            : null,
+                        Nome: result.data.nome,
+                    };
+                });
+
+                if (result.data.listFomentos && result.data.listFomentos.length > 0) {
+                    var items = '<option value="">Selecionar o Fomento</option>';
+                    $("#ddlFomento").empty();
+                    $.each(result.data.listFomentos,
+                        function (i, row) {
+                            if (row.selected) {
+                                items += "<option selected value='" + row.value + "'>" + row.text + "</option>";
+                            } else {
+                                items += "<option value='" + row.value + "'>" + row.text + "</option>";
+                            }
+                        });
+                    $("#ddlFomento").html(items);
+                } else {
+                    Site.Notification("Fomento", "Fomentos não encontrados.", "warning", 1);
+                }
+
+            }).catch(error => {
+                console.error('Erro ao carregar dados:', error);
+            });
+        },
         Certificado: function (id) {
             var self = this;
             return axios.get("/Certificado/GetCertificadoById/?id=" + id).then(result => {
@@ -69,6 +113,17 @@ var vm = new Vue({
             }).catch(error => {
                 alert("Erro ao carregar certificado: " + error.message);
             });
+        },
+        ValidateFileType: function () {
+            var fileName = document.getElementById("arquivo").value;
+            var idxDot = fileName.lastIndexOf(".") + 1;
+            var extFile = fileName.substr(idxDot, fileName.length).toLowerCase();
+            if (extFile === "pdf") {
+                //TO DO
+            } else {
+                Site.Notification("Erro ao realizar Upload", "Somente arquivos PDF são permitidos.", "error", 2);
+
+            }
         }
     }
 });
@@ -259,80 +314,6 @@ $(document).ready(function () {
             }, 100);
         }, 1500);
     });
-
-    function initializeSummernote(elementId) {
-        $('#' + elementId).summernote({
-            lang: 'pt-BR',
-            height: 813,
-            width: 1140,
-            toolbar: [
-                ['style', ['style']],
-                ['font', ['bold', 'italic', 'underline', 'clear']],
-                ['fontname', ['fontname']],
-                ['fontsize', ['fontsize']],
-                ['color', ['color']],
-                ['para', ['ul', 'ol', 'paragraph']],
-                ['table', ['table']],
-                ['insert', ['link', 'picture']],
-                ['view', ['fullscreen', 'codeview']]
-            ],
-            fontSizes: ['8', '9', '10', '11', '12', '14', '18', '24', '36'],
-            callbacks: {
-                onInit: function () {
-                    $(this).next('.note-editor').find('.note-editing-area').css({
-                        'width': '1140px',
-                        'height': '813px'
-                    });
-                },
-                onEnterFullscreen: function () {
-                    const $editor = $(this).next('.note-editor');
-                    $editor.find('.note-editable').css({
-                        'background-color': 'white',
-                        'margin': '20px auto'
-                    });
-                },
-                onExitFullscreen: function () {
-                    const $editor = $(this).next('.note-editor');
-                    $editor.find('.note-editable').css({ 'margin-top': '0' });
-                }
-            }
-        });
-    }
-
-    initializeSummernote('summernoteFrente');
-    initializeSummernote('summernoteVerso');
-
-    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-        var target = $(e.target).attr("href");
-        if (target === "#tabFrente" && vm.editDto.ImagemFrente) {
-            applyBackgroundImage('summernoteFrente', vm.editDto.ImagemFrente);
-        } else if (target === "#tabVerso") {
-            if (vm.editDto.ImagemVerso) {
-                applyBackgroundImage('summernoteVerso', vm.editDto.ImagemVerso);
-            } else {
-                $('#summernoteVerso').next('.note-editor').find('.note-editable').css('background-image', 'none');
-            }
-        }
-    });
-
-    $("#ddlTipoFomento").change(function () {
-        var tipoFomentoId = $(this).val();
-        $("#ddlFomento").empty().append('<option value="">Selecionar Fomento</option>');
-        if (tipoFomentoId) {
-            $.getJSON(`/Certificado/GetFomentosByTipoFomentoId/${tipoFomentoId}`, function (data) {
-                $.each(data, function (i, item) {
-                    $("#ddlFomento").append(`<option value="${item.id}">${item.titulo}</option>`);
-                });
-            });
-        }
-    });
-
-    $('#formCertificado').on('submit', function () {
-        var htmlFrente = $('#summernoteFrente').summernote('code');
-        var htmlVerso = $('#summernoteVerso').summernote('code');
-        $('<input>').attr({ type: 'hidden', name: 'HtmlFrente', value: htmlFrente }).appendTo(this);
-        $('<input>').attr({ type: 'hidden', name: 'HtmlVerso', value: htmlVerso }).appendTo(this);
-    });
 });
 
 var crud = {
@@ -340,6 +321,11 @@ var crud = {
         $('input[name="certificadoId"]').val(id);
         $('#mdCertificado').modal('show');
         vm.Certificado(id);
+    },
+    EditModal: function (id) {
+        $('input[name="editCertificadoId"]').val(id);
+        $('#mdEditCertificado').modal('show');
+        vm.EditCertificado(id);
     },
     DeleteModal: function (id) {
         $('input[name="deleteCertificadoId"]').val(id);

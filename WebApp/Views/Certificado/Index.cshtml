@@ -25,6 +25,7 @@
                             <tr>
                                 <th class="text-center">Id</th>
                                 <th class="text-center">Nome do Fomento</th>
+                                <th class="text-center">Nome do Certificadoo</th>
                                 <th class="text-center">Status</th>
                                 <th class="text-center">Ações</th>
                             </tr>
@@ -35,6 +36,7 @@
                                 <tr>
                                     <td class="text-center" style="width:20px;">@Html.DisplayFor(modelItem => item.Id)</td>
                                     <td class="text-center">@Html.DisplayFor(modelItem => item.NomeFomento)</td>
+                                    <td class="text-center">@Html.DisplayFor(modelItem => item.Nome)</td>
                                     @if (item.Status)
                                     {
                                         <td class="text-center"><span class="label label-success">ATIVO</span></td>
@@ -45,7 +47,8 @@
                                     }
                                     <td class="actions text-center">
                                         <a data-toggle="tooltip" data-placement="top" title="Editar"
-                                           href='@Url.Action("Edit", "Certificado", new { id = item.Id })'
+                                           href="javascript:void(0);"
+                                           onclick="crud.EditModal(@item.Id)"
                                            class="on-default edit-row" style='color: #FF9800'>
                                             <i class="fa fa-pencil"></i>
                                         </a>
@@ -155,9 +158,78 @@
             </div>
         </div>
     </div>
+    <!-- Modal -->
+    <div class="modal fade" id="mdEditCertificado" tabindex="-1" role="dialog" aria-labelledby="mdEditCertificadoLabel" aria-hidden="true">
+        <div class="modal-dialog modal-md" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="mdEditCertificadoLabel">
+                        <i class="fa fa-pencil"></i> &nbsp;&nbsp;<strong>Alterar Certificado</strong>
+                    </h5>
+                </div>
+                @using (@Html.BeginForm("Edit", "Certificado", FormMethod.Post, new { id = "formEditCertificado", @class = "form-horizontal", @enctype = "multipart/form-data" }))
+                {
+                    <div class="modal-body">
+                        <input type="hidden" name="editCertificadoId" :value="editDto.Id"/>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label text-sm-right pt-2">Fomento <span class="required">*</span></label>
+                            <div class="col-sm-9">
+                                <select class="form-control populate select2" name="ddlFomento" id="ddlFomento" style="width:100%"
+                                        required title="Por favor selecione o fomento"
+                                        asp-for="FomentoId" asp-items="Model.ListFomentos">
+                                    <option value="">Selecionar Fomento</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Imagem</label>
+                            <div class="col-sm-9">
+                                <div class="fileupload fileupload-new" data-provides="fileupload">
+                                    <div class="input-append">
+                                        <div class="uneditable-input">
+                                            <i class="fa fa-file fileupload-exists"></i>
+                                            <span class="fileupload-preview">{{ editDto.Nome }}</span>
+                                        </div>
+                                        <span class="btn btn-default btn-file">
+                                            <span class="fileupload-exists">Alterar</span>
+                                            <span class="fileupload-new">Selecionar Arquivo</span>
+                                            <input type="file" id="arquivo" name="arquivo" accept=".pdf" v-on:change="ValidateFileType()"/>
+                                        </span>
+                                        <a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload">Remover</a>
+                                    </div>
+
+                                    <div v-if="editDto.NomeImagem" class="mt-2">
+                                        <code>Imagem atual: {{ editDto.Nome }}</code>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-3 control-label text-sm-right pt-2">Status</label>
+                            <div class="col-md-3">
+                                <div class="switch switch-sm switch-primary">
+                                    <div v-show="editDto.Status">
+                                        <input type="checkbox" id="editStatus" name="editStatus" data-plugin-ios-switch checked="checked" />
+                                    </div>
+                                    <div v-show="!editDto.Status">
+                                        <input type="checkbox" id="editStatus" name="editStatus" data-plugin-ios-switch />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-remove"></i> &nbsp;&nbsp;Cancelar</button>
+                        <button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
 </div>
 
 @section CssSpecificVendor {
+    <link rel="stylesheet" href="~/assets/vendor/bootstrap-fileupload/bootstrap-fileupload.min.css" />
     <link rel="stylesheet" href="~/assets/vendor/select2/css/select2.css" />
     <link rel="stylesheet" href="~/assets/vendor/select2-bootstrap-theme/select2-bootstrap.min.css" />
     <link rel="stylesheet" href="~/assets/vendor/datatables/media/css/dataTables.bootstrap4.css" />
@@ -169,6 +241,7 @@
     <script src="~/assets/vendor/ios7-switch/ios7-switch.js"></script>
     <script src="~/assets/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
     <script src="~/assets/vendor/datatables/media/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/assets/vendor/bootstrap-fileupload/bootstrap-fileupload.min.js"></script>
     <script src="~/js/formatTable.js"></script>
     <script src="~/js/Certificado.js"></script>
 

@@ -132,5 +132,4 @@ var crud = {
         $('#mdEditCurso').modal('show');
         vm.EditCurso(id);
     },
-
 };
