@@ -1948,7 +1948,7 @@ var vm = new Vue({
                         text: undefined
                     },
                     xAxis: {
-                        categories: ['DEFASAGEM', 'INTERMEEDIÁRIO', 'ADEQUADO'],
+                        categories: ['DEFASAGEM', 'INTERMEDIÁRIO', 'ADEQUADO'],
 
                         labels: {
                             style: {
