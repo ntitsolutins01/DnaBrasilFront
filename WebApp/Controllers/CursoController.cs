@@ -95,9 +95,15 @@ public class CursoController : BaseController
         {
             SetNotifyMessage(notify, message);
             SetCrudMessage(crud);
-            
 
-            return View();
+            var cursos = ApiClientFactory.Instance.GetCursosAll();
+
+            var model = new CursoModel()
+            {
+                Cursos = cursos
+            };
+
+            return View(model);
         }
         catch (Exception e)
         {
@@ -295,6 +301,42 @@ public class CursoController : BaseController
         catch (Exception ex)
         {
             return Task.FromResult(Json(ex.Message));
+        }
+    }
+    public Task<List<ModuloEadDto>> GetModulosEadAllByCursoId(int id)
+    {
+        var result = ApiClientFactory.Instance.GetModulosEadAllByCursoId(id);
+
+        return Task.FromResult(result);
+    }
+    public Task<List<AulaDto>> GetAulasByCursoId(int id)
+    {
+        var result = ApiClientFactory.Instance.GetAulasByCursoId(id);
+
+        return Task.FromResult(result);
+    }
+
+    [HttpGet]
+    public ActionResult GetDetalheCurso(int id)
+    {
+        try
+        {
+            var curso = ApiClientFactory.Instance.GetCursoById(id);
+
+            var modulos = ApiClientFactory.Instance.GetModulosEadAllByCursoId(id);
+
+            var aulas = ApiClientFactory.Instance.GetAulasByCursoId(id);
+
+            return PartialView("_DetalheCurso", new AlunoCursoCertificadoModel
+            {
+                Curso = curso,
+                Modulos = modulos,
+                Aulas = aulas,
+            });
+        }
+        catch (Exception ex)
+        {
+            return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = "Erro ao executar esta ação. Favor entrar em contato com o administrador do sistema." });
         }
     }
     #endregion

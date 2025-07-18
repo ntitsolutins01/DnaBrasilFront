@@ -218,6 +218,8 @@ var vm = new Vue({
             self.ShowLoad(true, "pConsumoAlimentarTot");
             self.ShowLoad(true, "pVocacionalPerc");
             self.ShowLoad(true, "pVocacionalTot");
+            self.ShowLoad(true, "pEducacionalPerc");
+            self.ShowLoad(true, "pEducacionalTot");
 
 
             const obj = {
@@ -346,6 +348,12 @@ var vm = new Vue({
                 $('#progressoVocacional').css('width', percentVocacional);
                 $('#vlProgressoVocacional').text(result.data.dashboard.statusLaudos.progressoVocacional + ' %');
 
+                $("#totEducacionalFinalizado").text(result.data.dashboard.statusLaudos.totEducacionalFinalizado);
+                $("#totEducacionalAndamento").text(result.data.dashboard.statusLaudos.totEducacionalAndamento);
+                var percentEducacional = result.data.dashboard.statusLaudos.progressoEducacional + '%'
+                $('#progressoEducacional').css('width', percentEducacional);
+                $('#vlProgressoEducacional').text(result.data.dashboard.statusLaudos.progressoEducacional + ' %');
+
 
                 self.ShowLoad(false, "pStatusLaudos");
 
@@ -353,20 +361,6 @@ var vm = new Vue({
                 Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
 
                 self.ShowLoad(false, "pStatusLaudos");
-            });
-
-            axios.post("Dashboard/GetEvolutivoByFilter", obj, axiosConfig).then(result => {
-                var self = this;
-                self.ShowLoad(true, "pEvolutivo");
-
-                self.SetGraficoEvolutivo(result);
-
-                self.ShowLoad(false, "pEvolutivo");
-
-            }).catch(error => {
-                Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
-
-                self.ShowLoad(false, "pEvolutivo");
             });
 
             axios.post("Dashboard/GetGraficosVocacionalByFilter", obj, axiosConfig).then(result => {
@@ -518,6 +512,26 @@ var vm = new Vue({
                 Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
                 self.ShowLoad(false, "pSaudeBucalPerc");
                 self.ShowLoad(false, "pSaudeBucalTot");
+            });
+
+
+
+            axios.post("Dashboard/GetGraficosEducacionalByFilter", obj, axiosConfig).then(result => {
+                var self = this;
+
+                self.ShowLoad(true, "pEducacionalPerc");
+                self.ShowLoad(true, "pEducacionalTot");
+
+                self.SetGraficoEducacionalPercentual(result);
+                self.SetGraficoTotalizadorEducacional(result);
+
+                self.ShowLoad(false, "pEducacionalPerc");
+                self.ShowLoad(false, "pEducacionalTot");
+
+            }).catch(error => {
+                Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
+                self.ShowLoad(false, "pEducacionalPerc");
+                self.ShowLoad(false, "pEducacionalTot");
             });
 
             axios.post("Dashboard/GetGraficosTalentoByFilter", obj, axiosConfig).then(result => {
@@ -1798,6 +1812,63 @@ var vm = new Vue({
                 });
             });
         },
+        SetGraficoEducacionalPercentual: function (result) {
+            $(function () {
+
+                Highcharts.chart('containerEducacionalPercentual', {
+                    chart: {
+                        type: 'variablepie'
+                    },
+                    title: {
+                        text: undefined
+                    },
+                    tooltip: {
+                        headerFormat: '',
+                        pointFormat: '<span style="color:{point.color}">\u25CF</span> <b> {point.name}</b><br/>' +
+                            '<b>{point.y} %</b> dos Alunos',
+                        style: {
+                            fontSize: '12px'
+                        }
+                    },
+                    legend: {
+                        itemStyle: {
+                            fontSize: '2px'
+                        }
+                    },
+                    plotOptions: {
+                        variablepie: {
+                            dataLabels: {
+                                enabled: true,
+                                style: {
+                                    fontSize: '12px',
+                                    fontWeight: '400'
+                                }
+                            }
+                        }
+                    },
+                    series: [{
+                        minPointSize: 10,
+                        innerSize: '20%',
+                        zMin: 0,
+                        name: 'Percentual de nivelamento dos alunos',
+                        borderRadius: 5,
+                        data: [{
+                            name: 'DEFASAGEM',
+                            y: result.data.dashboard.listTotalizadorEducacional.percentualEducacional.DEFASAGEM,
+                            z: 50
+                        }, {
+                            name: 'INTERMEDIÁRIO',
+                            y: result.data.dashboard.listTotalizadorEducacional.percentualEducacional.INTERMEDIARIO,
+                            z: 50
+                        }, {
+                            name: 'ADEQUADO',
+                            y: result.data.dashboard.listTotalizadorEducacional.percentualEducacional.ADEQUADO,
+                            z: 50
+                        }]
+                    }]
+                });
+            });
+        },
         SetGraficoTotalizadorBucal: function (result) {
             $(function () {
 
@@ -1862,6 +1933,74 @@ var vm = new Vue({
                     }, {
                         name: 'Masculino',
                         data: [result.data.dashboard.listTotalizadorSaudeBucal.valorTotalizadorSaudeBucalMasculino.CUIDADO, result.data.dashboard.listTotalizadorSaudeBucal.valorTotalizadorSaudeBucalMasculino.ATENCAO, result.data.dashboard.listTotalizadorSaudeBucal.valorTotalizadorSaudeBucalMasculino.MUITOBOM]
+                    }]
+                });
+            });
+        },
+        SetGraficoTotalizadorEducacional: function (result) {
+            $(function () {
+
+                Highcharts.chart('containerEducacional', {
+                    chart: {
+                        type: 'bar'
+                    },
+                    title: {
+                        text: undefined
+                    },
+                    xAxis: {
+                        categories: ['DEFASAGEM', 'INTERMEEDIÁRIO', 'ADEQUADO'],
+
+                        labels: {
+                            style: {
+                                fontSize: '12px'
+                            }
+                        }
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: 'Total',
+                            style: {
+                                fontSize: '12px'
+                            }
+                        },
+
+                        labels: {
+                            style: {
+                                fontSize: '12px'
+                            }
+                        }
+                    },
+                    legend: {
+                        reversed: true,
+                        itemStyle: {
+                            fontSize: '12px'
+                        }
+                    },
+                    tooltip: {
+                        style: {
+                            fontSize: '12px'
+                        }
+                    },
+                    plotOptions: {
+                        series: {
+                            stacking: 'normal',
+                            dataLabels: {
+                                enabled: true,
+                                style: {
+                                    fontSize: '12px',
+                                    fontWeight: '400'
+                                }
+                            }
+                        }
+                    },
+                    series: [{
+                        name: 'Feminino',
+                        color: '#EC407A',
+                        data: [result.data.dashboard.listTotalizadorEducacional.valorTotalizadorEducacionalFeminino.DEFASAGEM, result.data.dashboard.listTotalizadorEducacional.valorTotalizadorEducacionalFeminino.INTERMEDIARIO, result.data.dashboard.listTotalizadorEducacional.valorTotalizadorEducacionalFeminino.ADEQUADO]
+                    }, {
+                        name: 'Masculino',
+                        data: [result.data.dashboard.listTotalizadorEducacional.valorTotalizadorEducacionalMasculino.DEFASAGEM, result.data.dashboard.listTotalizadorEducacional.valorTotalizadorEducacionalMasculino.INTERMEDIARIO, result.data.dashboard.listTotalizadorEducacional.valorTotalizadorEducacionalMasculino.ADEQUADO]
                     }]
                 });
             });

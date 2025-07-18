@@ -54,7 +54,13 @@ namespace WebApp.ApiClient
         public Task<DashboardDto?> GetGraficosSaudeBucalByFilter(DashboardDto searchFilter)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceDashboard}/GraficosSaudeBucal"));
+                $"{ResourceDashboard}/2"));
+            return GetFiltro(requestUrl, searchFilter);
+        }
+        public Task<DashboardDto?> GetGraficosEducacionalByFilter(DashboardDto searchFilter)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceDashboard}/GraficosEducacional"));
             return GetFiltro(requestUrl, searchFilter);
         }
         public Task<DashboardDto?> GetGraficosEtniaByFilter(DashboardDto searchFilter)
