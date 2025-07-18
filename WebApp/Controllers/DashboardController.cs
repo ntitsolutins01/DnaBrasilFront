@@ -123,6 +123,26 @@ namespace WebApp.Controllers
                 return Json(ex);
             }
         }
+        public async Task<JsonResult> GetIndicadoresEadByFilter([FromBody] DashboardEadDto search)
+        {
+            try
+            {
+                var dashboard = await ApiClientFactory.Instance.GetIndicadoresEadByFilter(search);
+
+                var model = new DashboardModel
+                {
+                    DashboardEad = dashboard,
+
+                };
+
+                return Json(model);
+
+            }
+            catch (Exception ex)
+            {
+                return Json(ex);
+            }
+        }
         public async Task<JsonResult> GetControlePresencaByFilter([FromBody] DashboardDto search)
         {
             try
@@ -229,6 +249,26 @@ namespace WebApp.Controllers
             try
             {
                 var dashboard = await ApiClientFactory.Instance.GetGraficosSaudeBucalByFilter(search);
+
+                var model = new DashboardModel
+                {
+                    Dashboard = dashboard,
+
+                };
+
+                return await Task.FromResult(Json(model));
+
+            }
+            catch (Exception ex)
+            {
+                return await Task.FromResult(Json(ex));
+            }
+        }
+        public async Task<JsonResult> GetGraficosEducacionalByFilter([FromBody] DashboardDto search)
+        {
+            try
+            {
+                var dashboard = await ApiClientFactory.Instance.GetGraficosEducacionalByFilter(search);
 
                 var model = new DashboardModel
                 {

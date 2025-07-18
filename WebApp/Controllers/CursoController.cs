@@ -88,12 +88,37 @@ public class CursoController : BaseController
         }
     }
 
-    /// <summary>
-    /// Ação de Inclusão do Curso
-    /// </summary>
-    /// <param name="collection">Coleção de dados para inclusao de Curso</param>
-    /// <returns>Retorna mensagem de inclusao através do parametro crud</returns>
     [ClaimsAuthorize(ClaimType.Curso, Identity.Claim.Incluir)]
+    public ActionResult CatalogoCursos(int? crud, int? notify, string message = null)
+    {
+        try
+        {
+            SetNotifyMessage(notify, message);
+            SetCrudMessage(crud);
+
+            var cursos = ApiClientFactory.Instance.GetCursosAll();
+
+            var model = new CursoModel()
+            {
+                Cursos = cursos
+            };
+
+            return View(model);
+        }
+        catch (Exception e)
+        {
+            Console.Write(e.StackTrace);
+            return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = e.Message });
+
+        }
+    }
+
+    /// <summary>
+        /// Ação de Inclusão do Curso
+        /// </summary>
+        /// <param name="collection">Coleção de dados para inclusao de Curso</param>
+        /// <returns>Retorna mensagem de inclusao através do parametro crud</returns>
+        [ClaimsAuthorize(ClaimType.Curso, Identity.Claim.Incluir)]
     [HttpPost]
     public async Task<ActionResult> Create(IFormCollection collection)
     {
@@ -238,15 +263,18 @@ public class CursoController : BaseController
             return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = "Este curso não pode ser excluído pois possui módulos vinculadas a ele." });
         }
     }
+
+
+
     #endregion
 
-    #region Get Methods
+        #region Get Methods
 
-    /// <summary>
-    /// Busca de Curso por Id
-    /// </summary>
-    /// <param name="id">Identificador de Curso</param>
-    /// <returns>Retorna o Curso</returns>
+        /// <summary>
+        /// Busca de Curso por Id
+        /// </summary>
+        /// <param name="id">Identificador de Curso</param>
+        /// <returns>Retorna o Curso</returns>
     public Task<CursoDto> GetCursoById(int id)
     {
         var result = ApiClientFactory.Instance.GetCursoById(id);
@@ -273,6 +301,42 @@ public class CursoController : BaseController
         catch (Exception ex)
         {
             return Task.FromResult(Json(ex.Message));
+        }
+    }
+    public Task<List<ModuloEadDto>> GetModulosEadAllByCursoId(int id)
+    {
+        var result = ApiClientFactory.Instance.GetModulosEadAllByCursoId(id);
+
+        return Task.FromResult(result);
+    }
+    public Task<List<AulaDto>> GetAulasByCursoId(int id)
+    {
+        var result = ApiClientFactory.Instance.GetAulasByCursoId(id);
+
+        return Task.FromResult(result);
+    }
+
+    [HttpGet]
+    public ActionResult GetDetalheCurso(int id)
+    {
+        try
+        {
+            var curso = ApiClientFactory.Instance.GetCursoById(id);
+
+            var modulos = ApiClientFactory.Instance.GetModulosEadAllByCursoId(id);
+
+            var aulas = ApiClientFactory.Instance.GetAulasByCursoId(id);
+
+            return PartialView("_DetalheCurso", new AlunoCursoCertificadoModel
+            {
+                Curso = curso,
+                Modulos = modulos,
+                Aulas = aulas,
+            });
+        }
+        catch (Exception ex)
+        {
+            return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = "Erro ao executar esta ação. Favor entrar em contato com o administrador do sistema." });
         }
     }
     #endregion

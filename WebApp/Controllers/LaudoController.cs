@@ -504,10 +504,10 @@ namespace WebApp.Controllers
                     command.ModalidadeId = modalidade!.Id;
 
                 }
-                else
-                {
-                    return RedirectToAction(nameof(Create), new { notify = (int)EnumNotify.Error, message = "Favor informar todos os campos de Talento Esportivo." });
-                }
+                //else
+                //{
+                //    return RedirectToAction(nameof(Create), new { notify = (int)EnumNotify.Error, message = "Favor informar todos os campos de Talento Esportivo." });
+                //}
 
                 if (command.SaudeBucalId != null || command.ConsumoAlimentarId != null || command.QualidadeDeVidaId != null ||
                     command.SaudeId != null || command.TalentoEsportivoId != null || command.VocacionalId != null)
