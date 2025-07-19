@@ -2,12 +2,14 @@ var vm = new Vue({
     el: "#vCertificado",
     data: {
         loading: false,
+        imagemFrenteBase64: '',
+        imagemVersoBase64: '',
         editDto: {
             Id: "", TipoCurso: "", Curso: "",
             ImagemFrente: "", HtmlFrente: "",
             ImagemVerso: "", HtmlVerso: "",
             NomeImagemFrente: "", NomeImagemVerso: "",
-            Fomento: "", Url: "", Nome: "",
+            Fomento: "", NomeFomento: "", Url: "", Nome: "",
             Status: true
         }
     },
@@ -96,20 +98,19 @@ var vm = new Vue({
             return axios.get("/Certificado/GetCertificadoById/?id=" + id).then(result => {
                 var data = result.data;
                 self.editDto.Id = data.id;
+                self.editDto.NomeFomento = data.nomeFomento;
                 self.editDto.TipoCurso = data.tipoCurso;
                 self.editDto.Curso = data.curso;
-                self.editDto.HtmlFrente = data.htmlFrente;
-                self.editDto.HtmlVerso = data.htmlVerso;
                 self.editDto.Status = data.status;
-                self.editDto.ImagemFrente = "/Certificados/" + data.imagemFrente;
-                self.editDto.ImagemVerso = data.imagemVerso ? "/Certificados/" + data.imagemVerso : null;
+                self.editDto.Nome = data.nome
+                self.editDto.Url = "\\Certificados\\" + data.url.split("\\Certificados\\")[1];
 
-                if (self.editDto.ImagemFrente) {
-                    applyBackgroundImage('summernoteFrente', self.editDto.ImagemFrente);
-                }
-                if (self.editDto.ImagemVerso) {
-                    applyBackgroundImage('summernoteVerso', self.editDto.ImagemVerso);
-                }
+                var pdfUrl = self.editDto.Url
+
+                self.GerarImagemDePdf(pdfUrl, 1, 'imagemFrenteBase64');
+
+                self.GerarImagemDePdf(pdfUrl, 2, 'imagemVersoBase64');
+
             }).catch(error => {
                 alert("Erro ao carregar certificado: " + error.message);
             });
@@ -124,7 +125,32 @@ var vm = new Vue({
                 Site.Notification("Erro ao realizar Upload", "Somente arquivos PDF são permitidos.", "error", 2);
 
             }
-        }
+        },
+        GerarImagemDePdf: function (pdfUrl, pageNumber, dataProperty) {
+            var self = this;
+            pdfjsLib.GlobalWorkerOptions.workerSrc = '/assets/vendor/pdfjs/pdf.worker.js';
+            pdfjsLib.getDocument(pdfUrl).promise.then(function (pdf) {
+                if (pdf.numPages < pageNumber) {
+                    self[dataProperty] = "";
+                    return;
+                }
+                pdf.getPage(pageNumber).then(function (page) {
+                    var viewport = page.getViewport({ scale: 2 });
+                    var canvas = document.createElement('canvas');
+                    var context = canvas.getContext('2d');
+                    canvas.width = viewport.width;
+                    canvas.height = viewport.height;
+                    var renderContext = {
+                        canvasContext: context,
+                        viewport: viewport
+                    };
+                    page.render(renderContext).promise.then(function () {
+                        var imgData = canvas.toDataURL('image/png');
+                        self[dataProperty] = imgData;
+                    });
+                });
+            });
+        },
     }
 });
 

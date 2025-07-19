@@ -94,7 +94,7 @@
                                     <!-- Container que agrupa imagem + html overlay -->
                                     <div style="position: relative; width: 100%; height: auto;">
                                         <!-- Imagem da Frente -->
-                                        <img :src="editDto.ImagemFrente"
+                                        <img :src="imagemFrenteBase64"
                                              alt="Frente do Certificado"
                                              style="width: 100%; height: auto; display: block; object-fit: contain; z-index: 1;" />
 
@@ -105,14 +105,11 @@
                                     </div>
                                 </div>
 
-                                <div id="verso" class="tab-pane">
+                                <div id="verso" class="tab-pane" style="position: relative;">
                                     <div style="position: relative; width: 100%; height: auto;">
-                                        <!-- Imagem do Verso -->
-                                        <img :src="editDto.ImagemVerso"
+                                        <img :src="imagemVersoBase64"
                                              alt="Verso do Certificado"
                                              style="width: 100%; height: auto; display: block; object-fit: contain; z-index: 1;" />
-
-                                        <!-- HTML sobre a imagem -->
                                         <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none;">
                                             <div v-html="editDto.HtmlVerso" style="color: black;"></div>
                                         </div>
@@ -242,6 +239,8 @@
     <script src="~/assets/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
     <script src="~/assets/vendor/datatables/media/js/dataTables.bootstrap4.min.js"></script>
     <script src="~/assets/vendor/bootstrap-fileupload/bootstrap-fileupload.min.js"></script>
+    <script src="/assets/vendor/pdfjs/build/pdf.js"></script>
+    <script src="/assets/vendor/pdfjs/build/pdf.worker.js"></script>
     <script src="~/js/formatTable.js"></script>
     <script src="~/js/Certificado.js"></script>
 
