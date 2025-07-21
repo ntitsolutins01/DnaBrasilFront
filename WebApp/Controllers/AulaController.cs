@@ -25,6 +25,7 @@ public class AulaController : BaseController
     private readonly IOptions<UrlSettings> _appSettings;
     private readonly IWebHostEnvironment _host;
     private readonly ILog _logger;
+    private readonly UrlSettings _settings;
 
     #endregion
 
@@ -36,13 +37,15 @@ public class AulaController : BaseController
     /// <param name="appSettings">Configurações de urls do sistema</param>
     /// <param name="host">Informações da aplicação em execução</param>
     /// <param name="logger">Log de mensagens da aplicação</param>
+    /// <param name="settings">Configurações parametrizadas do sistema</param>
     public AulaController(IOptions<UrlSettings> appSettings, IWebHostEnvironment host,
-        ILog logger)
+        ILog logger, UrlSettings settings)
     {
         _appSettings = appSettings;
         ApplicationSettings.WebApiUrl = _appSettings.Value.WebApiBaseUrl;
         _host = host;
         _logger = logger;
+        _settings = settings;
     }
     #endregion
 
@@ -192,10 +195,10 @@ public class AulaController : BaseController
     {
         try
         {
-            var uriMaterial = new Uri(collection["material"].ToString().Replace("\"", "").Replace("C:\\MaterialEAD\\", "C:\\inetpub\\wwwroot\\wwwroot\\MaterialEAD\\"));
-            var nomeMaterial = Path.GetFileName(uriMaterial.LocalPath);
-            var uriVideo = new Uri(collection["video"].ToString().Replace("\"", "").Replace("C:\\MaterialEAD\\", "C:\\inetpub\\wwwroot\\wwwroot\\MaterialEAD\\"));
-            var nomeVideo = Path.GetFileName(uriVideo.LocalPath);
+            var uriMaterial = _settings.BloobUrl + collection["material"];//new Uri(collection["material"].ToString()); //transforma em Uri String pra salvar no banco 
+            var nomeMaterial = collection["nomeMaterial"].ToString(); //Path.GetFileName(uriMaterial.LocalPath);
+            var uriVideo = _settings.BloobUrl + collection["video"]; //new Uri(collection["video"].ToString());
+            var nomeVideo = collection["nomeVideo"].ToString(); //Path.GetFileName(uriVideo.LocalPath);
 
             AulaModel.CreateUpdateAulaCommand command;
             command = new AulaModel.CreateUpdateAulaCommand
@@ -206,9 +209,9 @@ public class AulaController : BaseController
                 Status = collection["editStatus"].ToString() == "" ? false : true,
                 ProfessorId = Convert.ToInt32(collection["ddlProfessor"].ToString()),
                 Ordem = Convert.ToInt32(collection["ordem"].ToString()),
-                Video = collection["video"].ToString().Replace("\"", "").Replace("C:\\MaterialEAD\\", "C:\\inetpub\\wwwroot\\wwwroot\\MaterialEAD\\"),
+                Video = uriVideo,
                 NomeVideo = nomeVideo,
-                Material = collection["material"].ToString().Replace("\"", "").Replace("C:\\MaterialEAD\\", "C:\\inetpub\\wwwroot\\wwwroot\\MaterialEAD\\"),
+                Material = uriMaterial,
                 NomeMaterial = nomeMaterial
             };
 

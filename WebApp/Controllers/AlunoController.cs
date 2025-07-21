@@ -1812,6 +1812,26 @@ namespace WebApp.Controllers
             }
         }
 
+        /// <summary>
+        /// Busca lista de etapa de ensino
+        /// </summary>
+        /// <returns>Retorna lista de etaoa de ebsino</returns>
+        [HttpGet]
+        public Task<JsonResult> GetEtapasEnsinoAll()
+        {
+            try
+            {
+                var result = ApiClientFactory.Instance.GetEtapasEnsinoAll();
+
+                return Task.FromResult(Json(new SelectList(result.Where(x=>x.Id == "1"), "Id", "Nome")));
+
+            }
+            catch (Exception ex)
+            {
+                return Task.FromResult(Json(ex.Message));
+            }
+        }
+
         #endregion
 
         #region Custom Methods
@@ -1991,6 +2011,36 @@ namespace WebApp.Controllers
         public async Task<ActionResult> Carteirinha()
         {
             return View();
+        }
+
+
+
+        /// <summary>
+        /// Açao de inclusão de etapa de ensino
+        /// </summary>
+        /// <param name="collection">Coleção de dados para etapa de ensino</param>
+        /// <returns>Retorna mensagem de inclusao através do parametro crud</returns>
+        [HttpPost]
+        [ClaimsAuthorize(ClaimType.Aluno, Claim.Incluir)]
+        public async Task<JsonResult> CreateEtapaEnsino(IFormCollection collection)
+        {
+            try
+            {
+                var command = new AlunoModel.CreateUpdateEtapaEnsinoCommand
+                {
+                    Nome = collection["etapa"].ToString()
+                };
+
+                await ApiClientFactory.Instance.CreateEtapaEnsino(command);
+
+                var result = ApiClientFactory.Instance.GetEtapasEnsinoAll();
+
+                return await Task.FromResult(Json(new SelectList(result, "Id", "Nome")));
+            }
+            catch (Exception ex)
+            {
+                return await Task.FromResult(Json(ex.Message));
+            }
         }
 
         #endregion

@@ -30,6 +30,7 @@ var vm = new Vue({
 
             //triggered when modal is about to be shown
             $('#mdDetalheCurso').on('show.bs.modal', function (e) {
+                self.ShowLoad(true, "pDetalheCurso");
 
                 //get data-id attribute of the clicked element
                 var id = $(e.relatedTarget).data('id');
@@ -47,10 +48,13 @@ var vm = new Vue({
                         id: id
                     }
                 }).then(result => {
-                    $("#mdDetalheCurso").find(".modal-body").html(result.data);
 
+                    $("#mdDetalheCurso").find(".modal-body").html(result.data);
+                    self.ShowLoad(false, "pDetalheCurso");
                 }).catch(error => {
+                    self.ShowLoad(false, "pDetalheCurso");
                     Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
+
                 });
 
 
@@ -83,16 +87,3 @@ var vm = new Vue({
         }
     }
 });
-
-var crud = {
-    //DeleteModal: function (id) {
-    //    $('input[name="TipoParceriaId"]').attr('value', id);
-    //    $('#mdDeleteTipoParceria').modal('show');
-    //    vm.DeleteTipoParceria(id)
-    //},
-    //EditModal: function (id) {
-    //    $('input[name="TipoParceriaId"]').attr('value', id);
-    //    $('#mdEditTipoParceria').modal('show');
-    //    vm.EditTipoParceria(id)
-    //}
-};
