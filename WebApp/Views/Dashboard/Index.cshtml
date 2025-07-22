@@ -278,146 +278,171 @@
 	</div>
 	<div class="row">
 		<div class="col-md-12">
-			<section class="panel">
-				<header class="panel-heading">
-					<div class="panel-actions">
-						<a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
-					</div>
+			<form id="formDashboardEad" class="form-horizontal">
+				<section class="panel">
+					<header class="panel-heading">
+						<div class="panel-actions">
+							<a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
+						</div>
 
-					<h2 class="panel-title">Indicadores EAD</h2>
-				</header>
-				<div class="panel-body" id="pIndicadoresEad">
+						<h2 class="panel-title">Indicadores EAD</h2>
+					</header>
+					<div class="panel-body" id="pIndicadoresEad">
+						<div class="form-group row">
+							<label class="col-sm-2 control-label text-right">Tipo de Curso <span class="required">*</span></label>
+							<div class="col-sm-3">
+								<select class="form-control populate select2" name="ddlTipoCurso" id="ddlTipoCurso" style="width: 100%"
+										required title="Por favor selecione o tipo de curso"
+										asp-for="TipoCursosId" asp-items="Model.ListTipoCursos">
+									<option value="">Selecionar Tipo de Curso</option>
+								</select>
+							</div>
+							<label class="col-sm-1 control-label text-right">Curso <span class="required">*</span></label>
+							<div class="col-sm-3">
+								<select class="form-control populate select2" name="ddlCurso" id="ddlCurso" style="width: 100%"
+										required title="Por favor selecione o curso"
+										asp-for="CursoId" asp-items="Model.ListCursos">
+									<option value="">Selecionar Curso</option>
+								</select>
+							</div>
+							<div class="col-sm-2 pull-right">
+								<button type="button" class="btn btn-block btn-primary pull-right" v-on:click="GetPesquisaIndicadoresEad()">
+									<i class="fa fa-search"></i> &nbsp;&nbsp;Pesquisar
+								</button>
+							</div>
+						</div>
+						<div class="col-md-4 col-xl-12">
+							<a href="@Url.Action("CatalogoCursos", "Curso")">
+								<section class="panel">
+									<div class="panel-body bg-primary" style="background-color: #f44336 !important">
+										<div class="widget-summary">
+											<div class="widget-summary-col widget-summary-col-icon">
+												<div class="summary-icon">
+													<i class="fa fa-file-code-o"></i>
+												</div>
+											</div>
+											<div class="widget-summary-col">
+												<div class="summary">
+													<h4 class="title">Cursos Disponíveis</h4>
+													<div class="info">
+														<strong class="amount"><label id="cursosDisponiveisEad">@Model.DashboardEad.CursosDisponiveis</label></strong>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</section>
+							</a>
 
-					<div class="col-md-4 col-xl-12">
-						<a href="@Url.Action("CatalogoCursos", "Curso")">
+						</div>
+						<div class="col-md-4 col-xl-12">
 							<section class="panel">
-								<div class="panel-body bg-primary" style="background-color: #f44336 !important">
+								<div class="panel-body bg-primary" style="background-color: #fb8c00 !important">
 									<div class="widget-summary">
 										<div class="widget-summary-col widget-summary-col-icon">
 											<div class="summary-icon">
-												<i class="fa fa-file-code-o"></i>
+												<i class="fa fa-file-text"></i>
 											</div>
 										</div>
 										<div class="widget-summary-col">
 											<div class="summary">
-												<h4 class="title">Cursos Disponíveis</h4>
+												<h4 class="title">Cursos em Andamento</h4>
 												<div class="info">
-													<strong class="amount"><label id="cursosDisponiveisEad">@Model.DashboardEad.CursosDisponiveis</label></strong>
+													<strong class="amount"><label id="cursosEmAndamentoEad">@Model.DashboardEad.CursosEmAndamento</label></strong>
 												</div>
 											</div>
 										</div>
 									</div>
 								</div>
 							</section>
-						</a>
-
-					</div>
-					<div class="col-md-4 col-xl-12">
-						<section class="panel">
-							<div class="panel-body bg-primary" style="background-color: #fb8c00!important">
-								<div class="widget-summary">
-									<div class="widget-summary-col widget-summary-col-icon">
-										<div class="summary-icon">
-											<i class="fa fa-file-text"></i>
+						</div>
+						<div class="col-md-4 col-xl-12">
+							<section class="panel">
+								<div class="panel-body bg-primary" style="background-color: #4CAF50 !important">
+									<div class="widget-summary">
+										<div class="widget-summary-col widget-summary-col-icon">
+											<div class="summary-icon">
+												<i class="fa fa-file-archive-o"></i>
+											</div>
 										</div>
-									</div>
-									<div class="widget-summary-col">
-										<div class="summary">
-											<h4 class="title">Cursos em Andamento</h4>
-											<div class="info">
-												<strong class="amount"><label id="cursosEmAndamentoEad">@Model.DashboardEad.CursosEmAndamento</label></strong>
+										<div class="widget-summary-col">
+											<div class="summary">
+												<h4 class="title">Cursos Finalizados</h4>
+												<div class="info">
+													<strong class="amount"><label id="cursosFinalizadosEad">@Model.DashboardEad.CursosFinalizados</label></strong>
+												</div>
 											</div>
 										</div>
 									</div>
 								</div>
-							</div>
-						</section>
-					</div>
-					<div class="col-md-4 col-xl-12">
-						<section class="panel">
-							<div class="panel-body bg-primary" style="background-color: #4CAF50 !important">
-								<div class="widget-summary">
-									<div class="widget-summary-col widget-summary-col-icon">
-										<div class="summary-icon">
-											<i class="fa fa-file-archive-o"></i>
+							</section>
+						</div>
+						<div class="col-md-4 col-xl-12">
+							<section class="panel">
+								<div class="panel-body bg-primary" style="background-color: #3F51B5 !important">
+									<div class="widget-summary">
+										<div class="widget-summary-col widget-summary-col-icon">
+											<div class="summary-icon">
+												<i class="fa fa-male"></i>
+											</div>
 										</div>
-									</div>
-									<div class="widget-summary-col">
-										<div class="summary">
-											<h4 class="title">Cursos Finalizados</h4>
-											<div class="info">
-												<strong class="amount"><label id="cursosFinalizadosEad">@Model.DashboardEad.CursosFinalizados</label></strong>
+										<div class="widget-summary-col">
+											<div class="summary">
+												<h4 class="title">Alunos Masculino</h4>
+												<div class="info">
+													<strong class="amount"><label id="cadastrosMasculinosEad">@Model.DashboardEad.CadastrosMasculinos</label></strong>
+												</div>
 											</div>
 										</div>
 									</div>
 								</div>
-							</div>
-						</section>
-					</div>
-					<div class="col-md-4 col-xl-12">
-						<section class="panel">
-							<div class="panel-body bg-primary" style="background-color: #3F51B5 !important">
-								<div class="widget-summary">
-									<div class="widget-summary-col widget-summary-col-icon">
-										<div class="summary-icon">
-											<i class="fa fa-male"></i>
+							</section>
+						</div>
+						<div class="col-md-4 col-xl-12">
+							<section class="panel">
+								<div class="panel-body bg-primary" style="background-color: #E91E63 !important">
+									<div class="widget-summary">
+										<div class="widget-summary-col widget-summary-col-icon">
+											<div class="summary-icon">
+												<i class="fa fa-female"></i>
+											</div>
 										</div>
-									</div>
-									<div class="widget-summary-col">
-										<div class="summary">
-											<h4 class="title">Alunos Masculino</h4>
-											<div class="info">
-												<strong class="amount"><label id="cadastrosMasculinosEad">@Model.DashboardEad.CadastrosMasculinos</label></strong>
+										<div class="widget-summary-col">
+											<div class="summary">
+												<h4 class="title">Alunos Feminino</h4>
+												<div class="info">
+													<strong class="amount"><label id="cadastrosFemininosEad">@Model.DashboardEad.CadastrosFemininos</label></></strong>
+												</div>
 											</div>
 										</div>
 									</div>
 								</div>
-							</div>
-						</section>
-					</div>
-					<div class="col-md-4 col-xl-12">
-						<section class="panel">
-							<div class="panel-body bg-primary" style="background-color: #E91E63 !important">
-								<div class="widget-summary">
-									<div class="widget-summary-col widget-summary-col-icon">
-										<div class="summary-icon">
-											<i class="fa fa-female"></i>
-										</div>
-									</div>
-									<div class="widget-summary-col">
-										<div class="summary">
-											<h4 class="title">Alunos Feminino</h4>
-											<div class="info">
-												<strong class="amount"><label id="cadastrosFemininosEad">@Model.DashboardEad.CadastrosFemininos</label></></strong>
+							</section>
+						</div>
+						<div class="col-md-4 col-xl-12">
+							<a href="#" data-toggle="modal" data-target="#mdAlunosMatriculados">
+								<section class="panel">
+									<div class="panel-body bg-primary" style="background-color: #2196F3 !important">
+										<div class="widget-summary">
+											<div class="widget-summary-col widget-summary-col-icon">
+												<div class="summary-icon">
+													<i class="fa fa-users"></i>
+												</div>
+											</div>
+											<div class="widget-summary-col">
+												<div class="summary">
+													<h4 class="title">Alunos Matriculados</h4>
+													<div class="info">
+														<strong class="amount"><label id="alunosCadastradosEad">@Model.DashboardEad.AlunosCadastrados</label></></strong>
+													</div>
+												</div>
 											</div>
 										</div>
 									</div>
-								</div>
-							</div>
-						</section>
-					</div>
-					<div class="col-md-4 col-xl-12">
-						<section class="panel">
-							<div class="panel-body bg-primary" style="background-color: #2196F3 !important">
-								<div class="widget-summary">
-									<div class="widget-summary-col widget-summary-col-icon">
-										<div class="summary-icon">
-											<i class="fa fa-users"></i>
-										</div>
-									</div>
-									<div class="widget-summary-col">
-										<div class="summary">
-											<h4 class="title">Alunos Matriculados</h4>
-											<div class="info">
-												<strong class="amount"><label id="alunosCadastradosEad">@Model.DashboardEad.AlunosCadastrados</label></></strong>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</section>
-					</div>
-					@* <div class="col-md-4 col-xl-12">
+								</section>
+							</a>
+						</div>
+						@* <div class="col-md-4 col-xl-12">
                 <section class="panel">
                 <div class="panel-body bg-primary" style="background-color: #3F51B5 !important">
                 <div class="widget-summary">
@@ -459,8 +484,9 @@
                 </div>
                 </section>
                 </div> *@
-				</div>
-			</section>
+					</div>
+				</section>
+			</form>
 		</div>
 	</div>
 
@@ -947,41 +973,6 @@
 		</div>
 	</div>
 	<div class="row">
-	<div class="col-lg-5 col-md-12">
-		<section class="panel">
-			<header class="panel-heading">
-				<div class="panel-actions">
-					<a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
-				</div>
-
-				<h2 class="panel-title">Etnias (%)</h2>
-				<p class="panel-subtitle">Percentual grafico de etnias dos alunos </p>
-			</header>
-			<div class="panel-body" id="pEtniaPerc">
-				<div id="containerEtniaPercentual"></div>
-			</div>
-		</section>
-	</div>
-	<div class="col-lg-7 col-md-12">
-		<section class="panel">
-			<header class="panel-heading">
-				<div class="panel-actions">
-					<a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
-				</div>
-
-				<h2 class="panel-title">Etnia</h2>
-				<p class="panel-subtitle">Totalizador de alunos por etnia</p>
-			</header>
-			<div class="panel-body" id="pEtniaTot">
-				<div class="table-responsive">
-					<div id="containerEtnia"></div>
-
-				</div>
-			</div>
-		</section>
-	</div>
-</div>
-	<div class="row">
 		<div class="col-lg-5 col-md-12">
 			<section class="panel">
 				<header class="panel-heading">
@@ -989,11 +980,11 @@
 						<a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
 					</div>
 
-					<h2 class="panel-title">Educacional (%)</h2>
-					<p class="panel-subtitle">Percentual gráfico educacional dos alunos </p>
+					<h2 class="panel-title">Etnias (%)</h2>
+					<p class="panel-subtitle">Percentual grafico de etnias dos alunos </p>
 				</header>
-				<div class="panel-body" id="pEducacionalPerc">
-					<div id="containerEducacionalPercentual"></div>
+				<div class="panel-body" id="pEtniaPerc">
+					<div id="containerEtniaPercentual"></div>
 				</div>
 			</section>
 		</div>
@@ -1004,34 +995,93 @@
 						<a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
 					</div>
 
-					<h2 class="panel-title">Educacional</h2>
-					<p class="panel-subtitle">Totalizador de alunos por nivelamento</p>
+					<h2 class="panel-title">Etnia</h2>
+					<p class="panel-subtitle">Totalizador de alunos por etnia</p>
 				</header>
-				<div class="panel-body" id="pEducacionalTot">
+				<div class="panel-body" id="pEtniaTot">
 					<div class="table-responsive">
-						<div id="containerEducacional"></div>
+						<div id="containerEtnia"></div>
 
 					</div>
 				</div>
 			</section>
 		</div>
 	</div>
+<div class="row">
+	<div class="col-lg-5 col-md-12">
+		<section class="panel">
+			<header class="panel-heading">
+				<div class="panel-actions">
+					<a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
+				</div>
+
+				<h2 class="panel-title">Educacional (%)</h2>
+				<p class="panel-subtitle">Percentual gráfico educacional dos alunos </p>
+			</header>
+			<div class="panel-body" id="pEducacionalPerc">
+				<div id="containerEducacionalPercentual"></div>
+			</div>
+		</section>
+	</div>
+	<div class="col-lg-7 col-md-12">
+		<section class="panel">
+			<header class="panel-heading">
+				<div class="panel-actions">
+					<a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
+				</div>
+
+				<h2 class="panel-title">Educacional</h2>
+				<p class="panel-subtitle">Totalizador de alunos por nivelamento</p>
+			</header>
+			<div class="panel-body" id="pEducacionalTot">
+				<div class="table-responsive">
+					<div id="containerEducacional"></div>
+
+				</div>
+			</div>
+		</section>
+	</div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="mdAlunosMatriculados" tabindex="-1" role="dialog" aria-labelledby="mdAlunosMatriculadosLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="mdAlunosMatriculadosLabel">
+					<i class="fa fa-users"></i> &nbsp;&nbsp;<strong>Alunos Matriculados</strong>
+				</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<input type="hidden" id="cursoId" name="cursoId" />
+			<div class="modal-body" id="pAlunosMatriculados">
+
+			</div>
+			<div class="modal-footer">
+				<button type="submit" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal">
+					<i class="fa fa-times"></i> &nbsp;&nbsp;Fechar
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
 </div>
 
 @section CssSpecificVendor {
-		<link rel="stylesheet" href="~/assets/vendor/select2/css/select2.css" />
-		<link rel="stylesheet" href="~/assets/vendor/select2-bootstrap-theme/select2-bootstrap.min.css" />
-		<link href="~/assets/vendor/bootstrap-datepicker/css/bootstrap-datepicker3.css" rel="stylesheet" />
+	<link rel="stylesheet" href="~/assets/vendor/select2/css/select2.css" />
+	<link rel="stylesheet" href="~/assets/vendor/select2-bootstrap-theme/select2-bootstrap.min.css" />
+	<link href="~/assets/vendor/bootstrap-datepicker/css/bootstrap-datepicker3.css" rel="stylesheet" />
 }
 @section Scripts {
-		<script src="~/assets/vendor/highcharts/highcharts.js"></script>
-		<script src="~/assets/vendor/highcharts/modules/variable-pie.js"></script>
-		<script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
-		<script src="~/assets/vendor/select2/js/select2.js"></script>
-		<script src="~/assets/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
-		<script src="~/assets/vendor/bootstrap-datepicker/locales/bootstrap-datepicker.pt-BR.min.js"></script>
-		<script src="~/js/dahsboard.js"></script>
-		<script>
+	<script src="~/assets/vendor/highcharts/highcharts.js"></script>
+	<script src="~/assets/vendor/highcharts/modules/variable-pie.js"></script>
+	<script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
+	<script src="~/assets/vendor/select2/js/select2.js"></script>
+	<script src="~/assets/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+	<script src="~/assets/vendor/bootstrap-datepicker/locales/bootstrap-datepicker.pt-BR.min.js"></script>
+	<script src="~/js/dahsboard.js"></script>
+	<script>
 
 
 
@@ -1042,5 +1092,5 @@
 
 
 
-		</script>
+	</script>
 }

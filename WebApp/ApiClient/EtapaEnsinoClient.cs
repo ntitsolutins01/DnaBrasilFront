@@ -1,4 +1,5 @@
 ﻿using WebApp.Dto;
+using WebApp.Models;
 
 namespace WebApp.ApiClient
 {
@@ -84,6 +85,18 @@ namespace WebApp.ApiClient
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
                 $"{ResourceEtapaEnsino}/Localidade/{id}"));
             return Get<List<EtapaEnsinoDto>>(requestUrl);
+        }
+
+        /// <summary>
+        /// Inclusão de Estapa Ensino
+        /// </summary>
+        /// <param name="command">Objeto de inclusão de Etapa ENsino</param>
+        /// <returns>Lista de Estapa Ensino</returns>
+        public Task<long> CreateEtapaEnsino(AlunoModel.CreateUpdateEtapaEnsinoCommand command)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceEtapaEnsino}"));
+            return Post(requestUrl, command);
         }
 
         #endregion

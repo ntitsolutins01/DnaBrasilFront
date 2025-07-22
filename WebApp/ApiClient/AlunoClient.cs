@@ -276,7 +276,5 @@ namespace WebApp.ApiClient
                 $"{ResourceAlunos}/Habilitar/{alunoId}"));
             return Put(requestUrl, command);
         }
-
-        
     }
 }

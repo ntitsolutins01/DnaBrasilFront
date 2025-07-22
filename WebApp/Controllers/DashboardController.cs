@@ -47,6 +47,7 @@ namespace WebApp.Controllers
             var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentosAll(), "Id", "Nome", dashboard.FomentoId);
             var deficiencias = new SelectList(ApiClientFactory.Instance.GetDeficienciaAll().Where(x => x.Status), "Id", "Nome", dashboard.DeficienciaId);
             var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome", dashboard.Estado);
+            var tipoCurso = new SelectList(ApiClientFactory.Instance.GetTipoCursosAll(), "Id", "Nome");
 
             List<SelectListDto> list = new List<SelectListDto>
             {
@@ -80,7 +81,8 @@ namespace WebApp.Controllers
                 ListDeficiencias = deficiencias,
                 ListMunicipios = municipios!,
                 ListEtnias = etnias,
-                ListLocalidades = localidades!
+                ListLocalidades = localidades!,
+                ListTipoCursos = tipoCurso
             };
 
             model.Dashboard.StatusLaudos = new StatusLaudosDto();

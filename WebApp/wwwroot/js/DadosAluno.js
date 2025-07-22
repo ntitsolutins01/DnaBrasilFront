@@ -1,6 +1,8 @@
 ﻿var vm = new Vue({
     el: "#formDadosAluno",
     data: {
+        comboItems: [],
+        selectedItem: "",
         params: {
             cpf: "",
             email: "",
@@ -14,6 +16,8 @@
         var self = this;
         (function ($) {
             'use strict';
+
+            this.selectedItem = "Selecionar Etapa de Ensino";
 
             var formid = $('form')[1].id;
 
@@ -475,6 +479,25 @@
                         }
                     }
                 });
+
+                $("#formEtapaEnsino").validate({
+                    highlight: function (label) {
+                        $(label).closest('.form-group').removeClass('has-success').addClass('has-error');
+                    },
+                    success: function (label) {
+                        $(label).closest('.form-group').removeClass('has-error');
+                        label.remove();
+                    },
+                    errorPlacement: function (error, element) {
+                        var placement = element.closest('.input-group');
+                        if (!placement.get(0)) {
+                            placement = element;
+                        }
+                        if (error.text() !== '') {
+                            placement.after(error);
+                        }
+                    }
+                });
             }
 
             var datatableInit = function () {
@@ -512,6 +535,8 @@
                 });
 
             };
+
+
 
             $(function () {
                 datatableInit();
@@ -687,48 +712,35 @@
 
             $("#ddlModalidadeAluno").select2("val", "0");
         },
-        OnClickPossuiDeficiencia(radioButton) {
-            var self = this;
+        CreateEtapaEnsino(nome) {
 
-            self.params.possuiDeficiencia = radioButton
-
-            if (self.params.possuiDeficiencia) {
-
-                $("#divDeficiencia").show();
-
-            } else {
-
-                self.params.deficiencias = [];
-
-                $("#ddlDeficiencia").select2("val", "0");
-
-                $('#deficienciaDataTable').DataTable().destroy();
-
-                $('#deficienciaDataTable').DataTable().clear();
-
-                $("divDeficiencia").hide();
-
-            }
+            axios.post("CreateEtapaEnsino", {
+                nome: nome
+            }).then(response => {
+                if (response.data.length > 0) {
+                    var items = '<option value="">Selecionar Etapa Ensino</option>';
+                    $("#ddlEtapa").empty;
+                    $.each(data,
+                        function (i, row) {
+                            items += "<option value='" + row.value + "'>" + row.text + "</option>";
+                        });
+                    $("#ddlEtapa").html(items);
+                } else {
+                    Site.Notification("Aluno", "Etapas de Ensino não encontradas", "warning", 2);
+                }
+            }).catch(error => {
+                Site.Notification("Erro ao buscar e analisar dados", error.response.data, "error", 2);
+            });
         }
     }
 });
 
 var crud = {
-    DeleteModal: function (id) {
-        $('input[name="DadosAlunoId"]').attr('value', id);
-        $('#mdDeleteDadosAluno').modal('show');
-        vm.DeleteDadosAluno(id)
+    AddEtapaEnsino: function () {
+        $('#mdEtapaEnsino').modal('show');
     },
-    AddDeficiencia: function () {
-        vm.AddDeficiencia()
-    },
-    AddModalidadeAluno: function () {
-        vm.AddModalidadeAluno()
-    },
-    DeleteDeficiencia: function (id) {
-        vm.DeleteDeficiencia(id)
-    },
-    DeleteModalidadeAluno: function (id) {
-        vm.DeleteModalidadeAluno(id)
+    CreateEtapaEnsino: function () {
+        var nome = $("#nome").val();
+        vm.CreateEtapaEnsino(nome);
     }
 };
