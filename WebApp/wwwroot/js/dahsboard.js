@@ -164,7 +164,68 @@ var vm = new Vue({
 
                     self.ShowLoad(false, "pFiltro");
                 });
+
+                $("#ddlTipoCurso").change(function () {
+                    var tipoCursoId = $("#ddlTipoCurso").val();
+                    var url = "../Curso/GetCursosAllByTipoCursoId";
+
+                    $.getJSON(url,
+                        { id: tipoCursoId },
+                        function (data) {
+                            if (data.length > 0) {
+                                var items = '<option value="">Selecionar Curso</option>';
+                                $("#ddlCurso").empty();
+                                $.each(data,
+                                    function (i, row) {
+                                        items += "<option value='" + row.value + "'>" + row.text + "</option>";
+                                    });
+                                $("#ddlCurso").html(items);
+                            }
+                            else {
+                                new PNotify({
+                                    title: 'Curso',
+                                    text: 'Cursos não encontrados.',
+                                    type: 'warning'
+                                });
+                            }
+                        });
+                });
+
+                //triggered when modal is about to be shown
+                $('#mdAlunosMatriculados').on('show.bs.modal', function (e) {
+                    self.ShowLoad(true, "pAlunosMatriculados");
+
+                    //get data-id attribute of the clicked element
+                    var id = $("#ddlCurso").val();
+
+                    $("input[name='cursoId']").val(id);
+
+                    if (id === "") {
+                        Site.Notification("Catálogo de Curso", "Por favor selecione um curso", "warning");
+                    }
+
+                    var url = "../Curso/GetAlunosMatriculados";
+
+                    axios.get(url, {
+                        params: {
+                            id: id
+                        }
+                    }).then(result => {
+
+                        $("#mdAlunosMatriculados").find(".modal-body").html(result.data);
+                        self.ShowLoad(false, "pAlunosMatriculados");
+                    }).catch(error => {
+                        self.ShowLoad(false, "pAlunosMatriculados");
+                        Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
+
+                    });
+
+
+
+
+                });
             }
+
         }).apply(this, [jQuery]);
     },
     methods: {
@@ -190,6 +251,40 @@ var vm = new Vue({
         DeleteDashboard: function (id) {
             var url = "Dashboard/Delete/" + id;
             $("#deleteDashboardHref").prop("href", url);
+        },
+        GetPesquisaIndicadoresEad: function () {
+            var self = this;
+            self.ShowLoad(true, "pIndicadoresEad");
+
+            const obj = {
+                cursoId: $("#ddlCurso").val()
+            }
+
+            let axiosConfig = {
+                headers: {
+                    "Content-Type": 'application/json;charset=UTF-8',
+                    "Access-Control-Allow-Origin": "*"
+                }
+            };
+
+            axios.post("Dashboard/GetIndicadoresEadByFilter", obj, axiosConfig).then(result => {
+                var self = this;
+                self.ShowLoad(true, "pIndicadoresEad");
+
+                $("#cursosDisponiveisEad").text(result.data.dashboardEad.cursosDisponiveis);
+                $("#cursosEmAndamentoEad").text(result.data.dashboardEad.cursosEmAndamento);
+                $("#cursosFinalizadosEad").text(result.data.dashboardEad.cursosFinalizados);
+                $("#cadastrosMasculinosEad").text(result.data.dashboardEad.cadastrosMasculinos);
+                $("#cadastrosFemininosEad").text(result.data.dashboardEad.cadastrosFemininos);
+                $("#alunosCadastradosEad").text(result.data.dashboardEad.alunosCadastrados);
+
+                self.ShowLoad(false, "pIndicadoresEad");
+
+            }).catch(error => {
+                Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
+
+                self.ShowLoad(false, "pIndicadoresEad");
+            });
         },
         GetPesquisaDashboard: function () {
 

@@ -318,7 +318,7 @@
             icon = 'fa-file-pdf-o';
             colorClass = 'text-danger';
 
-            const caminho = "\\MaterialEAD" + material.split("\\MaterialEAD")[1];
+            const caminho = material;
             const url = caminho.replace(/\\/g, "/");
 
             lista.append(`

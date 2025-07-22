@@ -339,5 +339,23 @@ public class CursoController : BaseController
             return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = "Erro ao executar esta ação. Favor entrar em contato com o administrador do sistema." });
         }
     }
+
+    [HttpGet]
+    public ActionResult GetAlunosMatriculados(int id)
+    {
+        try
+        {
+            var alunos = ApiClientFactory.Instance.GetAlunosCursosByCursoId(id);
+
+            return PartialView("_AlunosMatriculados", new AlunoCursoCertificadoModel
+            {
+                AlunosCursos = alunos
+            });
+        }
+        catch (Exception ex)
+        {
+            return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = "Erro ao executar esta ação. Favor entrar em contato com o administrador do sistema." });
+        }
+    }
     #endregion
 }
