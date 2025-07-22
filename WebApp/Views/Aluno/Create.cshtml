@@ -162,10 +162,11 @@
 							</div>
 
 							<div class="col-sm-1">
-								<a type="button" class="ml-xs btn btn-success" href="#"  data-toggle="modal" data-target="#mdEtapaEnsino"
+								<button class="ml-xs btn btn-success"  data-toggle="modal" data-target="#mdEtapaEnsino"
 								   data-toggle="tooltip" data-placement="top" >
 									<i class="fa fa-plus"></i>
-								</a>
+								</button>
+								<a href="#" data-toggle="modal" data-target="#mdEtapa">etapa</a>
 							</div>
 							<label class="col-sm-1 control-label">Série <span class="required">*</span></label>
 							<div class="col-md-2">
@@ -389,6 +390,38 @@
 		</div>
 	</div>
 	<!-- Modal -->
+	<div class="modal fade" id="mdEtapa" tabindex="-1" role="dialog" aria-labelledby="mdEtapaLabel" aria-hidden="true">
+		<div class="modal-dialog modal-md" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="mdEtapaLabel">
+						<i class="fa fa-plus"></i> &nbsp;&nbsp;<strong>Nova Etapa de Ensino</strong>
+					</h5>
+				</div>
+
+				<div class="modal-body">
+					<form id="formEtapaEnsino" class="form-horizontal">
+						<div class="modal-body">
+							<div class="form-group mb-lg">
+								<label class="col-sm-3 control-label">Nome da Etapa</label><span class="required">*</span>
+								<div class="col-sm-9">
+									<input type="text" id="etapa" name="etapa" class="form-control" />
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-remove"></i> &nbsp;&nbsp;Fechar</button>
+							<button type="button" href='javascript:(crud.CreateEtapaEnsino())' class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-remove"></i> &nbsp;&nbsp;Fechar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Modal -->
 	<div class="modal fade" id="mdEtapaEnsino" tabindex="-1" role="dialog" aria-labelledby="mdEtapaEnsinoLabel" aria-hidden="true">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
@@ -399,16 +432,19 @@
 				</div>
 				<form id="formEtapaEnsino" class="form-horizontal">
 					<div class="modal-body">
-						<div class="form-group mb-lg">
-							<label class="col-sm-3 control-label">Nome da Etapa</label><span class="required">*</span>
-							<div class="col-sm-9">
-								<input type="text" id="etapa" name="etapa" class="form-control" />
+						<div class="form-group row">
+							
+							<label class="col-sm-2 control-label text-sm-right pt-2">Etapa de Ensino <span class="required">*</span></label>
+							<div class="col-sm-4">
+								<input type="text" name="nomeEtapaEnsino" id="nomeEtapaEnsino" class="form-control"
+								       maxlength="80" 
+								       title="Por favor informe a Etapa de Ensino." required />
 							</div>
 						</div>
 					</div>
 					<div class="modal-footer">
 						<button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-remove"></i> &nbsp;&nbsp;Fechar</button>
-						<button type="button" href='javascript:(crud.CreateEtapaEnsino())' class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
+						<button type="button" onclick='javascript:(crud.CreateEtapaEnsino());' class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
 					</div>
 				</form>
 			</div>

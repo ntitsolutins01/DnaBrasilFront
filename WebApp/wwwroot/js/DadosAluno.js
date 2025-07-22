@@ -712,25 +712,29 @@
 
             $("#ddlModalidadeAluno").select2("val", "0");
         },
-        CreateEtapaEnsino(nome) {
-
-            axios.post("CreateEtapaEnsino", {
-                nome: nome
-            }).then(response => {
-                if (response.data.length > 0) {
-                    var items = '<option value="">Selecionar Etapa Ensino</option>';
-                    $("#ddlEtapa").empty;
-                    $.each(data,
-                        function (i, row) {
-                            items += "<option value='" + row.value + "'>" + row.text + "</option>";
+        CreateEtapaEnsino() {
+            var nome = $("#nomeEtapaEnsino").val();
+            var url = "CreateEtapaEnsino";
+            $.getJSON(url,
+                { nome: nome },
+                function (data) {
+                    if (data.length > 0) {
+                        var items = '<option value="">Selecionar Etapa Ensino</option>';
+                        $("#ddlEtapa").empty;
+                        $.each(data,
+                            function (i, row) {
+                                items += "<option value='" + row.value + "'>" + row.text + "</option>";
+                            });
+                        $("#ddlEtapa").html(items);
+                    }
+                    else {
+                        new PNotify({
+                            title: 'Curso',
+                            text: 'Cursos não encontrados.',
+                            type: 'warning'
                         });
-                    $("#ddlEtapa").html(items);
-                } else {
-                    Site.Notification("Aluno", "Etapas de Ensino não encontradas", "warning", 2);
-                }
-            }).catch(error => {
-                Site.Notification("Erro ao buscar e analisar dados", error.response.data, "error", 2);
-            });
+                    }
+                });
         }
     }
 });
@@ -740,7 +744,7 @@ var crud = {
         $('#mdEtapaEnsino').modal('show');
     },
     CreateEtapaEnsino: function () {
-        var nome = $("#nome").val();
-        vm.CreateEtapaEnsino(nome);
+        
+        vm.CreateEtapaEnsino();
     }
 };

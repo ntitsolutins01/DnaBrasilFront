@@ -2022,13 +2022,13 @@ namespace WebApp.Controllers
         /// <returns>Retorna mensagem de inclusao através do parametro crud</returns>
         [HttpPost]
         [ClaimsAuthorize(ClaimType.Aluno, Claim.Incluir)]
-        public async Task<JsonResult> CreateEtapaEnsino(IFormCollection collection)
+        public async Task<JsonResult> CreateEtapaEnsino(string nome)
         {
             try
             {
                 var command = new AlunoModel.CreateUpdateEtapaEnsinoCommand
                 {
-                    Nome = collection["etapa"].ToString()
+                    Nome = nome
                 };
 
                 await ApiClientFactory.Instance.CreateEtapaEnsino(command);
