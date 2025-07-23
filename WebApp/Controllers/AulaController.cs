@@ -25,7 +25,6 @@ public class AulaController : BaseController
     private readonly IOptions<UrlSettings> _appSettings;
     private readonly IWebHostEnvironment _host;
     private readonly ILog _logger;
-    private readonly UrlSettings _settings;
 
     #endregion
 
@@ -39,13 +38,12 @@ public class AulaController : BaseController
     /// <param name="logger">Log de mensagens da aplicação</param>
     /// <param name="settings">Configurações parametrizadas do sistema</param>
     public AulaController(IOptions<UrlSettings> appSettings, IWebHostEnvironment host,
-        ILog logger, UrlSettings settings)
+        ILog logger)
     {
         _appSettings = appSettings;
         ApplicationSettings.WebApiUrl = _appSettings.Value.WebApiBaseUrl;
         _host = host;
         _logger = logger;
-        _settings = settings;
     }
     #endregion
 
@@ -195,9 +193,9 @@ public class AulaController : BaseController
     {
         try
         {
-            var uriMaterial = _settings.BloobUrl + collection["material"];//new Uri(collection["material"].ToString()); //transforma em Uri String pra salvar no banco 
+            var uriMaterial = collection["material"];//new Uri(collection["material"].ToString()); //transforma em Uri String pra salvar no banco 
             var nomeMaterial = collection["nomeMaterial"].ToString(); //Path.GetFileName(uriMaterial.LocalPath);
-            var uriVideo = _settings.BloobUrl + collection["video"]; //new Uri(collection["video"].ToString());
+            var uriVideo = collection["video"]; //new Uri(collection["video"].ToString());
             var nomeVideo = collection["nomeVideo"].ToString(); //Path.GetFileName(uriVideo.LocalPath);
 
             AulaModel.CreateUpdateAulaCommand command;
@@ -338,9 +336,17 @@ public class AulaController : BaseController
     /// </summary>
     /// <param name="id">Identificador de Aula</param>
     /// <returns>Retorna a Aula</returns>
-    public Task<AulaDto> GetAulaById(int id)
+    public Task<AulaDto> GetAulaById(int id, bool? bloob = null)
     {
         var result = ApiClientFactory.Instance.GetAulaById(id);
+
+        if (bloob != null && (bool)bloob)
+        {
+            result.Material = _appSettings.Value.BloobUrl + result.Material;
+            result.Video = _appSettings.Value.BloobUrl + result.Video;
+        }
+
+
         var professores = result.ProfessorId == null ? null : new SelectList(ApiClientFactory.Instance.GetUsuarioAll().Where(x => x.Perfil.Id == (int)EnumPerfil.Professor), "Id", "Nome", result.ProfessorId);
         result.ListProfessores = professores;
 

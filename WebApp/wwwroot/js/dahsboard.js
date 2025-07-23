@@ -173,7 +173,7 @@ var vm = new Vue({
                         { id: tipoCursoId },
                         function (data) {
                             if (data.length > 0) {
-                                var items = '<option value="">Selecionar Curso</option>';
+                                var items = '<option value="">Selecionar Curso</option><option value="0">Todos</option>';
                                 $("#ddlCurso").empty();
                                 $.each(data,
                                     function (i, row) {

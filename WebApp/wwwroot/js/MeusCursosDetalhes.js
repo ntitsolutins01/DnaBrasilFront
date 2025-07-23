@@ -260,7 +260,7 @@
         GetAulaById: function (id) {
             var self = this;
             vm.AtualizarProgresso();
-            axios.get("../../Aula/GetAulaById?id=" + id)
+            axios.get("../../Aula/GetAulaById?id=" + id + "&bloob=true")
                 .then(response => {
                     self.ListarMateriais();
                     self.aula = response.data;

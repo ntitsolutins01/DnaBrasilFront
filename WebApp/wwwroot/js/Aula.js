@@ -7,12 +7,10 @@ var vm = new Vue({
             Titulo: "",
             Descricao: "",
             Status: true,
+            Material: "",
+            NomeMaterial: "",
             Video: "",
-            Pdf: "",
-            //Material: "",
-            //NomeMaterial: "",
-            //Video: "",
-            //NomeVideo: ""
+            NomeVideo: ""
         }
     },
     watch: {
@@ -195,13 +193,13 @@ var vm = new Vue({
                 Titulo: "",
                 Descricao: "",
                 Status: true,
+                NomeVideo: "",
                 Video: "",
                 Material: "",
                 NomeMaterial: ""
             };
 
             axios.get("Aula/GetAulaById/?id=" + id).then(result => {
-                //console.log('Dados retornados:', result.data);
 
                 self.$nextTick(() => {
                     self.editDto = {
@@ -209,26 +207,12 @@ var vm = new Vue({
                         Titulo: result.data.titulo,
                         Descricao: result.data.descricao,
                         Status: result.data.status,
+                        NomeVideo: result.data.nomeVideo,
                         Video: result.data.video,
+                        NomeMaterial: result.data.nomeMaterial,
                         Material: result.data.material,
                         Ordem: result.data.ordem
-                        //Material: result.data.material && result.data.material.includes("\\Aulas")
-                        //    ? "\\Aulas" + result.data.imagem.split("\\Aulas")[1]
-                        //    : null,
-                        //NomeMaterial: result.data.nomeMaterial,
-                        //Video: result.data.video && result.data.video.includes("\\Aulas")
-                        //    ? "\\Aulas" + result.data.video.split("\\Aulas")[1]
-                        //    : null,
-                        //NomeVideo: result.data.nomeVideo
                     };
-
-                    //self.$nextTick(() => {
-                    //    $("#descricao").val(result.data.descricao || '');
-                    //    $("#video").val(result.data.video || '');
-
-                    //    $("#video")[0].dispatchEvent(new Event('input'));
-                    //    $("#descricao")[0].dispatchEvent(new Event('input'));
-                    //});
                 });
 
                 if (result.data.listProfessores && result.data.listProfessores.length > 0) {

@@ -92,6 +92,17 @@ builder.Services.Configure<DataProtectionTokenProviderOptions>(options =>
 
 builder.Services.AddTransient<IEmailSender, EmailService>();
 
+// Habilita CORS para todas as origens
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+    });
+});
+
 // Cria um grupo de pol�ticas de administradores para requisitos de seguran�a de alto n�vel
 builder.Services.AddAuthorization(o =>
 {
@@ -254,6 +265,9 @@ app.UseRouting();
 app.UseCookiePolicy();
 
 app.UseAuthorization();
+
+// Ativa o CORS
+app.UseCors("AllowAll");
 
 app.UseStaticFiles(new StaticFileOptions
 {
