@@ -1,3 +1,5 @@
+@using System.Security.Claims
+@using WebApp.Enumerators
 @model AlunoModel
 
 @{
@@ -539,9 +541,22 @@
 						<label class="col-sm-3 control-label text-sm-right pt-2">Matrícula </label>
 						<div class="col-sm-4">
 							<input type="text" id="matricula" name="matricula" class="form-control" readonly
-								   title="Por favor informe a matrícula do aluno" :value="editDto.Id" />
+							       title="Por favor informe a matrícula do aluno" :value="editDto.Id" />
 						</div>
 					</div>
+					@{
+						var perfil = ((ClaimsIdentity)User.Identity).FindFirst(ClaimTypes.Role)?.Value;
+						if (perfil == EnumPerfil.Administrador.GetDescription())
+						{
+							<div class="form-group row">
+								<label class="col-sm-3 control-label text-sm-right pt-2">Lote Matrícula </label>
+								<div class="col-sm-8">
+									<textarea type="text" id="lote" name="lote" class="form-control" title="Por favor informe as matrículas"></textarea>
+								</div>
+							</div>
+						}
+					}
+					
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-remove"></i> &nbsp;&nbsp;Cancelar</button>
