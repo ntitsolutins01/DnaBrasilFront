@@ -11,7 +11,6 @@ using iText.Layout;
 using iText.Layout.Element;
 using iText.Layout.Properties;
 using log4net;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
