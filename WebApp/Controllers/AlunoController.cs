@@ -11,7 +11,6 @@ using iText.Layout;
 using iText.Layout.Element;
 using iText.Layout.Properties;
 using log4net;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -109,7 +108,7 @@ namespace WebApp.Controllers
                     FomentoId = collection["ddlFomento"].ToString(),
                     Estado = collection["ddlEstado"].ToString(),
                     MunicipioId = collection["ddlMunicipio"].ToString(),
-                    LocalidadeId = collection["ddlLocalidade"].ToString() == "" ? usu.LocalidadeId : collection["ddlLocalidade"].ToString(),
+                    LocalidadeId = collection["ddlLocalidade"].ToString(),
                     ProfissionalId = collection["ddlProfissional"].ToString(),
                     DeficienciaId = collection["ddlDeficiencia"].ToString(),
                     Etnia = collection["ddlEtnia"].ToString(),
@@ -569,7 +568,8 @@ namespace WebApp.Controllers
                         Url = filePathDocumento
                     });
                 }
-                await ApiClientFactory.Instance.CreateDocumentosAluno(list);
+
+                if (list.Count>0) await ApiClientFactory.Instance.CreateDocumentosAluno(list);
 
                 return RedirectToAction(nameof(Index), new { id = alunoId, crud = (int)EnumCrud.Created });
 
