@@ -197,18 +197,24 @@ var vm = new Vue({
 
                     //get data-id attribute of the clicked element
                     var id = $("#ddlCurso").val();
+                    var idTipoCurso = $("#ddlTipoCurso").val();
 
                     $("input[name='cursoId']").val(id);
 
-                    if (id === "") {
-                        Site.Notification("Catálogo de Curso", "Por favor selecione um curso", "warning");
-                    }
+                    //if (id === "" && idTipoCurso != "") {
+                    //    Site.Notification("Catálogo de Curso", "Por favor selecione um curso", "warning", 1);
+                    //}
+
+                    //if (idTipoCurso === "") {
+                    //    Site.Notification("Catálogo de Curso", "Por favor selecione um tipo de curso", "warning", 1);
+                    //}
 
                     var url = "../Curso/GetAlunosMatriculados";
 
                     axios.get(url, {
                         params: {
-                            id: id
+                            id: id,
+                            idTipoCurso: idTipoCurso
                         }
                     }).then(result => {
 

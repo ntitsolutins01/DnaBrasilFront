@@ -342,11 +342,11 @@ public class CursoController : BaseController
     }
 
     [HttpGet]
-    public ActionResult GetAlunosMatriculados(int id)
+    public ActionResult GetAlunosMatriculados(int id, int idTipoCurso)
     {
         try
         {
-            var alunos = ApiClientFactory.Instance.GetAlunosCursosByCursoId(id);
+            var alunos = ApiClientFactory.Instance.GetAlunosCursosByCursoId(id, idTipoCurso);
 
             return PartialView("_AlunosMatriculados", new AlunoCursoCertificadoModel
             {
