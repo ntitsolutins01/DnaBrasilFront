@@ -53,13 +53,13 @@
                                         <div id="tabFrente" class="tab-pane active">
                                             <div class="form-group mt-3">
                                                 <div class="certificate-container">
-                                                    @{
+                                                    @* @{
                                                         var imagemFrente = Url.Content("/Certificados/" + Model.Certificado.ImagemFrente);
                                                     }
                                                     <div class="summernote" id="summernoteFrente" name="HtmlFrente" data-plugin-summernote
                                                          data-background="@imagemFrente">
                                                         @Html.Raw(Model.Certificado.HtmlFrente ?? "Digite o conteúdo da frente do certificado...")
-                                                    </div>
+                                                    </div> *@
                                                 </div>
                                             </div>
                                         </div>
@@ -68,7 +68,7 @@
                                             <div class="form-group mt-3">
                                                 <div class="certificate-container">
                                                     <div class="summernote" id="summernoteVerso" name="HtmlVerso" data-plugin-summernote>
-                                                        @Html.Raw(Model.Certificado.HtmlVerso ?? "Digite o conteúdo da frente do certificado...")
+                                                        @* @Html.Raw(Model.Certificado.HtmlVerso ?? "Digite o conteúdo da frente do certificado...") *@
                                                     </div>
                                                 </div>
                                             </div>

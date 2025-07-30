@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using WebApp.Authorization;
 using WebApp.Configuration;
 using WebApp.Dto;
@@ -52,10 +53,12 @@ namespace WebApp.Controllers
             SetNotifyMessage(notify, message);
             SetCrudMessage(crud);
             var response = ApiClientFactory.Instance.GetCertificadosAll() ?? new List<CertificadoDto>();
+            var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentosAll(), "Id", "Nome");
 
             return View(new CertificadoModel()
             {
-                Certificados = response
+                Certificados = response,
+                ListFomentos = fomentos
             });
         }
 
@@ -89,7 +92,7 @@ namespace WebApp.Controllers
         /// <summary>
         ///  Ação de Inclusão de Certificado
         /// </summary>
-        /// <param name="collection">Coleção de dados para inclusao de Curso</param>
+        /// <param name="collection">Coleção de dados para inclusao de Certificado</param>
         /// <returns>Retorna mensagem de inclusao através do parametro crud</returns>
         [ClaimsAuthorize(ClaimType.Certificado, Identity.Claim.Consultar)]
         [HttpPost]
@@ -100,8 +103,6 @@ namespace WebApp.Controllers
                 var command = new CertificadoModel.CreateCertificadoCommand
                 {
                     FomentoId = Convert.ToInt32(collection["ddlFomento"].ToString()),
-                    HtmlFrente = collection["HtmlFrente"].ToString(),
-                    HtmlVerso = collection["HtmlVerso"].ToString(),
                     Status = collection["Status"].ToString().ToLower() == "on"
                 };
 
@@ -110,34 +111,25 @@ namespace WebApp.Controllers
                 if (!Directory.Exists(certificadosPath))
                     Directory.CreateDirectory(certificadosPath);
 
-                string? filePathFrente = null;
-                string? fileNameFrente = null;
-                string? filePathVerso = null;
-                string? fileNameVerso = null;
+                string? filePath;
+                string? fileName;
+                string extension = ".pdf";
+                string newFileName = Path.ChangeExtension(
+                    Guid.NewGuid().ToString(),
+                    extension
+                );
 
-                for (int i = 0; i < collection.Files.Count; i++)
+                foreach (var file in collection.Files)
                 {
-                    var file = collection.Files[i];
                     if (file.Length <= 0) continue;
+                    fileName = Path.GetFileName(collection.Files[0].FileName);
+                    filePath = Path.Combine(_host.WebRootPath, $"Certificados\\{newFileName}");
 
-                    string extension = ".jpg";
-                    string newFileName = Path.ChangeExtension(Guid.NewGuid().ToString(), extension);
-                    string filePath = Path.Combine(certificadosPath, newFileName);
+                    if (!Directory.Exists(Path.Combine(_host.WebRootPath, $"Certificados")))
+                        Directory.CreateDirectory(Path.Combine(_host.WebRootPath, $"Certificados"));
 
-                    if (i == 0)
-                    {
-                        fileNameFrente = Path.GetFileName(file.FileName);
-                        filePathFrente = filePath;
-                        command.ImagemFrente = filePathFrente;
-                        command.NomeImagemFrente = fileNameFrente;
-                    }
-                    else if (i == 1)
-                    {
-                        fileNameVerso = Path.GetFileName(file.FileName);
-                        filePathVerso = filePath;
-                        command.ImagemVerso = filePathVerso;
-                        command.NomeImagemVerso = fileNameVerso;
-                    }
+                    command.Url = filePath;
+                    command.Nome = fileName;
 
                     using Stream fileStream = new FileStream(filePath, FileMode.Create);
                     await file.CopyToAsync(fileStream);
@@ -153,30 +145,30 @@ namespace WebApp.Controllers
             }
         }
 
-        /// <summary>
-        /// Tela para Alteração de Certificado
-        /// </summary>
-        /// <param name="id">Identificador de Certificado</param>
-        /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
-        /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
-        /// <param name="message">Retorna mensagem de alteração através do parametro crud</param>
-        /// <returns></returns>
-        [ClaimsAuthorize(ClaimType.Certificado, Identity.Claim.Alterar)]
-        public ActionResult Edit(int id, int? crud, int? notify, string message = null)
-        {
-            SetNotifyMessage(notify, message);
-            SetCrudMessage(crud);
+        ///// <summary>
+        ///// Tela para Alteração de Certificado
+        ///// </summary>
+        ///// <param name="id">Identificador de Certificado</param>
+        ///// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
+        ///// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
+        ///// <param name="message">Retorna mensagem de alteração através do parametro crud</param>
+        ///// <returns></returns>
+        //[ClaimsAuthorize(ClaimType.Certificado, Identity.Claim.Alterar)]
+        //public ActionResult Edit(int id, int? crud, int? notify, string message = null)
+        //{
+        //    SetNotifyMessage(notify, message);
+        //    SetCrudMessage(crud);
 
-            var certificado = ApiClientFactory.Instance.GetCertificadoById(id);
-            var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentosAll(), "Id", "Nome", certificado.FomentoId);
+        //    var certificado = ApiClientFactory.Instance.GetCertificadoById(id);
+        //    var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentosAll(), "Id", "Nome", certificado.FomentoId);
 
-            var model = new CertificadoModel
-            {
-                Certificado = certificado,
-                ListFomentos = fomentos
-            };
-            return View(model);
-        }
+        //    var model = new CertificadoModel
+        //    {
+        //        Certificado = certificado,
+        //        ListFomentos = fomentos
+        //    };
+        //    return View(model);
+        //}
 
         /// <summary>
         /// Ação de Alteração de Certificado
@@ -186,16 +178,49 @@ namespace WebApp.Controllers
         /// <returns>Retorna mensagem de alteração através do parametro crud</returns>
         [ClaimsAuthorize(ClaimType.Certificado, Identity.Claim.Alterar)]
         [HttpPost]
-        public async Task<ActionResult> Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> Edit(IFormCollection collection)
         {
             var command = new CertificadoModel.UpdateCertificadoCommand
             {
-                Id = id,
-                FomentoId = Convert.ToInt32(collection["ddlFomento"].ToString()),
-                HtmlFrente = collection["HtmlFrente"].ToString(),
-                HtmlVerso = collection["HtmlVerso"].ToString(),
-                Status = collection["Status"].ToString() == "" ? false : true
+                Id = Convert.ToInt32(collection["editCertificadoId"]),
+                FomentoId = Convert.ToInt32(collection["ddlFomento"]),
+                Status = collection["editStatus"].ToString() == "" ? false : true
             };
+
+            string? filePath;
+            string? fileName;
+            string extension = ".pdf";
+            string newFileName = Path.ChangeExtension(
+                Guid.NewGuid().ToString(),
+                extension
+            );
+
+            var certificado = ApiClientFactory.Instance.GetCertificadoById(command.Id);
+
+            if (!certificado.Url.IsNullOrEmpty())
+                System.IO.File.Delete(certificado.Url);
+
+            if (!collection.Files.Any())
+            {
+                command.Url = certificado.Url;
+                command.Nome = certificado.Nome;
+            }
+
+            foreach (var file in collection.Files)
+            {
+                if (file.Length <= 0) continue;
+                fileName = Path.GetFileName(collection.Files[0].FileName);
+                filePath = Path.Combine(_host.WebRootPath, $"Certificados\\{newFileName}");
+
+                if (!Directory.Exists(Path.Combine(_host.WebRootPath, $"Certificados")))
+                    Directory.CreateDirectory(Path.Combine(_host.WebRootPath, $"Certificados"));
+
+                command.Url = filePath;
+                command.Nome = fileName;
+
+                using Stream fileStream = new FileStream(filePath, FileMode.Create);
+                await file.CopyToAsync(fileStream);
+            }
 
             await ApiClientFactory.Instance.UpdateCertificado(command.Id, command);
 
@@ -235,6 +260,8 @@ namespace WebApp.Controllers
         public Task<CertificadoDto> GetCertificadoById(int id)
         {
             var result = ApiClientFactory.Instance.GetCertificadoById(id);
+            var fomentos = result.FomentoId == null ? null : new SelectList(ApiClientFactory.Instance.GetFomentosAll(), "Id", "Nome", result.FomentoId);
+            result.ListFomentos = fomentos;
 
             return Task.FromResult(result);
         }

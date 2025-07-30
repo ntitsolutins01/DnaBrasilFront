@@ -158,14 +158,14 @@
 											                <div class="widget-summary">
 												                <div class="widget-summary-col widget-summary-col-icon">
 													                <div class="summary-icon">
-														                @if (item.ImagemFrente != null)
+														                @* @if (item.ImagemFrente != null)
 														                {
 															                <img class="img-responsive img-thumbnail" src="~/Certificados/@Html.DisplayFor(modelItem => item.ImagemFrente)" alt="Certificado">
 														                }
 														                else
 														                {
 															                <i class="fa fa-certificate fa-4x"></i>
-														                }
+														                } *@
 													                </div>
 													                <div class="mt-sm text-center">
 														                <span class="label label-success">Concluído</span>
@@ -174,7 +174,7 @@
 
 												                <div class="widget-summary-col">
 													                <div class="summary">
-														                <h4 class="title">@item.NomeImagemFrente</h4>
+														                @* <h4 class="title">@item.NomeImagemFrente</h4> *@
 														                <p class="text-success"><i class="fa fa-check-circle"></i> Certificado emitido</p>
 													                </div>
 
