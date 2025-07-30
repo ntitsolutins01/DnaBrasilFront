@@ -245,7 +245,7 @@ namespace WebApp.Controllers
         }
 
         [ClaimsAuthorize(ClaimType.Laudo, Claim.Incluir)]
-        public async Task<ActionResult> Create(int? crud, int? notify, string message = null)
+        public async Task<ActionResult> Create(int? crud, int? notify, bool? aluno = null, string message = null)
         {
             try
             {
@@ -254,9 +254,20 @@ namespace WebApp.Controllers
 
                 var usuario = User.Identity.Name;
 
-                var usu = await ApiClientFactory.Instance.GetUsuarioByEmail(usuario);
+                UsuarioDto usu;
+                AlunoDto aln = null;
+                if (aluno != null && (bool)aluno)
+                {
+                    aln = await ApiClientFactory.Instance.GetAlunoById(Convert.ToInt32(usuario));
+                    usu = await ApiClientFactory.Instance.GetUsuarioByEmail(aln.Email);
+                }
+                else
+                {
+                    usu = await ApiClientFactory.Instance.GetUsuarioByEmail(usuario);
+                }
+                    
 
-                var questionarioVocacional =
+                    var questionarioVocacional =
                     ApiClientFactory.Instance.GetQuestionarioByTipoLaudo((int)EnumTipoLaudo.Vocacional).OrderBy(o => o.Questao).ToList();
                 var questionarioQualidadeVida =
                     ApiClientFactory.Instance.GetQuestionarioByTipoLaudo((int)EnumTipoLaudo.QualidadeVida).OrderBy(o => o.Questao).ToList();
@@ -291,9 +302,22 @@ namespace WebApp.Controllers
 
                 if (usu.LocalidadeId != null)
                 {
-                    var resultAlunos = ApiClientFactory.Instance
-                        .GetAlunosByLocalidadeId(Convert.ToInt32(usu.LocalidadeId))
-                        .Where(x => x.PossuiLaudoFinalizado);
+                    IEnumerable<AlunoIndexDto> resultAlunos;
+
+                    if (aluno != null && (bool)aluno)
+                    {
+                        resultAlunos = ApiClientFactory.Instance
+                            .GetAlunosByLocalidadeId(Convert.ToInt32(usu.LocalidadeId))
+                            .Where(x => aln != null && x.Id == aln.Id);
+
+                    }
+                    else
+                    {
+                        resultAlunos = ApiClientFactory.Instance
+                            .GetAlunosByLocalidadeId(Convert.ToInt32(usu.LocalidadeId))
+                            .Where(x=>x.PossuiLaudoFinalizado);
+                    }
+                        
 
                     alunos = new SelectList(resultAlunos, "Id", "Nome");
 
@@ -314,7 +338,8 @@ namespace WebApp.Controllers
                     ListMunicipios = municipios!,
                     ListLocalidades = localidades!,
                     ListAlunos = alunos!,
-                    ListProfissionais = profissionais!
+                    ListProfissionais = profissionais!,
+                    IdPerfil = usu.Perfil.Id
                 });
 
             }
