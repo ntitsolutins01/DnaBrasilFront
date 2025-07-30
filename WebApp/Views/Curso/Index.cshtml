@@ -60,6 +60,13 @@
                                         <td class="text-center"><span class="label label-danger" style="display: block;">INATIVO</span></td>
                                     }
                                     <td class="actions text-center">
+                                        <a data-toggle="tooltip" data-placement="top" title="Organizar"
+                                           href="javascript:void(0);"
+                                           onclick="crud.PlanModal(@item.Id)"
+                                           class="on-default plan-row" style='color: #898989'>
+                                            <i class="fa fa-align-justify"></i>
+                                        </a>
+
                                         <a data-toggle="tooltip" data-placement="top" title="Editar"
                                            href="javascript:void(0);"
                                            onclick="crud.EditModal(@item.Id)"
@@ -196,6 +203,37 @@
             </div>
         </div>
     </div>
+    <!-- Modal Organizar Módulos -->
+    <div class="modal fade" id="mdPlanCurso" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fa fa-pencil"></i> Organizar Estrutura do Curso
+                    </h5>
+                </div>
+                <input type="hidden" name="cursoId" :value="editDto.Id" />
+                <input type="hidden" name="novaOrdem" value="" />
+
+                <div class="modal-body">
+                    <div class="loading-overlay" style="display: none;">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="sr-only">Carregando...</span>
+                        </div>
+                    </div>
+
+                    <!-- O nome será carregado dinamicamente aqui -->
+                    <div id="nestable-container"></div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        <i class="fa fa-times"></i> Fechar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section CssSpecificVendor {
@@ -205,7 +243,6 @@
     <link rel="stylesheet" href="~/assets/vendor/datatables/media/css/dataTables.bootstrap4.css" />
 }
 @section Scripts {
-    <script src="~/assets/vendor/bootstrap-fileupload/bootstrap-fileupload.min.js"></script>
     <script src="~/assets/vendor/select2/js/select2.js"></script>
     <script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
     <script src="~/assets/vendor/jquery-mask/jquery.mask.js"></script>
@@ -213,6 +250,7 @@
     <script src="~/assets/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
     <script src="~/assets/vendor/datatables/media/js/dataTables.bootstrap4.min.js"></script>
     <script src="~/js/formatTable.js"></script>
+    <script src="~/assets/vendor/jquery-nestable/jquery-nestable.js"></script>
     <script src="~/js/curso.js"></script>
 
     <script>

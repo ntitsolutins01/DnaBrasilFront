@@ -1,3 +1,21 @@
+var crud = {
+    DeleteModal: function (id) {
+        $('input[name="deleteCursoId"]').val(id);
+        $('#mdDeleteCurso').modal('show');
+        vm.DeleteCurso(id);
+    },
+    EditModal: function (id) {
+        $('input[name="editCursoId"]').val(id);
+        $('#mdEditCurso').modal('show');
+        vm.EditCurso(id);
+    },
+    PlanModal: function (id) {
+        $('input[name="editCursoId"]').val(id);
+        $('#mdPlanCurso').modal('show');
+        vm.PlanCurso(id);
+    }
+};
+
 var vm = new Vue({
     el: "#vCurso",
     data: {
@@ -116,21 +134,122 @@ var vm = new Vue({
                 Site.Notification("Erro ao realizar Upload", "Somente arquivos JPG/JPEG e PNG são permitidos.", "error", 2);
                 
             }   
-        }
+        },
+        PlanCurso: function (id) {
+            this.editDto.Id = id;
+            this.LoadEstruturaCurso(id);
+        },
+        LoadEstruturaCurso: function (id) {
+            var self = this;
+            $('#nestable-container').html('');
+            $('.loading-overlay').show();
 
+            $.ajax({
+                url: 'Curso/CarregarEstrutura',
+                type: 'GET',
+                data: { cursoId: id },
+                success: function (response) {
+                    self.$nextTick(() => {
+                        $('#nestable-container').html(response);
+                        self.InitializeNestable();
+                    });
+                },
+                complete: function () {
+                    $('.loading-overlay').hide();
+                }
+            });
+        },
+        InitializeNestable: function () {
+            var self = this;
+
+            if ($('#nestable').data('nestable')) {
+                $('#nestable').nestable('destroy');
+            }
+
+            $('#nestable').nestable({
+                maxDepth: 1,
+                group: 1
+            }).on('change', function (e) {
+                const serialized = $(this).nestable('serialize');
+                self.novaOrdem = JSON.stringify(serialized);
+                self.AtualizarNumeracaoVisual(serialized);
+                self.AtualizarOrdem(serialized);
+            });
+
+            this.AtualizarNumeracaoVisual($('#nestable').nestable('serialize'));
+        },
+        AtualizarOrdem: async function (items) {
+            const requests = [];
+
+            items.forEach(async (moduloEad, index) => {
+                try {
+                    const response = await axios.get("ModuloEad/GetModuloEadById/?id=" + moduloEad.id.replace('moduloEad_', ''));
+                    const moduloEadData = {
+                        Id: response.data.id,
+                        Titulo: response.data.titulo,
+                        CursoId: response.data.cursoId,
+                        Descricao: response.data.descricao,
+                        Status: response.data.status,
+                        Ordem: index + 1
+                    };
+
+                    requests.push(
+                        axios.post(`/ModuloEad/Order/${moduloEadData.Id}`, moduloEadData, {
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                            }
+                        })
+                    );
+
+                } catch (error) {
+                    console.error('Erro ao buscar módulo ead:', error);
+                }
+            });
+
+            try {
+                const responses = await Promise.all(requests);
+                const allSuccess = responses.every(r => r.data.success);
+
+                if (allSuccess) {
+                    new PNotify({
+                        title: 'Módulo Ead',
+                        text: 'Ordem alterada com sucesso!',
+                        type: 'success'
+                    });
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                toastr.error('Erro ao atualizar ordem');
+            }
+        },
+        AtualizarNumeracaoVisual: function (items) {
+            items.forEach((modulo, modIndex) => {
+                const moduloNumber = modIndex + 1;
+                $(`[data-id="${modulo.id}"] .position-badge`).text(moduloNumber);
+
+                if (modulo.children) {
+                    modulo.children.forEach((moduloEad, moduloEadIndex) => {
+                        const moduloEadNumber = moduloEadIndex + 1;
+                        $(`[data-id="${moduloEad.id}"] .position-badge`).text(`${moduloNumber}.${moduloEadNumber}`);
+                    });
+                }
+            });
+        },
+        AtualizarNumeracaoVisual: function (items) {
+            this.$nextTick(() => {
+                items.forEach((modulo, modIndex) => {
+                    const moduloNumber = modIndex + 1;
+                    $(`[data-id="${modulo.id}"] .position-badge`).text(moduloNumber);
+
+                    if (modulo.children) {
+                        modulo.children.forEach((moduloEad, moduloEadIndex) => {
+                            const moduloEadNumber = moduloEadIndex + 1;
+                            $(`[data-id="${moduloEad.id}"] .position-badge`).text(`${moduloNumber}.${moduloEadNumber}`);
+                        });
+                    }
+                });
+            });
+        }
     }
 });
-
-var crud = {
-    DeleteModal: function (id) {
-        $('input[name="deleteCursoId"]').val(id);
-        $('#mdDeleteCurso').modal('show');
-        vm.DeleteCurso(id);
-    },
-    EditModal: function (id) {
-        $('input[name="editCursoId"]').val(id);
-        $('#mdEditCurso').modal('show');
-        vm.EditCurso(id);
-    },
-
-};

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using WebApp.Authorization;
 using WebApp.Configuration;
 using WebApp.Dto;
@@ -268,13 +269,13 @@ public class CursoController : BaseController
 
     #endregion
 
-        #region Get Methods
+    #region Get Methods
 
-        /// <summary>
-        /// Busca de Curso por Id
-        /// </summary>
-        /// <param name="id">Identificador de Curso</param>
-        /// <returns>Retorna o Curso</returns>
+    /// <summary>
+    /// Busca de Curso por Id
+    /// </summary>
+    /// <param name="id">Identificador de Curso</param>
+    /// <returns>Retorna o Curso</returns>
     public Task<CursoDto> GetCursoById(int id)
     {
         var result = ApiClientFactory.Instance.GetCursoById(id);
@@ -356,6 +357,55 @@ public class CursoController : BaseController
         {
             return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = "Erro ao executar esta ação. Favor entrar em contato com o administrador do sistema." });
         }
+    }
+
+    /// <summary>
+    /// Ação de Exibir a Partial View de ordenação no Curso
+    /// </summary>
+    /// <param name="id">identificador do Curso</param>
+    /// <returns>retorna a Partial View de ordenação dos Módulos de um Cursp</returns>
+    [HttpGet]
+    public ActionResult CarregarEstrutura(int cursoId)
+    {
+        try
+        {
+            var curso = ApiClientFactory.Instance.GetCursoById(cursoId);
+            var modulosEad = ApiClientFactory.Instance.GetModulosEadAllByCursoId(cursoId);
+
+            return PartialView("_EstruturaCurso", new EstruturaCursoModel
+            {
+                Curso = curso,
+                ModulosEad = modulosEad
+            });
+        }
+        catch (Exception ex)
+        {
+            return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = "Erro ao executar esta ação. Favor entrar em contato com o administrador do sistema." });
+        }
+    }
+
+    [HttpPost]
+    public JsonResult SalvarOrdem(int cursoId, string novaOrdem)
+    {
+        try
+        {
+            var items = JsonConvert.DeserializeObject<List<NestableItem>>(novaOrdem);
+
+            // Lógica para atualizar a ordem no banco de dados
+            //ApiClientFactory.Instance.AtualizarOrdemCurso(cursoId, items);
+
+            return Json(new { success = true, message = "Ordem salva com sucesso!" });
+        }
+        catch (Exception ex)
+        {
+            return Json(new { success = false, message = ex.Message });
+        }
+    }
+
+    public class NestableItem
+    {
+        public string id { get; set; }
+        public List<NestableItem> children { get; set; }
     }
     #endregion
 }

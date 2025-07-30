@@ -130,7 +130,7 @@
                                     <div class="panel-group" id="accordion">
                                         @if (Model.Modulos != null && Model.Modulos.Any())
                                         {
-                                            foreach (var modulo in Model.Modulos)
+                                            foreach (var modulo in Model.Modulos.OrderBy(m => m.Ordem))
                                             {
                                                 var moduloAulas = Model.Aulas?.Where(a => a.ModuloEadId == modulo.Id).OrderBy(a => a.Ordem).ToList()
                                                 ?? new List<AulaDto>();
@@ -185,7 +185,6 @@
 
                                 </div>
                             </div>
-
 
                             <!-- Opções -->
                             <div class="panel panel-default">
