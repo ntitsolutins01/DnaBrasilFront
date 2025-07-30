@@ -22,40 +22,131 @@
 					<div class="panel-body" id="pFiltro">
 						<label class="col-sm-2 control-label">Fomento / Contrato: <span class="required">*</span></label>
 						<div class="col-md-4 form-group">
-							<select class="form-control populate select2" name="ddlFomento" id="ddlFomento" style="width:100%"
-									asp-for="FomentoId" asp-items="Model.ListFomentos">
-								<option value="">Selecionar Fomento / Contrato</option>
-							</select>
+							@{
+								if (Model.IdPerfil == (int)EnumPerfil.Administrador)
+								{
+									<select class="form-control populate select2" name="ddlFomento" id="ddlFomento" style="width: 100%"
+											asp-for="FomentoId" asp-items="Model.ListFomentos">
+										<option value="">Selecionar Fomento / Contrato</option>
+									</select>
+								}
+								else
+								{
+									<select class="form-control populate select2" name="ddlFomento" id="ddlFomento" style="width: 100%" disabled="disabled"
+											asp-for="FomentoId" asp-items="Model.ListFomentos">
+										<option value="">Selecionar Fomento / Contrato</option>
+									</select>
+								}
+							}
+
+
 						</div>
 						<label class="col-sm-2 control-label">Estado:</label>
 						<div class="col-md-4 form-group">
-							<select class="form-control populate select2" name="ddlEstado" id="ddlEstado" style="width:100%"
-									asp-for="EstadoId" asp-items="Model.ListEstados">
-								<option value="">Selecionar Estado</option>
-							</select>
+							@{
+								if (Model.IdPerfil == (int)EnumPerfil.Administrador)
+								{
+									<select class="form-control populate select2" name="ddlEstado" id="ddlEstado" style="width: 100%"
+											asp-for="EstadoId" asp-items="Model.ListEstados">
+										<option value="">Selecionar Estado</option>
+									</select>
+								}
+								else
+								{
+									<select class="form-control populate select2" name="ddlEstado" id="ddlEstado" style="width: 100%" disabled="disabled"
+											asp-for="EstadoId" asp-items="Model.ListEstados">
+										<option value="">Selecionar Estado</option>
+									</select>
+								}
+							}
+
 						</div>
 						<label class="col-sm-2 control-label">Municipio:</label>
 						<div class="col-md-4 form-group">
-							<select class="form-control populate select2" name="ddlMunicipio" id="ddlMunicipio" style="width:100%"
-									asp-for="MunicipioId" asp-items="Model.ListMunicipios">
-								<option value="">Selecionar Municipio</option>
-							</select>
+							@{
+								if (Model.IdPerfil == (int)EnumPerfil.Administrador)
+								{
+									<select class="form-control populate select2" name="ddlMunicipio" id="ddlMunicipio" style="width: 100%"
+											asp-for="MunicipioId" asp-items="Model.ListMunicipios">
+										<option value="">Selecionar Municipio</option>
+									</select>
+								}
+								else
+								{
+									<select class="form-control populate select2" name="ddlMunicipio" id="ddlMunicipio" style="width: 100%" disabled="disabled"
+											asp-for="MunicipioId" asp-items="Model.ListMunicipios">
+										<option value="">Selecionar Municipio</option>
+									</select>
+								}
+							}
+
 						</div>
 						<label class="col-sm-2 control-label">Localidade:</label>
 						<div class="col-md-4 form-group">
-							<select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade" style="width:100%"
-									asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
-								<option value="">Selecionar Localidade</option>
-							</select>
+							@{
+								if (Model.IdPerfil == (int)EnumPerfil.Administrador)
+								{
+									<select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade" style="width: 100%"
+											asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
+										<option value="">Selecionar Localidade</option>
+									</select>
+								}
+								else
+								{
+									if (Model.IdPerfil == (int)EnumPerfil.GestorPedagogico)
+									{
+										<select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade" style="width: 100%"
+												asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
+											<option value="">Selecionar Localidade</option>
+										</select>
+									}
+									else
+									{
+										<select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade" style="width: 100%" disabled="disabled"
+												asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
+											<option value="">Selecionar Localidade</option>
+										</select>
+									}
+
+
+								}
+							}
+
 						</div>
 
 						<label class="col-sm-2 control-label">Profissional:</label>
 						<div class="col-md-4 form-group">
-							<select class="form-control populate select2" name="ddlProfissional" id="ddlProfissional"
-									title="Por favor informe o profissional." style="width:100%"
-									asp-for="ProfissionalId" asp-items="Model.ListProfissionais">
-								<option value="">Selecionar Profissional</option>
-							</select>
+							@{
+								if (Model.IdPerfil == (int)EnumPerfil.Administrador)
+								{
+									<select class="form-control populate select2" name="ddlProfissional" id="ddlProfissional"
+											title="Por favor informe o profissional." style="width: 100%"
+											asp-for="ProfissionalId" asp-items="Model.ListProfissionais">
+										<option value="">Selecionar Profissional</option>
+									</select>
+								}
+								else
+								{
+									if (Model.IdPerfil == (int)EnumPerfil.GestorPedagogico)
+									{
+										<select class="form-control populate select2" name="ddlProfissional" id="ddlProfissional"
+												title="Por favor informe o profissional." style="width: 100%"
+												asp-for="ProfissionalId" asp-items="Model.ListProfissionais">
+											<option value="">Selecionar Profissional</option>
+										</select>
+									}
+									else
+									{
+										<select class="form-control populate select2" name="ddlProfissional" id="ddlProfissional" disabled="disabled"
+												title="Por favor informe o profissional." style="width: 100%"
+												asp-for="ProfissionalId" asp-items="Model.ListProfissionais">
+											<option value="">Selecionar Profissional</option>
+										</select>
+									}
+
+								}
+							}
+
 						</div>
 						<label class="col-sm-2 control-label">Deficiencia:</label>
 						<div class="col-md-4 form-group">
@@ -154,34 +245,6 @@
 		</header>
 		<div class="panel-body" id="pResult">
 			<div class="form-group row">
-				@{
-					bool filtroVazio = string.IsNullOrEmpty(Model.SearchFilter.MunicipioId) ?
-					string.IsNullOrEmpty(Model.SearchFilter.FomentoId) ?
-					string.IsNullOrEmpty(Model.SearchFilter.LocalidadeId) ?
-					string.IsNullOrEmpty(Model.SearchFilter.Sexo) ?
-					string.IsNullOrEmpty(Model.SearchFilter.DeficienciaId) ?
-					string.IsNullOrEmpty(Model.SearchFilter.Estado) ?
-					string.IsNullOrEmpty(Model.SearchFilter.Etnia) ?
-					string.IsNullOrEmpty(Model.SearchFilter.Nome) ?
-					string.IsNullOrEmpty(Model.SearchFilter.Matricula) : false
-					: false
-					: false
-					: false
-					: false
-					: false
-					: false
-					: false;
-
-			/*
-			<div class="col-sm-8 pull-left">
-			<div class="alert alert-warning" style="padding-bottom: 6px;padding-top: 6px; !important; margin-bottom: 10px; !important">
-			<strong>Atenção!</strong> Os alunos listados são referentes ao seu <a href="" class="alert-link">Estado/Município</a> de cadastro.
-			</div>
-			</div>
-			*/
-
-
-				}
 				<div class="col-sm-2 pull-right">
 					<a href="@Url.Action("Create", "Aluno")" id="addToTable" class="btn btn-block btn-primary pull-right"><i class="fa fa-plus"></i>  &nbsp;&nbsp;Novo Aluno </a>
 				</div>
@@ -201,54 +264,54 @@
 				<tbody>
 					@foreach (var item in Model.Alunos)
 					{
-					<tr>
-						<td class="text-center">@Html.DisplayFor(modelItem => item.Id)</td>
-						<td class="text-center">@Html.DisplayFor(modelItem => item.Nome)</td>
-						<td class="text-center">@Html.DisplayFor(modelItem => item.Email)</td>
-						<td class="text-center">@Html.DisplayFor(modelItem => item.DtNascimento)</td>
-						@if (item.Habilitado)
+						<tr>
+							<td class="text-center">@Html.DisplayFor(modelItem => item.Id)</td>
+							<td class="text-center">@Html.DisplayFor(modelItem => item.Nome)</td>
+							<td class="text-center">@Html.DisplayFor(modelItem => item.Email)</td>
+							<td class="text-center">@Html.DisplayFor(modelItem => item.DtNascimento)</td>
+							@if (item.Habilitado)
 							{
-						<td class="text-center"><span class="label label-success" >SIM</span></td>
+								<td class="text-center"><span class="label label-success">SIM</span></td>
 							}
 							else
 							{
-						<td class="text-center"><span class="label label-danger" >NÃO</span></td>
+								<td class="text-center"><span class="label label-danger">NÃO</span></td>
 							}
-						<td class="actions text-center">
-							<a data-toggle="tooltip" data-placement="top" title="Editar" asp-action="Edit" asp-controller="Aluno" asp-route-Id="@item.Id" class="on-default edit-row" style='color: #FF9800'><i class="fa fa-pencil"></i></a>
-							<a data-toggle="tooltip" data-placement="top" title="Carteirinha"
-							   href='javascript:(crud.CarterinhaModal(@item.Id))'
-							   class="on-default edit-row" style='color: #8E24AA'>
-								<i class="fa fa-address-card-o"></i>
-							</a>
+							<td class="actions text-center">
+								<a data-toggle="tooltip" data-placement="top" title="Editar" asp-action="Edit" asp-controller="Aluno" asp-route-Id="@item.Id" class="on-default edit-row" style='color: #FF9800'><i class="fa fa-pencil"></i></a>
+								<a data-toggle="tooltip" data-placement="top" title="Carteirinha"
+								   href='javascript:(crud.CarterinhaModal(@item.Id))'
+								   class="on-default edit-row" style='color: #8E24AA'>
+									<i class="fa fa-address-card-o"></i>
+								</a>
 
-							<a href="#" data-id="@item.Id" data-toggle="modal" data-target="#mdUpload"
-							   data-toggle="tooltip" data-placement="top" title="Upload Foto"
-							   class="on-default edit-row" style='color: #303F9F'><i class="fa fa-upload"></i></a>
+								<a href="#" data-id="@item.Id" data-toggle="modal" data-target="#mdUpload"
+								   data-toggle="tooltip" data-placement="top" title="Upload Foto"
+								   class="on-default edit-row" style='color: #303F9F'><i class="fa fa-upload"></i></a>
 
-							<a data-toggle="tooltip" data-placement="top" title="Excluir" href='javascript:(crud.DeleteModal(@item.Id))'
-							   class="on-default remove-row" style="cursor: pointer;color: #F44336"><i class="fa fa-trash"></i></a>
+								<a data-toggle="tooltip" data-placement="top" title="Excluir" href='javascript:(crud.DeleteModal(@item.Id))'
+								   class="on-default remove-row" style="cursor: pointer;color: #F44336"><i class="fa fa-trash"></i></a>
 
-							<a href="#" data-id="@item.Id" data-toggle="modal" data-target="#mdUploadDocumentos"
-							   data-toggle="tooltip" data-placement="top" title="Upload Documentos"
-							   class="on-default edit-row" style='color:#148f77'><i class="fa fa-file-archive-o"></i></a>
+								<a href="#" data-id="@item.Id" data-toggle="modal" data-target="#mdUploadDocumentos"
+								   data-toggle="tooltip" data-placement="top" title="Upload Documentos"
+								   class="on-default edit-row" style='color:#148f77'><i class="fa fa-file-archive-o"></i></a>
 
-							@if (item.Documentos.Any())
-				{
+								@if (item.Documentos.Any())
+								{
 
-							<a data-toggle="tooltip" data-placement="top" title="Download Documentos"
-							   asp-action="Download" asp-controller="Aluno" asp-route-id="@item.Id" class="on-default edit-row"
-							   style='color:#d4ac0d'><i class="fa fa-download" target="_blank"></i></a>
+									<a data-toggle="tooltip" data-placement="top" title="Download Documentos"
+									   asp-action="Download" asp-controller="Aluno" asp-route-id="@item.Id" class="on-default edit-row"
+									   style='color:#d4ac0d'><i class="fa fa-download" target="_blank"></i></a>
 
-				}
-							@if (!item.Habilitado)
-				{
-							<a data-toggle="tooltip" data-placement="top" title="Habilitar Aluno" href='javascript:(crud.HabilitarModal(@item.Id))'
-							   class="on-default remove-row" style="cursor: pointer;color: #3498db"><i class="fa fa-check-circle"></i></a>
+								}
+								@if (!item.Habilitado)
+								{
+									<a data-toggle="tooltip" data-placement="top" title="Habilitar Aluno" href='javascript:(crud.HabilitarModal(@item.Id))'
+									   class="on-default remove-row" style="cursor: pointer;color: #3498db"><i class="fa fa-check-circle"></i></a>
 
-				}
-						</td>
-					</tr>
+								}
+							</td>
+						</tr>
 					}
 				</tbody>
 			</table>
@@ -403,34 +466,34 @@
 					</h5>
 				</div>
 				@using (@Html.BeginForm("Upload", "Aluno", FormMethod.Post, new { id = "formUploadFoto", @class = "form-horizontal", @enctype = "multipart/form-data" }))
-			{
-				<div class="modal-body">
-					<input type="hidden" id="alunoId" name="alunoId" />
-					<div class="form-group mb-lg">
-						<label class="col-sm-2 control-label">Foto</label>
-						<div class="col-sm-10">
-							<div class="fileupload fileupload-new" data-provides="fileupload">
-								<div class="input-append">
-									<div class="uneditable-input">
-										<i class="fa fa-file fileupload-exists"></i>
-										<span class="fileupload-preview"></span>
+				{
+					<div class="modal-body">
+						<input type="hidden" id="alunoId" name="alunoId" />
+						<div class="form-group mb-lg">
+							<label class="col-sm-2 control-label">Foto</label>
+							<div class="col-sm-10">
+								<div class="fileupload fileupload-new" data-provides="fileupload">
+									<div class="input-append">
+										<div class="uneditable-input">
+											<i class="fa fa-file fileupload-exists"></i>
+											<span class="fileupload-preview"></span>
+										</div>
+										<span class="btn btn-default btn-file">
+											<span class="fileupload-exists">Alterar</span>
+											<span class="fileupload-new">Selecionar Arquivos</span>
+											<input type="file" id="arquivo" name="arquivo" />
+										</span>
+										<a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload">Remover</a>
 									</div>
-									<span class="btn btn-default btn-file">
-										<span class="fileupload-exists">Alterar</span>
-										<span class="fileupload-new">Selecionar Arquivos</span>
-										<input type="file" id="arquivo" name="arquivo" />
-									</span>
-									<a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload">Remover</a>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-				<div class="modal-footer">
-					<button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-remove"></i> &nbsp;&nbsp;Fechar</button>
-					<button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
-				</div>
-			}
+					<div class="modal-footer">
+						<button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-remove"></i> &nbsp;&nbsp;Fechar</button>
+						<button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
+					</div>
+				}
 			</div>
 		</div>
 	</div>
@@ -471,34 +534,34 @@
 					</h5>
 				</div>
 				@using (@Html.BeginForm("UploadDocumentos", "Aluno", FormMethod.Post, new { id = "formUploadDocumentos", @class = "form-horizontal", @enctype = "multipart/form-data" }))
-			{
-				<div class="modal-body">
-					<input type="hidden" id="alunoId" name="alunoId" />
-					<div class="form-group mb-lg">
-						<label class="col-sm-2 control-label">Documentos</label>
-						<div class="col-sm-10">
-							<div class="fileupload fileupload-new" data-provides="fileupload">
-								<div class="input-append">
-									<div class="uneditable-input">
-										<i class="fa fa-file fileupload-exists"></i>
-										<span class="fileupload-preview"></span>
+				{
+					<div class="modal-body">
+						<input type="hidden" id="alunoId" name="alunoId" />
+						<div class="form-group mb-lg">
+							<label class="col-sm-2 control-label">Documentos</label>
+							<div class="col-sm-10">
+								<div class="fileupload fileupload-new" data-provides="fileupload">
+									<div class="input-append">
+										<div class="uneditable-input">
+											<i class="fa fa-file fileupload-exists"></i>
+											<span class="fileupload-preview"></span>
+										</div>
+										<span class="btn btn-default btn-file">
+											<span class="fileupload-exists">Alterar</span>
+											<span class="fileupload-new">Selecionar Arquivo</span>
+											<input type="file" id="documentosAluno" name="documentosAluno" multiple />
+										</span>
+										<a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload">Remover</a>
 									</div>
-									<span class="btn btn-default btn-file">
-										<span class="fileupload-exists">Alterar</span>
-										<span class="fileupload-new">Selecionar Arquivo</span>
-										<input type="file" id="documentosAluno" name="documentosAluno" multiple />
-									</span>
-									<a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload">Remover</a>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-				<div class="modal-footer">
-					<button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-remove"></i> &nbsp;&nbsp;Fechar</button>
-					<button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
-				</div>
-			}
+					<div class="modal-footer">
+						<button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-remove"></i> &nbsp;&nbsp;Fechar</button>
+						<button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
+					</div>
+				}
 			</div>
 		</div>
 	</div>
@@ -512,57 +575,57 @@
 					</h5>
 				</div>
 				@using (@Html.BeginForm("Habilitar", "Aluno", FormMethod.Post, new { id = "formHabilitarAluno", @class = "form-horizontal" }))
-			{
-				<input type="hidden" name="habilitarAlunoId" :value="editDto.Id" />
+				{
+					<input type="hidden" name="habilitarAlunoId" :value="editDto.Id" />
 
-				<div class="modal-body">
-					<div class="form-group">
-						<label class="col-sm-3 control-label">Nome</label>
-						<div class="col-sm-8">
-							<input type="text" id="nome" name="nome" class="form-control" readonly
-								   :value="editDto.Nome" />
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="col-sm-3 control-label">Email</label>
-						<div class="col-sm-8">
-							<input type="text" id="email" name="email" class="form-control" readonly
-								   :value="editDto.Email" />
-						</div>
-					</div>
-					<div class="form-group row">
-						<label class="col-sm-3 control-label">CPF</label>
-						<div class="col-sm-4">
-							<input type="text" id="cpfCnpj" name="cpfCnpj" class="form-control" readonly
-								   :value="editDto.Cpf" />
-						</div>
-					</div>
-					<div class="form-group row">
-						<label class="col-sm-3 control-label text-sm-right pt-2">Matrícula </label>
-						<div class="col-sm-4">
-							<input type="text" id="matricula" name="matricula" class="form-control" readonly
-							       title="Por favor informe a matrícula do aluno" :value="editDto.Id" />
-						</div>
-					</div>
-					@{
-						var perfil = ((ClaimsIdentity)User.Identity).FindFirst(ClaimTypes.Role)?.Value;
-						if (perfil == EnumPerfil.Administrador.GetDescription())
-						{
-							<div class="form-group row">
-								<label class="col-sm-3 control-label text-sm-right pt-2">Lote Matrícula </label>
-								<div class="col-sm-8">
-									<textarea type="text" id="lote" name="lote" class="form-control" title="Por favor informe as matrículas"></textarea>
-								</div>
+					<div class="modal-body">
+						<div class="form-group">
+							<label class="col-sm-3 control-label">Nome</label>
+							<div class="col-sm-8">
+								<input type="text" id="nome" name="nome" class="form-control" readonly
+									   :value="editDto.Nome" />
 							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label">Email</label>
+							<div class="col-sm-8">
+								<input type="text" id="email" name="email" class="form-control" readonly
+									   :value="editDto.Email" />
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-sm-3 control-label">CPF</label>
+							<div class="col-sm-4">
+								<input type="text" id="cpfCnpj" name="cpfCnpj" class="form-control" readonly
+									   :value="editDto.Cpf" />
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-sm-3 control-label text-sm-right pt-2">Matrícula </label>
+							<div class="col-sm-4">
+								<input type="text" id="matricula" name="matricula" class="form-control" readonly
+									   title="Por favor informe a matrícula do aluno" :value="editDto.Id" />
+							</div>
+						</div>
+						@{
+							var perfil = ((ClaimsIdentity)User.Identity).FindFirst(ClaimTypes.Role)?.Value;
+							if (perfil == EnumPerfil.Administrador.GetDescription())
+							{
+								<div class="form-group row">
+									<label class="col-sm-3 control-label text-sm-right pt-2">Lote Matrícula </label>
+									<div class="col-sm-8">
+										<textarea type="text" id="lote" name="lote" class="form-control" title="Por favor informe as matrículas"></textarea>
+									</div>
+								</div>
+							}
 						}
-					}
-					
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-remove"></i> &nbsp;&nbsp;Cancelar</button>
-					<button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
-				</div>
-			}
+
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-remove"></i> &nbsp;&nbsp;Cancelar</button>
+						<button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
+					</div>
+				}
 			</div>
 		</div>
 	</div>
@@ -582,84 +645,84 @@
 	</style>
 }
 @section Scripts {
-<script src="~/assets/vendor/bootstrap-fileupload/bootstrap-fileupload.min.js"></script>
-<script src="~/assets/vendor/classy-qr/jquery.classyqr.js"></script>
-<script src="~/assets/vendor/select2/js/select2.js"></script>
-<script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
-<script src="~/assets/vendor/ios7-switch/ios7-switch.js"></script>
-<script src="~/assets/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
-<script src="~/assets/vendor/datatables/media/js/dataTables.bootstrap4.min.js"></script>
-<script src="~/js/formatTableMultiselect.js"></script>
-<script src="~/js/alunos.js"></script>
+	<script src="~/assets/vendor/bootstrap-fileupload/bootstrap-fileupload.min.js"></script>
+	<script src="~/assets/vendor/classy-qr/jquery.classyqr.js"></script>
+	<script src="~/assets/vendor/select2/js/select2.js"></script>
+	<script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
+	<script src="~/assets/vendor/ios7-switch/ios7-switch.js"></script>
+	<script src="~/assets/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
+	<script src="~/assets/vendor/datatables/media/js/dataTables.bootstrap4.min.js"></script>
+	<script src="~/js/formatTableMultiselect.js"></script>
+	<script src="~/js/alunos.js"></script>
 
-<script>
-	// Nova função para gerar PDF CMYK
-	function gerarPdfCmykCarteirinha() {
-		const alunoId = $('#carteirinhaAlunoId').val();
-		const fomentoId = $('#fomentoId').val();
-		window.open(`/Aluno/GerarPdfCarteirinha/${alunoId}?fomentoId=${fomentoId}`, '_blank');
-	}
-
-	(function ($) {
-
-		'use strict';
-
-		var crud = @ViewBag.CrudMessage;
-
-		if (crud === 1) {
-			new PNotify({
-				title: 'Aluno',
-				text: 'Cadastro realizado com sucesso!',
-				type: 'success'
-			});
-		} else if (crud === 2) {
-			new PNotify({
-				title: 'Aluno',
-				text: 'Dados alterados com sucesso.',
-				type: 'warning',
-				icon: 'fa fa-pencil'
-			});
-		} else if (crud === 3) {
-			new PNotify({
-				title: 'Aluno',
-				text: 'Registro excluído com sucesso.',
-				type: 'error',
-				icon: 'fa fa-trash-o'
-			});
+	<script>
+		// Nova função para gerar PDF CMYK
+		function gerarPdfCmykCarteirinha() {
+			const alunoId = $('#carteirinhaAlunoId').val();
+			const fomentoId = $('#fomentoId').val();
+			window.open(`/Aluno/GerarPdfCarteirinha/${alunoId}?fomentoId=${fomentoId}`, '_blank');
 		}
 
+		(function ($) {
 
-		var notify = @ViewBag.NotifyMessage;
-		var messagem = '@ViewBag.Notify';
+			'use strict';
 
-		if (notify === 0) {
-			new PNotify({
-				title: 'Aluno',
-				text: messagem,
-				type: 'success'
-			});
-			crud = 0;
-		} else if (notify === 1) {
-			new PNotify({
-				title: 'Aluno',
-				text: messagem,
-				type: 'warning'
-			});
-			crud = 0;
-		} else if (notify === 2) {
-			new PNotify({
-				title: 'Aluno',
-				text: messagem,
-				type: 'error'
-			});
-			crud = 0;
-		}
+			var crud = @ViewBag.CrudMessage;
 
-		if ($.isFunction($.fn['tooltip'])) {
-			$('[data-toggle=tooltip],[rel=tooltip]').tooltip({ container: 'body' });
-		}
+			if (crud === 1) {
+				new PNotify({
+					title: 'Aluno',
+					text: 'Cadastro realizado com sucesso!',
+					type: 'success'
+				});
+			} else if (crud === 2) {
+				new PNotify({
+					title: 'Aluno',
+					text: 'Dados alterados com sucesso.',
+					type: 'warning',
+					icon: 'fa fa-pencil'
+				});
+			} else if (crud === 3) {
+				new PNotify({
+					title: 'Aluno',
+					text: 'Registro excluído com sucesso.',
+					type: 'error',
+					icon: 'fa fa-trash-o'
+				});
+			}
 
-	}).apply(this, [jQuery]);
-</script>
+
+			var notify = @ViewBag.NotifyMessage;
+			var messagem = '@ViewBag.Notify';
+
+			if (notify === 0) {
+				new PNotify({
+					title: 'Aluno',
+					text: messagem,
+					type: 'success'
+				});
+				crud = 0;
+			} else if (notify === 1) {
+				new PNotify({
+					title: 'Aluno',
+					text: messagem,
+					type: 'warning'
+				});
+				crud = 0;
+			} else if (notify === 2) {
+				new PNotify({
+					title: 'Aluno',
+					text: messagem,
+					type: 'error'
+				});
+				crud = 0;
+			}
+
+			if ($.isFunction($.fn['tooltip'])) {
+				$('[data-toggle=tooltip],[rel=tooltip]').tooltip({ container: 'body' });
+			}
+
+		}).apply(this, [jQuery]);
+	</script>
 }
 

@@ -2,6 +2,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.RegularExpressions;
+using Azure;
 using log4net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -75,19 +76,31 @@ namespace WebApp.Controllers
         /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
         /// <returns></returns>
         [ClaimsAuthorize(ClaimType.Profissional, Claim.Consultar)]
-        public IActionResult Index(int? crud, int? notify, string message = null)
+        public async Task<ActionResult> Index(int? crud, int? notify, string message = null)
         {
 
             try
             {
                 SetNotifyMessage(notify, message);
-                SetCrudMessage(crud); var response = ApiClientFactory.Instance.GetProfissionalAll();
-                var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome");
+                SetCrudMessage(crud);
+
+                var usuario = User.Identity.Name;
+                var usu = await ApiClientFactory.Instance.GetUsuarioByEmail(usuario);
+
+                List<ProfissionalDto> response;
+                if (usu.Perfil.Id == (int)EnumPerfil.Administrador)
+                {
+                    response = ApiClientFactory.Instance.GetProfissionalAll();
+                }
+                else
+                {
+                    response = ApiClientFactory.Instance.GetProfissionalAll().Where(x=>x.MunicipioId == Convert.ToInt32(usu.MunicipioId)).ToList();
+                }
+
 
                 return View(new ProfissionalModel()
                 {
-                    Profissionais = response,
-                    ListEstados = estados,
+                    Profissionais = response
                 });
 
             }

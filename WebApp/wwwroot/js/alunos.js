@@ -152,6 +152,37 @@ var vm = new Vue({
                     self.ShowLoad(false, "pFiltro");
                 });
 
+                //clique de escolha do select
+                $("#ddlLocalidade").change(function () {
+                    var id = $("#ddlLocalidade").val();
+
+                    var url = "../../Profissional/GetProfissionaisByLocalidade/?id=" + id;
+
+                    var ddlSource = "#ddlProfissional";
+
+                    $.getJSON(url,
+                        { id: $(ddlSource).val() },
+                        function (data) {
+                            if (data.length > 0) {
+                                var items = '<option value="">Selecionar Profissional</option>';
+                                $("#ddlProfissional").empty;
+                                $.each(data,
+                                    function (i, row) {
+                                        items += "<option value='" + row.value + "'>" + row.text + "</option>";
+                                    });
+                                $("#ddlProfissional").html(items);
+                            }
+                            else {
+                                new PNotify({
+                                    title: 'Profissional',
+                                    text: 'Profissional não encontrados.',
+                                    type: 'warning'
+                                });
+                            }
+                        });
+
+                });
+
                 $("#ddlFomento").change(function () {
                     var fomentoId = $(this).val();
 

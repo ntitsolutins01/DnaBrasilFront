@@ -5,7 +5,7 @@ namespace WebApp.Enumerators
     public enum EnumPerfil
     {
         [Description("Administrador")]
-        Administrador = 6,
+        Administrador = 4,
         [Description("Parceiro")]
         Parceiro = 8,
         [Description("Aluno")]
