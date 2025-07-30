@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace WebApp.Views.ModuloEad
 {
-    public class _EstruturaCursoModel : PageModel
+    public class _EstruturaModelEadModel : PageModel
     {
         public void OnGet()
         {

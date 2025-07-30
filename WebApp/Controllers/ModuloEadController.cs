@@ -171,50 +171,6 @@ public class ModuloEadController : BaseController
         }
     }
 
-    [HttpGet]
-    public ActionResult CarregarEstrutura(int moduloId)
-    {
-        try
-        {
-            var modulo = ApiClientFactory.Instance.GetModuloEadById(moduloId);
-            var aulas = ApiClientFactory.Instance.GetAulasByModuloEadId(moduloId);
-
-            return PartialView("_EstruturaModuloEad", new EstruturaModuloEadModel
-            {
-                ModuloEad = modulo,
-                Aulas = aulas
-            });
-        }
-        catch (Exception ex)
-        {
-            return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = "Erro ao executar esta ação. Favor entrar em contato com o administrador do sistema." });
-        }
-    }
-
-    [HttpPost]
-    public JsonResult SalvarOrdem(int cursoId, string novaOrdem)
-    {
-        try
-        {
-            var items = JsonConvert.DeserializeObject<List<NestableItem>>(novaOrdem);
-
-            // Lógica para atualizar a ordem no banco de dados
-            //ApiClientFactory.Instance.AtualizarOrdemCurso(cursoId, items);
-
-            return Json(new { success = true, message = "Ordem salva com sucesso!" });
-        }
-        catch (Exception ex)
-        {
-            return Json(new { success = false, message = ex.Message });
-        }
-    }
-
-    public class NestableItem
-    {
-        public string id { get; set; }
-        public List<NestableItem> children { get; set; }
-    }
-
     /// <summary>
     /// Ação de Exclusão do Modulo Ead
     /// </summary>
@@ -235,7 +191,36 @@ public class ModuloEadController : BaseController
         }
     }
 
+    /// <summary>
+    /// Ação de Alteração de Módulo EAD
+    /// </summary>
+    /// <param name="id">Identificador do módulo ead</param>
+    /// <returns>Retorna mensagem de alteração através do parametro crud</returns>
+    [ClaimsAuthorize(ClaimType.ModuloEad, Identity.Claim.Alterar)]
+    [HttpPost]
+    public async Task<IActionResult> Order([FromBody] ModuloEadModel.CreateUpdateModuloEadCommand model)
+    {
+        try
+        {
+            var command = new ModuloEadModel.CreateUpdateModuloEadCommand
+            {
+                Id = model.Id,
+                Titulo = model.Titulo,
+                Status = model.Status,
+                CursoId = model.CursoId,
+                Descricao = model.Descricao,
+                Ordem = model.Ordem
+            };
 
+            await ApiClientFactory.Instance.UpdateModuloEad(model.Id, command);
+
+            return NoContent();
+        }
+        catch (Exception e)
+        {
+            return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = "Erro ao executar esta ação. Favor entrar em contato com o administrador do sistema." });
+        }
+    }
     #endregion
 
     #region Get Methods
@@ -293,6 +278,55 @@ public class ModuloEadController : BaseController
         {
             return Task.FromResult(Json(ex.Message));
         }
+    }
+
+    /// <summary>
+    /// Ação de Exibir a Partial View de ordenação no Modulo Ead
+    /// </summary>
+    /// <param name="id">identificador do Modulo Ead</param>
+    /// <returns>retorna a Partial View de ordenamção das Aulas de um Módulo Ead</returns>
+    [HttpGet]
+    public ActionResult CarregarEstrutura(int moduloId)
+    {
+        try
+        {
+            var modulo = ApiClientFactory.Instance.GetModuloEadById(moduloId);
+            var aulas = ApiClientFactory.Instance.GetAulasByModuloEadId(moduloId);
+
+            return PartialView("_EstruturaModuloEad", new EstruturaModuloEadModel
+            {
+                ModuloEad = modulo,
+                Aulas = aulas
+            });
+        }
+        catch (Exception ex)
+        {
+            return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = "Erro ao executar esta ação. Favor entrar em contato com o administrador do sistema." });
+        }
+    }
+
+    [HttpPost]
+    public JsonResult SalvarOrdem(int cursoId, string novaOrdem)
+    {
+        try
+        {
+            var items = JsonConvert.DeserializeObject<List<NestableItem>>(novaOrdem);
+
+            // Lógica para atualizar a ordem no banco de dados
+            //ApiClientFactory.Instance.AtualizarOrdemCurso(cursoId, items);
+
+            return Json(new { success = true, message = "Ordem salva com sucesso!" });
+        }
+        catch (Exception ex)
+        {
+            return Json(new { success = false, message = ex.Message });
+        }
+    }
+
+    public class NestableItem
+    {
+        public string id { get; set; }
+        public List<NestableItem> children { get; set; }
     }
 
     #endregion

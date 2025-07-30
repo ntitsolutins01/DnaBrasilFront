@@ -1,0 +1,39 @@
+﻿@model WebApp.Models.EstruturaCursoModel
+
+<div class="dd" id="nestable">
+    <ol class="dd-list">
+
+        @{
+            int posicaoModuloEad = 1;
+        }
+        @foreach (var moduloEad in Model.ModulosEad.OrderBy(a => a.Ordem))
+        {
+            <li class="dd-item" data-id="moduloEad_@moduloEad.Id">
+                <div class="dd-handle">
+                    <span class="position-badge">@posicaoModuloEad</span>
+                    @moduloEad.Titulo
+                </div>
+            </li>
+            posicaoModuloEad++;
+        }
+    </ol>
+</div>
+
+<style>
+    .position-badge {
+        background: #007bff;
+        color: white;
+        border-radius: 50%;
+        width: 25px;
+        height: 25px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 10px;
+    }
+</style>
+
+@if (!Model.ModulosEad.Any())
+{
+    <div class="alert alert-warning">Nenhuma módulo encontrado para este curso</div>
+}
