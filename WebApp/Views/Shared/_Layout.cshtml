@@ -605,12 +605,15 @@
 				                                <span>Laudo</span>
 			                                </a>
 		                                </li>
-		                                @* <li class="nav-parent nav-expanded">
-			                                <a href="@Url.Action("Details", "Laudo", new {id = laudoId})">
-				                                <i class="fa fa-file-text-o" aria-hidden="true"></i>
+	                                }
+	                                else
+	                                {
+		                                <li class="nav-parent nav-expanded">
+                                            <a href="@Url.Action("Create", "Laudo", new {aluno = true})">
+                                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
 				                                <span>Protocólo Avaliativo</span>
 			                                </a>
-		                                </li> *@
+		                                </li>
 	                                }
 	                                
                                     <li class="nav-parent nav-expanded">
