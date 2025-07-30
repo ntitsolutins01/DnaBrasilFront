@@ -208,6 +208,7 @@ var vm = new Vue({
 
             if ($('#nestable').data('nestable')) {
                 $('#nestable').nestable('destroy');
+                $('#nestable').off('change');
             }
 
             $('#nestable').nestable({
