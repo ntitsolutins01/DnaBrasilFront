@@ -20,21 +20,21 @@
 						<h2 class="panel-title">Filtro de pesquisa</h2>
 					</header>
 					<div class="panel-body" id="pFiltro">
-						<label class="col-sm-2 control-label">Fomento / Contrato: <span class="required">*</span></label>
+						<label class="col-sm-2 control-label">Contrato: <span class="required">*</span></label>
 						<div class="col-md-4 form-group">
 							@{
 								if (Model.IdPerfil == (int)EnumPerfil.Administrador)
 								{
 									<select class="form-control populate select2" name="ddlFomento" id="ddlFomento" style="width: 100%"
 											asp-for="FomentoId" asp-items="Model.ListFomentos">
-										<option value="">Selecionar Fomento / Contrato</option>
+										<option value="">Selecionar Contrato</option>
 									</select>
 								}
 								else
 								{
 									<select class="form-control populate select2" name="ddlFomento" id="ddlFomento" style="width: 100%" disabled="disabled"
 											asp-for="FomentoId" asp-items="Model.ListFomentos">
-										<option value="">Selecionar Fomento / Contrato</option>
+										<option value="">Selecionar Contrato</option>
 									</select>
 								}
 							}
@@ -47,14 +47,14 @@
 								if (Model.IdPerfil == (int)EnumPerfil.Administrador)
 								{
 									<select class="form-control populate select2" name="ddlEstado" id="ddlEstado" style="width: 100%"
-											asp-for="EstadoId" asp-items="Model.ListEstados">
+									        asp-for="EstadoId" asp-items="Model.ListEstados">
 										<option value="">Selecionar Estado</option>
 									</select>
 								}
 								else
 								{
 									<select class="form-control populate select2" name="ddlEstado" id="ddlEstado" style="width: 100%" disabled="disabled"
-											asp-for="EstadoId" asp-items="Model.ListEstados">
+									        asp-for="EstadoId" asp-items="Model.ListEstados">
 										<option value="">Selecionar Estado</option>
 									</select>
 								}

@@ -100,6 +100,7 @@ namespace WebApp.Controllers
                     DeficienciaId = collection["ddlDeficiencia"].ToString(),
                     PossuiFoto = possuiFoto != "",
                     Finalizado = finalizado != "",
+
                     PageNumber = 1,
 #if DEBUG
                     PageSize = 300
@@ -125,7 +126,7 @@ namespace WebApp.Controllers
                     ListAlunos = alunos,
                     SearchFilter = searchFilter,
                     ListProfissionais = profissionais,
-                    //ListTurmas = turmas
+                    IdPerfil = usu.Perfil.Id
                 };
 
                 return View(model);
@@ -1172,7 +1173,7 @@ namespace WebApp.Controllers
                 var textoGabarito = "";
                 var anoGabarito = "";
 
-                switch (collection["ddlGabarito"])
+                switch (collection["ddlGabaritoModal"])
                 {
                     case "3LP":
                         textoGabarito = "LÍNGUA PORTUGUESA";
