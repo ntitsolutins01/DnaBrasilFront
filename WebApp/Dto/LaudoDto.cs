@@ -8,6 +8,7 @@
 
         public int? TalentoEsportivoId { get; set; }
         public int? VocacionalId { get; set; }
+        public int? EducacionalId { get; set; }
         public int? QualidadeDeVidaId { get; set; }
         public int? SaudeId { get; set; }
         public int? ConsumoAlimentarId { get; set; }

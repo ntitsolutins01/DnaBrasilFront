@@ -7,33 +7,24 @@
 <div id="vCatalogo">
 	<div class="row">
 		<div class="col-md-12">
-			@using (@Html.BeginForm("Create", "Curso", FormMethod.Post, new { id = "formCurso", @class = "form-horizontal" }))
+			@foreach (var tiposCurso in Model.TiposCursos)
 			{
-				@foreach (var tiposCurso in Model.TiposCursos)
-				{
 
-					<section class="panel panel-featured">
-						<header class="panel-heading">
-							<h1 class="panel-title">@tiposCurso.Nome</h1>
-						</header>
-						<div class="panel-body">
-							@* @foreach (var item in tiposCurso.Cursos)
+				<section class="panel panel-featured">
+					<header class="panel-heading">
+						<h1 class="panel-title">@tiposCurso.Nome</h1>
+					</header>
+					<div class="panel-body">
+						<div class="owl-carousel owl-theme" data-plugin-carousel data-plugin-options='{ "dots": true, "autoplay": true, "autoplayTimeout": 3000, "loop": true, "margin": 10, "nav": false,   }'>
+							@foreach (var item in tiposCurso.Cursos)
 							{
 								<a href="#" data-toggle="modal" data-target="#mdDetalheCurso" data-id="@item.Id">
 									<div class="item"><img class="img-thumbnail" src="~/Cursos/@Html.DisplayFor(modelItem => item.Imagem)" alt="@item.Titulo"></div>
 								</a>
-							} *@
-							<div class="owl-carousel owl-theme" data-plugin-carousel data-plugin-options='{ "dots": true, "autoplay": true, "autoplayTimeout": 3000, "loop": true, "margin": 10, "nav": false,   }'>
-								@foreach (var item in tiposCurso.Cursos)
-								{
-									<a href="#" data-toggle="modal" data-target="#mdDetalheCurso" data-id="@item.Id">
-										<div class="item"><img class="img-thumbnail" src="~/Cursos/@Html.DisplayFor(modelItem => item.Imagem)" alt="@item.Titulo"></div>
-									</a>
-								}
-							</div>
+							}
 						</div>
-					</section>
-				}
+					</div>
+				</section>
 			}
 		</div>
 	</div>
@@ -51,7 +42,6 @@
 				</div>
 				<input type="hidden" id="cursoId" name="cursoId" />
 				<div class="modal-body" id="pDetalheCurso">
-
 				</div>
 				<div class="modal-footer">
 					<button type="submit" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal">

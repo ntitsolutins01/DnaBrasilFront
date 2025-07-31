@@ -1,13 +1,10 @@
 @using System.Globalization
-@using Microsoft.IdentityModel.Tokens
 @model LaudoModel
 @{
     ViewData["Title"] = "Laudo Detalhado";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>@Model.Aluno.Nome</h1>
-<br />
 <div id="vLaudoDetails">
     <div class="col-md-11 col-lg-12">
         <div class="col-md-12">
@@ -344,7 +341,7 @@
                         <div class="panel-heading">
                             <h4 class="panel-title">
                                 <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse2ThreeFinal">
-                                    <i class="fa fa-heartbeat"></i> Consumo Alimentar
+                                    <i class="fa fa-cutlery"></i> Consumo Alimentar
                                 </a>
                             </h4>
                         </div>
@@ -440,7 +437,7 @@
                         <div class="panel-heading">
                             <h4 class="panel-title">
                                 <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse2FourFinal">
-                                    <i class="fa fa-heartbeat"></i> Saude Bucal
+                                    <i class="fa fa-medkit"></i> Saude Bucal
                                 </a>
                             </h4>
                         </div>
@@ -537,7 +534,7 @@
                         <div class="panel-heading">
                             <h4 class="panel-title">
                                 <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse2Five">
-                                    <i class="fa fa-heartbeat"></i> Qualidade de Vida
+                                    <i class="fa fa-thumbs-up"></i> Qualidade de Vida
                                 </a>
                             </h4>
                         </div>
@@ -701,7 +698,7 @@
                         <div class="panel-heading">
                             <h4 class="panel-title">
                                 <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse2Six">
-                                    <i class="fa fa-heartbeat"></i> Vocacional
+                                    <i class="fa fa-star"></i> Vocacional
                                 </a>
                             </h4>
                         </div>
@@ -853,8 +850,54 @@
                         </div>
                     </div>
                 }
+                @* Educacional -----------------------------------------------------------------------------------------------------------*@
+                @if (Model.Laudo.EducacionalId != null)
+                {
 
-            </div>
+                }
+                <div class="panel panel-accordion panel-accordion-edu">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseEdu">
+                                <i class="fa fa-file-text"></i> Educacional
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseEdu" class="accordion-body collapse">
+                        <div class="panel-body">
+                            <div class="well well-sm">
+                                <div class="form-group">
+                                    <div class="col-sm-2" style="width: 10% !important;">
+                                        <div class="liquid-meter-wrapper liquid-meter-sm">
+                                            <div class="liquid-meter">
+                                                <meter min="0" max="100" value="100" id="meterSaude"></meter>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-10">
+                                        
+                                        <div class="h4 text-weight-bold mb-3" style="margin-top: 30px;">
+                                            Data de realização do teste em 01/01/0001
+                                        </div>
+                                        <p>Porcentagem de educacional</p>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <section class="panel">
+                                        <div class="panel-body">
+                                            
+                                        </div>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
         </div>
     </div>
 </div>

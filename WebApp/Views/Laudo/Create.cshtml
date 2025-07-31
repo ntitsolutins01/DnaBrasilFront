@@ -170,13 +170,13 @@
 									</a>
 								</li>
 
-								@* <li class="" id="liEducacional3Lp" style="display: none;">
+								<li class="" id="liEducacional3Lp" style="display: none;">
 									<a href="#educacional3Lp"
 									   data-toggle="tab" aria-expanded="false">
 										<i class="fa fa-file-text" style="color: #78909c;"></i>
 										<span style="color: #78909c;">Educacional</span>
 									</a>
-								</li> *@
+								</li>
 							</ul>
 							<div class="tab-content">
 								<!-- CAMPO DE SAÚDE -->
@@ -349,7 +349,7 @@
 										var item = Model.ListQuestionarioVocacional[index];
 										<div class="form-group">
 											<div class="col-sm-12">
-												<label class="control-label" style="padding-bottom: 10px;">
+												<label class="control-label" style="padding-bottom: 10px;text-align: left;">
 													<strong>@item.Questao - @item.Pergunta</strong>
 												</label>
 												<input type="hidden" id="perguntaVocacional_@item.Id" />
@@ -377,7 +377,7 @@
 										var item = Model.ListQuestionarioQualidadeVida[index];
 										<div class="form-group">
 											<div class="col-sm-12">
-												<label class="control-label" style="padding-bottom: 10px;">
+												<label class="control-label" style="padding-bottom: 10px;text-align: left;">
 													<strong>@item.Questao - @item.Pergunta</strong>
 												</label>
 												<input type="hidden" id="perguntaQualidadeVida_@item.Id" />
@@ -406,7 +406,7 @@
 												var item = Model.ListQuestionarioConsumoAlimentar[index];
 												<div class="form-group">
 													<div class="col-sm-12">
-														<label class="control-label" style="padding-bottom: 10px;">
+														<label class="control-label" style="padding-bottom: 10px;text-align: left;">
 															<strong>@item.Questao - @item.Pergunta</strong>
 														</label>
 														<input type="hidden" id="perguntaConsumoAlimentar_@item.Id" />
@@ -414,7 +414,7 @@
 													<div class="col-sm-12">
 														@foreach (var resp in @item.Respostas)
 														{
-															<div class="radio-custom radio-default col-sm-12">
+															<div class="radio-custom radio-success col-sm-12">
 																<input id="respConsumoAlimentar_@resp.Id" name="nomeRespConsumoAlimentar_@index" type="radio" value="@resp.Id"
 																       required title="Por favor selecione uma opção." />
 																<label for="respConsumoAlimentar_@resp.Id">@resp.RespostaQuestionario</label>
@@ -435,7 +435,7 @@
 												var item = Model.ListQuestionarioConsumoAlimentar[index];
 												<div class="form-group">
 													<div class="col-sm-12">
-														<label class="control-label" style="padding-bottom: 10px;">
+														<label class="control-label" style="padding-bottom: 10px;text-align: left;">
 															<strong>@item.Questao - @item.Pergunta</strong>
 														</label>
 														<input type="hidden" id="perguntaConsumoAlimentar_@item.Id" />
@@ -443,7 +443,7 @@
 													<div class="col-sm-12">
 														@foreach (var resp in @item.Respostas)
 														{
-															<div class="radio-custom radio-default col-sm-12">
+															<div class="radio-custom radio-success col-sm-12">
 																<input id="respConsumoAlimentar_@resp.Id" name="nomeRespConsumoAlimentar_@index" type="radio" value="@resp.Id"
 																       required title="Por favor selecione uma opção." />
 																<label for="respConsumoAlimentar_@resp.Id">@resp.RespostaQuestionario</label>
@@ -465,14 +465,14 @@
 										var item = Model.ListQuestionarioSaudeBucal[index];
 										<div class="form-group">
 											<div class="col-sm-12">
-												<label class="control-label" style="padding-bottom: 10px;">
+												<label class="control-label" style="padding-bottom: 10px;text-align: left;">
 													<strong>@item.Questao - @item.Pergunta</strong>
 												</label>
 											</div>
 											<div class="col-sm-12">
 												@foreach (var resp in @item.Respostas)
 												{
-													<div class="radio-custom radio-default col-sm-12">
+													<div class="radio-custom radio-info col-sm-12">
 														<input id="respSaudeBucal_@resp.Id" name="nomeRespSaudeBucal_@index" type="radio" value="@resp.Id"
 															   required title="Por favor selecione uma opção." />
 														<label for="respSaudeBucal_@resp.Id">@resp.RespostaQuestionario</label>
@@ -491,7 +491,7 @@
 										var item = Model.ListQuestionarioEducacional3Lp[index];
 										<div class="form-group">
 											<div class="col-sm-12">
-												<label class="control-label"style="padding-bottom: 10px;">
+												<label class="control-label"style="padding-bottom: 10px;text-align: left;">
 													<strong>@item.Questao - @item.Pergunta</strong>
 												</label>
 											</div><br/>

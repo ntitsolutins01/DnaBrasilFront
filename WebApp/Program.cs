@@ -248,7 +248,6 @@ builder.Services.AddAuthorization(o =>
             context.User.IsInRole(UserRoles.Gestor) ||
             context.User.IsInRole(UserRoles.AdministradorEad) ||
             context.User.IsInRole(UserRoles.CoordenadorEad) ||
-            context.User.IsInRole(UserRoles.Aluno) ||
             context.User.IsInRole(UserRoles.AdministradorConsulta) ||
             context.User.IsInRole(UserRoles.Administrador)));
 
