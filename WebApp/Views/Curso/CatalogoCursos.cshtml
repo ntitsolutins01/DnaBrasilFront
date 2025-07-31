@@ -7,34 +7,33 @@
 <div id="vCatalogo">
 	<div class="row">
 		<div class="col-md-12">
-			@using (@Html.BeginForm("Create", "Curso", FormMethod.Post, new { id = "formCurso", @class = "form-horizontal", @enctype = "multipart/form-data" }))
+			@using (@Html.BeginForm("Create", "Curso", FormMethod.Post, new { id = "formCurso", @class = "form-horizontal" }))
 			{
-				<section class="panel">
-					<header class="panel-heading">
-						<div class="panel-actions">
-							<a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
-						</div>
+				@foreach (var tiposCurso in Model.TiposCursos)
+				{
 
-						<h2 class="panel-title">Catálogo de Cursos</h2>
-					</header>
-					<div class="panel-body">
-						<div class="owl-carousel owl-theme" data-plugin-carousel data-plugin-options='{ "dots": true, "autoplay": true, "autoplayTimeout": 3000, "loop": true, "margin": 10, "nav": false, "responsive": {"0":{"items":1 }, "600":{"items":3 }, "1000":{"items":6 } }  }'>
-							@foreach (var item in Model.Cursos)
+					<section class="panel panel-featured">
+						<header class="panel-heading">
+							<h1 class="panel-title">@tiposCurso.Nome</h1>
+						</header>
+						<div class="panel-body">
+							@* @foreach (var item in tiposCurso.Cursos)
 							{
 								<a href="#" data-toggle="modal" data-target="#mdDetalheCurso" data-id="@item.Id">
 									<div class="item"><img class="img-thumbnail" src="~/Cursos/@Html.DisplayFor(modelItem => item.Imagem)" alt="@item.Titulo"></div>
 								</a>
-							}
-						</div>
-					</div>
-					<footer class="panel-footer">
-						<div class="row">
-							<div class="col-md-9 col-md-offset-3">
-								<a href="@Url.Action("Index", "Dashboard")" class="btn btn-dark pull-right" style="margin-left: 5px;margin-right: 5px;"><i class="fa fa-reply"></i> &nbsp;&nbsp;Voltar</a>
+							} *@
+							<div class="owl-carousel owl-theme" data-plugin-carousel data-plugin-options='{ "dots": true, "autoplay": true, "autoplayTimeout": 3000, "loop": true, "margin": 10, "nav": false,   }'>
+								@foreach (var item in tiposCurso.Cursos)
+								{
+									<a href="#" data-toggle="modal" data-target="#mdDetalheCurso" data-id="@item.Id">
+										<div class="item"><img class="img-thumbnail" src="~/Cursos/@Html.DisplayFor(modelItem => item.Imagem)" alt="@item.Titulo"></div>
+									</a>
+								}
 							</div>
 						</div>
-					</footer>
-				</section>
+					</section>
+				}
 			}
 		</div>
 	</div>

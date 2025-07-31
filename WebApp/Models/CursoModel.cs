@@ -11,6 +11,7 @@ namespace WebApp.Models
         public string TipoCursoId { get; set; }
         public SelectList ListCoordenadores { get; set; }
         public string CoordenadorId { get; set; }
+        public List<TiposCursoDto> TiposCursos { get; set; }
 
 
         public class CreateUpdateCursoCommand

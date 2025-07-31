@@ -239,6 +239,12 @@ builder.Services.AddAuthorization(o =>
 
     o.AddPolicy(ModuloAccess.MeusCursos, policy =>
         policy.RequireAssertion(context =>
+            context.User.IsInRole(UserRoles.AdministradorEad) ||
+            context.User.IsInRole(UserRoles.Aluno) ||
+            context.User.IsInRole(UserRoles.Administrador)));
+
+    o.AddPolicy(ModuloAccess.Catalogo, policy =>
+        policy.RequireAssertion(context =>
             context.User.IsInRole(UserRoles.Gestor) ||
             context.User.IsInRole(UserRoles.AdministradorEad) ||
             context.User.IsInRole(UserRoles.CoordenadorEad) ||
