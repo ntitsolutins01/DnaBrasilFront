@@ -26,27 +26,29 @@ namespace WebApp.Controllers
         }
         public async Task<IActionResult> Index(IFormCollection collection)
         {
-            //var usu = User?.Identity.Name;
+            var usuario = User?.Identity.Name;
             //var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             //userName = User.FindFirstValue(ClaimTypes.Name); // will give the user's userName
             //email = User.FindFirstValue(ClaimTypes.Email);
 
+            var usu = await ApiClientFactory.Instance.GetUsuarioByEmail(usuario);
+
             var searchFilter = new DashboardDto
             {
-                FomentoId = collection["ddlFomento"].ToString(),
-                Estado = collection["ddlEstado"].ToString(),
-                MunicipioId = collection["ddlMunicipio"].ToString(),
-                LocalidadeId = collection["ddlLocalidade"].ToString(),
-                DeficienciaId = collection["ddlDeficiencia"].ToString(),
-                Etnia = collection["ddlEtnia"].ToString()
+                MunicipioId = usu.MunicipioId.ToString(),
+                LocalidadeId = usu.LocalidadeId
             };
 
             var dashboard = new DashboardDto();
             var dashboardEad = new DashboardEadDto();
 
-            var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentosAll(), "Id", "Nome", dashboard.FomentoId);
+            var fomento = ApiClientFactory.Instance.GetFomentoByLocalidadeId(Convert.ToInt32(usu.LocalidadeId));
+            var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentosAll(), "Id", "Nome", fomento.Id);
+
             var deficiencias = new SelectList(ApiClientFactory.Instance.GetDeficienciaAll().Where(x => x.Status), "Id", "Nome", dashboard.DeficienciaId);
-            var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome", dashboard.Estado);
+
+            var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome", usu.Uf);
+
             var tipoCurso = new SelectList(ApiClientFactory.Instance.GetTipoCursosAll(), "Id", "Nome");
 
             List<SelectListDto> list = new List<SelectListDto>
@@ -59,17 +61,22 @@ namespace WebApp.Controllers
             };
 
             var etnias = new SelectList(list, "IdNome", "Nome", dashboard.Etnia);
+
             SelectList municipios = null;
 
-            if (!string.IsNullOrEmpty(dashboard.Estado))
+            if (!string.IsNullOrEmpty(usu.Uf))
             {
-                municipios = new SelectList(ApiClientFactory.Instance.GetMunicipiosByUf(dashboard.Estado), "Id", "Nome", dashboard.MunicipioId);
+                municipios = new SelectList(ApiClientFactory.Instance.GetMunicipiosByUf(usu.Uf), "Id", "Nome", usu.MunicipioId);
             }
+
             SelectList localidades = null;
 
-            if (!string.IsNullOrEmpty(dashboard.LocalidadeId))
+            if (usu.MunicipioId != null)
             {
-                localidades = new SelectList(ApiClientFactory.Instance.GetLocalidadeByMunicipioId(dashboard.MunicipioId), "Id", "Nome", dashboard.LocalidadeId);
+                var resultLocalidades = ApiClientFactory.Instance.GetLocalidadeByMunicipioId(usu.MunicipioId.ToString());
+
+                if (resultLocalidades != null)
+                    localidades = new SelectList(resultLocalidades, "Id", "Nome", usu.LocalidadeId);
             }
 
             var model = new DashboardModel
@@ -82,7 +89,8 @@ namespace WebApp.Controllers
                 ListMunicipios = municipios!,
                 ListEtnias = etnias,
                 ListLocalidades = localidades!,
-                ListTipoCursos = tipoCurso
+                ListTipoCursos = tipoCurso,
+                IdPerfil = usu.Perfil.Id
             };
 
             model.Dashboard.StatusLaudos = new StatusLaudosDto();

@@ -17,7 +17,8 @@ namespace WebApp.Controllers;
 /// <summary>
 /// Controle de Curso
 /// </summary>
-[Authorize(Policy = ModuloAccess.ConfiguracaoSistemaEad)]
+//[Authorize(Policy = ModuloAccess.MeusCursos)]
+[Authorize(Policy = ModuloAccess.Catalogo)]
 public class CursoController : BaseController
 {
     #region Parametros
@@ -89,7 +90,7 @@ public class CursoController : BaseController
         }
     }
 
-    [ClaimsAuthorize(ClaimType.Curso, Identity.Claim.Incluir)]
+    [ClaimsAuthorize(ClaimType.Curso, Identity.Claim.Consultar)]
     public ActionResult CatalogoCursos(int? crud, int? notify, string message = null)
     {
         try
@@ -97,11 +98,13 @@ public class CursoController : BaseController
             SetNotifyMessage(notify, message);
             SetCrudMessage(crud);
 
+            var tipoCursos = ApiClientFactory.Instance.GetTipoCursosAll();
             var cursos = ApiClientFactory.Instance.GetCursosAll();
 
             var model = new CursoModel()
             {
-                Cursos = cursos
+                Cursos = cursos,
+                TiposCursos = tipoCursos
             };
 
             return View(model);

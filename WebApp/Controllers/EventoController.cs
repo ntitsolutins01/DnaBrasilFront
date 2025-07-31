@@ -46,11 +46,24 @@ public class EventoController : BaseController
     /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
     /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
     [ClaimsAuthorize(ClaimType.Evento, Identity.Claim.Consultar)]
-    public IActionResult Index(int? crud, int? notify, string message = null)
+    public async Task<ActionResult> Index(int? crud, int? notify, string message = null)
     {
         SetNotifyMessage(notify, message);
         SetCrudMessage(crud);
-        var response = ApiClientFactory.Instance.GetEventosAll();
+
+        var usuario = User.Identity.Name;
+        var usu = await ApiClientFactory.Instance.GetUsuarioByEmail(usuario);
+
+        List<EventoDto> response;
+
+        if (usu.Perfil.Id == (int)EnumPerfil.Administrador)
+        {
+            response = ApiClientFactory.Instance.GetEventosAll();
+        }
+        else
+        {
+            response = ApiClientFactory.Instance.GetEventosAll().Where(x => x.MunicipioId == usu.MunicipioId.ToString()).ToList();
+        }
 
         return View(new EventoModel() { Eventos = response });
     }

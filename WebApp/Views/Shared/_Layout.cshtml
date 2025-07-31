@@ -577,6 +577,16 @@
                                     </li>
                                 }
 
+                                @if ((await AuthorizationService.AuthorizeAsync(User, ModuloAccess.Catalogo)).Succeeded)
+                                {
+                                    <li class="nav-parent nav-expanded">
+                                        <a href="@Url.Action("CatalogoCursos", "Curso")">
+                                            <i class="fa fa-files-o" aria-hidden="true"></i>
+                                            <span>Catálogo Cursos</span>
+                                        </a>
+                                    </li>
+                                }
+
                                 @if ((await AuthorizationService.AuthorizeAsync(User, ModuloAccess.ControleAcesso)).Succeeded)
                                 {
                                     <li class="nav-parent nav-expanded">
