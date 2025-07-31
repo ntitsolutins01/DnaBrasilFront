@@ -66,7 +66,7 @@ namespace WebApp.Controllers
 
             if (!string.IsNullOrEmpty(usu.Uf))
             {
-                municipios = new SelectList(ApiClientFactory.Instance.GetMunicipiosByUf(usu.Uf), "Id", "Nome", usu.MunicipioId);
+                municipios = new SelectList(ApiClientFactory.Instance.GetMunicipiosByFomentoId(fomento.Id), "Id", "Nome", usu.MunicipioId);
             }
 
             SelectList localidades = null;

@@ -65,10 +65,20 @@
 								}
 								else
 								{
-									<select class="form-control populate select2" name="ddlMunicipio" id="ddlMunicipio" style="width: 100%" disabled="disabled"
-									        asp-for="MunicipioId" asp-items="Model.ListMunicipios">
-										<option value="">Selecionar Municipio</option>
-									</select>
+									if (Model.IdPerfil == (int)EnumPerfil.GestorPedagogico)
+									{
+										<select class="form-control populate select2" name="ddlMunicipio" id="ddlMunicipio" style="width: 100%"
+										        asp-for="MunicipioId" asp-items="Model.ListMunicipios">
+											<option value="">Selecionar Municipio</option>
+										</select>
+									}
+									else
+									{
+										<select class="form-control populate select2" name="ddlMunicipio" id="ddlMunicipio" style="width: 100%" disabled="disabled"
+												asp-for="MunicipioId" asp-items="Model.ListMunicipios">
+											<option value="">Selecionar Municipio</option>
+										</select>
+									}
 								}
 							}
 						</div>
