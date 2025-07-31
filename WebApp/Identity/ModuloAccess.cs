@@ -10,7 +10,6 @@
         public const string ControlePresenca = "ControlePresenca";
         public const string Profissional = "Profissional";
         public const string PlanoAula = "PlanoAula";
-        public const string Catalogo = "Catalogo";
         public const string ControleAcesso = "ControleAcesso";
         public const string Nota = "Nota";
         public const string Evento = "Evento";
