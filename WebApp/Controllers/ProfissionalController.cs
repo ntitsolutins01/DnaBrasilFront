@@ -100,7 +100,8 @@ namespace WebApp.Controllers
 
                 return View(new ProfissionalModel()
                 {
-                    Profissionais = response
+                    Profissionais = response,
+                    IdPerfil = usu.Perfil.Id
                 });
 
             }

@@ -33,12 +33,6 @@ namespace WebApp.Controllers
 
             var usu = await ApiClientFactory.Instance.GetUsuarioByEmail(usuario);
 
-            var searchFilter = new DashboardDto
-            {
-                MunicipioId = usu.MunicipioId.ToString(),
-                LocalidadeId = usu.LocalidadeId
-            };
-
             var dashboard = new DashboardDto();
             var dashboardEad = new DashboardEadDto();
 

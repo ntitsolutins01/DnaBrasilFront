@@ -17,6 +17,7 @@ namespace WebApp.Models
         public List<EventoDto> Eventos { get; set; }
         public List<ControlePresencaDto> ControlesPresencas { get; set; }
         public AlunoIndexDto? Convidado { get; set; }
+        public int IdPerfil { get; set; }
 
 
         public class CreateUpdateEventoCommand

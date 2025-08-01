@@ -58,14 +58,14 @@ public class EventoController : BaseController
 
         if (usu.Perfil.Id == (int)EnumPerfil.Administrador)
         {
-            response = ApiClientFactory.Instance.GetEventosAll();
+            response = await ApiClientFactory.Instance.GetEventosAll();
         }
         else
         {
-            response = ApiClientFactory.Instance.GetEventosAll().Where(x => x.MunicipioId == usu.MunicipioId.ToString()).ToList();
+            response = await ApiClientFactory.Instance.GetEventosAll();
         }
 
-        return View(new EventoModel() { Eventos = response });
+        return View(new EventoModel() { Eventos = response.Where(x=>x.EstadoId == usu.Uf).ToList() });
     }
 
     /// <summary>
@@ -75,19 +75,43 @@ public class EventoController : BaseController
     /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
     /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
     [ClaimsAuthorize(ClaimType.Evento, Identity.Claim.Incluir)]
-    public ActionResult Create(int? crud, int? notify, string message = null)
+    public async Task<ActionResult> Create(int? crud, int? notify, string message = null)
     {
         try
         {
+            var usuario = User.Identity.Name;
+            var usu = await ApiClientFactory.Instance.GetUsuarioByEmail(usuario);
+
             SetNotifyMessage(notify, message);
             SetCrudMessage(crud);
-            var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome");
 
+            var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome", usu.Uf);
 
+            SelectList municipios = null;
+
+            var fomento = ApiClientFactory.Instance.GetFomentoByLocalidadeId(Convert.ToInt32(usu.LocalidadeId));
+
+            if (!string.IsNullOrEmpty(usu.Uf))
+            {
+                municipios = new SelectList(ApiClientFactory.Instance.GetMunicipiosByFomentoId(fomento.Id), "Id", "Nome", usu.MunicipioId);
+            }
+
+            SelectList localidades = null;
+
+            if (usu.MunicipioId != null)
+            {
+                var resultLocalidades = ApiClientFactory.Instance.GetLocalidadeByMunicipioId(usu.MunicipioId.ToString());
+
+                if (resultLocalidades != null)
+                    localidades = new SelectList(resultLocalidades, "Id", "Nome", usu.LocalidadeId);
+            }
 
             return View(new EventoModel()
             {
-                ListEstados = estados
+                ListEstados = estados,
+                ListMunicipios = municipios!,
+                ListLocalidades = localidades!,
+                IdPerfil = usu.Perfil.Id
             });
         }
         catch (Exception e)
