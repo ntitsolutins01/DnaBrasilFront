@@ -7,16 +7,15 @@
 <div id="vCatalogo">
 	<div class="row">
 		<div class="col-md-12">
-			@foreach (var tiposCurso in Model.TiposCursos)
+			@foreach (var tiposCurso in Model.TiposCursos.Where(tiposCurso => tiposCurso.Cursos.Count > 0))
 			{
-
 				<section class="panel panel-featured">
 					<header class="panel-heading">
 						<h1 class="panel-title">@tiposCurso.Nome</h1>
 					</header>
 					<div class="panel-body">
 						<div class="owl-carousel owl-theme" data-plugin-carousel data-plugin-options='{ "dots": true, "autoplay": true, "autoplayTimeout": 3000, "loop": true, "margin": 10, "nav": false,   }'>
-							@foreach (var item in tiposCurso.Cursos)
+							@foreach (var item in tiposCurso.Cursos.Where(x => x.Status))
 							{
 								<a href="#" data-toggle="modal" data-target="#mdDetalheCurso" data-id="@item.Id">
 									<div class="item"><img class="img-thumbnail" src="~/Cursos/@Html.DisplayFor(modelItem => item.Imagem)" alt="@item.Titulo"></div>
