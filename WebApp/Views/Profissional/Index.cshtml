@@ -1,6 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @inject UserManager<IdentityUser> _userManager
 @using Microsoft.AspNetCore.Mvc.TagHelpers
+@using WebApp.Enumerators
 @model WebApp.Models.ProfissionalModel
 @{
 	ViewData["Title"] = "Listagem de Profissionais";
@@ -20,7 +21,12 @@
 				<div class="panel-body">
 					<div class="form-group row">
 						<div class="col-sm-2 pull-right">
-							<a href="@Url.Action("Create", "Profissional")" id="addToTable" class="btn btn-block btn-primary pull-right"><i class="fa fa-plus"></i> &nbsp;&nbsp; Novo Profissional </a>
+						@{
+							if (Model.IdPerfil == (int)EnumPerfil.Administrador)
+							{
+								<a href="@Url.Action("Create", "Profissional")" id="addToTable" class="btn btn-block btn-primary pull-right"><i class="fa fa-plus"></i> &nbsp;&nbsp; Novo Profissional </a>
+							}
+						}
 						</div>
 					</div>
 					<table class="table table-bordered table-striped mb-0" id="datatable-default">
@@ -33,7 +39,12 @@
 								<th class="text-center">Localidade</th>
 								<th class="text-center" style="width: 10%;">Status</th>
 								<th class="text-center" style="width: 10%;">Habilitado</th>
-								<th class="text-center">Ações</th>
+								@{
+									if (Model.IdPerfil == (int)EnumPerfil.Administrador)
+									{
+										<th class="text-center">Ações</th>
+									}
+								}
 							</tr>
 						</thead>
 						<tbody>
@@ -61,9 +72,12 @@
 									{
 										<td class="text-center"><span class="label label-danger" style="display: block;">INABILITADO</span></td>
 									}
-									<td class="actions text-center">
-										<a data-toggle="tooltip" data-placement="top" title="Editar" asp-action="Edit" asp-controller="Profissional" asp-route-Id="@item.Id" class="on-default edit-row" style='color: #FF9800'><i class="fa fa-pencil"></i></a>
-										@* <a data-toggle="tooltip" data-placement="top" title="Habilitar Profissional" href='javascript:(crud.HabilitarModal(@item.Id))'
+									@{
+										if (Model.IdPerfil == (int)EnumPerfil.Administrador)
+										{
+											<td class="actions text-center">
+												<a data-toggle="tooltip" data-placement="top" title="Editar" asp-action="Edit" asp-controller="Profissional" asp-route-Id="@item.Id" class="on-default edit-row" style='color: #FF9800'><i class="fa fa-pencil"></i></a>
+												@* <a data-toggle="tooltip" data-placement="top" title="Habilitar Profissional" href='javascript:(crud.HabilitarModal(@item.Id))'
 										   class="on-default remove-row" style="cursor: pointer;color: #7B1FA2"><i class="fa fa-check-circle"></i></a>
 										@{
 											if (item.PossuiAlunosVinculados)
@@ -72,10 +86,13 @@
 												   class="on-default remove-row" style="cursor: pointer; color: #7B1FA2"><i class="fa fa-unlink"></i></a>
 											}
 										} *@
-											<a data-toggle="tooltip" data-placement="top" title="Excluir" href='javascript:(crud.DeleteModal(@item.Id))'
-											   class="on-default remove-row" style="cursor: pointer;color: #F44336"><i class="fa fa-trash"></i></a>
+												<a data-toggle="tooltip" data-placement="top" title="Excluir" href='javascript:(crud.DeleteModal(@item.Id))'
+												   class="on-default remove-row" style="cursor: pointer;color: #F44336"><i class="fa fa-trash"></i></a>
 										
-									</td>
+											</td>
+										}
+									}
+									
 								</tr>
 							}
 						</tbody>

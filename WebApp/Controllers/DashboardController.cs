@@ -33,12 +33,6 @@ namespace WebApp.Controllers
 
             var usu = await ApiClientFactory.Instance.GetUsuarioByEmail(usuario);
 
-            var searchFilter = new DashboardDto
-            {
-                MunicipioId = usu.MunicipioId.ToString(),
-                LocalidadeId = usu.LocalidadeId
-            };
-
             var dashboard = new DashboardDto();
             var dashboardEad = new DashboardEadDto();
 
@@ -66,7 +60,7 @@ namespace WebApp.Controllers
 
             if (!string.IsNullOrEmpty(usu.Uf))
             {
-                municipios = new SelectList(ApiClientFactory.Instance.GetMunicipiosByUf(usu.Uf), "Id", "Nome", usu.MunicipioId);
+                municipios = new SelectList(ApiClientFactory.Instance.GetMunicipiosByFomentoId(fomento.Id), "Id", "Nome", usu.MunicipioId);
             }
 
             SelectList localidades = null;
