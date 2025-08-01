@@ -99,11 +99,9 @@ public class CursoController : BaseController
             SetCrudMessage(crud);
 
             var tipoCursos = ApiClientFactory.Instance.GetTipoCursosAll();
-            var cursos = ApiClientFactory.Instance.GetCursosAll();
 
             var model = new CursoModel()
             {
-                Cursos = cursos,
                 TiposCursos = tipoCursos
             };
 
