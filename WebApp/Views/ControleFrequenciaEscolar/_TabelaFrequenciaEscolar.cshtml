@@ -1,0 +1,56 @@
+﻿@using Microsoft.IdentityModel.Tokens
+@model IEnumerable<WebApp.Dto.AlunoIndexDto>
+
+<section class="panel">
+    <header class="panel-heading">
+        <div class="panel-actions">
+            <a href="#" class="card-action card-action-toggle" data-card-toggle></a>
+        </div>
+        <h2 class="panel-title">Listagem de Frequências</h2>
+    </header>
+    <div class="panel-body">
+        <div class="form-group row">
+            <div class="col-sm-2 pull-right">
+                <a href="@Url.Action("Create", "Laudo")" id="addToTable" class="btn btn-block btn-danger pull-right"><i class="fa fa-window-close"></i> Novo Laudo </a>
+            </div>
+        </div>
+        <br />
+        <table class="table table-bordered table-striped mb-0" id="datatable-default">
+            <thead>
+                <tr>
+                    <th class="text-center">Matricula - Nome do Aluno</th>
+                    @{
+                        DateTime dataAtual = DateTime.Now;
+                        int ano = dataAtual.Year;
+                        int mes = dataAtual.Month;
+                        int totalDiasNoMes = DateTime.DaysInMonth(ano, mes);
+
+                        for (int dia = 1; dia <= totalDiasNoMes; dia++)
+                        {
+                            <th class="text-center">@dia</th>
+                        }
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.IsNullOrEmpty())
+                {
+                    @foreach (var aluno in Model)
+                    {
+                        <tr>
+                            <td class="text-center" style="width: 300px;">
+                                @aluno.Nome
+                            </td>
+                            @{
+                                for (int dia1 = 1; dia1 <= totalDiasNoMes; dia1++)
+                                {
+                                    <th class="text-center">*</th>
+                                }
+                            }
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</section>

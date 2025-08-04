@@ -23,6 +23,7 @@ namespace WebApp.Models
         public List<ControleFrequenciaEscolarDto> ControlesFrequenciasEscolares { get; set; }
         public string EtapaId { get; set; }
         public SelectList ListEtapas { get; set; }
+        public List<AlunoIndexDto> Alunos { get; set; }
 
         public class CreateUpdateControleFrequenciaEscolarCommand
         {

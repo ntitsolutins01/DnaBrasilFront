@@ -6,7 +6,7 @@
 <div id="vControleFrequenciaEscolar">
     <div class="row">
         <div class="col-md-12">
-            @using (@Html.BeginForm("Index", "ControleFrequenciaEscolar", FormMethod.Post, new { id = "formPesquisarControleFrequenciaEscolar", @class = "form-horizontal" }))
+            @using (@Html.BeginForm("PesquisarTabela", "ControleFrequenciaEscolar", FormMethod.Post, new { id = "formPesquisarControleFrequenciaEscolar", @class = "form-horizontal" }))
             {
                 <section class="panel">
                     <header class="panel-heading">
@@ -39,7 +39,7 @@
                         </div>
                         <label class="col-sm-2 control-label">Etapa Ensino:</label>
                         <div class="col-md-4 form-group">
-                            <select class="form-control populate select2" name="ddlEtapa" id="ddlEtapa"
+                            <select class="form-control populate select2" name="ddlEtapa" id="ddlEtapa" style="width: 100%"
                                     title="Por favor informe a série." required
                                     asp-for="EtapaId" asp-items="Model.ListEtapas">
                                 <option value="">Selecionar Etapa</option>
@@ -47,7 +47,7 @@
                         </div>
                         <label class="col-sm-2 control-label">Série:</label>
                         <div class="col-md-4 form-group">
-                            <select class="form-control populate select2" name="ddlSerie" id="ddlSerie"
+                            <select class="form-control populate select2" name="ddlSerie" id="ddlSerie" style="width: 100%"
                                     title="Por favor informe a série." required
                                     asp-for="SerieId" asp-items="Model.ListSeries">
                                 <option value="">Selecionar Série</option>
@@ -89,67 +89,8 @@
             }
         </div>
     </div>
-    <div class="row">
-        <div class="col-lg-12">
-            <section class="panel">
-                <header class="panel-heading">
-                    <div class="panel-actions">
-                        <a href="#" class="card-action card-action-toggle" data-card-toggle></a>
-                    </div>
-                    <h2 class="panel-title">Listagem de Laudos</h2>
-                </header>
-                <div class="panel-body">
-                    <div class="form-group row">
-                        <div class="col-sm-2 pull-right">
-                            <a href="@Url.Action("Create", "Laudo")" id="addToTable" class="btn btn-block btn-danger pull-right"><i class="fa fa-window-close"></i> Novo Laudo </a>
-                        </div>
-                    </div>
-                    <br />
-                    <table class="table table-bordered table-striped mb-0" id="datatable-default">
-                        <thead>
-                            <tr>
-                                <th class="text-center">Matricula - Nome do Aluno</th>
-                                @{
-                                    DateTime dataAtual = DateTime.Now;
-                                    int ano = dataAtual.Year;
-                                    int mes = dataAtual.Month;
-                                    int totalDiasNoMes = DateTime.DaysInMonth(ano, mes);
-
-                                    for (int dia = 1; dia <= totalDiasNoMes; dia++)
-                                    {
-                                    //DateTime data = new DateTime(ano, mes, dia);
-                                        // Faça algo com a data aqui, por exemplo, imprimir
-                                        //Console.WriteLine(data.ToString("yyyy-MM-dd"));
-                                        <th class="text-center">@dia</th>
-
-                                    }
-                                }
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @for (int i = 0; i < 11; i++)
-                            {
-                                <tr>
-                                    <td class="text-center" style="width: 300px;">12345678 - Fábio de Souza Muniz</td>
-                                    @{
-                                        for (int dia1 = 1; dia1 <= totalDiasNoMes; dia1++)
-                                        {
-                                            //DateTime data = new DateTime(ano, mes, dia);
-                                            // Faça algo com a data aqui, por exemplo, imprimir
-                                            //Console.WriteLine(data.ToString("yyyy-MM-dd"));
-                                            <th class="text-center">
-                                                *
-                                            </th>
-
-                                        }
-                                    }
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-        </div>
+    <div id="tabela-container">
+        @await Html.PartialAsync("_TabelaFrequenciaEscolar", Model.Alunos)
     </div>
 
 </div>

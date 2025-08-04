@@ -144,6 +144,32 @@ public class ControleFrequenciaEscolarController : BaseController
         }
     }
 
+    [HttpPost]
+    public async Task<ActionResult> PesquisarTabela(IFormCollection collection)
+    {
+        //var series = ApiClientFactory.Instance.GetSerieAll();
+        //var serie = series.Where(s =>
+        //        s.Nome == collection["ddlSerie"].ToString() &&
+        //        s.LocalidadeId.ToString() == collection["ddlLocalidade"].ToString()
+        //);
+
+        var filter = new AlunosFilterDto()
+        {
+            SerieId = collection["ddlTurma"].ToString(),
+            LocalidadeId = collection["ddlLocalidade"].ToString(),
+            //ProfissionalId = collection["ddlProfissional"].ToString(),
+        };
+
+        var result = await ApiClientFactory.Instance.GetAlunosByFilter(filter);
+        var alunos = result.Alunos;
+
+        var response = alunos.Where(
+            a => a.SerieTurma == collection["ddlSerie"].ToString() + " - " + collection["ddlTurma"].ToString());
+
+        return PartialView("_TabelaFrequenciaEscolar", alunos);
+    }
+
+
     #endregion
 
     #region Get Methods

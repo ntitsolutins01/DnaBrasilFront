@@ -356,6 +356,41 @@
                 
             }
 
+            $("#formPesquisarControleFrequenciaEscolar").submit(function (e) {
+                e.preventDefault();
+
+                var $form = $(this);
+                var $btn = $form.find('button[type="submit"]');
+                $btn.prop('disabled', true);
+
+                if (typeof self.ShowLoad === "function") self.ShowLoad(true, "tabela-container");
+
+                $.ajax({
+                    url: $form.attr('action'),
+                    type: $form.attr('method'),
+                    data: $form.serialize(),
+                    success: function (html) {
+                        // Substitui o conteúdo da tabela pela partial retornada
+                        $("#tabela-container").html(html);
+
+                        // Scroll até a tabela, se desejar:
+                        $('html, body').animate({ scrollTop: $("#tabela-container").offset().top }, 300);
+                    },
+                    error: function (xhr, status, error) {
+                        new PNotify({
+                            title: 'Erro',
+                            text: 'Não foi possível pesquisar. ' + (xhr.responseText || error),
+                            type: 'error'
+                        });
+                    },
+                    complete: function () {
+                        $btn.prop('disabled', false);
+                        if (typeof self.ShowLoad === "function") self.ShowLoad(false, "tabela-container");
+                    }
+                });
+            });
+
+
         }).apply(this, [jQuery]);
     },
     methods: {
