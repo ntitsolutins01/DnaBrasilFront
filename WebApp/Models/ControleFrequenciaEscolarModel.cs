@@ -20,17 +20,17 @@ namespace WebApp.Models
         public string SerieId { get; set; }
         public SelectList ListSeries { get; set; }
         public string Data { get; set; }
+        public List<ControleFrequenciaEscolarDto> ControlesFrequenciasEscolares { get; set; }
+        public string EtapaId { get; set; }
+        public SelectList ListEtapas { get; set; }
 
         public class CreateUpdateControleFrequenciaEscolarCommand
         {
             public int Id { get; set; }
-            public string Controle { get; init; }
-            public string Justificativa { get; init; }
-            public bool Status { get; init; } = true;
-            public int? LocalidadeId { get; set; }
-            public string? MunicipioId { get; set; }
+            public string Controle { get; set; }
             public string? AlunoId { get; set; }
-            public int? EventoId { get; set; }
+            public string? SerieId { get; set; }
+            public string? DisciplinaId { get; set; }
         }
     }
 
