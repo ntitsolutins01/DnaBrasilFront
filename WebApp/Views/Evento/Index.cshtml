@@ -16,11 +16,16 @@
 					<h2 class="panel-title">Listagem de Eventos</h2>
 				</header>
 				<div class="panel-body">
-					<div class="form-group row">
-						<div class="col-sm-12 pull-right">
-							<a href="@Url.Action("Create", "Evento")" id="addToTable" class="btn btn-primary pull-right"><i class="fa fa-plus"></i>&nbsp;&nbsp; Novo Evento </a>
-						</div>
-					</div>
+					@{
+						if (Model.IdPerfil == (int)EnumPerfil.Administrador)
+						{
+							<div class="form-group row">
+								<div class="col-sm-12 pull-right">
+									<a href="@Url.Action("Create", "Evento")" id="addToTable" class="btn btn-primary pull-right"><i class="fa fa-plus"></i>&nbsp;&nbsp; Novo Evento </a>
+								</div>
+							</div>
+						}
+					}
 					<table class="table table-bordered table-striped mb-0" id="datatable-default">
 						<thead>
 							<tr>
@@ -43,7 +48,7 @@
 							@foreach (var item in Model.Eventos)
 							{
 								<tr>
-									<td class="text-center" style="width:20px;">@Html.DisplayFor(modelItem => item.Id)</td>
+									<td class="text-center" style="width: 20px;">@Html.DisplayFor(modelItem => item.Id)</td>
 									<td class="text-center">@Html.DisplayFor(modelItem => item.Titulo)</td>
 									<td class="text-center">@Html.DisplayFor(modelItem => item.Localidade)</td>
 									<td class="text-center">@Html.DisplayFor(modelItem => item.DataEvento)</td>

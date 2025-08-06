@@ -24,27 +24,7 @@
 					</div>
 					<h2 class="panel-title">Gerenciamento de Aprendizado</h2>
 				</header>
-
-				<div class="panel-body">
-					@{
-						var perfil = ((ClaimsIdentity)User.Identity).FindFirst(ClaimTypes.Role)?.Value;
-						if (perfil == EnumPerfil.Administrador.GetDescription())
-		                {
-			                <div class="form-group row">
-                                @*<div class="col-sm-2 pull-right">
-                                    <a href="@Url.Action("CreateAlunoCertificado", "AlunoCursoCertificado")" class="btn btn-block btn-success pull-right">
-                                        <i class="fa fa-certificate"></i> Cadastrar Certificado
-                                    </a>
-                                </div>
-								*@
-				                <div class="col-sm-2 pull-right">
-					                <a href="@Url.Action("CreateAlunoCurso", "AlunoCursoCertificado")" class="btn btn-block btn-primary pull-right">
-						                <i class="fa fa-plus"></i> Cadastrar Curso
-					                </a>
-				                </div>
-			                </div>
-		                }
-	                }
+					
                 <div class="panel-body">
 		                <div class="tabs">
 			                <ul class="nav nav-tabs tabs-primary">
@@ -209,7 +189,7 @@
 			                </div>
 		                </div>
 	                </div>
-                </div>
+                
             </section>
         </div>
     </div>
