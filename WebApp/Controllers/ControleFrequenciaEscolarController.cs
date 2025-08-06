@@ -9,6 +9,7 @@ using WebApp.Factory;
 using WebApp.Identity;
 using WebApp.Models;
 using WebApp.Utility;
+using static WebApp.Models.ControleFrequenciaEscolarModel;
 
 namespace WebApp.Controllers;
 
@@ -144,31 +145,53 @@ public class ControleFrequenciaEscolarController : BaseController
         }
     }
 
+    /// <summary>
+    /// Ação de Pesquisa de Alunos
+    /// </summary>
+    /// <param name="collection">Coleção de dados para pesquisa da Frequencia Escolar</param>
+    /// <returns>Retorna a partial view da tabela com os alunos</returns>
     [HttpPost]
     public async Task<ActionResult> PesquisarTabela(IFormCollection collection)
     {
-        //var series = ApiClientFactory.Instance.GetSerieAll();
-        //var serie = series.Where(s =>
-        //        s.Nome == collection["ddlSerie"].ToString() &&
-        //        s.LocalidadeId.ToString() == collection["ddlLocalidade"].ToString()
-        //);
-
         var filter = new AlunosFilterDto()
         {
             SerieId = collection["ddlTurma"].ToString(),
             LocalidadeId = collection["ddlLocalidade"].ToString(),
-            //ProfissionalId = collection["ddlProfissional"].ToString(),
         };
 
         var result = await ApiClientFactory.Instance.GetAlunosByFilter(filter);
         var alunos = result.Alunos;
 
-        var response = alunos.Where(
-            a => a.SerieTurma == collection["ddlSerie"].ToString() + " - " + collection["ddlTurma"].ToString());
+        var presencas = new List<ControleFrequenciaEscolarDto>();
 
-        return PartialView("_TabelaFrequenciaEscolar", alunos);
+        foreach (var aluno in alunos)
+        {
+            var freq = ApiClientFactory.Instance.GetControlesFrequenciasEscolaresByAlunoId(aluno.Id);
+
+            if (freq != null && freq.Any())
+            {
+                foreach (var registro in freq)
+                {
+                    presencas.Add(new ControleFrequenciaEscolarDto
+                    {
+                        Id = registro.Id,
+                        AlunoId = aluno.Id.ToString(),
+                        Data = registro.Data,
+                        Controle = registro.Controle,
+                        DisciplinaId = registro.DisciplinaId
+                    });
+                }
+            }
+        }
+
+        var tabelaFrequenciaEscolar = new TabelaFrequenciasEscolares
+        {
+            Alunos = alunos,
+            AlunosComPresencas = presencas
+        };
+
+        return PartialView("_TabelaFrequenciaEscolar", tabelaFrequenciaEscolar);
     }
-
 
     #endregion
 

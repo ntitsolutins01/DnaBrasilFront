@@ -1,5 +1,5 @@
 ﻿@using Microsoft.IdentityModel.Tokens
-@model IEnumerable<WebApp.Dto.AlunoIndexDto>
+@model ControleFrequenciaEscolarModel.TabelaFrequenciasEscolares
 
 <section class="panel">
     <header class="panel-heading">
@@ -13,6 +13,11 @@
             <div class="col-sm-2 pull-right">
                 <a href="@Url.Action("Create", "Laudo")" id="addToTable" class="btn btn-block btn-danger pull-right"><i class="fa fa-window-close"></i> Novo Laudo </a>
             </div>
+            <div class="col-sm-2 pull-right" style="margin-right: 7px;">
+                <button id="marcarDiaAtual" type="button" class="btn btn-block btn-success pull-right">
+                    <i class="fa fa-check"></i> Marcar presenças de hoje
+                </button>
+            </div>
         </div>
         <br />
         <table class="table table-bordered table-striped mb-0" id="datatable-default">
@@ -24,6 +29,7 @@
                         int ano = dataAtual.Year;
                         int mes = dataAtual.Month;
                         int totalDiasNoMes = DateTime.DaysInMonth(ano, mes);
+                        int diaHoje = dataAtual.Day;
 
                         for (int dia = 1; dia <= totalDiasNoMes; dia++)
                         {
@@ -33,19 +39,36 @@
                 </tr>
             </thead>
             <tbody>
-                @if (!Model.IsNullOrEmpty())
+                @if (!Model.Alunos.IsNullOrEmpty())
                 {
-                    @foreach (var aluno in Model)
+                    foreach (var aluno in Model.Alunos)
                     {
                         <tr>
                             <td class="text-center" style="width: 300px;">
                                 @aluno.Nome
                             </td>
-                            @{
-                                for (int dia1 = 1; dia1 <= totalDiasNoMes; dia1++)
-                                {
-                                    <th class="text-center">*</th>
-                                }
+                            @for (int dia1 = 1; dia1 <= totalDiasNoMes; dia1++)
+                            {
+                                var disabled = dia1 > diaHoje ? "disabled" : "";
+                                var isHoje = dia1 == diaHoje ? "checkbox-dia-hoje" : "";
+
+                                var temPresenca = Model.AlunosComPresencas != null && Model.AlunosComPresencas.Any(p =>
+                                p.AlunoId == aluno.Id.ToString() &&
+                                p.Data?.Day == dia1 &&
+                                p.Data?.Month == mes &&
+                                p.Data?.Year == ano &&
+                                p.Controle == "P"
+                                );
+
+                                var marcado = temPresenca ? "checked" : "";
+
+                                <th class="text-center">
+                                    <input type="checkbox"
+                                           id="presenca_@dia1-@aluno.Id"
+                                           name="presenca_@dia1"
+                                           class="@isHoje"
+                                    @disabled @marcado />
+                                </th>
                             }
                         </tr>
                     }

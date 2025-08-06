@@ -76,6 +76,16 @@ namespace WebApp.ApiClient
             return Get<List<ControleFrequenciaEscolarDto>>(requestUrl);
         }
 
+        /// <summary>
+        /// Busca os Controles de FrequenciasEscolares cadastradas de um aluno especifico
+        /// </summary>
+        /// <returns>Retorna a lista de Frequencia Escolar</returns>
+        public List<ControleFrequenciaEscolarDto> GetControlesFrequenciasEscolaresByAlunoId(int id)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceMaterial}/Aluno/{id}"));
+            return Get<List<ControleFrequenciaEscolarDto>>(requestUrl);
+        }
         #endregion
 
     }

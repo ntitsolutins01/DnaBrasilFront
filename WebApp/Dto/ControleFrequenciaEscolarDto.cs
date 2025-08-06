@@ -7,5 +7,7 @@
         public string? AlunoId { get; set; }
         public string? SerieId { get; set; }
         public string? DisciplinaId { get; set; }
+        public DateTimeOffset? Data { get; set; }
+
     }
 }

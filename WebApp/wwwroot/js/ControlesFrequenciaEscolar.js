@@ -187,10 +187,8 @@
                             etapaId: etapaId
                         }
                     }).then(result => {
-                        console.log('Dados retornados:', result.data);
-
                         if (result.data && result.data.length > 0) {
-                            var items = '<option value="">Selecionar a série</option>';
+                            var items = '<option value="">Selecionar Série</option>';
                             $("#ddlSerie").empty();
                             $.each(result.data,
                                 function (i, row) {
@@ -259,10 +257,8 @@
                             serie: serie
                         }
                     }).then(result => {
-                        console.log('Dados retornados:', result.data);
-
                         if (result.data && result.data.length > 0) {
-                            var items = '<option value="">Selecionar a turma</option>';
+                            var items = '<option value="">Selecionar Turma</option>';
                             $("#ddlTurma").empty();
                             $.each(result.data,
                                 function (i, row) {
@@ -353,7 +349,7 @@
                         Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
                     });
                 });
-                
+
             }
 
             $("#formPesquisarControleFrequenciaEscolar").submit(function (e) {
@@ -370,10 +366,8 @@
                     type: $form.attr('method'),
                     data: $form.serialize(),
                     success: function (html) {
-                        // Substitui o conteúdo da tabela pela partial retornada
                         $("#tabela-container").html(html);
 
-                        // Scroll até a tabela, se desejar:
                         $('html, body').animate({ scrollTop: $("#tabela-container").offset().top }, 300);
                     },
                     error: function (xhr, status, error) {
@@ -390,6 +384,10 @@
                 });
             });
 
+            // Botão de Marcar aulas do dia atual
+            $(document).on('click', '#marcarDiaAtual', function () {
+                $(".checkbox-dia-hoje:not(:disabled)").prop("checked", true);
+            });
 
         }).apply(this, [jQuery]);
     },
