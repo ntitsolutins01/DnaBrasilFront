@@ -19,6 +19,11 @@ namespace WebApp.Models
         public string EtniaId { get; set; }
         public DashboardDto Dashboard { get; set; }
         public DashboardEadDto DashboardEad { get; set; }
+        public string CursoId { get; set; }
+        public SelectList ListCursos { get; set; }
+        public string TipoCursosId { get; set; }
+        public SelectList ListTipoCursos { get; set; }
+        public int IdPerfil { get; set; }
     }
 
     public class DataGrafico

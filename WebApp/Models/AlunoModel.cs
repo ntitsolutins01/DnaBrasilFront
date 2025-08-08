@@ -33,6 +33,7 @@ namespace WebApp.Models
         public SelectList ListSexos { get; set; }
         public string SexoId { get; set; }
         public string? NomePerfil { get; set; }
+        public int IdPerfil { get; set; }
         public AlunosFilterDto SearchFilter { get; set; }
         public ModeloCarteirinhaDto ModeloCarteirinha { get; set; }
         public AtividadeDto Atividade { get; set; }
@@ -124,6 +125,11 @@ namespace WebApp.Models
             public string? Numero { get; set; }
             public string? Bairro { get; set; }
             public string? Email { get; set; }
+        }
+
+        public class CreateUpdateEtapaEnsinoCommand
+        {
+            public string? Nome { get; set; }
         }
     }
 

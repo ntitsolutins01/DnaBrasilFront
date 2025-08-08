@@ -27,6 +27,7 @@ namespace WebApp.Dto
         public TotalizadorQualidadeVidaDto? ListTotalizadorQualidadeVida { get; set; }
         public TotalizadorConsumoAlimentarDto? ListTotalizadorConsumoAlimentar { get; set; }
         public TotalizadorSaudeBucalDto? ListTotalizadorSaudeBucal { get; set; }
+        public TotalizadorEducacionalDto? ListTotalizadorEducacional { get; set; }
         public TotalizadorVocacionalDto? ListTotalizadorVocacional { get; set; }
         public TotalizadorDesempenhoDto? ListTotalizadorDesempenho { get; set; }
         public TotalizadorDeficienciaDto? ListTotalizadorDeficiencia { get; set; }

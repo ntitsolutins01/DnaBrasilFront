@@ -24,27 +24,7 @@
 					</div>
 					<h2 class="panel-title">Gerenciamento de Aprendizado</h2>
 				</header>
-
-				<div class="panel-body">
-					@{
-						var perfil = ((ClaimsIdentity)User.Identity).FindFirst(ClaimTypes.Role)?.Value;
-						if (perfil == EnumPerfil.Administrador.GetDescription())
-		                {
-			                <div class="form-group row">
-                                @*<div class="col-sm-2 pull-right">
-                                    <a href="@Url.Action("CreateAlunoCertificado", "AlunoCursoCertificado")" class="btn btn-block btn-success pull-right">
-                                        <i class="fa fa-certificate"></i> Cadastrar Certificado
-                                    </a>
-                                </div>
-								*@
-				                <div class="col-sm-2 pull-right">
-					                <a href="@Url.Action("CreateAlunoCurso", "AlunoCursoCertificado")" class="btn btn-block btn-primary pull-right">
-						                <i class="fa fa-plus"></i> Cadastrar Curso
-					                </a>
-				                </div>
-			                </div>
-		                }
-	                }
+					
                 <div class="panel-body">
 		                <div class="tabs">
 			                <ul class="nav nav-tabs tabs-primary">
@@ -158,14 +138,14 @@
 											                <div class="widget-summary">
 												                <div class="widget-summary-col widget-summary-col-icon">
 													                <div class="summary-icon">
-														                @if (item.ImagemFrente != null)
+														                @* @if (item.ImagemFrente != null)
 														                {
 															                <img class="img-responsive img-thumbnail" src="~/Certificados/@Html.DisplayFor(modelItem => item.ImagemFrente)" alt="Certificado">
 														                }
 														                else
 														                {
 															                <i class="fa fa-certificate fa-4x"></i>
-														                }
+														                } *@
 													                </div>
 													                <div class="mt-sm text-center">
 														                <span class="label label-success">Concluído</span>
@@ -174,7 +154,7 @@
 
 												                <div class="widget-summary-col">
 													                <div class="summary">
-														                <h4 class="title">@item.NomeImagemFrente</h4>
+														                @* <h4 class="title">@item.NomeImagemFrente</h4> *@
 														                <p class="text-success"><i class="fa fa-check-circle"></i> Certificado emitido</p>
 													                </div>
 
@@ -209,7 +189,7 @@
 			                </div>
 		                </div>
 	                </div>
-                </div>
+                
             </section>
         </div>
     </div>

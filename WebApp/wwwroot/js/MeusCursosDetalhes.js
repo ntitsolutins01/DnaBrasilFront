@@ -260,27 +260,31 @@
         GetAulaById: function (id) {
             var self = this;
             vm.AtualizarProgresso();
-            axios.get("../../Aula/GetAulaById?id=" + id)
+            axios.get("../../Aula/GetAulaById?id=" + id + "&bloob=true")
                 .then(response => {
                     self.ListarMateriais();
                     self.aula = response.data;
                     self.ListarMateriais();
                     self.selectedVideoUrl = "";
-                    if (response.data.video !== undefined) {
-                        if (response.data.video.includes("\\Aulas")) {
-                            self.selectedVideoUrl = "\\Aulas" + response.data.video.split("\\Aulas")[1];
-                        } else if (response.data.video.includes("\\MaterialEAD")) {
-                            self.selectedVideoUrl = "\\MaterialEAD" + response.data.video.split("\\MaterialEAD")[1];
-                        }
-                    }
+                    //if (response.data.video !== undefined) {
+                    //    if (response.data.video.includes("\\Aulas")) {
+                    //        self.selectedVideoUrl = "\\Aulas" + response.data.video.split("\\Aulas")[1];
+                    //    } else if (response.data.video.includes("\\MaterialEAD")) {
+                    //        self.selectedVideoUrl = "\\MaterialEAD" + response.data.video.split("\\MaterialEAD")[1];
+                    //    }
+                    //}
 
-                    if (response.data.material !== undefined) {
-                        if (response.data.material.includes("\\Aulas")) {
-                            self.selectedMaterialUrl = "\\Aulas" + response.data.material.split("\\Aulas")[1];
-                        } else if (response.data.material.includes("\\MaterialEAD")) {
-                            self.selectedMaterialUrl = "\\MaterialEAD" + response.data.material.split("\\MaterialEAD")[1];
-                        }
-                    }
+                    self.selectedVideoUrl = response.data.video;
+
+                    //if (response.data.material !== undefined) {
+                    //    if (response.data.material.includes("\\Aulas")) {
+                    //        self.selectedMaterialUrl = "\\Aulas" + response.data.material.split("\\Aulas")[1];
+                    //    } else if (response.data.material.includes("\\MaterialEAD")) {
+                    //        self.selectedMaterialUrl = "\\MaterialEAD" + response.data.material.split("\\MaterialEAD")[1];
+                    //    }
+                    //}
+
+                    self.selectedMaterialUrl = response.data.material;
 
                     $('#aulaAtualTitulo').text(response.data.titulo);
 
@@ -314,8 +318,8 @@
             icon = 'fa-file-pdf-o';
             colorClass = 'text-danger';
 
-            const caminho = "\\MaterialEAD" + material.split("\\MaterialEAD")[1];
-            const url = "http://localhost:5166" + caminho.replace(/\\/g, "/");
+            const caminho = material;
+            const url = caminho.replace(/\\/g, "/");
 
             lista.append(`
                 <li class="list-group-item">

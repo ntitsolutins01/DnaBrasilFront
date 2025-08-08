@@ -52,6 +52,7 @@ namespace WebApp.Models
         public string TipoLaudoSaudeBucalDescricao { get; set; }
         public string TipoLaudoVocacionalDescricao { get; set; }
         public List<EducacionalDto> Educacionais { get; set; }
+        public int IdPerfil { get; set; }
 
         public class CreateUpdateLaudoCommand
         {

@@ -1,0 +1,26 @@
+﻿@model AlunoCursoCertificadoModel
+<link rel="stylesheet" href="~/assets/vendor/datatables/media/css/dataTables.bootstrap4.css" />
+<table class="table table-bordered table-striped mb-0" id="datatable-default">
+	<thead>
+	<tr>
+		<th class="text-center">Matrícula</th>
+		@* <th class="text-center">Idade</th> *@
+		<th class="text-center">Nome</th>
+		<th class="text-center">Localidade - Município / Uf</th>
+	</tr>
+	</thead>
+	<tbody>
+	@foreach (var item in Model.AlunosCursos)
+	{
+		<tr>
+			<td class="text-center" style="width:20px;">@Html.DisplayFor(modelItem => item.Matricula)</td>
+			@* <td class="text-center">@Html.DisplayFor(modelItem => item.Idade)</td> *@
+			<td class="text-center">@Html.DisplayFor(modelItem => item.NomeAluno)</td>
+			<td class="text-center">@Html.DisplayFor(modelItem => item.LocalidadeMunicipioUf)</td>
+		</tr>
+	}
+	</tbody>
+</table>
+<script src="~/assets/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
+<script src="~/assets/vendor/datatables/media/js/dataTables.bootstrap4.min.js"></script>
+<script src="~/js/formatTable.js"></script>

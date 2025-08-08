@@ -38,7 +38,8 @@ namespace WebApp.Controllers
         }
 
         [ClaimsAuthorize(ClaimType.Laudo, Claim.Consultar)]
-        public async Task<IActionResult> Index(int? crud, int? notify, IFormCollection collection, string message = null)
+        [HttpGet]
+        public async Task<IActionResult> Index(int? crud, int? notify, string message = null)
         {
             try
             {
@@ -51,16 +52,18 @@ namespace WebApp.Controllers
 
                 var usu = await ApiClientFactory.Instance.GetUsuarioByEmail(usuario);
 
+                var fomento = ApiClientFactory.Instance.GetFomentoByLocalidadeId(Convert.ToInt32(usu.LocalidadeId));
+                var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentosAll(), "Id", "Nome", fomento.Id);
 
-                var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentosAll(), "Id", "Nome");
                 var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome", usu.Uf);
 
                 SelectList municipios = null;
 
                 if (!string.IsNullOrEmpty(usu.Uf))
                 {
-                    municipios = new SelectList(ApiClientFactory.Instance.GetMunicipiosByUf(usu.Uf), "Id", "Nome", usu.MunicipioId);
+                    municipios = new SelectList(ApiClientFactory.Instance.GetMunicipiosByFomentoId(fomento.Id), "Id", "Nome", usu.MunicipioId);
                 }
+
                 SelectList localidades = null;
 
                 if (usu.MunicipioId != null)
@@ -72,44 +75,20 @@ namespace WebApp.Controllers
                 }
 
                 SelectList alunos = null;
-                //SelectList turmas = null;
 
                 if (usu.LocalidadeId != null)
                 {
                     var resultAlunos = ApiClientFactory.Instance.GetAlunosByLocalidadeId(Convert.ToInt32(usu.LocalidadeId));
 
                     alunos = new SelectList(resultAlunos, "Id", "Nome");
-
-                    //turmas = new SelectList(ApiClientFactory.Instance.GetTurmasByLocalidadeId(Convert.ToInt32(usu.LocalidadeId)));
+                    
                 }
 
-                var tiposLaudos = new SelectList(ApiClientFactory.Instance.GetTiposLaudoAll(), "Id", "Nome");
-
-                var possuiFoto = collection["possuiFoto"].ToString();
-                var finalizado = collection["finalizado"].ToString();
-
-                var searchFilter = new LaudosFilterDto()
+                var searchFilter = new LaudosFilterDto
                 {
-                    UsuarioEmail = usuario,
-                    FomentoId = collection["ddlFomento"].ToString(),
-                    Estado = collection["ddlEstado"].ToString(),
-                    MunicipioId = collection["ddlMunicipio"].ToString(),
-                    LocalidadeId = collection["ddlLocalidade"].ToString() == "" ? usu.LocalidadeId : collection["ddlLocalidade"].ToString(),
-                    TipoLaudoId = collection["ddlTipoLaudo"].ToString(),
-                    AlunoId = collection["ddlAluno"].ToString(),
-                    DeficienciaId = collection["ddlDeficiencia"].ToString(),
-                    PossuiFoto = possuiFoto != "",
-                    Finalizado = finalizado != "",
-                    PageNumber = 1,
-#if DEBUG
-                    PageSize = 300
-#else
-                    PageSize = 1000
-#endif
+                    MunicipioId = usu.MunicipioId.ToString(),
+                    LocalidadeId = usu.LocalidadeId
                 };
-
-                var deficiencias = new SelectList(ApiClientFactory.Instance.GetDeficienciaAll(), "Id", "Nome", searchFilter.DeficienciaId);
-                var profissionais = new SelectList(ApiClientFactory.Instance.GetProfissionalAll(), "Id", "Nome");
 
                 var response = await ApiClientFactory.Instance.GetLaudosByFilter(searchFilter);
 
@@ -118,14 +97,92 @@ namespace WebApp.Controllers
                     Laudos = response.Laudos,
                     ListFomentos = fomentos,
                     ListEstados = estados,
-                    ListTiposLaudos = tiposLaudos,
                     ListMunicipios = municipios!,
                     ListLocalidades = localidades!,
-                    ListDeficiencias = deficiencias,
                     ListAlunos = alunos,
                     SearchFilter = searchFilter,
-                    ListProfissionais = profissionais,
-                    //ListTurmas = turmas
+                    IdPerfil = usu.Perfil.Id
+                };
+
+                return View(model);
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e.StackTrace);
+                return RedirectToAction(nameof(Error), new { notify = (int)EnumNotify.Error, message = e.Message });
+
+            }
+        }
+
+        [ClaimsAuthorize(ClaimType.Laudo, Claim.Consultar)]
+        [HttpPost]
+        public async Task<IActionResult> Index(int? crud, int? notify, IFormCollection collection, string message = null)
+        {
+            try
+            {
+                var usuario = User.Identity.Name;
+                var usu = await ApiClientFactory.Instance.GetUsuarioByEmail(usuario);
+
+                SetNotifyMessage(notify, message);
+                SetCrudMessage(crud);
+
+                var possuiFoto = collection["possuiFoto"].ToString();
+                var finalizado = collection["finalizado"].ToString();
+
+                var searchFilter = new LaudosFilterDto()
+                {
+                    
+                    MunicipioId = collection["ddlMunicipio"].ToString(),
+                    LocalidadeId = collection["ddlLocalidade"].ToString(),
+                    AlunoId = collection["ddlAluno"].ToString(),
+                    PossuiFoto = possuiFoto != "",
+                    Finalizado = finalizado != ""
+                };
+
+                var response = await ApiClientFactory.Instance.GetLaudosByFilter(searchFilter);
+                
+                var fomento = ApiClientFactory.Instance.GetFomentoByLocalidadeId(Convert.ToInt32(usu.LocalidadeId));
+                var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentosAll(), "Id", "Nome", fomento.Id);
+
+                var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome", usu.Uf);
+
+                SelectList municipios = null;
+
+                if (!string.IsNullOrEmpty(usu.Uf))
+                {
+                    municipios = new SelectList(ApiClientFactory.Instance.GetMunicipiosByFomentoId(fomento.Id), "Id", "Nome", searchFilter.MunicipioId);
+                }
+
+                SelectList localidades = null;
+
+                if (usu.MunicipioId != null)
+                {
+                    var resultLocalidades = ApiClientFactory.Instance.GetLocalidadeByMunicipioId(searchFilter.MunicipioId.ToString());
+
+                    if (resultLocalidades != null)
+                        localidades = new SelectList(resultLocalidades, "Id", "Nome", searchFilter.LocalidadeId);
+                }
+
+                SelectList alunos = null;
+
+                if (usu.LocalidadeId != null)
+                {
+                    var resultAlunos = ApiClientFactory.Instance.GetAlunosByLocalidadeId(Convert.ToInt32(searchFilter.LocalidadeId));
+
+                    alunos = new SelectList(resultAlunos, "Id", "Nome", searchFilter.AlunoId);
+
+                }
+
+                var model = new LaudoModel()
+                {
+                    Laudos = response.Laudos,
+                    ListFomentos = fomentos,
+                    ListEstados = estados,
+                    ListMunicipios = municipios!,
+                    ListLocalidades = localidades!,
+                    ListAlunos = alunos,
+                    SearchFilter = searchFilter,
+                    IdPerfil = usu.Perfil.Id
                 };
 
                 return View(model);
@@ -245,7 +302,7 @@ namespace WebApp.Controllers
         }
 
         [ClaimsAuthorize(ClaimType.Laudo, Claim.Incluir)]
-        public async Task<ActionResult> Create(int? crud, int? notify, string message = null)
+        public async Task<ActionResult> Create(int? crud, int? notify, bool? aluno = null, string message = null)
         {
             try
             {
@@ -254,9 +311,20 @@ namespace WebApp.Controllers
 
                 var usuario = User.Identity.Name;
 
-                var usu = await ApiClientFactory.Instance.GetUsuarioByEmail(usuario);
+                UsuarioDto usu;
+                AlunoDto aln = null;
+                if (aluno != null && (bool)aluno)
+                {
+                    aln = await ApiClientFactory.Instance.GetAlunoById(Convert.ToInt32(usuario));
+                    usu = await ApiClientFactory.Instance.GetUsuarioByEmail(aln.Email);
+                }
+                else
+                {
+                    usu = await ApiClientFactory.Instance.GetUsuarioByEmail(usuario);
+                }
+                    
 
-                var questionarioVocacional =
+                    var questionarioVocacional =
                     ApiClientFactory.Instance.GetQuestionarioByTipoLaudo((int)EnumTipoLaudo.Vocacional).OrderBy(o => o.Questao).ToList();
                 var questionarioQualidadeVida =
                     ApiClientFactory.Instance.GetQuestionarioByTipoLaudo((int)EnumTipoLaudo.QualidadeVida).OrderBy(o => o.Questao).ToList();
@@ -291,9 +359,22 @@ namespace WebApp.Controllers
 
                 if (usu.LocalidadeId != null)
                 {
-                    var resultAlunos = ApiClientFactory.Instance
-                        .GetAlunosByLocalidadeId(Convert.ToInt32(usu.LocalidadeId))
-                        .Where(x => x.PossuiLaudoFinalizado);
+                    IEnumerable<AlunoIndexDto> resultAlunos;
+
+                    if (aluno != null && (bool)aluno)
+                    {
+                        resultAlunos = ApiClientFactory.Instance
+                            .GetAlunosByLocalidadeId(Convert.ToInt32(usu.LocalidadeId))
+                            .Where(x => aln != null && x.Id == aln.Id);
+
+                    }
+                    else
+                    {
+                        resultAlunos = ApiClientFactory.Instance
+                            .GetAlunosByLocalidadeId(Convert.ToInt32(usu.LocalidadeId))
+                            .Where(x=>x.PossuiLaudoFinalizado);
+                    }
+                        
 
                     alunos = new SelectList(resultAlunos, "Id", "Nome");
 
@@ -314,7 +395,8 @@ namespace WebApp.Controllers
                     ListMunicipios = municipios!,
                     ListLocalidades = localidades!,
                     ListAlunos = alunos!,
-                    ListProfissionais = profissionais!
+                    ListProfissionais = profissionais!,
+                    IdPerfil = usu.Perfil.Id
                 });
 
             }
@@ -504,10 +586,10 @@ namespace WebApp.Controllers
                     command.ModalidadeId = modalidade!.Id;
 
                 }
-                else
-                {
-                    return RedirectToAction(nameof(Create), new { notify = (int)EnumNotify.Error, message = "Favor informar todos os campos de Talento Esportivo." });
-                }
+                //else
+                //{
+                //    return RedirectToAction(nameof(Create), new { notify = (int)EnumNotify.Error, message = "Favor informar todos os campos de Talento Esportivo." });
+                //}
 
                 if (command.SaudeBucalId != null || command.ConsumoAlimentarId != null || command.QualidadeDeVidaId != null ||
                     command.SaudeId != null || command.TalentoEsportivoId != null || command.VocacionalId != null)
@@ -1147,7 +1229,7 @@ namespace WebApp.Controllers
                 var textoGabarito = "";
                 var anoGabarito = "";
 
-                switch (collection["ddlGabarito"])
+                switch (collection["ddlGabaritoModal"])
                 {
                     case "3LP":
                         textoGabarito = "LÍNGUA PORTUGUESA";

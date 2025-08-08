@@ -1,4 +1,5 @@
-﻿@model DashboardModel
+@using WebApp.Enumerators
+@model DashboardModel
 @{
 	ViewData["Title"] = "Dashboard";
 }
@@ -14,33 +15,103 @@
 						<h2 class="panel-title">Filtro de pesquisa</h2>
 					</header>
 					<div class="panel-body" id="pFiltro">
-						<label class="col-sm-2 control-label text-right">Fomento:</label>
+						<label class="col-sm-2 control-label text-right">Contrato:</label>
 						<div class="col-md-4 form-group">
-							<select class="form-control populate select2" name="ddlFomento" id="ddlFomento" style="width:100%"
-									asp-for="FomentoId" asp-items="Model.ListFomentos">
-								<option value="">Selecionar Fomento</option>
-							</select>
+							@{
+								if (Model.IdPerfil == (int)EnumPerfil.Administrador)
+								{
+									<select class="form-control populate select2" name="ddlFomento" id="ddlFomento" style="width: 100%"
+									        asp-for="FomentoId" asp-items="Model.ListFomentos">
+										<option value="">Selecionar Contrato</option>
+									</select>
+								}
+								else
+								{
+									<select class="form-control populate select2" name="ddlFomento" id="ddlFomento" style="width: 100%" disabled="disabled"
+									        asp-for="FomentoId" asp-items="Model.ListFomentos">
+										<option value="">Selecionar Contrato</option>
+									</select>
+								}
+							}
 						</div>
 						<label class="col-sm-2 control-label text-right">Estado:</label>
 						<div class="col-md-4 form-group">
-							<select class="form-control populate select2" name="ddlEstado" id="ddlEstado" style="width:100%"
-									asp-for="EstadoId" asp-items="Model.ListEstados">
-								<option value="">Selecionar Estado</option>
-							</select>
+							@{
+								if (Model.IdPerfil == (int)EnumPerfil.Administrador)
+								{
+									<select class="form-control populate select2" name="ddlEstado" id="ddlEstado" style="width: 100%"
+									        asp-for="EstadoId" asp-items="Model.ListEstados">
+										<option value="">Selecionar Estado</option>
+									</select>
+								}
+								else
+								{
+									<select class="form-control populate select2" name="ddlEstado" id="ddlEstado" style="width: 100%" disabled="disabled"
+									        asp-for="EstadoId" asp-items="Model.ListEstados">
+										<option value="">Selecionar Estado</option>
+									</select>
+								}
+							}
 						</div>
 						<label class="col-sm-2 control-label text-right">Municipio:</label>
 						<div class="col-md-4 form-group">
-							<select class="form-control populate select2" name="ddlMunicipio" id="ddlMunicipio" style="width:100%"
-									asp-for="MunicipioId" asp-items="Model.ListMunicipios">
-								<option value="">Selecionar Municipio</option>
-							</select>
+							@{
+								if (Model.IdPerfil == (int)EnumPerfil.Administrador)
+								{
+									<select class="form-control populate select2" name="ddlMunicipio" id="ddlMunicipio" style="width: 100%"
+									        asp-for="MunicipioId" asp-items="Model.ListMunicipios">
+										<option value="">Selecionar Municipio</option>
+									</select>
+								}
+								else
+								{
+									if (Model.IdPerfil == (int)EnumPerfil.GestorPedagogico)
+									{
+										<select class="form-control populate select2" name="ddlMunicipio" id="ddlMunicipio" style="width: 100%"
+										        asp-for="MunicipioId" asp-items="Model.ListMunicipios">
+											<option value="">Selecionar Municipio</option>
+										</select>
+									}
+									else
+									{
+										<select class="form-control populate select2" name="ddlMunicipio" id="ddlMunicipio" style="width: 100%" disabled="disabled"
+												asp-for="MunicipioId" asp-items="Model.ListMunicipios">
+											<option value="">Selecionar Municipio</option>
+										</select>
+									}
+								}
+							}
 						</div>
 						<label class="col-sm-2 control-label text-right">Localidade:</label>
 						<div class="col-md-4 form-group">
-							<select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade" style="width:100%"
-									asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
-								<option value="">Selecionar Localidade</option>
-							</select>
+							@{
+								if (Model.IdPerfil == (int)EnumPerfil.Administrador)
+								{
+									<select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade" style="width: 100%"
+									        asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
+										<option value="">Selecionar Localidade</option>
+									</select>
+								}
+								else
+								{
+									if (Model.IdPerfil == (int)EnumPerfil.GestorPedagogico)
+									{
+										<select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade" style="width: 100%"
+										        asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
+											<option value="">Selecionar Localidade</option>
+										</select>
+									}
+									else
+									{
+										<select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade" style="width: 100%" disabled="disabled"
+										        asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
+											<option value="">Selecionar Localidade</option>
+										</select>
+									}
+
+
+								}
+							}
 						</div>
 						<label class="col-sm-2 control-label text-right">Deficiencia:</label>
 						<div class="col-md-4 form-group">
@@ -278,143 +349,171 @@
 	</div>
 	<div class="row">
 		<div class="col-md-12">
-			<section class="panel">
-				<header class="panel-heading">
-					<div class="panel-actions">
-						<a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
-					</div>
+			<form id="formDashboardEad" class="form-horizontal">
+				<section class="panel">
+					<header class="panel-heading">
+						<div class="panel-actions">
+							<a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
+						</div>
 
-					<h2 class="panel-title">Indicadores</h2>
-				</header>
-				<div class="panel-body" id="pIndicadores">
+						<h2 class="panel-title">Indicadores EAD</h2>
+					</header>
+					<div class="panel-body" id="pIndicadoresEad">
+						<div class="form-group row">
+							<label class="col-sm-2 control-label text-right">Tipo de Curso <span class="required">*</span></label>
+							<div class="col-sm-3">
+								<select class="form-control populate select2" name="ddlTipoCurso" id="ddlTipoCurso" style="width: 100%"
+										required title="Por favor selecione o tipo de curso"
+										asp-for="TipoCursosId" asp-items="Model.ListTipoCursos">
+									<option value="">Selecionar Tipo de Curso</option>
+								</select>
+							</div>
+							<label class="col-sm-1 control-label text-right">Curso <span class="required">*</span></label>
+							<div class="col-sm-3">
+								<select class="form-control populate select2" name="ddlCurso" id="ddlCurso" style="width: 100%"
+										required title="Por favor selecione o curso"
+										asp-for="CursoId" asp-items="Model.ListCursos">
+									<option value="">Selecionar Curso</option>
+								</select>
+							</div>
+							<div class="col-sm-2 pull-right">
+								<button type="button" class="btn btn-block btn-primary pull-right" v-on:click="GetPesquisaIndicadoresEad()">
+									<i class="fa fa-search"></i> &nbsp;&nbsp;Pesquisar
+								</button>
+							</div>
+						</div>
+						<div class="col-md-4 col-xl-12">
+							<a href="@Url.Action("CatalogoCursos", "Curso")">
+								<section class="panel">
+									<div class="panel-body bg-primary" style="background-color: #f44336 !important">
+										<div class="widget-summary">
+											<div class="widget-summary-col widget-summary-col-icon">
+												<div class="summary-icon">
+													<i class="fa fa-file-code-o"></i>
+												</div>
+											</div>
+											<div class="widget-summary-col">
+												<div class="summary">
+													<h4 class="title">Cursos Disponíveis</h4>
+													<div class="info">
+														<strong class="amount"><label id="cursosDisponiveisEad">@Model.DashboardEad.CursosDisponiveis</label></strong>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</section>
+							</a>
 
-					<div class="col-md-4 col-xl-12">
-						<section class="panel">
-							<div class="panel-body bg-primary" style="background-color: #f44336 !important">
-								<div class="widget-summary">
-									<div class="widget-summary-col widget-summary-col-icon">
-										<div class="summary-icon">
-											<i class="fa fa-file-code-o"></i>
+						</div>
+						<div class="col-md-4 col-xl-12">
+							<section class="panel">
+								<div class="panel-body bg-primary" style="background-color: #fb8c00 !important">
+									<div class="widget-summary">
+										<div class="widget-summary-col widget-summary-col-icon">
+											<div class="summary-icon">
+												<i class="fa fa-file-text"></i>
+											</div>
 										</div>
-									</div>
-									<div class="widget-summary-col">
-										<div class="summary">
-											<h4 class="title">Cursos Disponíveis</h4>
-											<div class="info">
-												<strong class="amount"><label id="avaliacoesDna">0</label></strong>
+										<div class="widget-summary-col">
+											<div class="summary">
+												<h4 class="title">Cursos em Andamento</h4>
+												<div class="info">
+													<strong class="amount"><label id="cursosEmAndamentoEad">@Model.DashboardEad.CursosEmAndamento</label></strong>
+												</div>
 											</div>
 										</div>
 									</div>
 								</div>
-							</div>
-						</section>
-					</div>
-					<div class="col-md-4 col-xl-12">
-						<section class="panel">
-							<div class="panel-body bg-primary" style="background-color: #fb8c00!important">
-								<div class="widget-summary">
-									<div class="widget-summary-col widget-summary-col-icon">
-										<div class="summary-icon">
-											<i class="fa fa-file-text"></i>
+							</section>
+						</div>
+						<div class="col-md-4 col-xl-12">
+							<section class="panel">
+								<div class="panel-body bg-primary" style="background-color: #4CAF50 !important">
+									<div class="widget-summary">
+										<div class="widget-summary-col widget-summary-col-icon">
+											<div class="summary-icon">
+												<i class="fa fa-file-archive-o"></i>
+											</div>
 										</div>
-									</div>
-									<div class="widget-summary-col">
-										<div class="summary">
-											<h4 class="title">Cursos em Andamento</h4>
-											<div class="info">
-												<strong class="amount"><label id="laudosAndamentos">@Model.DashboardEad.CursosEmAndamento</label></strong>
+										<div class="widget-summary-col">
+											<div class="summary">
+												<h4 class="title">Cursos Finalizados</h4>
+												<div class="info">
+													<strong class="amount"><label id="cursosFinalizadosEad">@Model.DashboardEad.CursosFinalizados</label></strong>
+												</div>
 											</div>
 										</div>
 									</div>
 								</div>
-							</div>
-						</section>
-					</div>
-					<div class="col-md-4 col-xl-12">
-						<section class="panel">
-							<div class="panel-body bg-primary" style="background-color: #4CAF50 !important">
-								<div class="widget-summary">
-									<div class="widget-summary-col widget-summary-col-icon">
-										<div class="summary-icon">
-											<i class="fa fa-file-archive-o"></i>
+							</section>
+						</div>
+						<div class="col-md-4 col-xl-12">
+							<section class="panel">
+								<div class="panel-body bg-primary" style="background-color: #3F51B5 !important">
+									<div class="widget-summary">
+										<div class="widget-summary-col widget-summary-col-icon">
+											<div class="summary-icon">
+												<i class="fa fa-male"></i>
+											</div>
 										</div>
-									</div>
-									<div class="widget-summary-col">
-										<div class="summary">
-											<h4 class="title">Cursos Finalizados</h4>
-											<div class="info">
-												<strong class="amount"><label id="laudosFinalizados">0</label></strong>
+										<div class="widget-summary-col">
+											<div class="summary">
+												<h4 class="title">Alunos Masculino</h4>
+												<div class="info">
+													<strong class="amount"><label id="cadastrosMasculinosEad">@Model.DashboardEad.CadastrosMasculinos</label></strong>
+												</div>
 											</div>
 										</div>
 									</div>
 								</div>
-							</div>
-						</section>
-					</div>
-					<div class="col-md-4 col-xl-12">
-						<section class="panel">
-							<div class="panel-body bg-primary" style="background-color: #3F51B5 !important">
-								<div class="widget-summary">
-									<div class="widget-summary-col widget-summary-col-icon">
-										<div class="summary-icon">
-											<i class="fa fa-male"></i>
+							</section>
+						</div>
+						<div class="col-md-4 col-xl-12">
+							<section class="panel">
+								<div class="panel-body bg-primary" style="background-color: #E91E63 !important">
+									<div class="widget-summary">
+										<div class="widget-summary-col widget-summary-col-icon">
+											<div class="summary-icon">
+												<i class="fa fa-female"></i>
+											</div>
 										</div>
-									</div>
-									<div class="widget-summary-col">
-										<div class="summary">
-											<h4 class="title">Alunos Masculino</h4>
-											<div class="info">
-												<strong class="amount"><label id="cadastrosMasculinos">0</label></strong>
+										<div class="widget-summary-col">
+											<div class="summary">
+												<h4 class="title">Alunos Feminino</h4>
+												<div class="info">
+													<strong class="amount"><label id="cadastrosFemininosEad">@Model.DashboardEad.CadastrosFemininos</label></></strong>
+												</div>
 											</div>
 										</div>
 									</div>
 								</div>
-							</div>
-						</section>
-					</div>
-					<div class="col-md-4 col-xl-12">
-						<section class="panel">
-							<div class="panel-body bg-primary" style="background-color: #E91E63 !important">
-								<div class="widget-summary">
-									<div class="widget-summary-col widget-summary-col-icon">
-										<div class="summary-icon">
-											<i class="fa fa-female"></i>
-										</div>
-									</div>
-									<div class="widget-summary-col">
-										<div class="summary">
-											<h4 class="title">Alunos Feminino</h4>
-											<div class="info">
-												<strong class="amount"><label id="cadastrosFemininos">0</label></></strong>
+							</section>
+						</div>
+						<div class="col-md-4 col-xl-12">
+							<a href="#" data-toggle="modal" data-target="#mdAlunosMatriculados">
+								<section class="panel">
+									<div class="panel-body bg-primary" style="background-color: #2196F3 !important">
+										<div class="widget-summary">
+											<div class="widget-summary-col widget-summary-col-icon">
+												<div class="summary-icon">
+													<i class="fa fa-users"></i>
+												</div>
+											</div>
+											<div class="widget-summary-col">
+												<div class="summary">
+													<h4 class="title">Alunos Matriculados</h4>
+													<div class="info">
+														<strong class="amount"><label id="alunosCadastradosEad">@Model.DashboardEad.AlunosCadastrados</label></></strong>
+													</div>
+												</div>
 											</div>
 										</div>
 									</div>
-								</div>
-							</div>
-						</section>
-					</div>
-					<div class="col-md-4 col-xl-12">
-						<section class="panel">
-							<div class="panel-body bg-primary" style="background-color: #2196F3 !important">
-								<div class="widget-summary">
-									<div class="widget-summary-col widget-summary-col-icon">
-										<div class="summary-icon">
-											<i class="fa fa-users"></i>
-										</div>
-									</div>
-									<div class="widget-summary-col">
-										<div class="summary">
-											<h4 class="title">Alunos Matriculados</h4>
-											<div class="info">
-												<strong class="amount"><label id="alunosCadastrados">0</label></></strong>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</section>
-					</div>
-					@* <div class="col-md-4 col-xl-12">
+								</section>
+							</a>
+						</div>
+						@* <div class="col-md-4 col-xl-12">
                 <section class="panel">
                 <div class="panel-body bg-primary" style="background-color: #3F51B5 !important">
                 <div class="widget-summary">
@@ -456,8 +555,9 @@
                 </div>
                 </section>
                 </div> *@
-				</div>
-			</section>
+					</div>
+				</section>
+			</form>
 		</div>
 	</div>
 
@@ -631,25 +731,32 @@
 									</td>
 								</tr>
 
+								<tr>
+									<td><span class="label label-success" style="background-color:#78909c !important">Educacional</span></td>
+									<td>
+										<label id="totVocacionalFinalizadoEad">
+											0
+										</label>
+									</td>
+									<td>
+										<label id="totVocacionalAndamentoEad">
+											0
+										</label>
+									</td>
+									<td>
+										<div class="progress progress-sm progress-half-rounded m-none mt-xs light">
+											<div id="progressoVocacionalEad" class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+												<label id="vlProgressoVocacionalEad">
+													0 %
+												</label>
+											</div>
+										</div>
+									</td>
+								</tr>
+
 							</tbody>
 						</table>
 					</div>
-				</div>
-			</section>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-md-12">
-			<section class="panel">
-				<header class="panel-heading">
-					<div class="panel-actions">
-						<a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
-					</div>
-
-					<h2 class="panel-title">Evolutivo - Desempenho Físico-Motor</h2>
-				</header>
-				<div class="panel-body" id="pEvolutivo">
-					<div id="containerEvolutivo"></div>
 				</div>
 			</section>
 		</div>
@@ -971,6 +1078,65 @@
 			</section>
 		</div>
 	</div>
+<div class="row">
+	<div class="col-lg-5 col-md-12">
+		<section class="panel">
+			<header class="panel-heading">
+				<div class="panel-actions">
+					<a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
+				</div>
+
+				<h2 class="panel-title">Educacional (%)</h2>
+				<p class="panel-subtitle">Percentual gráfico educacional dos alunos </p>
+			</header>
+			<div class="panel-body" id="pEducacionalPerc">
+				<div id="containerEducacionalPercentual"></div>
+			</div>
+		</section>
+	</div>
+	<div class="col-lg-7 col-md-12">
+		<section class="panel">
+			<header class="panel-heading">
+				<div class="panel-actions">
+					<a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
+				</div>
+
+				<h2 class="panel-title">Educacional</h2>
+				<p class="panel-subtitle">Totalizador de alunos por nivelamento</p>
+			</header>
+			<div class="panel-body" id="pEducacionalTot">
+				<div class="table-responsive">
+					<div id="containerEducacional"></div>
+
+				</div>
+			</div>
+		</section>
+	</div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="mdAlunosMatriculados" tabindex="-1" role="dialog" aria-labelledby="mdAlunosMatriculadosLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="mdAlunosMatriculadosLabel">
+					<i class="fa fa-users"></i> &nbsp;&nbsp;<strong>Alunos Matriculados</strong>
+				</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<input type="hidden" id="cursoId" name="cursoId" />
+			<div class="modal-body" id="pAlunosMatriculados">
+
+			</div>
+			<div class="modal-footer">
+				<button type="submit" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal">
+					<i class="fa fa-times"></i> &nbsp;&nbsp;Fechar
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
 </div>
 
 @section CssSpecificVendor {

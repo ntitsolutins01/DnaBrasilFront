@@ -122,7 +122,7 @@ namespace WebApp.ApiClient
         public List<EncaminhamentoDto> GetEncaminhamentoByVocacional()
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceLaudo}/Encaminhamento/Vocacional"));
+                $"{ResourceLaudo}/Encaminhamentos/Vocacional"));
             return Get<List<EncaminhamentoDto>>(requestUrl);
         }
 

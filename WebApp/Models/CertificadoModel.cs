@@ -17,20 +17,16 @@ namespace WebApp.Models
         {
             public int Id { get; set; }
             public int FomentoId { get; set; }
-            public string ImagemFrente { get; set; }
-            public string? ImagemVerso { get; set; }
-            public string NomeImagemFrente { get; set; }
-            public string? NomeImagemVerso { get; set; }
-            public string HtmlFrente { get; set; }
-            public string HtmlVerso { get; set; }
+            public string Nome { get; set; }
+            public string Url { get; set; }
             public bool Status { get; set; } = true;
         }
         public class UpdateCertificadoCommand
         {
             public int Id { get; set; }
             public int FomentoId { get; set; }
-            public string HtmlFrente { get; set; }
-            public string HtmlVerso { get; set; }
+            public string Nome { get; set; }
+            public string Url { get; set; }
             public bool Status { get; set; } = true;
         }
     }

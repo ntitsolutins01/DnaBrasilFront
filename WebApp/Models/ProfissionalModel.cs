@@ -29,6 +29,7 @@ namespace WebApp.Models
         public SelectList ListAtividadesModalidades { get; set; }
         public int AlunoId { get; set; }
         public SelectList ListAlunos { get; set; }
+        public int IdPerfil { get; set; }
 
         public class CreateUpdateProfissionalCommand
         {

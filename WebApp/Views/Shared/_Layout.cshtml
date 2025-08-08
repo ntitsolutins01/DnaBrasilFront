@@ -577,6 +577,16 @@
                                     </li>
                                 }
 
+                                @if ((await AuthorizationService.AuthorizeAsync(User, ModuloAccess.Catalogo)).Succeeded)
+                                {
+                                    <li class="nav-parent nav-expanded">
+                                        <a href="@Url.Action("CatalogoCursos", "Curso")">
+                                            <i class="fa fa-files-o" aria-hidden="true"></i>
+                                            <span>Catálogo Cursos</span>
+                                        </a>
+                                    </li>
+                                }
+
                                 @if ((await AuthorizationService.AuthorizeAsync(User, ModuloAccess.ControleAcesso)).Succeeded)
                                 {
                                     <li class="nav-parent nav-expanded">
@@ -606,6 +616,15 @@
 			                                </a>
 		                                </li>
 	                                }
+	                                else
+	                                {
+		                                <li class="nav-parent nav-expanded">
+                                            <a href="@Url.Action("Create", "Laudo", new {aluno = true})">
+                                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+				                                <span>Protocólo Avaliativo</span>
+			                                </a>
+		                                </li>
+	                                }
 	                                
                                     <li class="nav-parent nav-expanded">
                                             <a href="@Url.Action($"Carteirinha", "Aluno", new {id = Convert.ToInt32(User.Identity.Name)})">
@@ -620,6 +639,8 @@
                                         </a>
                                     </li> *@
                                 }
+
+
                             </ul>
                         </nav>
                     </div>
@@ -643,7 +664,7 @@
 
                         //var requirement = new UserInRoleRequirement(userRole);
                     }
-                    <div class="right-wrapper pull-right">
+                    <div class="right-wrapper pull-right" style="margin-right: 1rem">
                         <ol class="breadcrumbs">
                             <li>
                                 <a href="index.html">
@@ -715,8 +736,8 @@
     <!-- Theme Initialization Files -->
     <script src="~/assets/javascripts/theme.init.js"></script>
     <script src="~/assets/vendor/vue/vue.js"></script>
-    @* <script src="~/assets/vendor/axios/axios.min.js"></script> *@
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+     <script src="~/assets/vendor/axios/axios.min.js"></script> 
+    @*<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>*@
     <script src="~/js/main.js"></script>
 
     @await RenderSectionAsync("Scripts", required: false)

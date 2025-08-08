@@ -46,6 +46,12 @@ namespace WebApp.ApiClient
             return Get<List<MunicipioDto>>(requestUrl);
         }
 
+        public List<MunicipioDto> GetMunicipiosByFomentoId(int id)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceDivisaoAdministrativa}/Municipio/Fomento/{id}"));
+            return Get<List<MunicipioDto>>(requestUrl);
+        }
         #endregion
 
     }

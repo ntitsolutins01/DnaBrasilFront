@@ -6441,6 +6441,13 @@ html.dark .radio-info input[type="radio"]:checked + label:after,
 	box-shadow: 0px 0px 1px #5bc0de;
 }
 
+html.dark .radio-voc input[type="radio"]:checked + label:after,
+.radio-voc input[type="radio"]:checked + label:after {
+	background: #9c27b0;
+	-webkit-box-shadow: 0px 0px 1px #9c27b0;
+	box-shadow: 0px 0px 1px #9c27b0;
+}
+
 html.dark .radio-dark input[type="radio"]:checked + label:after,
 .radio-dark input[type="radio"]:checked + label:after {
 	background: #171717;
@@ -10717,6 +10724,11 @@ body .ui-pnotify.icon-nb .notification .ui-pnotify-icon > span {
 
 .panel-group .panel-accordion-voc .panel-heading .panel-title a {
 	background: #a787c0;
+	color: #FFF;
+}
+
+.panel-group .panel-accordion-edu .panel-heading .panel-title a {
+	background: #78909c;
 	color: #FFF;
 }
 

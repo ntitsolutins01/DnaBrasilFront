@@ -1,128 +1,127 @@
-@using WebApp.Enumerators
 @model AlunoModel
 
 @{
-    ViewData["Title"] = "Inclusão de Aluno";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+	ViewData["Title"] = "Inclusão de Aluno";
+	Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div id="vAluno">
-    <div class="row">
-        <div class="col-md-12">
-            @using (@Html.BeginForm("CreateDados", "Aluno", FormMethod.Post, new { id = "formDadosAluno", @class = "form-horizontal", @enctype = "multipart/form-data" }))
-            {
-                <section class="panel">
-                    <header class="panel-heading">
-                        <div class="panel-actions">
-                            <a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
-                        </div>
+	<div class="row">
+		<div class="col-md-12">
+			@using (@Html.BeginForm("CreateDados", "Aluno", FormMethod.Post, new { id = "formDadosAluno", @class = "form-horizontal", @enctype = "multipart/form-data" }))
+			{
+				<section class="panel">
+					<header class="panel-heading">
+						<div class="panel-actions">
+							<a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
+						</div>
 
-                        <h2 class="panel-title">Cadastro de Aluno</h2>
-                    </header>
-                    <div class="panel-body">
-                        <div class="form-group" id="pAluno">
-                            <label class="col-sm-1 control-label">Foto</label>
-                            <div class="col-sm-4">
-                                <div class="fileupload fileupload-new" data-provides="fileupload">
-                                    <div class="input-append">
-                                        <div class="uneditable-input">
-                                            <i class="fa fa-file fileupload-exists"></i>
-                                            <span class="fileupload-preview"></span>
-                                        </div>
-                                        <span class="btn btn-default btn-file">
-                                            <span class="fileupload-exists">Alterar</span>
-                                            <span class="fileupload-new">Selecionar Arquivo</span>
-                                            <input type="file" id="arquivo" name="arquivo" />
-                                        </span>
-                                        <a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload">Remover</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <label class="col-sm-1 control-label">CPF </label>
-                            <div class="col-sm-3">
-                                <input id="cpf" name="cpf"
-                                       v-model="params.cpf"
-                                       type="text" value="" class="form-control"
+						<h2 class="panel-title">Cadastro de Aluno</h2>
+					</header>
+					<div class="panel-body">
+						<div class="form-group" id="pAluno">
+							<label class="col-sm-1 control-label">Foto</label>
+							<div class="col-sm-4">
+								<div class="fileupload fileupload-new" data-provides="fileupload">
+									<div class="input-append">
+										<div class="uneditable-input">
+											<i class="fa fa-file fileupload-exists"></i>
+											<span class="fileupload-preview"></span>
+										</div>
+										<span class="btn btn-default btn-file">
+											<span class="fileupload-exists">Alterar</span>
+											<span class="fileupload-new">Selecionar Arquivo</span>
+											<input type="file" id="arquivo" name="arquivo" />
+										</span>
+										<a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload">Remover</a>
+									</div>
+								</div>
+							</div>
+							<label class="col-sm-1 control-label">CPF </label>
+							<div class="col-sm-3">
+								<input id="cpf" name="cpf"
+									   v-model="params.cpf"
+									   type="text" value="" class="form-control"
 									   maxlength="14" />@*  v-on:blur="ExisteCpf" *@
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-1 control-label">Nome <span class="required">*</span></label>
-                            <div class="col-sm-5">
-                                <input type="text" name="nome" id="nome" maxlength="150" class="form-control" required title="Por favor informe um nome." oninput="this.value = this.value.toUpperCase()" />
-                            </div>
-                            <label class="col-sm-1 control-label">Email <span class="required">*</span></label>
-                            <div class="col-sm-5">
-                                <div class="input-group">
-                                    <span class="input-group-addon">
-                                        <i class="fa fa-envelope"></i>
-                                    </span>
-                                    <input type="text" name="email" maxlength="100" class="form-control" 
-                                               required title="Por favor informe o email." oninput="this.value = this.value.toLowerCase()"
-                                           v-model="params.email"  v-on:blur="ExisteEmail" />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-1 control-label">Etnia <span class="required">*</span></label>
-                            <div class="col-sm-2">
-                                <select class="form-control populate select2" name="ddlEtnia" id="ddlEtnia" style="width:100%"
-                                        title="Por favor selecione um etnia." required
-                                        asp-for="EtniaId" asp-items="Model.ListEtnias">
-                                    <option value="">Selecionar Etnia</option>
-                                </select>
-                            </div>
-                            <label class="col-sm-1 control-label">Sexo <span class="required">*</span></label>
-                            <div class="col-sm-2">
-                                <select class="form-control populate select2" name="ddlSexo" id="ddlSexo"
-                                        title="Por favor selecione um sexo." required style="width:100%">
-                                    <option value="">Selecionar Sexo</option>
-                                    <option value="M">MASCULINO</option>
-                                    <option value="F">FEMININO</option>
-                                </select>
-                            </div>
-                            <label class="col-sm-2 control-label">Data Nascimento <span class="required">*</span></label>
-                            <div class="col-sm-4">
-                                <div class="input-group">
-                                    <span class="input-group-addon">
-                                        <i class="fa fa-calendar"></i>
-                                    </span>
-                                    <input id="DtNascimento" name="DtNascimento"
-                                           required
-                                           title="Por favor informe a data de nascimento."
-                                           style="z-index: auto;"
-                                           data-plugin-datepicker data-date-format="dd/mm/yyyy" data-plugin-options='{"language": "pt-BR"}'
-                                           placeholder="__/__/____" class="form-control startdate"
-                                           class="form-control">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-1 control-label text-sm-right pt-2">Estado <span class="required">*</span></label>
-                            <div class="col-md-2">
-	                            <select class="form-control populate select2" name="ddlEstado" id="ddlEstado"
-	                                    title="Por favor informe um Estado." required style="width:100%" 
-	                                    asp-for="EstadoId" asp-items="Model.ListEstados">
-		                            <option value="">Selecionar Estado</option>
-	                            </select>
-	                            @* @(Model.UsuarioLogado.Perfil.Id != (int)EnumPerfil.Administrador ? "disabled" : "") *@
-                            </div>
-                            <label class="col-sm-1 control-label text-sm-right pt-2">Município <span class="required">*</span></label>
-                            <div class="col-md-3">
-                                <select class="form-control populate select2" name="ddlMunicipio" id="ddlMunicipio"
-                                        title="Por favor informe um Municipio." required style="width:100%" 
-                                        asp-for="MunicipioId" asp-items="Model.ListMunicipios">
-                                    <option value="">Selecionar Município</option>
-                                </select>
-                            </div>
-                            <label class="col-sm-2 control-label text-sm-right pt-2">Localidade <span class="required">*</span></label>
-                            <div class="col-md-3">
-                                <select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade"
-                                        title="Por favor informe o localidade." required style="width:100%"
-                                        asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
-                                    <option value="">Selecionar Localidade</option>
-                                </select>
-                            </div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-1 control-label">Nome <span class="required">*</span></label>
+							<div class="col-sm-5">
+								<input type="text" name="nome" id="nome" maxlength="150" class="form-control" required title="Por favor informe um nome." oninput="this.value = this.value.toUpperCase()" />
+							</div>
+							<label class="col-sm-1 control-label">Email <span class="required">*</span></label>
+							<div class="col-sm-5">
+								<div class="input-group">
+									<span class="input-group-addon">
+										<i class="fa fa-envelope"></i>
+									</span>
+									<input type="text" name="email" maxlength="100" class="form-control"
+										   required title="Por favor informe o email." oninput="this.value = this.value.toLowerCase()"
+										   v-model="params.email" v-on:blur="ExisteEmail" />
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-1 control-label">Etnia <span class="required">*</span></label>
+							<div class="col-sm-2">
+								<select class="form-control populate select2" name="ddlEtnia" id="ddlEtnia" style="width:100%"
+										title="Por favor selecione um etnia." required
+										asp-for="EtniaId" asp-items="Model.ListEtnias">
+									<option value="">Selecionar Etnia</option>
+								</select>
+							</div>
+							<label class="col-sm-1 control-label">Sexo <span class="required">*</span></label>
+							<div class="col-sm-2">
+								<select class="form-control populate select2" name="ddlSexo" id="ddlSexo"
+										title="Por favor selecione um sexo." required style="width:100%">
+									<option value="">Selecionar Sexo</option>
+									<option value="M">MASCULINO</option>
+									<option value="F">FEMININO</option>
+								</select>
+							</div>
+							<label class="col-sm-2 control-label">Data Nascimento <span class="required">*</span></label>
+							<div class="col-sm-4">
+								<div class="input-group">
+									<span class="input-group-addon">
+										<i class="fa fa-calendar"></i>
+									</span>
+									<input id="DtNascimento" name="DtNascimento"
+										   required
+										   title="Por favor informe a data de nascimento."
+										   style="z-index: auto;"
+										   data-plugin-datepicker data-date-format="dd/mm/yyyy" data-plugin-options='{"language": "pt-BR"}'
+										   placeholder="__/__/____" class="form-control startdate"
+										   class="form-control">
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-1 control-label text-sm-right pt-2">Estado <span class="required">*</span></label>
+							<div class="col-md-2">
+								<select class="form-control populate select2" name="ddlEstado" id="ddlEstado"
+										title="Por favor informe um Estado." required style="width:100%"
+										asp-for="EstadoId" asp-items="Model.ListEstados">
+									<option value="">Selecionar Estado</option>
+								</select>
+								@* @(Model.UsuarioLogado.Perfil.Id != (int)EnumPerfil.Administrador ? "disabled" : "") *@
+							</div>
+							<label class="col-sm-1 control-label text-sm-right pt-2">Município <span class="required">*</span></label>
+							<div class="col-md-3">
+								<select class="form-control populate select2" name="ddlMunicipio" id="ddlMunicipio"
+										title="Por favor informe um Municipio." required style="width:100%"
+										asp-for="MunicipioId" asp-items="Model.ListMunicipios">
+									<option value="">Selecionar Município</option>
+								</select>
+							</div>
+							<label class="col-sm-2 control-label text-sm-right pt-2">Localidade <span class="required">*</span></label>
+							<div class="col-md-3">
+								<select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade"
+										title="Por favor informe o localidade." required style="width:100%"
+										asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
+									<option value="">Selecionar Localidade</option>
+								</select>
+							</div>
 						</div>
 						<div class="form-group">
 							<label class="col-sm-1 control-label text-sm-right pt-2">Fomento: <span class="required">*</span></label>
@@ -151,312 +150,381 @@
 								</div>
 							</div>
 						</div>
-                        
-                        <div class="form-group row">
-	                        <label class="col-sm-1 control-label">Etapa de Ensino <span class="required">*</span></label>
-	                        <div class="col-md-3">
-		                        <select class="form-control populate select2" name="ddlEtapa" id="ddlEtapa"
-		                                title="Por favor informe a etapa de ensino." required
-		                                asp-for="EtapaId" asp-items="Model.ListEtapas">
-			                        <option value="">Selecionar Etapa de Ensino</option>
-		                        </select>
-	                        </div>
-	                        <label class="col-sm-1 control-label">Série <span class="required">*</span></label>
-	                        <div class="col-md-2">
-                                <select class="form-control populate select2" name="ddlSerie" id="ddlSerie"
-		                                title="Por favor informe a série." required
-		                                asp-for="SerieId" asp-items="Model.ListSeries">
-			                        <option value="">Selecionar Série</option>
-		                        </select>
-	                        </div>
-	                        <label class="col-sm-1 control-label">Turma <span class="required">*</span></label>
-	                        <div class="col-md-4">
-                                <select class="form-control populate select2" name="ddlTurma" id="ddlTurma"
-		                                title="Por favor informe a turma." required
-		                                asp-for="TurmaId" asp-items="Model.ListTurmas">
-			                        <option value="">Selecionar Turma</option>
-		                        </select>
-	                        </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-1 control-label text-sm-right pt-2">Deficiência: <span class="required">*</span></label>
-                            <div class="col-md-4">
-                                <select class="form-control populate select2" name="ddlDeficiencia" id="ddlDeficiencia" style="width:100%"
-                                        title="Por favor selecione uma deficiência." required
-                                        asp-for="DeficienciaId" asp-items="Model.ListDeficiencias">
-                                    <option value="">Selecionar Deficiência</option>
-                                </select>
-                            </div>
-                            <label class="col-sm-1 control-label text-sm-right pt-2">Modalidades<span class="required">*</span></label>
-                            <div class="col-md-6">
-                                <select class="form-control populate" multiple="multiple" data-plugin-multiselect data-plugin-options='{ "maxHeight": 200, "enableCaseInsensitiveFiltering": true }'
-                                        id="ddlModalidades" name="ddlModalidades" style="width:100%" asp-for="ModalidadeId" asp-items="Model.ListModalidades" required
-                                        title="Por favor selecione ao menos uma modalidade.">
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-1 control-label">Nome Mãe</label>
-                            <div class="col-sm-5">
-                                <input type="text" name="nomeMae" maxlength="150" class="form-control" />
-                            </div>
-                            <label class="col-sm-1 control-label">Nome Pai</label>
-                            <div class="col-sm-5">
-                                <input type="text" name="nomePai" maxlength="150" class="form-control" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-1 control-label">Endereço</label>
-                            <div class="col-sm-6">
-                                <input type="text" id="endereco" name="endereco" maxlength="200" class="form-control" />
-                            </div>
-                            <label class="col-sm-1 control-label">Número</label>
-                            <div class="col-sm-1">
-                                <input type="number" id="numero" name="numero" maxlength="4" class="form-control" />
-                            </div>
-                            <label class="col-sm-1 control-label">Cep</label>
-                            <div class="col-sm-2">
-                                <input type="text" id="cep" name="cep" maxlength="9" class="form-control" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-1 control-label">Bairro </label>
-                            <div class="col-sm-3">
-                                <input type="bairro" name="bairro" maxlength="50" class="form-control" />
-                            </div>
-                            <label class="col-lg-1 control-label text-lg-right pt-2">Telefone</label>
-                            <div class="col-lg-3">
-                                <div class="input-group">
-                                    <span class="input-group-addon">
-                                        <i class="fa fa-phone"></i>
-                                    </span>
-                                    <input id="numTelefone" name="numTelefone" class="form-control"
-                                           maxlength="14">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label pull-left">Cadastro ativo para login?</label>
-                            <div class="col-sm-1">
-                                <div class="switch switch-sm switch-success">
-                                    <input type="checkbox" id="status" name="status" data-plugin-ios-switch checked="checked" />
-                                </div>
-                            </div>
-                            <label class="col-sm-3 control-label">Cadastro habilitado a operar?</label>
-                            <div class="col-sm-1">
-                                <div class="switch switch-sm switch-success">
-                                    <input type="checkbox" id="habilitado" name="habilitado" data-plugin-ios-switch />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-1"></div>
-                            <div class="col-md-5">
-                                <label>Aluno está autorizado a sair sozinho? <span class="required">*</span></label><br />
-                                <div class="radio-custom radio-success">
-                                    <input type="radio" id="autorizadoSim" name="autorizado" value="true" required title="Por favor selecione uma opção">
-                                    <label>Sim</label>
-                                </div>
-                                <div class="radio-custom radio-danger">
-                                    <input type="radio" id="autorizadoNao" name="autorizado" value="false" required title="Por favor selecione uma opção">
-                                    <label>Não</label>
-                                </div>
-                                <label class="error" for="autorizado"></label>
-                                <p>
-                                    <code>O estudante pode deixar o local desacompanhado do responsável.</code>
-                                </p>
-                            </div>
-                            <div class="col-md-6">
-                                <label>Participação no programa DNA DO BRASIL TALENTOS e compartilhamento dos dados pessoais do estudante. <span class="required">*</span></label><br />
-                                <div class="radio-custom radio-success">
-                                    <input type="radio" id="participacaoSim" name="participacao" value="true" required title="Por favor selecione uma opção">
-                                    <label>Sim</label>
-                                </div>
-                                <div class="radio-custom radio-danger">
-                                    <input type="radio" id="participacaoNao" name="participacao" value="false" required title="Por favor selecione uma opção">
-                                    <label>Não</label>
-                                </div>
-                                <label class="error" for="participacao"></label>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-1"></div>
-                            <div class="col-md-5">
-                                <label>Utilização da imagem <span class="required">*</span></label><br />
-                                <div class="radio-custom radio-success">
-                                    <input type="radio" id="utilizacaoImagemSim" name="utilizacaoImagem" value="true" required title="Por favor selecione uma opção">
-                                    <label>Sim</label>
-                                </div>
-                                <div class="radio-custom radio-danger">
-                                    <input type="radio" id="utilizacaoImagemNao" name="utilizacaoImagem" value="false" required title="Por favor selecione uma opção">
-                                    <label>Não</label>
-                                </div>
-                                <label class="error" for="utilizacaoImagem"></label>
-                                <p>
-                                    <code>O Idecace, a título gratuito e não oneroso, para fins de divulgação/publicação em qualquer material de foto, vídeo, documentos em geral, relatórios bem como em todo e qualquer veículo de comunicação</code>
-                                </p>
-                            </div>
-                            <div class="col-md-6">
-                                <label>Todos os alunos que estiver apto a participar das atividades no Ceu das Artes, Documentação exigida no primeiro dia de aula. <span class="required">*</span> </label><br />
-                                <div class="radio-custom radio-success">
-                                    <input type="radio" id="copiaDocImagemSim" name="copiaDoc" value="true" required title="Por favor selecione uma opção">
-                                    <label>Sim</label>
-                                </div>
-                                <div class="radio-custom radio-danger">
-                                    <input type="radio" id="copiaDocImagemNao" name="copiaDoc" value="false" required title="Por favor selecione uma opção">
-                                    <label>Não</label>
-                                </div>
-                                <label class="error" for="copiaDoc"></label>
-                                <p>
-                                    <code>Cópia do documento de indentidade do aluno. Cópia do documento de identidade do responsável legal.</code>
-                                </p>
-                            </div>
-						</div>
-                    <div class="form-group">
-	                    <label class="col-sm-1 control-label">Documentos</label>
-	                    <div class="col-sm-10">
-		                    <div class="fileupload fileupload-new" data-provides="fileupload">
-			                    <div class="input-append" >
-				                    <div class="uneditable-input" style="width: 500px;">
-					                    <i class="fa fa-file fileupload-exists"></i>
-					                    <span class="fileupload-preview"></span>
-				                    </div>
-				                    <span class="btn btn-default btn-file">
-					                    <span class="fileupload-exists">Alterar</span>
-					                    <span class="fileupload-new">Selecionar Documentos</span>
-					                    <input type="file" id="documentos" name="documentos" multiple/>
-				                    </span>
-				                    <a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload">Remover</a>
-			                    </div>
-		                    </div>
-	                    </div>
-                    </div>
-                        <div class="form-group">
-                            <div class="col-md-1"></div>
-                            <div class="col-sm-8">
-                                <div class="checkbox-custom checkbox-default">
-                                    <input id="AgreeTerms" id="agreeterms" name="agreeterms" type="checkbox" required title="Por favor leia com atenção para aceitar ao termo." />
-                                    <label for="AgreeTerms">Eu concordo com os <a href="#" data-toggle="modal" data-target="#mdTermo">termos</a></label> <span class="required">*</span>
-                                </div>
-                                <label class="error" for="agreeterms"></label>
-                            </div>
-                        </div>
-                    </div>
-                    <footer class="panel-footer">
-                        <div class="row">
-                            <div class="col-md-9 col-md-offset-3">
-                                <a href="@Url.Action("Index", "Aluno")" class="btn btn-dark pull-right" style="margin-left: 5px;margin-right: 5px;"><i class="fa fa-reply"></i> &nbsp;&nbsp;Voltar</a>
-                                <button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;"><i class="fa fa-remove"></i> &nbsp;&nbsp;Cancelar</button>
-                                <button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
-                            </div>
-                        </div>
-                    </footer>
-                </section>
-            }
-        </div>
-    </div>
-</div>
-<!-- Modal -->
-<div class="modal fade" id="mdTermo" tabindex="-1" role="dialog" aria-labelledby="mdTermoLabel" aria-hidden="true">
-    <div class="modal-dialog modal-md" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="mdTermoLabel">
-                    <i class="fa fa-file"></i> &nbsp;&nbsp;<strong>TERMO DE AUTORIZAÇÃO E CONSENTIMENTO / ASSENTIMENTO</strong>
-                </h5>
-            </div>
 
-            <div class="modal-body">
-                <ul class="list-unstyled search-results-list">
-                    <li>
-                        <div class="result-data">
-                            <p class="text-justify">
-                                O Programa DNA DO BRASIL-TALENTOS objetiva a integração do desenvolvimento acadêmico e esportivo dos estudantes, com domínio nas áreas de oportunização, promoção e desenvolvimento no esporte, na saúde, no desenvolvimento psicossocial e na vocação profissionalizante. O Programa utiliza, com exclusividade, uma metodologia para análise psicossocial e vocacional, as quais permitem nortear o talento esportivo ou a carreira e potencializar a construção do Plano de Desenvolvimento Pessoal e Profissional de cada indivíduo avaliado. Para participação no Programa, faz-se necessária a autorização dos pais e/ou responsáveis, bem como o consentimento para a aplicação do protocolo avaliativo, em 3 períodos distintos, o qual direcionará o estudante conforme o seu talento profissional ou esportivo. A participação é voluntária, podendo ser interrompida sem que nenhuma implicação recaia sobre o avaliado. O Programa trabalha com 5 dimensões centrais do desenvolvimento humano (físico-motor, saúde, qualidade de vida, vocacional e educacional) e, também, levanta dados e trabalha com recursos sobre a violência contra crianças e adolescentes, sobre a saúde bucal, sobre a educação alimentar e sobre indicadores educacionais. Os dados serão inseridos em uma plataforma própria e os pais e/ou responsáveis terão acesso a esses dados por meio do aplicativo do estudante/famílias. Serão gerados automaticamente laudos e relatórios indicando fragilidades e potencialidades em cada uma das variáveis. DECLARO que: 1. Estou ciente que o tratamento de dados pessoais coletados é condição para a participação do estudantes no Programa DNA DO BRASIL TALENTOS e que posso requerer, como titular dos dados, a qualquer momento e mediante requisição, os direitos elencados no Art. 18, da Lei 13.709, de 14 de agosto de 2018 - LGPD. 2 - O(a) estudante não possui qualquer enfermidade que o/a impeça da prática esportiva e não passou por qualquer procedimento cirúrgico nos últi prática; 3. Tenho conhecimento de que a bateria de testes poderá consistir na realização de testes físico motores,índices de saúde, inventários psicossociais,e teste de aptidão e interesses profissionais. - Para crianças e adolescentes (maiores que 6 anos e menores de 18 anos de idade) e para legalmente incapaz. O Instituto para o Desenvolvimento da Criança e do Adolescente pela Cultura e Esporte (IDECACE) convida você a participar do estudo Extração e Modelagem de Features do Programa DNA do Brasil - Talentos: desenvolvimento físico-motor, saúde e qualidade de vida de crianças e adolescentes. Informamos que seu pai/mãe ou responsável legal permitiu a sua participação. Analisamos a aplicação de protocolo avaliativo com estudantes para a prática de diferentes modalidades esportivas nos estados e municípios brasileiros, empregando dados do Programa DNA do Brasil – Talentos. Gostaríamos muito de contar com a sua participação, porém, você não é obrigado a participar e não tem problema em desistir. Outras crianças e/ou adolescentes participantes desta pesquisa tem de 6 a 17 anos de idade. A pesquisa será feita no ambiente onde os participantes (crianças/adolescente) realizarão os testes físico-motores e responderão os questionários psicossocial, vocacional, nutricional e odontológico. A sua participação é importante, pois através dos testes serão gerados automaticamente laudos e relatórios indicando fragilidades e potencialidades individuais. As suas informações ficarão sob sigilo, ninguém saberá que você está participando da pesquisa. Não compartilharemos com outras pessoas as suas informações. Os resultados da pesquisa serão utilizados para produção de material cientifico sem identificar (dados pessoais, vídeos, imagens e áudios de gravações) os participantes (crianças/adolescentes). Aceito participar da pesquisa Extração e Modelagem de Features do Programa DNA do Brasil - Talentos: desenvolvimento físico-motor, saúde e qualidade de vida de crianças e adolescentes. Entendi as coisas ruins e as coisas boas que podem acontecer. Entendi que posso dizer “sim” e participar, mas que, a qualquer momento, posso dizer “não” e desistir e que ninguém vai ficar com raiva/chateado comigo. Os pesquisadores esclareceram minhas dúvidas e conversaram com os meus familiares/responsável legal. Recebi uma cópia deste termo de assentimento, li e quero/concordo em participar da pesquisa/estudo.
-                            </p>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-            <div class="modal-footer">
-                <button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-remove"></i> &nbsp;&nbsp;Fechar</button>
-            </div>
-        </div>
-    </div>
+						<div class="form-group row">
+							<label class="col-sm-1 control-label">Etapa de Ensino <span class="required">*</span></label>
+							<div class="col-md-3">
+								<select class="form-control populate select2" name="ddlEtapa" id="ddlEtapa"
+										title="Por favor informe a etapa de ensino." required
+										asp-for="EtapaId" asp-items="Model.ListEtapas">
+									<option value="">Selecionar Etapa de Ensino</option>
+								</select>
+							</div>
+
+							<div class="col-sm-1">
+								<button class="ml-xs btn btn-success"  data-toggle="modal" data-target="#mdEtapaEnsino"
+								   data-toggle="tooltip" data-placement="top" >
+									<i class="fa fa-plus"></i>
+								</button>
+								<a href="#" data-toggle="modal" data-target="#mdEtapa">etapa</a>
+							</div>
+							<label class="col-sm-1 control-label">Série <span class="required">*</span></label>
+							<div class="col-md-2">
+								<select class="form-control populate select2" name="ddlSerie" id="ddlSerie"
+										title="Por favor informe a série." required
+										asp-for="SerieId" asp-items="Model.ListSeries">
+									<option value="">Selecionar Série</option>
+								</select>
+							</div>
+							<label class="col-sm-1 control-label">Turma <span class="required">*</span></label>
+							<div class="col-md-4">
+								<select class="form-control populate select2" name="ddlTurma" id="ddlTurma"
+										title="Por favor informe a turma." required
+										asp-for="TurmaId" asp-items="Model.ListTurmas">
+									<option value="">Selecionar Turma</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-1 control-label text-sm-right pt-2">Deficiência: <span class="required">*</span></label>
+							<div class="col-md-4">
+								<select class="form-control populate select2" name="ddlDeficiencia" id="ddlDeficiencia" style="width:100%"
+										title="Por favor selecione uma deficiência." required
+										asp-for="DeficienciaId" asp-items="Model.ListDeficiencias">
+									<option value="">Selecionar Deficiência</option>
+								</select>
+							</div>
+							<label class="col-sm-1 control-label text-sm-right pt-2">Modalidades<span class="required">*</span></label>
+							<div class="col-md-6">
+								<select class="form-control populate" multiple="multiple" data-plugin-multiselect data-plugin-options='{ "maxHeight": 200, "enableCaseInsensitiveFiltering": true }'
+										id="ddlModalidades" name="ddlModalidades" style="width:100%" asp-for="ModalidadeId" asp-items="Model.ListModalidades" required
+										title="Por favor selecione ao menos uma modalidade.">
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-1 control-label">Nome Mãe</label>
+							<div class="col-sm-5">
+								<input type="text" name="nomeMae" maxlength="150" class="form-control" />
+							</div>
+							<label class="col-sm-1 control-label">Nome Pai</label>
+							<div class="col-sm-5">
+								<input type="text" name="nomePai" maxlength="150" class="form-control" />
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-1 control-label">Endereço</label>
+							<div class="col-sm-6">
+								<input type="text" id="endereco" name="endereco" maxlength="200" class="form-control" />
+							</div>
+							<label class="col-sm-1 control-label">Número</label>
+							<div class="col-sm-1">
+								<input type="number" id="numero" name="numero" maxlength="4" class="form-control" />
+							</div>
+							<label class="col-sm-1 control-label">Cep</label>
+							<div class="col-sm-2">
+								<input type="text" id="cep" name="cep" maxlength="9" class="form-control" />
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-1 control-label">Bairro </label>
+							<div class="col-sm-3">
+								<input type="bairro" name="bairro" maxlength="50" class="form-control" />
+							</div>
+							<label class="col-lg-1 control-label text-lg-right pt-2">Telefone</label>
+							<div class="col-lg-3">
+								<div class="input-group">
+									<span class="input-group-addon">
+										<i class="fa fa-phone"></i>
+									</span>
+									<input id="numTelefone" name="numTelefone" class="form-control"
+										   maxlength="14">
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label pull-left">Cadastro ativo para login?</label>
+							<div class="col-sm-1">
+								<div class="switch switch-sm switch-success">
+									<input type="checkbox" id="status" name="status" data-plugin-ios-switch checked="checked" />
+								</div>
+							</div>
+							<label class="col-sm-3 control-label">Cadastro habilitado a operar?</label>
+							<div class="col-sm-1">
+								<div class="switch switch-sm switch-success">
+									<input type="checkbox" id="habilitado" name="habilitado" data-plugin-ios-switch />
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-md-1"></div>
+							<div class="col-md-5">
+								<label>Aluno está autorizado a sair sozinho? <span class="required">*</span></label><br />
+								<div class="radio-custom radio-success">
+									<input type="radio" id="autorizadoSim" name="autorizado" value="true" required title="Por favor selecione uma opção">
+									<label>Sim</label>
+								</div>
+								<div class="radio-custom radio-danger">
+									<input type="radio" id="autorizadoNao" name="autorizado" value="false" required title="Por favor selecione uma opção">
+									<label>Não</label>
+								</div>
+								<label class="error" for="autorizado"></label>
+								<p>
+									<code>O estudante pode deixar o local desacompanhado do responsável.</code>
+								</p>
+							</div>
+							<div class="col-md-6">
+								<label>Participação no programa DNA DO BRASIL TALENTOS e compartilhamento dos dados pessoais do estudante. <span class="required">*</span></label><br />
+								<div class="radio-custom radio-success">
+									<input type="radio" id="participacaoSim" name="participacao" value="true" required title="Por favor selecione uma opção">
+									<label>Sim</label>
+								</div>
+								<div class="radio-custom radio-danger">
+									<input type="radio" id="participacaoNao" name="participacao" value="false" required title="Por favor selecione uma opção">
+									<label>Não</label>
+								</div>
+								<label class="error" for="participacao"></label>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-md-1"></div>
+							<div class="col-md-5">
+								<label>Utilização da imagem <span class="required">*</span></label><br />
+								<div class="radio-custom radio-success">
+									<input type="radio" id="utilizacaoImagemSim" name="utilizacaoImagem" value="true" required title="Por favor selecione uma opção">
+									<label>Sim</label>
+								</div>
+								<div class="radio-custom radio-danger">
+									<input type="radio" id="utilizacaoImagemNao" name="utilizacaoImagem" value="false" required title="Por favor selecione uma opção">
+									<label>Não</label>
+								</div>
+								<label class="error" for="utilizacaoImagem"></label>
+								<p>
+									<code>O Idecace, a título gratuito e não oneroso, para fins de divulgação/publicação em qualquer material de foto, vídeo, documentos em geral, relatórios bem como em todo e qualquer veículo de comunicação</code>
+								</p>
+							</div>
+							<div class="col-md-6">
+								<label>Todos os alunos que estiver apto a participar das atividades no Ceu das Artes, Documentação exigida no primeiro dia de aula. <span class="required">*</span> </label><br />
+								<div class="radio-custom radio-success">
+									<input type="radio" id="copiaDocImagemSim" name="copiaDoc" value="true" required title="Por favor selecione uma opção">
+									<label>Sim</label>
+								</div>
+								<div class="radio-custom radio-danger">
+									<input type="radio" id="copiaDocImagemNao" name="copiaDoc" value="false" required title="Por favor selecione uma opção">
+									<label>Não</label>
+								</div>
+								<label class="error" for="copiaDoc"></label>
+								<p>
+									<code>Cópia do documento de indentidade do aluno. Cópia do documento de identidade do responsável legal.</code>
+								</p>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-1 control-label">Documentos</label>
+							<div class="col-sm-10">
+								<div class="fileupload fileupload-new" data-provides="fileupload">
+									<div class="input-append">
+										<div class="uneditable-input" style="width: 500px;">
+											<i class="fa fa-file fileupload-exists"></i>
+											<span class="fileupload-preview"></span>
+										</div>
+										<span class="btn btn-default btn-file">
+											<span class="fileupload-exists">Alterar</span>
+											<span class="fileupload-new">Selecionar Documentos</span>
+											<input type="file" id="documentos" name="documentos" multiple />
+										</span>
+										<a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload">Remover</a>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-md-1"></div>
+							<div class="col-sm-8">
+								<div class="checkbox-custom checkbox-default">
+									<input id="AgreeTerms" id="agreeterms" name="agreeterms" type="checkbox" required title="Por favor leia com atenção para aceitar ao termo." />
+									<label for="AgreeTerms">Eu concordo com os <a href="#" data-toggle="modal" data-target="#mdTermo">termos</a></label> <span class="required">*</span>
+								</div>
+								<label class="error" for="agreeterms"></label>
+							</div>
+						</div>
+					</div>
+					<footer class="panel-footer">
+						<div class="row">
+							<div class="col-md-9 col-md-offset-3">
+								<a href="@Url.Action("Index", "Aluno")" class="btn btn-dark pull-right" style="margin-left: 5px;margin-right: 5px;"><i class="fa fa-reply"></i> &nbsp;&nbsp;Voltar</a>
+								<button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;"><i class="fa fa-remove"></i> &nbsp;&nbsp;Cancelar</button>
+								<button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
+							</div>
+						</div>
+					</footer>
+				</section>
+			}
+		</div>
+	</div>
+	<!-- Modal -->
+	<div class="modal fade" id="mdTermo" tabindex="-1" role="dialog" aria-labelledby="mdTermoLabel" aria-hidden="true">
+		<div class="modal-dialog modal-md" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="mdTermoLabel">
+						<i class="fa fa-file"></i> &nbsp;&nbsp;<strong>TERMO DE AUTORIZAÇÃO E CONSENTIMENTO / ASSENTIMENTO</strong>
+					</h5>
+				</div>
+
+				<div class="modal-body">
+					<ul class="list-unstyled search-results-list">
+						<li>
+							<div class="result-data">
+								<p class="text-justify">
+									O Programa DNA DO BRASIL-TALENTOS objetiva a integração do desenvolvimento acadêmico e esportivo dos estudantes, com domínio nas áreas de oportunização, promoção e desenvolvimento no esporte, na saúde, no desenvolvimento psicossocial e na vocação profissionalizante. O Programa utiliza, com exclusividade, uma metodologia para análise psicossocial e vocacional, as quais permitem nortear o talento esportivo ou a carreira e potencializar a construção do Plano de Desenvolvimento Pessoal e Profissional de cada indivíduo avaliado. Para participação no Programa, faz-se necessária a autorização dos pais e/ou responsáveis, bem como o consentimento para a aplicação do protocolo avaliativo, em 3 períodos distintos, o qual direcionará o estudante conforme o seu talento profissional ou esportivo. A participação é voluntária, podendo ser interrompida sem que nenhuma implicação recaia sobre o avaliado. O Programa trabalha com 5 dimensões centrais do desenvolvimento humano (físico-motor, saúde, qualidade de vida, vocacional e educacional) e, também, levanta dados e trabalha com recursos sobre a violência contra crianças e adolescentes, sobre a saúde bucal, sobre a educação alimentar e sobre indicadores educacionais. Os dados serão inseridos em uma plataforma própria e os pais e/ou responsáveis terão acesso a esses dados por meio do aplicativo do estudante/famílias. Serão gerados automaticamente laudos e relatórios indicando fragilidades e potencialidades em cada uma das variáveis. DECLARO que: 1. Estou ciente que o tratamento de dados pessoais coletados é condição para a participação do estudantes no Programa DNA DO BRASIL TALENTOS e que posso requerer, como titular dos dados, a qualquer momento e mediante requisição, os direitos elencados no Art. 18, da Lei 13.709, de 14 de agosto de 2018 - LGPD. 2 - O(a) estudante não possui qualquer enfermidade que o/a impeça da prática esportiva e não passou por qualquer procedimento cirúrgico nos últi prática; 3. Tenho conhecimento de que a bateria de testes poderá consistir na realização de testes físico motores,índices de saúde, inventários psicossociais,e teste de aptidão e interesses profissionais. - Para crianças e adolescentes (maiores que 6 anos e menores de 18 anos de idade) e para legalmente incapaz. O Instituto para o Desenvolvimento da Criança e do Adolescente pela Cultura e Esporte (IDECACE) convida você a participar do estudo Extração e Modelagem de Features do Programa DNA do Brasil - Talentos: desenvolvimento físico-motor, saúde e qualidade de vida de crianças e adolescentes. Informamos que seu pai/mãe ou responsável legal permitiu a sua participação. Analisamos a aplicação de protocolo avaliativo com estudantes para a prática de diferentes modalidades esportivas nos estados e municípios brasileiros, empregando dados do Programa DNA do Brasil – Talentos. Gostaríamos muito de contar com a sua participação, porém, você não é obrigado a participar e não tem problema em desistir. Outras crianças e/ou adolescentes participantes desta pesquisa tem de 6 a 17 anos de idade. A pesquisa será feita no ambiente onde os participantes (crianças/adolescente) realizarão os testes físico-motores e responderão os questionários psicossocial, vocacional, nutricional e odontológico. A sua participação é importante, pois através dos testes serão gerados automaticamente laudos e relatórios indicando fragilidades e potencialidades individuais. As suas informações ficarão sob sigilo, ninguém saberá que você está participando da pesquisa. Não compartilharemos com outras pessoas as suas informações. Os resultados da pesquisa serão utilizados para produção de material cientifico sem identificar (dados pessoais, vídeos, imagens e áudios de gravações) os participantes (crianças/adolescentes). Aceito participar da pesquisa Extração e Modelagem de Features do Programa DNA do Brasil - Talentos: desenvolvimento físico-motor, saúde e qualidade de vida de crianças e adolescentes. Entendi as coisas ruins e as coisas boas que podem acontecer. Entendi que posso dizer “sim” e participar, mas que, a qualquer momento, posso dizer “não” e desistir e que ninguém vai ficar com raiva/chateado comigo. Os pesquisadores esclareceram minhas dúvidas e conversaram com os meus familiares/responsável legal. Recebi uma cópia deste termo de assentimento, li e quero/concordo em participar da pesquisa/estudo.
+								</p>
+							</div>
+						</li>
+					</ul>
+				</div>
+				<div class="modal-footer">
+					<button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-remove"></i> &nbsp;&nbsp;Fechar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Modal -->
+	<div class="modal fade" id="mdEtapa" tabindex="-1" role="dialog" aria-labelledby="mdEtapaLabel" aria-hidden="true">
+		<div class="modal-dialog modal-md" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="mdEtapaLabel">
+						<i class="fa fa-plus"></i> &nbsp;&nbsp;<strong>Nova Etapa de Ensino</strong>
+					</h5>
+				</div>
+
+				<div class="modal-body">
+					<form id="formEtapaEnsino" class="form-horizontal">
+						<div class="modal-body">
+							<div class="form-group mb-lg">
+								<label class="col-sm-3 control-label">Nome da Etapa</label><span class="required">*</span>
+								<div class="col-sm-9">
+									<input type="text" id="etapa" name="etapa" class="form-control" />
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-remove"></i> &nbsp;&nbsp;Fechar</button>
+							<button type="button" href='javascript:(crud.CreateEtapaEnsino())' class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-remove"></i> &nbsp;&nbsp;Fechar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Modal -->
+	<div class="modal fade" id="mdEtapaEnsino" tabindex="-1" role="dialog" aria-labelledby="mdEtapaEnsinoLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="mdEtapaEnsinoLabel">
+						<i class="fa fa-plus"></i> &nbsp;&nbsp;<strong>Nova Etapa de Ensino</strong>
+					</h5>
+				</div>
+				<form id="formEtapaEnsino" class="form-horizontal">
+					<div class="modal-body">
+						<div class="form-group row">
+							
+							<label class="col-sm-2 control-label text-sm-right pt-2">Etapa de Ensino <span class="required">*</span></label>
+							<div class="col-sm-4">
+								<input type="text" name="nomeEtapaEnsino" id="nomeEtapaEnsino" class="form-control"
+								       maxlength="80" 
+								       title="Por favor informe a Etapa de Ensino." required />
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-remove"></i> &nbsp;&nbsp;Fechar</button>
+						<button type="button" onclick='javascript:(crud.CreateEtapaEnsino());' class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
 </div>
 
 
 
 
 @section CssSpecificVendor {
-    <link rel="stylesheet" href="~/assets/vendor/bootstrap-fileupload/bootstrap-fileupload.min.css" />
-    <link rel="stylesheet" href="~/assets/vendor/select2/css/select2.css" />
-    <link rel="stylesheet" href="~/assets/vendor/select2-bootstrap-theme/select2-bootstrap.min.css" />
-    <link rel="stylesheet" href="~/assets/vendor/bootstrap-multiselect/bootstrap-multiselect.css" />
-    <link rel="stylesheet" href="~/assets/vendor/datatables/media/css/dataTables.bootstrap4.css" />
-    <link href="~/assets/vendor/bootstrap-datepicker/css/bootstrap-datepicker3.css" rel="stylesheet" />
+	<link rel="stylesheet" href="~/assets/vendor/bootstrap-fileupload/bootstrap-fileupload.min.css" />
+	<link rel="stylesheet" href="~/assets/vendor/select2/css/select2.css" />
+	<link rel="stylesheet" href="~/assets/vendor/select2-bootstrap-theme/select2-bootstrap.min.css" />
+	<link rel="stylesheet" href="~/assets/vendor/bootstrap-multiselect/bootstrap-multiselect.css" />
+	<link rel="stylesheet" href="~/assets/vendor/datatables/media/css/dataTables.bootstrap4.css" />
+	<link href="~/assets/vendor/bootstrap-datepicker/css/bootstrap-datepicker3.css" rel="stylesheet" />
 }
 @section Scripts {
-    <script src="~/assets/vendor/bootstrap-fileupload/bootstrap-fileupload.min.js"></script>
-    <script src="~/assets/vendor/ios7-switch/ios7-switch.js"></script>
-    <script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
-    <script src="~/assets/vendor/select2/js/select2.js"></script>
-    <script src="~/assets/vendor/jquery-mask/jquery.mask.js"></script>
-    <script src="~/assets/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
-    <script src="~/assets/vendor/datatables/media/js/dataTables.bootstrap4.min.js"></script>
-    <script src="~/assets/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
-    <script src="~/assets/vendor/bootstrap-datepicker/locales/bootstrap-datepicker.pt-BR.min.js"></script>
-    <script src="~/js/formatTable.js"></script>
-    <script src="~/js/DadosAluno.js"></script>
-    <script>
+	<script src="~/assets/vendor/bootstrap-fileupload/bootstrap-fileupload.min.js"></script>
+	<script src="~/assets/vendor/ios7-switch/ios7-switch.js"></script>
+	<script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
+	<script src="~/assets/vendor/select2/js/select2.js"></script>
+	<script src="~/assets/vendor/jquery-mask/jquery.mask.js"></script>
+	<script src="~/assets/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
+	<script src="~/assets/vendor/datatables/media/js/dataTables.bootstrap4.min.js"></script>
+	<script src="~/assets/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+	<script src="~/assets/vendor/bootstrap-datepicker/locales/bootstrap-datepicker.pt-BR.min.js"></script>
+	<script src="~/js/formatTable.js"></script>
+	<script src="~/js/DadosAluno.js"></script>
+	<script>
 
-        (function ($) {
+		(function ($) {
 
-            'use strict';
-            var crud = @ViewBag.CrudMessage;
+			'use strict';
+			var crud = @ViewBag.CrudMessage;
 
-            if (crud === 1) {
-                new PNotify({
-                    title: 'Aluno',
-                    text: 'Cadastro realizado com sucesso!',
-                    type: 'success'
-                });
-            } else if (crud === 2) {
-                new PNotify({
-                    title: 'Aluno',
-                    text: 'Dados alterados com sucesso.',
-                    type: 'warning'
-                });
-            } else if (crud === 3) {
-                new PNotify({
-                    title: 'Aluno',
-                    text: 'Registro excluído com sucesso.',
-                    type: 'error'
-                });
-            }
+			if (crud === 1) {
+				new PNotify({
+					title: 'Aluno',
+					text: 'Cadastro realizado com sucesso!',
+					type: 'success'
+				});
+			} else if (crud === 2) {
+				new PNotify({
+					title: 'Aluno',
+					text: 'Dados alterados com sucesso.',
+					type: 'warning'
+				});
+			} else if (crud === 3) {
+				new PNotify({
+					title: 'Aluno',
+					text: 'Registro excluído com sucesso.',
+					type: 'error'
+				});
+			}
 
-            var notify = @ViewBag.NotifyMessage;
-            var messagem = '@ViewBag.Notify';
+			var notify = @ViewBag.NotifyMessage;
+			var messagem = '@ViewBag.Notify';
 
-            if (notify === 0) {
-                new PNotify({
-                    title: 'Aluno',
-                    text: messagem,
-                    type: 'success'
-                });
-            } else if (notify === 1) {
-                new PNotify({
-                    title: 'Aluno',
-                    text: messagem,
-                    type: 'warning'
-                });
-            } else if (notify === 2) {
-                new PNotify({
-                    title: 'Aluno',
-                    text: messagem,
-                    type: 'error'
-                });
-            }
+			if (notify === 0) {
+				new PNotify({
+					title: 'Aluno',
+					text: messagem,
+					type: 'success'
+				});
+			} else if (notify === 1) {
+				new PNotify({
+					title: 'Aluno',
+					text: messagem,
+					type: 'warning'
+				});
+			} else if (notify === 2) {
+				new PNotify({
+					title: 'Aluno',
+					text: messagem,
+					type: 'error'
+				});
+			}
 
-        }).apply(this, [jQuery]);
-    </script>
+		}).apply(this, [jQuery]);
+	</script>
 }

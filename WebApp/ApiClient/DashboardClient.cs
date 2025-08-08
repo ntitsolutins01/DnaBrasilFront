@@ -57,6 +57,12 @@ namespace WebApp.ApiClient
                 $"{ResourceDashboard}/GraficosSaudeBucal"));
             return GetFiltro(requestUrl, searchFilter);
         }
+        public Task<DashboardDto?> GetGraficosEducacionalByFilter(DashboardDto searchFilter)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceDashboard}/GraficosEducacional"));
+            return GetFiltro(requestUrl, searchFilter);
+        }
         public Task<DashboardDto?> GetGraficosEtniaByFilter(DashboardDto searchFilter)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
@@ -73,6 +79,12 @@ namespace WebApp.ApiClient
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
                 $"{ResourceDashboard}/Indicadores"));
+            return GetFiltro(requestUrl, searchFilter);
+        }
+        public Task<DashboardEadDto?> GetIndicadoresEadByFilter(DashboardEadDto searchFilter)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceDashboard}/IndicadoresEad"));
             return GetFiltro(requestUrl, searchFilter);
         }
         public Task<DashboardDto?> GetControlePresencaByFilter(DashboardDto searchFilter)

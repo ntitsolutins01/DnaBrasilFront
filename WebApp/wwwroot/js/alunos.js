@@ -98,7 +98,7 @@ var vm = new Vue({
 
                     $.getJSON(url, function (data) {
                         if (data.length > 0) {
-                            var items = '';
+                            var items = '<option value="">Selecionar o Município</option>';
                             $.each(data, function (i, row) {
                                 items += "<option value='" + row.value + "'>" + row.text + "</option>";
                             });
@@ -134,7 +134,7 @@ var vm = new Vue({
 
                     $.getJSON(url, function (data) {
                         if (data.length > 0) {
-                            var items = '';
+                            var items = '<option value="">Selecionar a Localidade</option>';
                             $.each(data, function (i, row) {
                                 items += "<option value='" + row.value + "'>" + row.text + "</option>";
                             });
@@ -150,6 +150,37 @@ var vm = new Vue({
                     });
 
                     self.ShowLoad(false, "pFiltro");
+                });
+
+                //clique de escolha do select
+                $("#ddlLocalidade").change(function () {
+                    var id = $("#ddlLocalidade").val();
+
+                    var url = "../../Profissional/GetProfissionaisByLocalidade/?id=" + id;
+
+                    var ddlSource = "#ddlProfissional";
+
+                    $.getJSON(url,
+                        { id: $(ddlSource).val() },
+                        function (data) {
+                            if (data.length > 0) {
+                                var items = '<option value="">Selecionar Profissional</option>';
+                                $("#ddlProfissional").empty;
+                                $.each(data,
+                                    function (i, row) {
+                                        items += "<option value='" + row.value + "'>" + row.text + "</option>";
+                                    });
+                                $("#ddlProfissional").html(items);
+                            }
+                            else {
+                                new PNotify({
+                                    title: 'Profissional',
+                                    text: 'Profissional não encontrados.',
+                                    type: 'warning'
+                                });
+                            }
+                        });
+
                 });
 
                 $("#ddlFomento").change(function () {
@@ -173,7 +204,7 @@ var vm = new Vue({
                                 $.getJSON("../../DivisaoAdministrativa/GetMunicipioByUf?uf=" + f.sigla)
                                     .done(function (municipios) {
                                         // Limpa e preenche o dropdown de municípios
-                                        var items = '';
+                                        var items = '<option value="">Selecionar o Município</option>';
                                         $.each(municipios, function (i, row) {
                                             items += "<option value='" + row.value + "'>" + row.text + "</option>";
                                         });
@@ -186,7 +217,7 @@ var vm = new Vue({
                                             $.getJSON("../../Localidade/GetLocalidadeByMunicipio?id=" + f.municipioId)
                                                 .done(function (localidades) {
                                                     // Limpa e preenche o dropdown de localidades
-                                                    var localItems = '';
+                                                    var localItems = '<option value="">Selecionar a Localidade</option>';
                                                     $.each(localidades, function (i, row) {
                                                         localItems += "<option value='" + row.value + "'>" + row.text + "</option>";
                                                     });

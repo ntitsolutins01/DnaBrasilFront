@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
@@ -26,27 +26,24 @@ namespace WebApp.Controllers
         }
         public async Task<IActionResult> Index(IFormCollection collection)
         {
-            //var usu = User?.Identity.Name;
+            var usuario = User?.Identity.Name;
             //var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             //userName = User.FindFirstValue(ClaimTypes.Name); // will give the user's userName
             //email = User.FindFirstValue(ClaimTypes.Email);
 
-            var searchFilter = new DashboardDto
-            {
-                FomentoId = collection["ddlFomento"].ToString(),
-                Estado = collection["ddlEstado"].ToString(),
-                MunicipioId = collection["ddlMunicipio"].ToString(),
-                LocalidadeId = collection["ddlLocalidade"].ToString(),
-                DeficienciaId = collection["ddlDeficiencia"].ToString(),
-                Etnia = collection["ddlEtnia"].ToString()
-            };
+            var usu = await ApiClientFactory.Instance.GetUsuarioByEmail(usuario);
 
             var dashboard = new DashboardDto();
             var dashboardEad = new DashboardEadDto();
 
-            var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentosAll(), "Id", "Nome", dashboard.FomentoId);
+            var fomento = ApiClientFactory.Instance.GetFomentoByLocalidadeId(Convert.ToInt32(usu.LocalidadeId));
+            var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentosAll(), "Id", "Nome", fomento.Id);
+
             var deficiencias = new SelectList(ApiClientFactory.Instance.GetDeficienciaAll().Where(x => x.Status), "Id", "Nome", dashboard.DeficienciaId);
-            var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome", dashboard.Estado);
+
+            var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome", usu.Uf);
+
+            var tipoCurso = new SelectList(ApiClientFactory.Instance.GetTipoCursosAll(), "Id", "Nome");
 
             List<SelectListDto> list = new List<SelectListDto>
             {
@@ -58,17 +55,22 @@ namespace WebApp.Controllers
             };
 
             var etnias = new SelectList(list, "IdNome", "Nome", dashboard.Etnia);
+
             SelectList municipios = null;
 
-            if (!string.IsNullOrEmpty(dashboard.Estado))
+            if (!string.IsNullOrEmpty(usu.Uf))
             {
-                municipios = new SelectList(ApiClientFactory.Instance.GetMunicipiosByUf(dashboard.Estado), "Id", "Nome", dashboard.MunicipioId);
+                municipios = new SelectList(ApiClientFactory.Instance.GetMunicipiosByFomentoId(fomento.Id), "Id", "Nome");
             }
+
             SelectList localidades = null;
 
-            if (!string.IsNullOrEmpty(dashboard.LocalidadeId))
+            if (usu.MunicipioId != null)
             {
-                localidades = new SelectList(ApiClientFactory.Instance.GetLocalidadeByMunicipioId(dashboard.MunicipioId), "Id", "Nome", dashboard.LocalidadeId);
+                var resultLocalidades = ApiClientFactory.Instance.GetLocalidadeByMunicipioId(usu.MunicipioId.ToString());
+
+                if (resultLocalidades != null)
+                    localidades = new SelectList(resultLocalidades, "Id", "Nome");
             }
 
             var model = new DashboardModel
@@ -80,7 +82,9 @@ namespace WebApp.Controllers
                 ListDeficiencias = deficiencias,
                 ListMunicipios = municipios!,
                 ListEtnias = etnias,
-                ListLocalidades = localidades!
+                ListLocalidades = localidades!,
+                ListTipoCursos = tipoCurso,
+                IdPerfil = usu.Perfil.Id
             };
 
             model.Dashboard.StatusLaudos = new StatusLaudosDto();
@@ -112,6 +116,26 @@ namespace WebApp.Controllers
                 var model = new DashboardModel
                 {
                     Dashboard = dashboard,
+
+                };
+
+                return Json(model);
+
+            }
+            catch (Exception ex)
+            {
+                return Json(ex);
+            }
+        }
+        public async Task<JsonResult> GetIndicadoresEadByFilter([FromBody] DashboardEadDto search)
+        {
+            try
+            {
+                var dashboard = await ApiClientFactory.Instance.GetIndicadoresEadByFilter(search);
+
+                var model = new DashboardModel
+                {
+                    DashboardEad = dashboard,
 
                 };
 
@@ -229,6 +253,26 @@ namespace WebApp.Controllers
             try
             {
                 var dashboard = await ApiClientFactory.Instance.GetGraficosSaudeBucalByFilter(search);
+
+                var model = new DashboardModel
+                {
+                    Dashboard = dashboard,
+
+                };
+
+                return await Task.FromResult(Json(model));
+
+            }
+            catch (Exception ex)
+            {
+                return await Task.FromResult(Json(ex));
+            }
+        }
+        public async Task<JsonResult> GetGraficosEducacionalByFilter([FromBody] DashboardDto search)
+        {
+            try
+            {
+                var dashboard = await ApiClientFactory.Instance.GetGraficosEducacionalByFilter(search);
 
                 var model = new DashboardModel
                 {
