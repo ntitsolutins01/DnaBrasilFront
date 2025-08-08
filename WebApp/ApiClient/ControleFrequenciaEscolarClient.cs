@@ -30,7 +30,7 @@ namespace WebApp.ApiClient
         /// <param name="id">Id de alteração de Frequencia Escolar</param>
         /// <param name="command">Objeto de alteração Controle de Frequencia Escolar</param>
         /// <returns></returns>
-        public Task<bool> UpdateControleFrequenciaEscolar(int id, ControleFrequenciaEscolarModel.CreateUpdateControleFrequenciaEscolarCommand command)
+        public Task<bool> UpdateControleFrequenciaEscolar(int? id, ControleFrequenciaEscolarModel.CreateUpdateControleFrequenciaEscolarCommand command)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
                 $"{ResourceControleFrequenciaEscolar}/{id}"));
@@ -83,7 +83,7 @@ namespace WebApp.ApiClient
         public List<ControleFrequenciaEscolarDto> GetControlesFrequenciasEscolaresByAlunoId(int id)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceMaterial}/Aluno/{id}"));
+                $"{ResourceControleFrequenciaEscolar}/Aluno/{id}"));
             return Get<List<ControleFrequenciaEscolarDto>>(requestUrl);
         }
         #endregion

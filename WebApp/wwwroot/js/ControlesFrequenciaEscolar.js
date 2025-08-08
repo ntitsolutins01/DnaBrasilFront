@@ -110,28 +110,6 @@
                 $("#ddlLocalidade").change(function () {
                     var id = $("#ddlLocalidade").val();
 
-                    //var url1 = "../../Aluno/GetAlunosByLocalidadeId?id=" + id;
-                    //$.getJSON(url1,
-                    //    { id: id },
-                    //    function (data) {
-                    //        if (data.length > 0) {
-                    //            var items = '<option value="">Selecionar Aluno</option>';
-                    //            $("#ddlAluno").empty;
-                    //            $.each(data,
-                    //                function (i, row) {
-                    //                    items += "<option value='" + row.value + "'>" + row.text + "</option>";
-                    //                });
-                    //            $("#ddlAluno").html(items);
-                    //        }
-                    //        else {
-                    //            new PNotify({
-                    //                title: 'Aluno',
-                    //                text: "Aluno não encontrado.",
-                    //                type: 'warning'
-                    //            });
-                    //        }
-                    //    });
-
                     var url = "../../Profissional/GetProfissionaisByLocalidade/" + id;
                     $.getJSON(url,
                         { id: id },
@@ -283,75 +261,9 @@
                         // sempre será executado
                     });
                 });
-
-                //clique de escolha do select
-                $("#ddlTurma").change(function () {
-
-                    var id = $("#ddlTurma").val();
-
-                    if (id === "") {
-                        Site.Notification("Profissional", "Por favor selecione uma turma", "warning");
-                    }
-
-                    var url = "../Atividade/GetAtividadeById";
-
-                    var urlDataTable = "../Atividade/GetAtividadeAlunosByAtividadeId";
-
-                    axios.get(url, {
-                        params: {
-                            id: id
-                        }
-                    }).then(result => {
-                        $("#divAlunos").show();
-                        self.editDto.Categoria = result.data.nomeCategoria;
-                        self.editDto.Estrutura = result.data.nomeEstrutura;
-                        self.editDto.DiasSemana = result.data.diasSemana;
-                        self.editDto.Horario = result.data.hrInicial + " - " + result.data.hrFinal;
-
-                        axios.get(urlDataTable, {
-                            params: {
-                                id: id
-                            }
-                        }).then(result => {
-                            if (result.data.length > 0) {
-
-                                self.editDto.Update = true;
-
-                                $.each(result.data,
-                                    function (i, item) {
-
-                                        $('#alunoDataTable').DataTable().destroy();
-
-                                        var table = $('#alunoDataTable').DataTable({
-                                            columnDefs: [
-                                                { "className": "text-center", "targets": "_all" }
-                                            ]
-                                        });
-
-                                        table.row.add([item.alunoId.toString(), item.alunoId + " - " + item.nome,
-                                        "<a style='color:#F44336' href='javascript:(crud.DeleteAluno(\"" + item.alunoId + "\"))'><i class='fa fa-trash'></i></a>"])
-                                            .draw();
-
-                                        self.params.alunos.push(item.alunoId.toString());
-
-                                    });
-
-                                $('input[name="arrAlunos"]').attr('value', self.params.alunos);
-                            } else {
-
-                                self.editDto.Update = false;
-                            }
-                        }).catch(error => {
-                            Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
-                        });
-
-                    }).catch(error => {
-                        Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
-                    });
-                });
-
             }
 
+            // Pesquisa de Alunos para preencher a frequência
             $("#formPesquisarControleFrequenciaEscolar").submit(function (e) {
                 e.preventDefault();
 
@@ -367,12 +279,23 @@
                     data: $form.serialize(),
                     success: function (html) {
                         $("#tabela-container").html(html);
+                        $("#tabela-container").show();
 
-                        $('html, body').animate({ scrollTop: $("#tabela-container").offset().top }, 300);
+                        var $table = $("#datatable-default");
+                        if ($table.length) {
+                            $('html, body').animate({ scrollTop: $table.offset().top }, 300);
+                        } else {
+                            new PNotify({
+                                title: 'Frequência Escolar',
+                                text: 'Nenhum resultado encontrado.',
+                                type: 'info'
+                            });
+                        }
                     },
+
                     error: function (xhr, status, error) {
                         new PNotify({
-                            title: 'Erro',
+                            title: 'Frequência Escolar',
                             text: 'Não foi possível pesquisar. ' + (xhr.responseText || error),
                             type: 'error'
                         });
@@ -385,8 +308,61 @@
             });
 
             // Botão de Marcar aulas do dia atual
-            $(document).on('click', '#marcarDiaAtual', function () {
+            $(document).on('click', '#btnMarcarDiaAtual', function () {
                 $(".checkbox-dia-hoje:not(:disabled)").prop("checked", true);
+            });
+
+            // Botão de envio das frequências
+            $(document).on('click', '#btnSalvarFrequencias', function () {
+                var frequencias = [];
+                var $btn = $(this);
+                $btn.prop('disabled', true);
+
+                var serieId = $("#ddlTurma").val();
+                var disciplinaId = $("#ddlDisciplina").val();
+                var profissionalId = $("#ddlProfissional").val();
+
+                var dataAtual = new Date();
+                var ano = dataAtual.getFullYear();
+                var mes = dataAtual.getMonth() + 1;
+                var diaHoje = dataAtual.getDate();
+
+                $('#tabela-container input[type="checkbox"]').each(function () {
+                    var $cb = $(this);
+                    var dia = $cb.data('dia');
+                    var alunoId = $cb.data('aluno-id');
+                    var presente = $cb.is(':checked');
+
+                    if (dia > diaHoje) return;
+
+                    var dataFrequencia = ano + '-' +
+                        String(mes).padStart(2, '0') + '-' +
+                        String(dia).padStart(2, '0') + 'T00:00:00';
+
+                    frequencias.push({
+                        AlunoId: alunoId.toString(),
+                        SerieId: serieId.toString(),
+                        DisciplinaId: disciplinaId.toString(),
+                        ProfissionalId: profissionalId.toString(),
+                        Controle: presente ? 'P' : 'F',
+                        DataFrequencia: dataFrequencia
+                    });
+                });
+
+                if (frequencias.length === 0) {
+                    new PNotify({
+                        title: 'Frequência Escolar',
+                        text: 'Nenhuma frequência selecionada!',
+                        type: 'warning'
+                    });
+                    $btn.prop('disabled', false);
+                    return;
+                }
+
+                self.frequenciaChunks = self.SplitArrayInChunks(frequencias, 200);
+                self.btnSalvar = $btn;
+
+                self.EnviarChunk(0);
             });
 
         }).apply(this, [jQuery]);
@@ -431,6 +407,54 @@
 
             }).catch(error => {
                 Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
+            });
+        },
+        SplitArrayInChunks: function (arr, chunkSize) {
+            var result = [];
+            for (var i = 0; i < arr.length; i += chunkSize) {
+                result.push(arr.slice(i, i + chunkSize));
+            }
+            return result;
+        },
+        EnviarChunk: function (index) {
+            var self = this;
+            var chunks = self.frequenciaChunks;
+            var $btn = self.btnSalvar;
+
+            if (index >= chunks.length) {
+                new PNotify({
+                    title: 'Frequência Escolar',
+                    text: 'Frequências salvas com sucesso!',
+                    type: 'success'
+                });
+                if ($btn) $btn.prop('disabled', false);
+                setTimeout(function () {
+                    location.reload();
+                }, 2000);
+                return;
+            }
+
+            if (!chunks[index] || !chunks[index].length) {
+                self.EnviarChunk(index + 1);
+                return;
+            }
+
+            $.ajax({
+                url: '/ControleFrequenciaEscolar/SalvarFrequencias',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(chunks[index]),
+                success: function () {
+                    self.EnviarChunk(index + 1);
+                },
+                error: function () {
+                    new PNotify({
+                        title: 'Frequência Escolar',
+                        text: 'Erro ao salvar frequências (lote ' + (index + 1) + ').',
+                        type: 'error'
+                    });
+                    if ($btn) $btn.prop('disabled', false);
+                }
             });
         }
     }

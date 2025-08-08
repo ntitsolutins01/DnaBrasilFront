@@ -14,8 +14,13 @@
                 <a href="@Url.Action("Create", "Laudo")" id="addToTable" class="btn btn-block btn-danger pull-right"><i class="fa fa-window-close"></i> Novo Laudo </a>
             </div>
             <div class="col-sm-2 pull-right" style="margin-right: 7px;">
-                <button id="marcarDiaAtual" type="button" class="btn btn-block btn-success pull-right">
+                <button id="btnMarcarDiaAtual" type="button" class="btn btn-block btn-info pull-right">
                     <i class="fa fa-check"></i> Marcar presenças de hoje
+                </button>
+            </div>
+            <div class="col-sm-2 pull-right" style="margin-right: 7px;">
+                <button id="btnSalvarFrequencias" type="button" class="btn btn-block btn-success pull-right">
+                    <i class="fa fa-arrow-up"></i> Salvar Frequências
                 </button>
             </div>
         </div>
@@ -54,11 +59,20 @@
 
                                 var temPresenca = Model.AlunosComPresencas != null && Model.AlunosComPresencas.Any(p =>
                                 p.AlunoId == aluno.Id.ToString() &&
-                                p.Data?.Day == dia1 &&
-                                p.Data?.Month == mes &&
-                                p.Data?.Year == ano &&
+                                ParseDate(p.DataFrequencia).Date == new DateTime(ano, mes, dia1) &&
                                 p.Controle == "P"
                                 );
+
+                                @functions {
+                                    public static DateTime ParseDate(object data)
+                                    {
+                                        if (data is DateTime dt)
+                                            return dt;
+                                        if (data is string s)
+                                            return DateTime.Parse(s);
+                                        return DateTime.MinValue;
+                                    }
+                                }
 
                                 var marcado = temPresenca ? "checked" : "";
 
@@ -67,6 +81,8 @@
                                            id="presenca_@dia1-@aluno.Id"
                                            name="presenca_@dia1"
                                            class="@isHoje"
+                                           data-aluno-id="@aluno.Id"
+                                           data-dia="@dia1"
                                     @disabled @marcado />
                                 </th>
                             }
