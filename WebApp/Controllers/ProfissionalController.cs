@@ -298,7 +298,9 @@ namespace WebApp.Controllers
                     new() { IdNome = "Psicólogo", Nome = "Psicólogo" },
                     new() { IdNome = "Assistente Social", Nome = "Assistente Social" },
                     new() { IdNome = "Estagiário", Nome = "Estagiário" },
-                    new() { IdNome = "Profissional Impressão", Nome = "Profissional Impressão" }
+                    new() { IdNome = "Profissional Impressão", Nome = "Profissional Impressão" },
+                    new() { IdNome = "Dentista", Nome = "Dentista" },
+                    new() { IdNome = "Nutricionista", Nome = "Nutricionista" }
                 };
 
                 var cargos = new SelectList(list, "IdNome", "Nome", profissional.Cargo);
