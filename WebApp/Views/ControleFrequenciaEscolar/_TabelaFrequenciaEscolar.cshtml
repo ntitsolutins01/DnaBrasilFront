@@ -9,67 +9,63 @@
         <h2 class="panel-title">Listagem de Frequências</h2>
     </header>
     <div class="panel-body">
-		@using (@Html.BeginForm("SalvarFrequencias", "ControleFrequenciaEscolar", FormMethod.Post, new { id = "formDisciplina", @class = "form-horizontal" }))
-    {
-	    <div class="form-group row">
-		    <div class="col-sm-2 pull-right">
-			    @* <a href="#" id="addToTable" class="btn btn-block btn-success pull-right">
-				    <i class="fa fa-save"></i> Salvar Frequências com Url.Action
-			    </a> *@
-			    <button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
-		    </div>
-		    <div class="col-sm-2 pull-right" style="margin-right: 7px;">
-			    <button id="btnMarcarDiaAtual" type="button" class="btn btn-block btn-info pull-right">
-				    <i class="fa fa-check"></i> Marcar presenças de hoje
-			    </button>
-		    </div>
-		    <div class="col-sm-2 pull-right" style="margin-right: 7px;">
-			    <button id="btnSalvarFrequencias" type="button" class="btn btn-block btn-success pull-right">
-				    <i class="fa fa-arrow-up"></i> Salvar Frequências
-			    </button>
-		    </div>
-	    </div>
-	    <br/>
-	    <table class="table table-bordered table-striped mb-0" id="datatable-default">
-		    <thead>
-		    <tr>
-			    <th class="text-center">Matricula - Nome do Aluno</th>
-			    @{
-				    DateTime dataAtual = DateTime.Now;
-				    int ano = dataAtual.Year;
-				    int mes = dataAtual.Month;
-				    int totalDiasNoMes = DateTime.DaysInMonth(ano, mes);
-				    int diaHoje = dataAtual.Day;
+        <div class="form-group row">
+            <div class="col-sm-2 pull-right">
+                <a href="@Url.Action("Create", "Laudo")" id="addToTable" class="btn btn-block btn-danger pull-right"><i class="fa fa-window-close"></i> Novo Laudo </a>
+            </div>
+            <div class="col-sm-2 pull-right" style="margin-right: 7px;">
+                <button id="btnMarcarDiaAtual" type="button" class="btn btn-block btn-info pull-right">
+                    <i class="fa fa-check"></i> Marcar presenças de hoje
+                </button>
+            </div>
+            <div class="col-sm-2 pull-right" style="margin-right: 7px;">
+                <button id="btnSalvarFrequencias" type="button" class="btn btn-block btn-success pull-right">
+                    <i class="fa fa-arrow-up"></i> Salvar Frequências
+                </button>
+            </div>
+        </div>
+        <br />
+        <table class="table table-bordered table-striped mb-0" id="datatable-default">
+	        <thead>
+	        <tr>
+		        <th class="text-center">Matricula - Nome do Aluno</th>
+		        @{
+			        DateTime dataAtual = DateTime.Now;
+			        int ano = dataAtual.Year;
+			        int mes = dataAtual.Month;
+			        int totalDiasNoMes = DateTime.DaysInMonth(ano, mes);
+			        int diaHoje = dataAtual.Day;
 
-				    for (int dia = 1; dia <= totalDiasNoMes; dia++)
-				    {
-					    <th class="text-center">@dia</th>
-				    }
-			    }
-		    </tr>
-		    </thead>
-		    <tbody>
-		    @if (!Model.Alunos.IsNullOrEmpty())
-		    {
-			    foreach (var aluno in Model.Alunos)
-			    {
-				    <tr>
-					    <td class="text-center" style="width: 300px;">
-						    @aluno.Nome
-					    </td>
-					    @for (int dia1 = 1; dia1 <= totalDiasNoMes; dia1++)
-					    {
-						    var disabled = dia1 > diaHoje ? "disabled" : "";
-						    var isHoje = dia1 == diaHoje ? "checkbox-dia-hoje" : "";
+			        for (int dia = 1; dia <= totalDiasNoMes; dia++)
+			        {
+				        <th class="text-center">@dia</th>
+			        }
+		        }
+		        <th class="text-center">Ação</th>
+	        </tr>
+	        </thead>
+	        <tbody>
+	        @if (!Model.Alunos.IsNullOrEmpty())
+	        {
+		        foreach (var aluno in Model.Alunos)
+		        {
+			        <tr>
+				        <td class="text-center" style="width: 300px;">
+					        @aluno.Nome
+				        </td>
 
-						    var temPresenca = Model.AlunosComPresencas != null && Model.AlunosComPresencas.Any(p =>
-							    p.AlunoId == aluno.Id.ToString() &&
-							    ParseDate(p.DataFrequencia).Date == new DateTime(ano, mes, dia1) &&
-							    p.Controle == "P"
-						    );
+				        @for (int dia1 = 1; dia1 <= totalDiasNoMes; dia1++)
+				        {
+					        var disabled = dia1 > diaHoje ? "disabled" : "";
+					        var isHoje = dia1 == diaHoje ? "checkbox-dia-hoje" : "";
+
+					        var temPresenca = Model.AlunosComPresencas != null && Model.AlunosComPresencas.Any(p =>
+						        p.AlunoId == aluno.Id.ToString() &&
+						        ParseDate(p.DataFrequencia).Date == new DateTime(ano, mes, dia1) &&
+						        p.Controle == "P"
+					        );
 
                                 @functions {
-
 	                                public static DateTime ParseDate(object data)
 	                                {
 		                                if (data is DateTime dt)
@@ -78,26 +74,96 @@
 			                                return DateTime.Parse(s);
 		                                return DateTime.MinValue;
 	                                }
-
                                 }
 
                                 var marcado = temPresenca ? "checked" : "";
 
-						    <th class="text-center">
-							    <input type="checkbox"
-							           id="presenca_@dia1-@aluno.Id"
-							           name="presenca_@dia1"
-							           class="@isHoje"
-							           data-aluno-id="@aluno.Id"
-							           data-dia="@dia1"
-							           @disabled @marcado/>
-						    </th>
-					    }
-				    </tr>
-			    }
-		    }
-		    </tbody>
-	    </table>
-    }
+					        <th class="text-center">
+						        <input type="checkbox"
+						               id="presenca_@dia1-@aluno.Id"
+						               name="presenca_@dia1"
+						               class="@isHoje"
+						               data-aluno-id="@aluno.Id"
+						               data-dia="@dia1"
+						               @disabled @marcado />
+					        </th>
+				        }
+				        <td class="actions text-center" style="width: 100px;">
+                                <a href="#" data-id="@aluno.Id" data-toggle="modal" data-target="#mdEditControleFrequencia"
+                                   data-toggle="tooltip" data-placement="top" title="Editar Frequência"
+                                   class="on-default edit-row" style='color: #FF9800'><i class="fa fa-pencil"></i></a>
+					        @* <a data-toggle="tooltip" data-placement="top" title="Editar Frequência"
+					           href='#' data-id="@aluno.Id" data-toggle="modal" data-target="#mdEditControleFrequencia"
+					           class="on-default edit-row" style='color: #FF9800'>
+						        <i class="fa fa-pencil"></i>
+					        </a> *@
+				        </td>
+
+			        </tr>
+		        }
+	        }
+	        </tbody>
+        </table>
+        <!-- Modal -->
+        <div class="modal fade" id="mdEditControleFrequencia" tabindex="-1" role="dialog" aria-labelledby="mdEditControleFrequenciaLabel" aria-hidden="true">
+            <div class="modal-dialog modal-md" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="mdEditControleFrequenciaLabel">
+                            <i class="fa fa-pencil"></i> &nbsp;&nbsp;<strong>Alterar Frequência</strong>
+                        </h5>
+                    </div>
+                    @using (@Html.BeginForm("Edit", "ControleFrequenciaEscolar", FormMethod.Post, new { id = "formEditControleFrequencia", @class = "form-horizontal" }))
+                    {
+                        <input type="hidden" name="editControleFrequenciaId" :value="editDto.Id" />
+                        <input type="hidden" name="editAlunoId" :value="editDto.AlunoId" />
+
+                        <div class="modal-body">
+
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label text-sm-right pt-2">Aluno <span class="required">*</span></label>
+                                <div class="col-md-9">
+                                    <input type="text" name="aluno" class="form-control" :value="editDto.NomeAluno" readonly />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-3 control-label">Data: <span class="required">*</span></label>
+                                <div class="col-sm-4 form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-calendar"></i>
+                                        </span>
+                                        <input id="data" name="data"
+                                               required
+                                               title="Por favor informe a data."
+                                               style="z-index: auto;"
+                                               data-plugin-datepicker data-date-format="dd/mm/yyyy" data-plugin-options='{"language": "pt-BR"}'
+                                               placeholder="__/__/____" class="form-control startdate"
+                                               class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-3 control-label text-sm-right pt-2">Controle <span class="required">*</span></label>
+                                <div class="col-sm-4">
+                                    <div class="radio-custom radio-success">
+                                        <input type="radio" id="controlePresente" name="controle" value="P" required title="Por favor selecione uma opção" :checked="editDto.Controle === 'P'">
+                                        <label>Presente</label>
+                                    </div>
+                                    <div class="radio-custom radio-danger">
+                                        <input type="radio" id="controleFalta" name="controle" value="F" required title="Por favor selecione uma opção" :checked="editDto.Controle === 'F'">
+                                        <label>Falta</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-remove"></i> &nbsp;&nbsp;Cancelar</button>
+                            <button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
     </div>
 </section>

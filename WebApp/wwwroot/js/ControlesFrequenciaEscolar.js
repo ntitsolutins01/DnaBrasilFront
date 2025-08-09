@@ -13,6 +13,10 @@
 
             if (formid === "formPesquisarControleFrequenciaEscolar") {
 
+            }
+
+            if (formid === "formPesquisarControleFrequenciaEscolar") {
+
                 var $select = $(".select2").select2({
                     allowClear: true
                 });
@@ -54,6 +58,11 @@
                             placement.after(error);
                         }
                     }
+                });
+
+                // Inicializa tooltips
+                $('[data-toggle="tooltip"]').tooltip({
+                    container: 'body'
                 });
 
                 //clique de escolha do select
