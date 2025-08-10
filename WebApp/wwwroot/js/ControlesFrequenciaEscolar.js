@@ -65,100 +65,78 @@
                     container: 'body'
                 });
 
-                //clique de escolha do select
+                // clique de escolha do select Estado
                 $("#ddlEstado").change(function () {
 
-                    self.ShowLoad(true, "pFiltro");
-
                     var sigla = $("#ddlEstado").val();
+                    if (!sigla) {
+                        new PNotify({
+                            title: 'Frequência Escolar',
+                            text: 'Por favor selecione um Estado.',
+                            type: 'warning'
+                        });
+                        return;
+                    }
+
+                    self.ShowLoad(true, "pFiltro");
 
                     var url = "../../DivisaoAdministrativa/GetMunicipioByUf?uf=" + sigla;
-
                     var ddlSource = "#ddlMunicipio";
 
-                    $.getJSON(url,
-                        { id: $(ddlSource).val() },
-                        function (data) {
-                            if (data.length > 0) {
-                                var items = '<option value="">Selecionar Municipio</option>';
-                                $("#ddlMunicipio").empty;
-                                $.each(data,
-                                    function (i, row) {
-                                        items += "<option value='" + row.value + "'>" + row.text + "</option>";
-                                    });
-                                $("#ddlMunicipio").html(items);
-                            }
-                            else {
-                                new PNotify({
-                                    title: 'Usuario',
-                                    text: data,
-                                    type: 'warning'
-                                });
-                            }
-                        });
+                    $.getJSON(url, { id: $(ddlSource).val() }, function (data) {
+                        if (data.length > 0) {
+                            var items = '<option value="">Selecionar Municipio</option>';
+                            $.each(data, function (i, row) {
+                                items += "<option value='" + row.value + "'>" + row.text + "</option>";
+                            });
+                            $("#ddlMunicipio").html(items);
+                        } else {
+                            new PNotify({
+                                title: 'Municipio',
+                                text: 'Municípios não encontrados.',
+                                type: 'warning'
+                            });
+                        }
+                    });
 
                     self.ShowLoad(false, "pFiltro");
                 });
 
-                //clique de escolha do select
+                // clique de escolha do select Municipio
                 $("#ddlMunicipio").change(function () {
+
+                    var id = $("#ddlMunicipio").val();
+                    if (!id) {
+                        new PNotify({
+                            title: 'Frequência Escolar',
+                            text: 'Por favor selecione um Município.',
+                            type: 'warning'
+                        });
+                        return;
+                    }
 
                     self.ShowLoad(true, "pFiltro");
 
-                    var id = $("#ddlMunicipio").val();
-
                     var url = "../../Localidade/GetLocalidadeByMunicipio?id=" + id;
-
                     var ddlSource = "#ddlLocalidade";
 
-                    $.getJSON(url,
-                        { id: $(ddlSource).val() },
-                        function (data) {
-                            if (data.length > 0) {
-                                var items = '<option value="">Selecionar Localidade</option>';
-                                $("#ddlLocalidade").empty;
-                                $.each(data,
-                                    function (i, row) {
-                                        items += "<option value='" + row.value + "'>" + row.text + "</option>";
-                                    });
-                                $("#ddlLocalidade").html(items);
-                            }
-                            else {
-                                new PNotify({
-                                    title: 'Localidades',
-                                    text: 'Localidades não encontradas.',
-                                    type: 'warning'
-                                });
-                            }
-                        });
+                    $.getJSON(url, { id: $(ddlSource).val() }, function (data) {
+                        if (data.length > 0) {
+                            var items = '<option value="">Selecionar Localidade</option>';
+                            $.each(data, function (i, row) {
+                                items += "<option value='" + row.value + "'>" + row.text + "</option>";
+                            });
+                            $("#ddlLocalidade").html(items);
+                        } else {
+                            new PNotify({
+                                title: 'Localidades',
+                                text: 'Localidades não encontradas.',
+                                type: 'warning'
+                            });
+                        }
+                    });
 
                     self.ShowLoad(false, "pFiltro");
-                });
-
-                $("#ddlLocalidade").change(function () {
-                    var id = $("#ddlLocalidade").val();
-
-                    var url = "../../Profissional/GetProfissionaisByLocalidade/" + id;
-                    $.getJSON(url,
-                        { id: id },
-                        function (data) {
-                            if (data.length > 0) {
-                                var items = '<option value="">Selecionar Profissional</option>';
-                                $("#ddlProfissional").empty;
-                                $.each(data,
-                                    function (i, row) {
-                                        items += "<option value='" + row.value + "'>" + row.text + "</option>";
-                                    });
-                                $("#ddlProfissional").html(items);
-                            }
-                            else {
-                                new PNotify({
-                                    title: 'Profissional',
-                                    text: "Profissionais não encontrados.",
-                                    type: 'warning'
-                                });
-                            }
-                        });
                 });
 
                 //clique de escolha do select
@@ -169,7 +147,7 @@
 
                     if (localidadeId === "") {
                         new PNotify({
-                            title: 'Aluno',
+                            title: 'Frequência Escolar',
                             text: 'Por favor selecione a localidade.',
                             type: 'warning'
                         });
@@ -178,7 +156,7 @@
 
                     if (etapaId === "") {
                         new PNotify({
-                            title: 'Aluno',
+                            title: 'Frequência Escolar',
                             text: 'Por favor selecione a etapa de ensino.',
                             type: 'warning'
                         });
@@ -307,6 +285,17 @@
                     data: $form.serialize(),
                     success: function (html) {
                         $("#tabela-container").html(html);
+                        $("#tabela-container .select2").select2({ allowClear: true });
+                        $("#tabela-container .select2").each(function () {
+                            var $this = $(this),
+                                opts = {};
+
+                            var pluginOptions = $this.data('plugin-options');
+                            if (pluginOptions)
+                                opts = pluginOptions;
+
+                            $this.themePluginSelect2(opts);
+                        });
                         $("#tabela-container").show();
 
                         var $table = $("#datatable-default");
@@ -340,58 +329,58 @@
                 $(".checkbox-dia-hoje:not(:disabled)").prop("checked", true);
             });
 
-            // Botão de envio das frequências
-            $(document).on('click', '#btnSalvarFrequencias', function () {
-                var frequencias = [];
-                var $btn = $(this);
-                $btn.prop('disabled', true);
+            // depreciado - Botão de envio das frequências
+            //$(document).on('click', '#btnSalvarFrequencias', function () {
+            //    var frequencias = [];
+            //    var $btn = $(this);
+            //    $btn.prop('disabled', true);
 
-                var serieId = $("#ddlTurma").val();
-                var disciplinaId = $("#ddlDisciplina").val();
-                var profissionalId = $("#ddlProfissional").val();
+            //    var serieId = $("#ddlTurma").val();
+            //    var disciplinaId = $("#ddlDisciplina").val();
+            //    var profissionalId = $("#ddlProfissional").val();
 
-                var dataAtual = new Date();
-                var ano = dataAtual.getFullYear();
-                var mes = dataAtual.getMonth() + 1;
-                var diaHoje = dataAtual.getDate();
+            //    var dataAtual = new Date();
+            //    var ano = dataAtual.getFullYear();
+            //    var mes = dataAtual.getMonth() + 1;
+            //    var diaHoje = dataAtual.getDate();
 
-                $('#tabela-container input[type="checkbox"]').each(function () {
-                    var $cb = $(this);
-                    var dia = $cb.data('dia');
-                    var alunoId = $cb.data('aluno-id');
-                    var presente = $cb.is(':checked');
+            //    $('#tabela-container input[type="checkbox"]').each(function () {
+            //        var $cb = $(this);
+            //        var dia = $cb.data('dia');
+            //        var alunoId = $cb.data('aluno-id');
+            //        var presente = $cb.is(':checked');
 
-                    if (dia > diaHoje) return;
+            //        if (dia > diaHoje) return;
 
-                    var dataFrequencia = ano + '-' +
-                        String(mes).padStart(2, '0') + '-' +
-                        String(dia).padStart(2, '0') + 'T00:00:00';
+            //        var dataFrequencia = ano + '-' +
+            //            String(mes).padStart(2, '0') + '-' +
+            //            String(dia).padStart(2, '0') + 'T00:00:00';
 
-                    frequencias.push({
-                        AlunoId: alunoId.toString(),
-                        SerieId: serieId.toString(),
-                        DisciplinaId: disciplinaId.toString(),
-                        ProfissionalId: profissionalId.toString(),
-                        Controle: presente ? 'P' : 'F',
-                        DataFrequencia: dataFrequencia
-                    });
-                });
+            //        frequencias.push({
+            //            AlunoId: alunoId.toString(),
+            //            SerieId: serieId.toString(),
+            //            DisciplinaId: disciplinaId.toString(),
+            //            ProfissionalId: profissionalId.toString(),
+            //            Controle: presente ? 'P' : 'F',
+            //            DataFrequencia: dataFrequencia
+            //        });
+            //    });
 
-                if (frequencias.length === 0) {
-                    new PNotify({
-                        title: 'Frequência Escolar',
-                        text: 'Nenhuma frequência selecionada!',
-                        type: 'warning'
-                    });
-                    $btn.prop('disabled', false);
-                    return;
-                }
+            //    if (frequencias.length === 0) {
+            //        new PNotify({
+            //            title: 'Frequência Escolar',
+            //            text: 'Nenhuma frequência selecionada!',
+            //            type: 'warning'
+            //        });
+            //        $btn.prop('disabled', false);
+            //        return;
+            //    }
 
-                self.frequenciaChunks = self.SplitArrayInChunks(frequencias, 200);
-                self.btnSalvar = $btn;
+            //    self.frequenciaChunks = self.SplitArrayInChunks(frequencias, 200);
+            //    self.btnSalvar = $btn;
 
-                self.EnviarChunk(0);
-            });
+            //    self.EnviarChunk(0);
+            //});
 
         }).apply(this, [jQuery]);
     },

@@ -13,10 +13,6 @@ namespace WebApp.Models
         public SelectList ListLocalidades { get; set; }
         public string TurmaId { get; set; }
         public SelectList ListTurmas { get; set; }
-        public string ProfissionalId { get; set; }
-        public SelectList ListProfissionais { get; set; }
-        public string DisciplinaId { get; set; }
-        public SelectList ListDisciplinas { get; set; }
         public string SerieId { get; set; }
         public SelectList ListSeries { get; set; }
         public string Data { get; set; }
@@ -41,6 +37,10 @@ namespace WebApp.Models
         {
             public List<AlunoIndexDto> Alunos { get; set; }
             public List<ControleFrequenciaEscolarDto> AlunosComPresencas { get; set; }
+            public string ProfissionalId { get; set; }
+            public SelectList ListProfissionais { get; set; }
+            public string DisciplinaId { get; set; }
+            public SelectList ListDisciplinas { get; set; }
         }
     }
 }

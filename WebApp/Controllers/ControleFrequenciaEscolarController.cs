@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Collections;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
 using System.Globalization;
+using Microsoft.IdentityModel.Tokens;
 using WebApp.Authorization;
 using WebApp.Configuration;
 using WebApp.Dto;
@@ -52,14 +54,12 @@ public class ControleFrequenciaEscolarController : BaseController
         SetCrudMessage(crud);
         var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome");
         var etapas = new SelectList(ApiClientFactory.Instance.GetEtapasEnsinoAll(), "Id", "Nome");
-        var disciplinas = new SelectList(ApiClientFactory.Instance.GetDisciplinasAll(), "Id", "Nome");
         var response = ApiClientFactory.Instance.GetControlesFrequenciasEscolaresAll();
 
         return View(new ControleFrequenciaEscolarModel()
         {
             ListEstados = estados,
             ListEtapas = etapas,
-            ListDisciplinas = disciplinas,
             ControlesFrequenciasEscolares = response
         });
     }
@@ -81,6 +81,18 @@ public class ControleFrequenciaEscolarController : BaseController
         var result = await ApiClientFactory.Instance.GetAlunosByFilter(filter);
         var alunos = result.Alunos;
         alunos = alunos.OrderBy(a => a.Nome.Split('-').Last().Trim()).ToList();
+
+        var disciplinas = new SelectList(ApiClientFactory.Instance.GetDisciplinasAll(), "Id", "Nome");
+
+        var profissionais = new SelectList(new List<object>(), "Id", "Nome");
+
+        if (!filter.LocalidadeId.IsNullOrEmpty())
+        {
+            var listaProfissionais = ApiClientFactory.Instance
+                .GetProfissionaisByLocalidade(Convert.ToInt32(filter.LocalidadeId));
+
+            profissionais = new SelectList((IEnumerable)listaProfissionais ?? new List<object>(), "Id", "Nome");
+        }
 
         var presencas = new List<ControleFrequenciaEscolarDto>();
 
@@ -107,7 +119,9 @@ public class ControleFrequenciaEscolarController : BaseController
         var tabelaFrequenciaEscolar = new TabelaFrequenciasEscolares
         {
             Alunos = alunos,
-            AlunosComPresencas = presencas
+            AlunosComPresencas = presencas,
+            ListDisciplinas = disciplinas,
+            ListProfissionais = profissionais
         };
 
         return PartialView("_TabelaFrequenciaEscolar", tabelaFrequenciaEscolar);
@@ -116,7 +130,7 @@ public class ControleFrequenciaEscolarController : BaseController
     /// <summary>
     /// Ação de criação de registro de Frequências
     /// </summary>
-    /// <param name="frequencias">Coleção de dados para criação dos registros da Frequencia Escolar</param>
+    /// <param name="collection">Coleção de dados para criação dos registros da Frequencia Escolar</param>
     /// <returns>Retorna mensagem de sucesso ou erro da ação</returns>
     [HttpPost]
     public async Task<IActionResult> SalvarFrequencias(IFormCollection collection)
