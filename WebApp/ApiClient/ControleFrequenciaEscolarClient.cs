@@ -1,4 +1,5 @@
-﻿using WebApp.Dto;
+﻿using NuGet.Protocol.Core.Types;
+using WebApp.Dto;
 using WebApp.Models;
 
 namespace WebApp.ApiClient
@@ -85,6 +86,17 @@ namespace WebApp.ApiClient
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
                 $"{ResourceControleFrequenciaEscolar}/Aluno/{id}"));
             return Get<List<ControleFrequenciaEscolarDto>>(requestUrl);
+        }
+        /// <summary>
+        /// Busca as frequencias escolares por filtro
+        /// </summary>
+        /// <param name="searchFilter">filtro para pesquisas de frequencias escolares</param>
+        /// <returns>Retorna a lista de frequencias</returns>
+        public Task<ControleFrequenciaEscolarFilterDto?> GetControlesFrequenciasEscolaresByFilter(ControleFrequenciaEscolarFilterDto searchFilter)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceControleFrequenciaEscolar}/Filter"));
+            return GetFiltro(requestUrl, searchFilter);
         }
         #endregion
 

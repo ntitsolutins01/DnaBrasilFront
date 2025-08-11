@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
-using System.Globalization;
 using Microsoft.IdentityModel.Tokens;
 using WebApp.Authorization;
 using WebApp.Configuration;
@@ -13,6 +12,7 @@ using WebApp.Identity;
 using WebApp.Models;
 using WebApp.Utility;
 using static WebApp.Models.ControleFrequenciaEscolarModel;
+using log4net;
 
 namespace WebApp.Controllers;
 
@@ -23,7 +23,7 @@ public class ControleFrequenciaEscolarController : BaseController
 {
     #region Parametros
 
-    private readonly IOptions<UrlSettings> _appSettings;
+    private readonly ILog _logger;
 
     #endregion
 
@@ -32,11 +32,13 @@ public class ControleFrequenciaEscolarController : BaseController
     /// <summary>
     /// Construtor da página
     /// </summary>
-    /// <param name="appSettings">Configurações de urls do sistema</param>
-    public ControleFrequenciaEscolarController(IOptions<UrlSettings> appSettings)
+    /// <param name="appSettings">configurações de urls do sistema</param>
+    /// <param name="logger">Log de mensagens da aplicação</param>
+    public ControleFrequenciaEscolarController(IOptions<UrlSettings> appSettings,
+        ILog logger)
     {
-        _appSettings = appSettings;
-        ApplicationSettings.WebApiUrl = _appSettings.Value.WebApiBaseUrl;
+        ApplicationSettings.WebApiUrl = appSettings.Value.WebApiBaseUrl;
+        _logger = logger;
     }
     #endregion
 
@@ -47,21 +49,72 @@ public class ControleFrequenciaEscolarController : BaseController
     /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
     /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
     /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
-    [ClaimsAuthorize(ClaimType.Laudo, Identity.Claim.Consultar)]
-    public IActionResult Index(int? crud, int? notify, string message = null)
+    [ClaimsAuthorize(ClaimType.ControlePresenca, Identity.Claim.Consultar)]
+    [HttpGet]
+    public async Task<ActionResult> Index(int? crud, int? notify, string message = null)
     {
-        SetNotifyMessage(notify, message);
-        SetCrudMessage(crud);
-        var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome");
-        var etapas = new SelectList(ApiClientFactory.Instance.GetEtapasEnsinoAll(), "Id", "Nome");
-        var response = ApiClientFactory.Instance.GetControlesFrequenciasEscolaresAll();
-
-        return View(new ControleFrequenciaEscolarModel()
+        try
         {
-            ListEstados = estados,
-            ListEtapas = etapas,
-            ControlesFrequenciasEscolares = response
-        });
+
+            _logger.Info($"Usuario Logado em ControleFrequenciaEscolar.Index User.Identity.Name : {User.Identity.Name}");
+
+            var usuario = User.Identity.Name;
+
+            SetNotifyMessage(notify, message);
+            SetCrudMessage(crud);
+
+            var usu = await ApiClientFactory.Instance.GetUsuarioByEmail(usuario);
+
+            var searchFilter = new ControleFrequenciaEscolarFilterDto
+            {
+                MunicipioId = usu.MunicipioId.ToString(),
+                LocalidadeId = usu.LocalidadeId
+            };
+
+            //var response = await ApiClientFactory.Instance.GetControlesFrequenciasEscolaresByFilter(searchFilter);
+             var responseFrequenciasEscolares =  ApiClientFactory.Instance.GetControlesFrequenciasEscolaresAll();
+
+            var fomento = ApiClientFactory.Instance.GetFomentoByLocalidadeId(Convert.ToInt32(usu.LocalidadeId));
+
+            var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome", usu.Uf);
+
+            SelectList municipios = null;
+
+            if (!string.IsNullOrEmpty(usu.Uf))
+            {
+                municipios = new SelectList(ApiClientFactory.Instance.GetMunicipiosByFomentoId(fomento.Id), "Id", "Nome", usu.MunicipioId);
+            }
+
+            SelectList localidades = null;
+
+            if (usu.MunicipioId != null)
+            {
+                var resultLocalidades = ApiClientFactory.Instance.GetLocalidadeByMunicipioId(usu.MunicipioId.ToString());
+
+                if (resultLocalidades != null)
+                    localidades = new SelectList(resultLocalidades, "Id", "Nome", usu.LocalidadeId);
+            }
+
+            var etapas = new SelectList(ApiClientFactory.Instance.GetEtapasEnsinoAll(), "Id", "Nome");
+
+            return View(new ControleFrequenciaEscolarModel()
+            {
+                ListEstados = estados,
+                ListMunicipios = municipios,
+                ListLocalidades = localidades,
+                ListEtapas = etapas,
+                SearchFilter = searchFilter,
+                IdPerfil = usu.Perfil.Id,
+                ControlesFrequenciasEscolares = responseFrequenciasEscolares//response.FrequenciasEscolares
+            });
+
+        }
+        catch (Exception e)
+        {
+            _logger.Error($"ControleFrequenciaEscolar.Index: {e.StackTrace}");
+            return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = e.Message });
+
+        }
     }
 
     /// <summary>
@@ -70,7 +123,7 @@ public class ControleFrequenciaEscolarController : BaseController
     /// <param name="collection">Coleção de dados para pesquisa da Frequencia Escolar</param>
     /// <returns>Retorna a partial view da tabela com os alunos</returns>
     [HttpPost]
-    public async Task<ActionResult> PesquisarTabela(IFormCollection collection)
+    public async Task<ActionResult> Index(IFormCollection collection)
     {
         var filter = new AlunosFilterDto()
         {
@@ -133,13 +186,23 @@ public class ControleFrequenciaEscolarController : BaseController
     /// <param name="collection">Coleção de dados para criação dos registros da Frequencia Escolar</param>
     /// <returns>Retorna mensagem de sucesso ou erro da ação</returns>
     [HttpPost]
-    public async Task<IActionResult> SalvarFrequencias(IFormCollection collection)
+    public async Task<IActionResult> Create(IFormCollection collection)
     {
         try
         {
-            var listPresença =
-                (from item in collection where item.Key.Contains("presenca") select item.Value)
+            var listFalta =
+                (from item in collection where item.Key.Contains("falta") select item.Key)
                 .Select(v => (string)v).ToList();
+
+            var command = new ControleFrequenciaEscolarModel.CreateUpdateControleFrequenciaEscolarCommand()
+            {
+                ListFaltas = listFalta,
+                DisciplinaId = collection["ddlDisciplina"].ToString(),
+                SerieId = collection["ddlLocalidade"].ToString(),
+                ProfissionalId = collection["ddlProfissional"].ToString(),
+                DataFrequencia = DateTime.Now.ToString("dd/MM/yyyy") //na api fica assim: DtNascimento = DateTime.ParseExact(request.DtNascimento, "dd/MM/yyyy", CultureInfo.CreateSpecificCulture("pt-BR")),
+            };
+
 
             //foreach (var freq in frequencias)
             //{

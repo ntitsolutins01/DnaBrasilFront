@@ -9,51 +9,38 @@
 		<h2 class="panel-title">Listagem de Frequências</h2>
 	</header>
 	<div class="panel-body">
-		@using (@Html.BeginForm("SalvarFrequencias", "ControleFrequenciaEscolar", FormMethod.Post, new { id = "formControlePresencas", @class = "form-horizontal" }))
+		@using (@Html.BeginForm("Create", "ControleFrequenciaEscolar", FormMethod.Post, new { id = "formCreateFrequenciaEscolar", @class = "form-horizontal" }))
 		{
 			<div class="form-group row">
-				<div class="col-sm-6">
-					<div class="row">
-						<div class="col-sm-6">
-							<label class="control-label">Profissional:</label>
-							<select class="form-control populate select2"
-									required title="Por favor selecione o profissional"
-									name="ddlProfissional" id="ddlProfissional"
-									asp-for="ProfissionalId" asp-items="Model.ListProfissionais"
-									style="width:100%" data-plugin-options='{"width":"100%"}'>
-								<option value="">Selecionar Profissional</option>
-							</select>
-						</div>
-						<div class="col-sm-6">
-							<label class="control-label">Disciplina:</label>
-							<select class="form-control populate select2"
-									required title="Por favor selecione a disciplina"
-									name="ddlDisciplina" id="ddlDisciplina"
-									asp-for="DisciplinaId" asp-items="Model.ListDisciplinas"
-									style="width:100%" data-plugin-options='{"width":"100%"}'>
-								<option value="">Selecionar Disciplina</option>
-							</select>
-						</div>
+				<div class="col-sm-2 pull-right" style="margin-top: 29px;">
+					<button type="submit" id="addToTable" class="btn btn-block btn-success pull-right"><i class="fa fa-save"></i> Salvar Frequências </button>
+				</div>
+				<div class="col-sm-4 pull-right" style="margin-top: 29px;">
+					<div class="alert alert-danger" style="padding-bottom: 6px;padding-top: 6px; !important; margin-bottom: 0px; !important">
+						Clique no checkbox para<strong> marcação de FALTAS</strong>.
 					</div>
 				</div>
-				<div class="col-sm-6">
-					<div class="form-group row" style="margin-top: 28px;">
-						<div class="col-xs-6">
-							<button id="btnMarcarDiaAtual" type="button"
-									class="btn btn-info btn-block">
-								<i class="fa fa-check"></i> Marcar presenças de hoje
-							</button>
-						</div>
-						<div class="col-xs-4">
-							<button id="btnSalvarFrequencias" type="submit"
-									class="btn btn-success btn-block">
-								<i class="fa fa-arrow-up"></i> Salvar Frequências
-							</button>
-						</div>
-					</div>
+				<div class="col-sm-3">
+					<label class="control-label">Profissional:</label>
+					<select class="form-control populate select2"
+					        required title="Por favor selecione o profissional"
+					        name="ddlProfissional" id="ddlProfissional"
+					        asp-for="ProfissionalId" asp-items="Model.ListProfissionais"
+					        style="width:100%" data-plugin-options='{"width":"100%"}'>
+						<option value="">Selecionar Profissional</option>
+					</select>
+				</div>
+				<div class="col-sm-3">
+					<label class="control-label">Disciplina:</label>
+					<select class="form-control populate select2"
+					        required title="Por favor selecione a disciplina"
+					        name="ddlDisciplina" id="ddlDisciplina"
+					        asp-for="DisciplinaId" asp-items="Model.ListDisciplinas"
+					        style="width:100%" data-plugin-options='{"width":"100%"}'>
+						<option value="">Selecionar Disciplina</option>
+					</select>
 				</div>
 			</div>
-			<br />
 			<table class="table table-bordered table-striped mb-0" id="datatable-default">
 				<thead>
 					<tr>
@@ -72,7 +59,7 @@
 						}
 						<th class="text-center">Ação</th>
 					</tr>
-				</thead>12
+				</thead>
 				<tbody>
 					@if (!Model.Alunos.IsNullOrEmpty())
 					{
@@ -111,8 +98,8 @@
 
 									<th class="text-center">
 										<input type="checkbox"
-											   id="presenca_@dia1-@aluno.Id"
-											   name="presenca_@dia1-@aluno.Id"
+											   id="F-@aluno.Id"
+											   name="F-@aluno.Id"
 											   class="@isHoje"
 											   data-aluno-id="@aluno.Id"
 											   data-dia="@dia1"
@@ -194,3 +181,7 @@
 		</div>
 	</div>
 </section>
+<link rel="stylesheet" href="~/assets/vendor/datatables/media/css/dataTables.bootstrap4.css" />
+<script src="~/assets/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
+<script src="~/assets/vendor/datatables/media/js/dataTables.bootstrap4.min.js"></script>
+<script src="~/js/formatTableMultiselect.js"></script>
