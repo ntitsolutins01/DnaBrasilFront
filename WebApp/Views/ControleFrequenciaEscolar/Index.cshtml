@@ -121,6 +121,14 @@
                                 <option value="">Selecionar Turma</option>
                             </select>
                         </div>
+                        <label class="col-sm-2 control-label">Disciplina:</label>
+                        <div class="col-md-4 form-group">
+                            <select class="form-control populate select2" name="ddlDisciplina" id="ddlDisciplina"
+                                    title="Por favor informe a disciplina." required style="width: 100%"
+                                    asp-for="DisciplinaId" asp-items="Model.ListDisciplinas">
+                                <option value="">Selecionar Disciplina</option>
+                            </select>
+                        </div>
                     </div>
                     <footer class="panel-footer">
 						<div class="form-group row">
