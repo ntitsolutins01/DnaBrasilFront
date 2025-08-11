@@ -398,10 +398,10 @@ namespace WebApp.Controllers
                     AlunoId = collection["ddlAluno"] == "" ? null : Convert.ToInt32(collection["ddlAluno"].ToString()).ToString(),
                 };
 
-                var possuiPrecensa = ApiClientFactory.Instance.GetControlePresencaByAlunoId(Convert.ToInt32(command.AlunoId))
+                var possuiPresensa = ApiClientFactory.Instance.GetControlePresencaByAlunoId(Convert.ToInt32(command.AlunoId))
                     .Where(x => x.ControlesPresencas.FirstOrDefault().Data == DateTime.Now.ToString("dd/MM/yyyy") && x.ControlesPresencas.FirstOrDefault()?.EventoId == null);
 
-                if (possuiPrecensa.Any())
+                if (possuiPresensa.Any())
                 {
                     return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Warning, message = "Já existe presença cadastrada para este aluno no dia de hoje." });
                 }

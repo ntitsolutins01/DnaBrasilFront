@@ -1,248 +1,177 @@
-﻿@* @model WebApp.Models.ControleFrequenciaEscolarModel *@
+﻿@using WebApp.Dto
+@model WebApp.Models.ControleFrequenciaEscolarModel
 @{
-	ViewData["Title"] = "Listagem de Controle de Frequencia Escolar";
-	Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Listagem de Controle de Frequencia Escolar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <div id="vControleFrequenciaEscolar">
-	<div class="row">
-		<div class="col-md-12">
-			@using (@Html.BeginForm("Index", "ControleFrequenciaEscolar", FormMethod.Post, new { id = "formPesquisarControleFrequenciaEscolar", @class = "form-horizontal" }))
-			{
-				<section class="panel">
-					<header class="panel-heading">
-						<div class="panel-actions">
-							<a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
-						</div>
-						<h2 class="panel-title">Filtro de pesquisa</h2>
-					</header>
-					<div class="panel-body">
-						<label class="col-sm-2 control-label">Estado:</label>
-						<div class="col-md-4 form-group">
-							<select class="form-control populate select2" name="ddlEstado" id="ddlEstado" style="width: 100%"
-							@* asp-for="EstadoId" asp-items="Model.ListEstados" *@>
-								<option value="">Selecionar Estado</option>
-							</select>
-						</div>
-						<label class="col-sm-2 control-label">Municipio:</label>
-						<div class="col-md-4 form-group">
-							<select class="form-control populate select2" name="ddlMunicipio" id="ddlMunicipio" style="width: 100%"
-							@* asp-for="MunicipioId" asp-items="Model.ListMunicipios" *@>
-								<option value="">Selecionar Municipio</option>
-							</select>
-						</div>
-						<label class="col-sm-2 control-label">Localidade:</label>
-						<div class="col-md-4 form-group">
-							<select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade" style="width: 100%"
-							@* asp-for="LocalidadeId" asp-items="Model.ListLocalidades" *@>
-								<option value="">Selecionar Localidade</option>
-							</select>
-						</div>
-						<label class="col-sm-2 control-label">Série:</label>
-						<div class="col-md-4 form-group">
-							<select class="form-control populate select2" name="ddlSerie" id="ddlSerie"
-									title="Por favor informe a série." required
-							@* asp-for="SerieId" asp-items="Model.ListSeries" *@>
-								<option value="">Selecionar Série</option>
-							</select>
-						</div>
-						<label class="col-sm-2 control-label">Turma:</label>
-						<div class="col-md-4 form-group">
-							<select class="form-control populate select2" name="ddlTurma" id="ddlTurma"
-									title="Por favor informe a turma." required style="width: 100%"
-							@* asp-for="TurmaId" asp-items="Model.ListTurmas" *@>
-								<option value="">Selecionar Turma</option>
-							</select>
-						</div>
-						<label class="col-sm-2 control-label">Profissional:</label>
-						<div class="col-md-4 form-group">
-							<select class="form-control populate select2" name="ddlProfissional" id="ddlProfissional"
-									title="Por favor informe o profissional." required style="width: 100%"
-							@* asp-for="ProfissionalId" asp-items="Model.ListProfissionais" *@>
-								<option value="">Selecionar Profissional</option>
-							</select>
-						</div>
-						<label class="col-sm-2 control-label text-sm-right pt-2">Disciplina:</label>
-						<div class="col-md-4 form-group">
-							<select class="form-control populate select2" name="ddlDisciplina" id="ddlDisciplina"
-									title="Por favor informe a Disciplina." required style="width: 100%"
-							@* asp-for="DisciplinaId" asp-items="Model.ListDisciplinas" *@>
-								<option value="">Selecionar Disciplina</option>
-							</select>
-						</div>
-						<label class="col-sm-2 control-label">Data: <span class="required">*</span></label>
-						<div class="col-sm-4 form-group">
-							<div class="input-group">
-								<span class="input-group-addon">
-									<i class="fa fa-calendar"></i>
-								</span>
-								<input id="data" name="data"
-									   required
-									   title="Por favor informe a data."
-									   style="z-index: auto;" @* value="@Model.Data" *@
-									   data-plugin-datepicker data-date-format="dd/mm/yyyy" data-plugin-options='{"language": "pt-BR"}'
-									   placeholder="__/__/____" class="form-control startdate"
-									   class="form-control">
-							</div>
-						</div>
-					</div>
-					<footer class="panel-footer">
+    <div class="row">
+        <div class="col-md-12">
+            @using (@Html.BeginForm("PesquisarTabela", "ControleFrequenciaEscolar", FormMethod.Post, new { id = "formPesquisarControleFrequenciaEscolar", @class = "form-horizontal" }))
+            {
+                <section class="panel">
+                    <header class="panel-heading">
+                        <div class="panel-actions">
+                            <a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
+                        </div>
+                        <h2 class="panel-title">Filtro de pesquisa</h2>
+                    </header>
+                    <div class="panel-body">
+                        <label class="col-sm-2 control-label">Estado:</label>
+                        <div class="col-md-4 form-group">
+                            <select class="form-control populate select2" name="ddlEstado" id="ddlEstado" style="width: 100%"
+                                    title="Por favor informe o estado." required
+                                    asp-for="EstadoId" asp-items="Model.ListEstados">
+                                <option value="">Selecionar Estado</option>
+                            </select>
+                        </div>
+                        <label class="col-sm-2 control-label">Município:</label>
+                        <div class="col-md-4 form-group">
+                            <select class="form-control populate select2" name="ddlMunicipio" id="ddlMunicipio" style="width: 100%"
+                                    title="Por favor informe o município." required
+                                    asp-for="MunicipioId" asp-items="Model.ListMunicipios">
+                                <option value="">Selecionar Municipio</option>
+                            </select>
+                        </div>
+                        <label class="col-sm-2 control-label">Localidade:</label>
+                        <div class="col-md-4 form-group">
+                            <select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade" style="width: 100%"
+                                    title="Por favor informe a localidade." required
+                                    asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
+                                <option value="">Selecionar Localidade</option>
+                            </select>
+                        </div>
+                        <label class="col-sm-2 control-label">Etapa Ensino:</label>
+                        <div class="col-md-4 form-group">
+                            <select class="form-control populate select2" name="ddlEtapa" id="ddlEtapa" style="width: 100%"
+                                    title="Por favor informe a série." required
+                                    asp-for="EtapaId" asp-items="Model.ListEtapas">
+                                <option value="">Selecionar Etapa</option>
+                            </select>
+                        </div>
+                        <label class="col-sm-2 control-label">Série:</label>
+                        <div class="col-md-4 form-group">
+                            <select class="form-control populate select2" name="ddlSerie" id="ddlSerie" style="width: 100%"
+                                    title="Por favor informe a série." required
+                                    asp-for="SerieId" asp-items="Model.ListSeries">
+                                <option value="">Selecionar Série</option>
+                            </select>
+                        </div>
+                        <label class="col-sm-2 control-label">Turma:</label>
+                        <div class="col-md-4 form-group">
+                            <select class="form-control populate select2" name="ddlTurma" id="ddlTurma"
+                                    title="Por favor informe a turma." required style="width: 100%"
+                                    asp-for="TurmaId" asp-items="Model.ListTurmas">
+                                <option value="">Selecionar Turma</option>
+                            </select>
+                        </div>
+                    </div>
+                    <footer class="panel-footer">
 						<div class="form-group row">
 							<div class="col-sm-2 pull-right">
 								<button type="submit" class="btn btn-block btn-primary pull-right"><i class="fa fa-search"></i> &nbsp;&nbsp;Pesquisar</button>
 							</div>
-						</div>
-					</footer>
-				</section>
-			}
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-lg-12">
-			<section class="panel">
-				<header class="panel-heading">
-					<div class="panel-actions">
-						<a href="#" class="card-action card-action-toggle" data-card-toggle></a>
-					</div>
-					<h2 class="panel-title">Listagem de Laudos</h2>
-				</header>
-				<div class="panel-body">
-					<div class="form-group row">
-						<div class="col-sm-2 pull-right">
-							<a href="@Url.Action("Create", "Laudo")" id="addToTable" class="btn btn-block btn-danger pull-right"><i class="fa fa-window-close"></i> Novo Laudo </a>
-						</div>
-					</div>
-					<br/>
-					<table class="table table-bordered table-striped mb-0" id="datatable-default">
-						<thead>
-						<tr>
-							<th class="text-center">Matricula - Nome do Aluno</th>
-							@{
-								DateTime dataAtual = DateTime.Now;
-								int ano = dataAtual.Year;
-								int mes = dataAtual.Month;
-								int totalDiasNoMes = DateTime.DaysInMonth(ano, mes);
+		                    <div class="col-sm-3 pull-right">
+			                    <a href="#" id="btnImprimirLaudo" class="btn btn-block btn-dark pull-right" data-toggle="modal" data-target="#mdMesImpressao">
+				                    <i class="fa fa-print"></i> &nbsp;&nbsp;Imprimir Controle Frequência
+			                    </a>
+		                    </div>
+	                    </div>
+                    </footer>
+                </section>
+            }
+        </div>
+    </div>
+    @{
+        var tabelaFrequenciasVazia = new WebApp.Models.ControleFrequenciaEscolarModel.TabelaFrequenciasEscolares
+        {
+            Alunos = new List<AlunoIndexDto>(),
+            AlunosComPresencas = new List<ControleFrequenciaEscolarDto>()
+        };
+    }
+    <div id="tabela-container" style="display:none;">
+        @await Html.PartialAsync("_TabelaFrequenciaEscolar", tabelaFrequenciasVazia)
+    </div>
 
-								for (int dia = 1; dia <= totalDiasNoMes; dia++)
-								{
-									//DateTime data = new DateTime(ano, mes, dia);
-									// Faça algo com a data aqui, por exemplo, imprimir
-									//Console.WriteLine(data.ToString("yyyy-MM-dd"));
-									<th class="text-center">@dia</th>
-
-								}
-							}
-						</tr>
-						</thead>
-						<tbody>
-						@for (int i = 0; i < 11; i++)
-						{
-							<tr>
-								<td class="text-center" style="width: 300px;">12345678 - Fábio de Souza Muniz</td>
-								@{
-									for (int dia1 = 1; dia1 <= totalDiasNoMes; dia1++)
-									{
-										//DateTime data = new DateTime(ano, mes, dia);
-										// Faça algo com a data aqui, por exemplo, imprimir
-										//Console.WriteLine(data.ToString("yyyy-MM-dd"));
-										<th class="text-center">
-											*
-										</th>
-
-									}
-								}
-							</tr>
-						}
-						</tbody>
-					</table>
-				</div>
-			</section>
-		</div>
-	</div>
-	
 </div>
 
 @section CssSpecificVendor {
-	<link rel="stylesheet" href="~/assets/vendor/select2/css/select2.css" />
-	<link rel="stylesheet" href="~/assets/vendor/select2-bootstrap-theme/select2-bootstrap.min.css" />
-	<link rel="stylesheet" href="~/assets/vendor/datatables/media/css/dataTables.bootstrap4.css" />
-	<link href="~/assets/vendor/bootstrap-datepicker/css/bootstrap-datepicker3.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/assets/vendor/select2/css/select2.css" />
+    <link rel="stylesheet" href="~/assets/vendor/select2-bootstrap-theme/select2-bootstrap.min.css" />
+    <link rel="stylesheet" href="~/assets/vendor/datatables/media/css/dataTables.bootstrap4.css" />
+    <link href="~/assets/vendor/bootstrap-datepicker/css/bootstrap-datepicker3.css" rel="stylesheet" />
 }
 @section Scripts {
-	<script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
-	<script src="~/assets/vendor/select2/js/select2.js"></script>
-	<script src="~/assets/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
-	<script src="~/assets/vendor/datatables/media/js/dataTables.bootstrap4.min.js"></script>
-	<script src="~/assets/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
-	<script src="~/assets/vendor/bootstrap-datepicker/locales/bootstrap-datepicker.pt-BR.min.js"></script>
-	<script src="~/js/ControlesFrequenciaEscolar.js"></script>
+    <script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
+    <script src="~/assets/vendor/select2/js/select2.js"></script>
+    <script src="~/assets/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
+    <script src="~/assets/vendor/datatables/media/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/assets/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+    <script src="~/assets/vendor/bootstrap-datepicker/locales/bootstrap-datepicker.pt-BR.min.js"></script>
+    <script src="~/js/ControlesFrequenciaEscolar.js"></script>
 
-	<script>
+    <script>
+        (function ($) {
+            'use strict';
+            var crud = @ViewBag.CrudMessage;
 
-		(function ($) {
-
-			'use strict';
-			var crud = @ViewBag.CrudMessage;
-
-			if (crud === 1) {
-				new PNotify({
-					title: 'Controle de Presenca',
-					text: 'Cadastro realizado com sucesso!',
-					type: 'success'
-				});
-				crud = 0;
-			} else if (crud === 2) {
-				new PNotify({
-					title: 'ControlePresenca',
-					text: 'Dados alterados com sucesso.',
-					type: 'warning',
-					icon: 'fa fa-pencil'
-				});
-				crud = 0;
-			} else if (crud === 3) {
-				new PNotify({
-					title: 'ControlePresenca',
-					text: 'Registro excluído com sucesso.',
-					type: 'error',
-					icon: 'fa fa-trash-o'
-				});
-				crud = 0;
-			}
+            if (crud === 1) {
+                new PNotify({
+                    title: 'Controle de Frequência',
+                    text: 'Cadastro realizado com sucesso!',
+                    type: 'success'
+                });
+                crud = 0;
+            } else if (crud === 2) {
+                new PNotify({
+                    title: 'Controle de Frequência',
+                    text: 'Dados alterados com sucesso.',
+                    type: 'warning',
+                    icon: 'fa fa-pencil'
+                });
+                crud = 0;
+            } else if (crud === 3) {
+                new PNotify({
+                    title: 'Controle de Frequência',
+                    text: 'Registro excluído com sucesso.',
+                    type: 'error',
+                    icon: 'fa fa-trash-o'
+                });
+                crud = 0;
+            }
 
 
-			var notify = @ViewBag.NotifyMessage;
-			var messagem = '@ViewBag.Notify';
+            var notify = @ViewBag.NotifyMessage;
+            var messagem = '@ViewBag.Notify';
 
-			if (notify === 0) {
-				new PNotify({
-					title: 'ControlePresenca',
-					text: messagem,
-					type: 'success'
-				});
-				crud = 0;
-			} else if (notify === 1) {
-				new PNotify({
-					title: 'ControlePresenca',
-					text: messagem,
-					type: 'warning'
-				});
-				crud = 0;
-			} else if (notify === 2) {
-				new PNotify({
-					title: 'ControlePresenca',
-					text: messagem,
-					type: 'error'
-				});
-				crud = 0;
-			}
+            if (notify === 0) {
+                new PNotify({
+                    title: 'Controle de Frequência',
+                    text: messagem,
+                    type: 'success'
+                });
+                crud = 0;
+            } else if (notify === 1) {
+                new PNotify({
+                    title: 'Controle de Frequência',
+                    text: messagem,
+                    type: 'warning'
+                });
+                crud = 0;
+            } else if (notify === 2) {
+                new PNotify({
+                    title: 'Controle de Frequência',
+                    text: messagem,
+                    type: 'error'
+                });
+                crud = 0;
+            }
 
-			if ($.isFunction($.fn['tooltip'])) {
-				$('[data-toggle=tooltip],[rel=tooltip]').tooltip({ container: 'body' });
-			}
+            if ($.isFunction($.fn['tooltip'])) {
+                $('[data-toggle=tooltip],[rel=tooltip]').tooltip({ container: 'body' });
+            }
 
-		}).apply(this, [jQuery]);
+        }).apply(this, [jQuery]);
 
-	</script>
+    </script>
 }
-
-
-
