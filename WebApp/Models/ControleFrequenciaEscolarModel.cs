@@ -20,7 +20,9 @@ namespace WebApp.Models
         public string EtapaId { get; set; }
         public SelectList ListEtapas { get; set; }
         public List<AlunoIndexDto> Alunos { get; set; }
-        public List<ControleFrequenciaEscolarDto> AlunosComPresencas { get; set; }
+        public List<ControleFrequenciaEscolarDto> FrequenciasEscolares { get; set; }
+        public ControleFrequenciaEscolarFilterDto SearchFilter { get; set; }
+        public int IdPerfil { get; set; }
 
         public class CreateUpdateControleFrequenciaEscolarCommand
         {
@@ -31,6 +33,7 @@ namespace WebApp.Models
             public string? DisciplinaId { get; set; }
             public string? ProfissionalId { get; set; }
             public string DataFrequencia { get; set; }
+            public List<string> ListFaltas { get; set; }
         }
 
         public class TabelaFrequenciasEscolares

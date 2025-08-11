@@ -1,4 +1,5 @@
 ﻿@using WebApp.Dto
+@using WebApp.Enumerators
 @model WebApp.Models.ControleFrequenciaEscolarModel
 @{
     ViewData["Title"] = "Listagem de Controle de Frequencia Escolar";
@@ -7,7 +8,7 @@
 <div id="vControleFrequenciaEscolar">
     <div class="row">
         <div class="col-md-12">
-            @using (@Html.BeginForm("PesquisarTabela", "ControleFrequenciaEscolar", FormMethod.Post, new { id = "formPesquisarControleFrequenciaEscolar", @class = "form-horizontal" }))
+            @using (@Html.BeginForm("Index", "ControleFrequenciaEscolar", FormMethod.Post, new { id = "formPesquisarControleFrequenciaEscolar", @class = "form-horizontal" }))
             {
                 <section class="panel">
                     <header class="panel-heading">
@@ -19,27 +20,82 @@
                     <div class="panel-body">
                         <label class="col-sm-2 control-label">Estado:</label>
                         <div class="col-md-4 form-group">
-                            <select class="form-control populate select2" name="ddlEstado" id="ddlEstado" style="width: 100%"
-                                    title="Por favor informe o estado." required
-                                    asp-for="EstadoId" asp-items="Model.ListEstados">
-                                <option value="">Selecionar Estado</option>
-                            </select>
+	                        @{
+		                        if (Model.IdPerfil == (int)EnumPerfil.Administrador)
+		                        {
+			                        <select class="form-control populate select2" name="ddlEstado" id="ddlEstado" style="width: 100%"
+			                                asp-for="EstadoId" asp-items="Model.ListEstados">
+				                        <option value="">Selecionar Estado</option>
+			                        </select>
+		                        }
+		                        else
+		                        {
+			                        <select class="form-control populate select2" name="ddlEstado" id="ddlEstado" style="width: 100%" disabled="disabled"
+			                                asp-for="EstadoId" asp-items="Model.ListEstados">
+				                        <option value="">Selecionar Estado</option>
+			                        </select>
+		                        }
+	                        }
                         </div>
                         <label class="col-sm-2 control-label">Município:</label>
                         <div class="col-md-4 form-group">
-                            <select class="form-control populate select2" name="ddlMunicipio" id="ddlMunicipio" style="width: 100%"
-                                    title="Por favor informe o município." required
-                                    asp-for="MunicipioId" asp-items="Model.ListMunicipios">
-                                <option value="">Selecionar Municipio</option>
-                            </select>
+	                        @{
+		                        if (Model.IdPerfil == (int)EnumPerfil.Administrador)
+		                        {
+			                        <select class="form-control populate select2" name="ddlMunicipio" id="ddlMunicipio" style="width: 100%"
+			                                asp-for="MunicipioId" asp-items="Model.ListMunicipios">
+				                        <option value="">Selecionar Municipio</option>
+			                        </select>
+		                        }
+		                        else
+		                        {
+			                        if (Model.IdPerfil == (int)EnumPerfil.GestorPedagogico)
+			                        {
+				                        <select class="form-control populate select2" name="ddlMunicipio" id="ddlMunicipio" style="width: 100%"
+				                                asp-for="MunicipioId" asp-items="Model.ListMunicipios">
+					                        <option value="">Selecionar Municipio</option>
+				                        </select>
+			                        }
+			                        else
+			                        {
+				                        <select class="form-control populate select2" name="ddlMunicipio" id="ddlMunicipio" style="width: 100%" disabled="disabled"
+				                                asp-for="MunicipioId" asp-items="Model.ListMunicipios">
+					                        <option value="">Selecionar Municipio</option>
+				                        </select>
+			                        }
+		                        }
+	                        }
                         </div>
                         <label class="col-sm-2 control-label">Localidade:</label>
                         <div class="col-md-4 form-group">
-                            <select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade" style="width: 100%"
-                                    title="Por favor informe a localidade." required
-                                    asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
-                                <option value="">Selecionar Localidade</option>
-                            </select>
+	                        @{
+		                        if (Model.IdPerfil == (int)EnumPerfil.Administrador)
+		                        {
+			                        <select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade" style="width: 100%"
+			                                asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
+				                        <option value="">Selecionar Localidade</option>
+			                        </select>
+		                        }
+		                        else
+		                        {
+			                        if (Model.IdPerfil == (int)EnumPerfil.GestorPedagogico)
+			                        {
+				                        <select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade" style="width: 100%"
+				                                asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
+					                        <option value="">Selecionar Localidade</option>
+				                        </select>
+			                        }
+			                        else
+			                        {
+				                        <select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade" style="width: 100%" disabled="disabled"
+				                                asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
+					                        <option value="">Selecionar Localidade</option>
+				                        </select>
+			                        }
+
+
+		                        }
+	                        }
                         </div>
                         <label class="col-sm-2 control-label">Etapa Ensino:</label>
                         <div class="col-md-4 form-group">
