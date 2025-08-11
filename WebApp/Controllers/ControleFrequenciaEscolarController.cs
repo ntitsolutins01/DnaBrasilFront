@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
@@ -11,6 +11,7 @@ using WebApp.Factory;
 using WebApp.Identity;
 using WebApp.Models;
 using WebApp.Utility;
+using System.Linq;
 using static WebApp.Models.ControleFrequenciaEscolarModel;
 using log4net;
 
@@ -174,7 +175,9 @@ public class ControleFrequenciaEscolarController : BaseController
             Alunos = alunos,
             AlunosComPresencas = presencas,
             ListDisciplinas = disciplinas,
-            ListProfissionais = profissionais
+            ListProfissionais = profissionais,
+            TurmaId = collection["ddlTurma"].ToString(),
+            LocalidadeId = collection["ddlLocalidade"].ToString(),
         };
 
         return PartialView("_TabelaFrequenciaEscolar", tabelaFrequenciaEscolar);
@@ -190,69 +193,51 @@ public class ControleFrequenciaEscolarController : BaseController
     {
         try
         {
-            var listFalta =
-                (from item in collection where item.Key.Contains("falta") select item.Key)
-                .Select(v => (string)v).ToList();
+            var listFaltas = collection
+                .Where(item => item.Key.Contains("#"))
+                .Select(item => item.Key.Split("#")[1]).ToList();
 
-            var command = new ControleFrequenciaEscolarModel.CreateUpdateControleFrequenciaEscolarCommand()
+            var filter = new AlunosFilterDto()
             {
-                ListFaltas = listFalta,
-                DisciplinaId = collection["ddlDisciplina"].ToString(),
-                SerieId = collection["ddlLocalidade"].ToString(),
-                ProfissionalId = collection["ddlProfissional"].ToString(),
-                DataFrequencia = DateTime.Now.ToString("dd/MM/yyyy") //na api fica assim: DtNascimento = DateTime.ParseExact(request.DtNascimento, "dd/MM/yyyy", CultureInfo.CreateSpecificCulture("pt-BR")),
+                SerieId = collection["turma"].ToString(),
+                LocalidadeId = collection["localidade"].ToString()
             };
 
+            var alunosFilter = await ApiClientFactory.Instance.GetAlunosByFilter(filter);
 
-            //foreach (var freq in frequencias)
-            //{
-            //    if (!DateTime.TryParse(freq.DataFrequencia, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dataFrequencia))
-            //        continue;
+            var alunos = alunosFilter?.Alunos.ToList();
 
-            //    var freqExistentes = ApiClientFactory.Instance
-            //        .GetControlesFrequenciasEscolaresByAlunoId(Convert.ToInt32(freq.AlunoId)) ?? new List<ControleFrequenciaEscolarDto>();
+            if (alunos != null && alunos.Any())
+            {
+                foreach (var aluno in alunos)
+                {
+                    var controle = "P";
+                    if (listFaltas.Contains(aluno.Id.ToString()))
+                    {
+                        controle = "F";
+                    }
 
-            //    var existente = freqExistentes
-            //        .FirstOrDefault(f =>
-            //            f.SerieId == freq.SerieId &&
-            //            f.DisciplinaId == freq.DisciplinaId &&
-            //            DateTime.Parse(f.DataFrequencia).Date == dataFrequencia.Date
-            //        );
+                    var command = new ControleFrequenciaEscolarModel.CreateUpdateControleFrequenciaEscolarCommand()
+                    {
+                        Controle = controle,
+                        DisciplinaId = collection["ddlDisciplina"].ToString(),
+                        AlunoId = aluno.Id.ToString(),
+                        SerieId = collection["turma"].ToString(),
+                        ProfissionalId = collection["ddlProfissional"].ToString(),
+                        DataFrequencia = DateTime
+                            .Parse(collection["data"])
+                            .ToString("yyyy-MM-dd")
+                    };
 
-            //    if (existente == null)
-            //    {
-            //        var command = new ControleFrequenciaEscolarModel.CreateUpdateControleFrequenciaEscolarCommand()
-            //        {
-            //            Controle = freq.Controle,
-            //            DisciplinaId = freq.DisciplinaId,
-            //            AlunoId = freq.AlunoId,
-            //            SerieId = freq.SerieId,
-            //            ProfissionalId = freq.ProfissionalId,
-            //            DataFrequencia = dataFrequencia.ToString("yyyy-MM-dd")
-            //        };
-            //        await ApiClientFactory.Instance.CreateControleFrequenciaEscolar(command);
-            //    }
-            //    else if (existente.Controle != freq.Controle)
-            //    {
-            //        var command = new ControleFrequenciaEscolarModel.CreateUpdateControleFrequenciaEscolarCommand()
-            //        {
-            //            Id = (int)existente.Id,
-            //            Controle = freq.Controle,
-            //            DisciplinaId = existente.DisciplinaId,
-            //            AlunoId = existente.AlunoId,
-            //            SerieId = existente.SerieId,
-            //            ProfissionalId = existente.ProfissionalId,
-            //            DataFrequencia = dataFrequencia.ToString("yyyy-MM-dd")
-            //        };
-            //        await ApiClientFactory.Instance.UpdateControleFrequenciaEscolar(command.Id, command);
-            //    }
-            //}
+                    await ApiClientFactory.Instance.CreateControleFrequenciaEscolar(command);
+                }
+            }
 
-            return Json(new { success = true, message = "Frequências salvas com sucesso!" });
+            return RedirectToAction(nameof(Index), new { crud = (int)EnumCrud.Created });
         }
         catch (Exception e)
         {
-            return Json(new { success = false, message = "Erro ao salvar frequências." });
+            return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = "Erro ao executar esta ação. Favor entrar em contato com o administrador do sistema." });
         }
     }
 

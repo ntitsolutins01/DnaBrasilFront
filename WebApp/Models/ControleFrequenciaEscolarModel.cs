@@ -33,7 +33,7 @@ namespace WebApp.Models
             public string? DisciplinaId { get; set; }
             public string? ProfissionalId { get; set; }
             public string DataFrequencia { get; set; }
-            public List<string> ListFaltas { get; set; }
+            public List<string>? ListFaltas { get; set; }
         }
 
         public class TabelaFrequenciasEscolares
@@ -44,6 +44,8 @@ namespace WebApp.Models
             public SelectList ListProfissionais { get; set; }
             public string DisciplinaId { get; set; }
             public SelectList ListDisciplinas { get; set; }
+            public string TurmaId { get; set; }
+            public string LocalidadeId { get; set; }
         }
     }
 }
