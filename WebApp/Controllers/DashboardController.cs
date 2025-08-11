@@ -60,7 +60,7 @@ namespace WebApp.Controllers
 
             if (!string.IsNullOrEmpty(usu.Uf))
             {
-                municipios = new SelectList(ApiClientFactory.Instance.GetMunicipiosByFomentoId(fomento.Id), "Id", "Nome", usu.MunicipioId);
+                municipios = new SelectList(ApiClientFactory.Instance.GetMunicipiosByFomentoId(fomento.Id), "Id", "Nome");
             }
 
             SelectList localidades = null;
@@ -70,7 +70,7 @@ namespace WebApp.Controllers
                 var resultLocalidades = ApiClientFactory.Instance.GetLocalidadeByMunicipioId(usu.MunicipioId.ToString());
 
                 if (resultLocalidades != null)
-                    localidades = new SelectList(resultLocalidades, "Id", "Nome", usu.LocalidadeId);
+                    localidades = new SelectList(resultLocalidades, "Id", "Nome");
             }
 
             var model = new DashboardModel

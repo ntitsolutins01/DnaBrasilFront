@@ -65,7 +65,9 @@ public class EventoController : BaseController
             response = await ApiClientFactory.Instance.GetEventosAll();
         }
 
-        return View(new EventoModel() { Eventos = response.Where(x=>x.EstadoId == usu.Uf).ToList() });
+        return View(new EventoModel() { Eventos = response.Where(x=>x.EstadoId == usu.Uf).ToList(),
+            IdPerfil = usu.Perfil.Id
+        });
     }
 
     /// <summary>
