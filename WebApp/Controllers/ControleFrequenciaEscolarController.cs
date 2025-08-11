@@ -137,6 +137,10 @@ public class ControleFrequenciaEscolarController : BaseController
     {
         try
         {
+            var listPresença =
+                (from item in collection where item.Key.Contains("presenca") select item.Value)
+                .Select(v => (string)v).ToList();
+
             //foreach (var freq in frequencias)
             //{
             //    if (!DateTime.TryParse(freq.DataFrequencia, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dataFrequencia))
