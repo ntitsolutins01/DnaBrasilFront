@@ -278,6 +278,36 @@ public class ControleFrequenciaEscolarController : BaseController
         }
     }
 
+    /// <summary>
+    /// Ação de Alteração da Frquência Escolar
+    /// </summary>
+    /// <param name="collection">coleção de dados para Alteração das Frquência Escolar</param>
+    /// <returns>retorna mensagem de alteração através do parametro crud</returns>
+    [ClaimsAuthorize(ClaimType.Laudo, Identity.Claim.Alterar)]
+    public async Task<ActionResult> Edit(IFormCollection collection)
+    {
+        try
+        {
+            var material =
+                ApiClientFactory.Instance.GetMaterialById(Convert.ToInt32(collection["editMaterialId"]));
+
+            var command = new MaterialModel.CreateUpdateMaterialCommand
+            {
+                Id = Convert.ToInt32(collection["editMaterialId"]),
+                UnidadeMedida = collection["ddlUnidadeMedida"].ToString(),
+                Descricao = collection["descricao"].ToString()
+            };
+
+            await ApiClientFactory.Instance.UpdateMaterial(command.Id, command);
+
+            return RedirectToAction(nameof(Index), new { crud = (int)EnumCrud.Updated });
+        }
+        catch (Exception e)
+        {
+            return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = "Erro ao executar esta ação. Favor entrar em contato com o administrador do sistema." });
+        }
+    }
+
     #endregion
 
     #region Get Methods

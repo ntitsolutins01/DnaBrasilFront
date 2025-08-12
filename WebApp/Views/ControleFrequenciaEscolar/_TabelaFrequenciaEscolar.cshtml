@@ -34,7 +34,8 @@
                     </select>
                 </div>
             </div>
-            <table class="table table-bordered table-striped" id="datatable-default">
+            <br/>
+            <table class="table table-bordered table-striped pt-3" id="datatable-default">
                 <thead>
                     <tr>
                         <th class="text-center">Matricula - Nome do Aluno</th>
@@ -55,48 +56,60 @@
                 </thead>
                 <input type="hidden" name="data" value="@dataAtual" />
                 <tbody>
+                    @{
+                        var presentes = new HashSet<string>();
+                        var faltas = new HashSet<string>();
+
+                        if (Model.AlunosComPresencas != null)
+                        {
+                            foreach (var p in Model.AlunosComPresencas)
+                            {
+                                var alunoId = p.AlunoId?.ToString();
+                                var dia = ParseDate(p.DataFrequencia).Date.ToString("yyyy-MM-dd");
+
+                                if (string.IsNullOrEmpty(alunoId)) continue;
+
+                                var key = $"{alunoId}|{dia}";
+                                if (p.Controle == "P") presentes.Add(key);
+                                else if (p.Controle == "F") faltas.Add(key);
+                            }
+                        }
+                    }
+
                     @if (!Model.Alunos.IsNullOrEmpty())
                     {
                         foreach (var aluno in Model.Alunos)
                         {
                             <tr>
-                                <td class="text-center" style="width: 300px;">
-                                    @aluno.Nome
-                                </td>
+                                <td class="text-center" style="width:300px;">@aluno.Nome</td>
 
                                 @for (int dia1 = 1; dia1 <= totalDiasNoMes; dia1++)
                                 {
-                                    bool isHoje = dia1 == diaHoje;
+                                    bool isHoje = (dia1 == diaHoje);
+                                    var diaRef = new DateTime(ano, mes, dia1).Date;
+                                    var key = $"{aluno.Id}|{diaRef:yyyy-MM-dd}";
 
-                                    bool temPresenca = Model.AlunosComPresencas != null && Model.AlunosComPresencas.Any(p =>
-                                    p.AlunoId == aluno.Id.ToString() &&
-                                    ParseDate(p.DataFrequencia).Date == new DateTime(ano, mes, dia1) &&
-                                    p.Controle == "P"
-                                    );
+                                    bool temPresenca = presentes.Contains(key);
+                                    bool temFalta = faltas.Contains(key);
+                                    bool temRegistro = temPresenca || temFalta;
 
-                                    bool diaSemRegistro = (Model.AlunosComPresencas == null || !Model.AlunosComPresencas.Any());
-
-                                    @if (dia1 <= diaHoje)
+                                    if (dia1 <= diaHoje)
                                     {
-                                        var marcado = temPresenca ? "" : "checked=\"checked\"";
                                         <td class="text-center">
                                             @if (isHoje)
                                             {
-                                                if (diaSemRegistro)
-                                                {
-                                                    marcado = temPresenca ? "checked=\"checked\"" : "";
-                                                }
+                                                var marcado = temFalta ? "checked=\"checked\"" : "";
+
                                                 <input type="checkbox"
                                                        id="F-@aluno.Id"
                                                        name="F#@aluno.Id"
-                                                       class="@isHoje"
                                                        data-aluno-id="@aluno.Id"
                                                        data-dia="@dia1"
-                                                       @marcado />
+                                                       @Html.Raw(marcado) />
                                             }
                                             else
                                             {
-                                                @Html.Raw(temPresenca ? "&bull;" : "F")
+                                                @Html.Raw(temRegistro ? (temPresenca ? "&bull;" : "F") : "")
                                             }
                                         </td>
                                     }
@@ -104,11 +117,14 @@
                                     {
                                         <td class="text-center"></td>
                                     }
+
                                 }
-                                <td class="actions text-center" style="width: 100px;">
-                                    <a href="#" data-id="@aluno.Id" data-toggle="modal" data-target="#mdEditControleFrequencia"
-                                       data-toggle="tooltip" data-placement="top" title="Editar Frequência"
-                                       class="on-default edit-row" style='color: #FF9800'><i class="fa fa-pencil"></i></a>
+                                <td class="actions text-center" style="width:100px;">
+                                    <a data-toggle="tooltip" data-placement="top" title="Editar Frequência"
+                                       href='javascript:(crud.EditModal(@aluno.Id))'
+                                       class="on-default edit-row" style='color:#FF9800'>
+                                        <i class="fa fa-pencil"></i>
+                                    </a>
                                 </td>
                             </tr>
                         }
@@ -117,21 +133,18 @@
             </table>
         }
         <!-- Modal -->
-        <div class="modal fade" id="mdEditControleFrequencia" tabindex="-1" role="dialog" aria-labelledby="mdEditControleFrequenciaLabel" aria-hidden="true">
+        <div class="modal fade" id="mdEditControleFrequenciaEscolar" tabindex="-1" role="dialog" aria-labelledby="mdEditControleFrequenciaEscolarLabel" aria-hidden="true">
             <div class="modal-dialog modal-md" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="mdEditControleFrequenciaLabel">
+                        <h5 class="modal-title" id="mdEditControleFrequenciaEscolarLabel">
                             <i class="fa fa-pencil"></i> &nbsp;&nbsp;<strong>Alterar Frequência</strong>
                         </h5>
                     </div>
                     @using (@Html.BeginForm("Edit", "ControleFrequenciaEscolar", FormMethod.Post, new { id = "formEditControleFrequencia", @class = "form-horizontal" }))
                     {
-                        <input type="hidden" name="editControleFrequenciaId" :value="editDto.Id" />
-                        <input type="hidden" name="editAlunoId" :value="editDto.AlunoId" />
-
+                        <input type="hidden" name="editAlunoId" :value="editDto.Id" />
                         <div class="modal-body">
-
                             <div class="form-group">
                                 <label class="col-sm-3 control-label text-sm-right pt-2">Aluno <span class="required">*</span></label>
                                 <div class="col-md-9">

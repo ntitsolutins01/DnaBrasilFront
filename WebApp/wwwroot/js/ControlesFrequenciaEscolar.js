@@ -2,7 +2,7 @@
     el: "#vControleFrequenciaEscolar",
     data: {
         loading: false,
-        editDto: { Id: "" }
+        editDto: { Id: "", NomeAluno: "" }
     },
     mounted: function () {
         var self = this;
@@ -368,16 +368,10 @@
         EditControleFrequenciaEscolar: function (id) {
             var self = this;
 
-            axios.get("ControleFrequenciaEscolar/GetControleFrequenciaEscolarById/?id=" + id).then(result => {
+            axios.get("../../Aluno/GetAlunoById/?id=" + id).then(result => {
 
                 self.editDto.Id = result.data.id;
-                self.editDto.Controle = result.data.controle;
-                self.editDto.Data = result.data.data;
-                self.editDto.Justificativa = result.data.justificativa;
-                self.editDto.NomeAluno = result.data.nomeAluno;
-                self.editDto.MunicipioEstado = result.data.municipioEstado;
-                self.editDto.NomeLocalidade = result.data.nomeLocalidade;
-                self.editDto.AlunoId = result.data.alunoId;
+                self.editDto.NomeAluno = result.data.nome;
 
             }).catch(error => {
                 Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
@@ -394,7 +388,7 @@ var crud = {
     },
     EditModal: function (id) {
         $('input[name="editControleFrequenciaEscolarId"]').attr('value', id);
-        $('#mdEditControleFrequenciaEscolar').modal('show');
         vm.EditControleFrequenciaEscolar(id)
+        $('#mdEditControleFrequenciaEscolar').modal('show');
     }
 };
