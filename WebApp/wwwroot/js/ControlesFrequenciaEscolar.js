@@ -6,7 +6,8 @@
             Id: null,
             NomeAluno: '',
             DisciplinaId: '',
-            ProfissionalId: ''
+            ProfissionalId: '',
+            TurmaId: ''
         }
     },
     mounted: function () {
@@ -383,6 +384,7 @@
                     this.editDto.NomeAluno = data.nome;
 
                     this.editDto.DisciplinaId = $('#ddlDisciplina').val() || '';
+                    this.editDto.TurmaId = $('#ddlTurma').val() || '';
 
                     const localidadeId = data.localidadeId;
 

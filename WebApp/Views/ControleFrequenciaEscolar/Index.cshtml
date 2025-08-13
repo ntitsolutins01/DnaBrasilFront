@@ -169,6 +169,7 @@
                     @using (@Html.BeginForm("Edit", "ControleFrequenciaEscolar", FormMethod.Post, new { id = "formEditControleFrequencia", @class = "form-horizontal" }))
                     {
                         <input type="hidden" name="editAlunoId" v-model="editDto.Id" />
+                        <input type="hidden" name="editTurmaId" v-model="editDto.TurmaId" />
                         <div class="modal-body">
                             <div class="form-group">
                                 <label class="col-sm-2 control-label text-sm-right pt-2">Aluno <span class="required">*</span></label>

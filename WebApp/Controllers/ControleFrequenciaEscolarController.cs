@@ -14,6 +14,8 @@ using WebApp.Utility;
 using System.Linq;
 using static WebApp.Models.ControleFrequenciaEscolarModel;
 using log4net;
+using DocumentFormat.OpenXml.Drawing.Diagrams;
+using System.Globalization;
 
 namespace WebApp.Controllers;
 
@@ -279,32 +281,71 @@ public class ControleFrequenciaEscolarController : BaseController
     }
 
     /// <summary>
-    /// Ação de Alteração da Frquência Escolar
+    /// Ação de Alteração da Frequência Escolar
     /// </summary>
-    /// <param name="collection">coleção de dados para Alteração das Frquência Escolar</param>
-    /// <returns>retorna mensagem de alteração através do parametro crud</returns>
+    /// <param name="collection">Coleção de dados para Alteração das Frequências Escolares</param>
+    /// <returns>Retorna mensagem de alteração através do parâmetro crud</returns>
+    [HttpPost]
     [ClaimsAuthorize(ClaimType.Laudo, Identity.Claim.Alterar)]
     public async Task<ActionResult> Edit(IFormCollection collection)
     {
         try
         {
-            var material =
-                ApiClientFactory.Instance.GetMaterialById(Convert.ToInt32(collection["editMaterialId"]));
+            var alunoId = collection["editAlunoId"];
+            var dataControle = DateTime.ParseExact(collection["data"].ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            var serieId = collection["editTurmaId"].ToString();
+            var disciplinaId = collection["ddlDisciplinaEdit"].ToString();
+            var profissional = collection["ddlProfissionalEdit"].ToString();
+            var controle = collection["controle"].ToString();
 
-            var command = new MaterialModel.CreateUpdateMaterialCommand
+            var existentes = ApiClientFactory.Instance
+                .GetControlesFrequenciasEscolaresByAlunoMesAno(Convert.ToInt32(alunoId), dataControle.Month, dataControle.Year);
+
+            var registroDoDia = existentes.FirstOrDefault(e =>
+                DateTimeOffset.TryParse(e.DataFrequencia, out var data) &&
+                data.Date == dataControle.Date &&
+                e.DisciplinaId == disciplinaId &&
+                e.SerieId == serieId);
+
+            if (registroDoDia != null)
             {
-                Id = Convert.ToInt32(collection["editMaterialId"]),
-                UnidadeMedida = collection["ddlUnidadeMedida"].ToString(),
-                Descricao = collection["descricao"].ToString()
-            };
+                var command = new ControleFrequenciaEscolarModel.CreateUpdateControleFrequenciaEscolarCommand
+                {
+                    Id = registroDoDia.Id,
+                    Controle = controle,
+                    DisciplinaId = registroDoDia.DisciplinaId,
+                    AlunoId = registroDoDia.AlunoId,
+                    SerieId = registroDoDia.SerieId,
+                    ProfissionalId = registroDoDia.ProfissionalId,
+                    DataFrequencia = registroDoDia.DataFrequencia
+                };
 
-            await ApiClientFactory.Instance.UpdateMaterial(command.Id, command);
+                await ApiClientFactory.Instance.UpdateControleFrequenciaEscolar(registroDoDia.Id, command);
+            }
+            else
+            {
+                var command = new ControleFrequenciaEscolarModel.CreateUpdateControleFrequenciaEscolarCommand
+                {
+                    Controle = controle,
+                    DisciplinaId = disciplinaId,
+                    AlunoId = alunoId.ToString(),
+                    SerieId = serieId,
+                    ProfissionalId = profissional,
+                    DataFrequencia = dataControle.ToString("yyyy-MM-dd")
+                };
+
+                await ApiClientFactory.Instance.CreateControleFrequenciaEscolar(command);
+            }
 
             return RedirectToAction(nameof(Index), new { crud = (int)EnumCrud.Updated });
         }
-        catch (Exception e)
+        catch
         {
-            return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = "Erro ao executar esta ação. Favor entrar em contato com o administrador do sistema." });
+            return RedirectToAction(nameof(Index), new
+            {
+                notify = (int)EnumNotify.Error,
+                message = "Erro ao executar esta ação. Favor entrar em contato com o administrador do sistema."
+            });
         }
     }
 
