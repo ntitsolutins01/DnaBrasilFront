@@ -25,6 +25,8 @@ namespace WebApp.Models
         public int IdPerfil { get; set; }
         public string DisciplinaId { get; set; }
         public SelectList ListDisciplinas { get; set; }
+        public string ProfissionalId { get; set; }
+        public SelectList ListProfissionais { get; set; }
 
         public class CreateUpdateControleFrequenciaEscolarCommand
         {

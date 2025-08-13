@@ -132,70 +132,8 @@
                 </tbody>
             </table>
         }
-        <!-- Modal -->
-        <div class="modal fade" id="mdEditControleFrequenciaEscolar" tabindex="-1" role="dialog" aria-labelledby="mdEditControleFrequenciaEscolarLabel" aria-hidden="true">
-            <div class="modal-dialog modal-md" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="mdEditControleFrequenciaEscolarLabel">
-                            <i class="fa fa-pencil"></i> &nbsp;&nbsp;<strong>Alterar Frequência</strong>
-                        </h5>
-                    </div>
-                    @using (@Html.BeginForm("Edit", "ControleFrequenciaEscolar", FormMethod.Post, new { id = "formEditControleFrequencia", @class = "form-horizontal" }))
-                    {
-                        <input type="hidden" name="editAlunoId" :value="editDto.Id" />
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label text-sm-right pt-2">Aluno <span class="required">*</span></label>
-                                <div class="col-md-9">
-                                    <input type="text" name="aluno" class="form-control" :value="editDto.NomeAluno" readonly />
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-sm-3 control-label">Data: <span class="required">*</span></label>
-                                <div class="col-sm-4 form-group">
-                                    <div class="input-group">
-                                        <span class="input-group-addon">
-                                            <i class="fa fa-calendar"></i>
-                                        </span>
-                                        <input id="data" name="data"
-                                               required
-                                               title="Por favor informe a data."
-                                               style="z-index: auto;"
-                                               data-plugin-datepicker data-date-format="dd/mm/yyyy" data-plugin-options='{"language": "pt-BR"}'
-                                               placeholder="__/__/____" class="form-control startdate"
-                                               class="form-control">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-sm-3 control-label text-sm-right pt-2">Controle <span class="required">*</span></label>
-                                <div class="col-sm-4">
-                                    <div class="radio-custom radio-success">
-                                        <input type="radio" id="controlePresente" name="controle" value="P" required title="Por favor selecione uma opção" :checked="editDto.Controle === 'P'">
-                                        <label>Presente</label>
-                                    </div>
-                                    <div class="radio-custom radio-danger">
-                                        <input type="radio" id="controleFalta" name="controle" value="F" required title="Por favor selecione uma opção" :checked="editDto.Controle === 'F'">
-                                        <label>Falta</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-remove"></i> &nbsp;&nbsp;Cancelar</button>
-                            <button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
-                        </div>
-                    }
-                </div>
-            </div>
-        </div>
     </div>
 </section>
-@* <link rel="stylesheet" href="~/assets/vendor/datatables/media/css/dataTables.bootstrap4.css" />
-<script src="~/assets/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
-<script src="~/assets/vendor/datatables/media/js/dataTables.bootstrap4.min.js"></script>
-<script src="~/js/formatTableMultiselect.js"></script> *@
 
 @functions {
     public static DateTime ParseDate(object data)

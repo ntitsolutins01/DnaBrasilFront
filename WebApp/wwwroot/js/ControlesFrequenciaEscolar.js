@@ -2,7 +2,12 @@
     el: "#vControleFrequenciaEscolar",
     data: {
         loading: false,
-        editDto: { Id: "", NomeAluno: "" }
+        editDto: {
+            Id: null,
+            NomeAluno: '',
+            DisciplinaId: '',
+            ProfissionalId: ''
+        }
     },
     mounted: function () {
         var self = this;
@@ -339,6 +344,16 @@
                 });
             });
 
+            if (!$('#ddlDisciplinaEdit').data('select2')) {
+                $('#ddlDisciplinaEdit').select2({ allowClear: true, width: '100%' })
+                    .on('change', function () { self.editDto.DisciplinaId = this.value; });
+            }
+
+            if (!$('#ddlProfissionalEdit').data('select2')) {
+                $('#ddlProfissionalEdit').select2({ allowClear: true, width: '100%' })
+                    .on('change', function () { self.editDto.ProfissionalId = this.value; });
+            }
+
         }).apply(this, [jQuery]);
     },
     methods: {
@@ -361,34 +376,50 @@
                 self.loading = flag;
             }
         },
-        DeleteControleFrequenciaEscolar: function (id) {
-            var url = "ControleFrequenciaEscolar/Delete/" + id;
-            $("#deleteControleFrequenciaEscolarHref").prop("href", url);
-        },
-        EditControleFrequenciaEscolar: function (id) {
-            var self = this;
+        EditControleFrequenciaEscolar(id) {
+            axios.get("../../Aluno/GetAlunoById", { params: { id } })
+                .then(({ data }) => {
+                    this.editDto.Id = data.id;
+                    this.editDto.NomeAluno = data.nome;
 
-            axios.get("../../Aluno/GetAlunoById/?id=" + id).then(result => {
+                    this.editDto.DisciplinaId = $('#ddlDisciplina').val() || '';
 
-                self.editDto.Id = result.data.id;
-                self.editDto.NomeAluno = result.data.nome;
+                    const localidadeId = data.localidadeId;
 
-            }).catch(error => {
-                Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
-            });
+                    return axios.get("../../Profissional/GetProfissionaisByLocalidade", {
+                        params: { id: localidadeId }
+                    }).then(({ data: profs }) => {
+                        const $sel = $('#ddlProfissionalEdit');
+
+                        let options = '<option value="">Selecionar o Profissional</option>';
+                        if (Array.isArray(profs) && profs.length) {
+                            profs.forEach(row => {
+                                const value = row.value ?? row.id ?? row.Id;
+                                const text = row.text ?? row.nome ?? row.Nome;
+                                options += `<option value="${value}">${text}</option>`;
+                            });
+                        }
+                        $sel.html(options);
+
+                        $sel.val(this.editDto.ProfissionalId).trigger('change.select2');
+                    });
+                })
+                .then(() => {
+                    this.$nextTick(() => {
+                        $('#ddlDisciplinaEdit').val(this.editDto.DisciplinaId).trigger('change.select2');
+                        $('#mdEditControleFrequenciaEscolar').modal('show');
+                    });
+                })
+                .catch(e => {
+                    Site.Notification("Erro ao buscar e analisar dados", e.message, "error", 1);
+                });
         },
     }
 });
 
 var crud = {
-    DeleteModal: function (id) {
-        $('input[name="deleteControleFrequenciaEscolarId"]').attr('value', id);
-        $('#mdDeleteControleFrequenciaEscolar').modal('show');
-        vm.DeleteControleFrequenciaEscolar(id)
-    },
     EditModal: function (id) {
-        $('input[name="editControleFrequenciaEscolarId"]').attr('value', id);
-        vm.EditControleFrequenciaEscolar(id)
-        $('#mdEditControleFrequenciaEscolar').modal('show');
+        $('input[name="editControleFrequenciaEscolarId"]').val(id);
+        vm.EditControleFrequenciaEscolar(id);
     }
 };
