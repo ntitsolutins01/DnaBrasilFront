@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
@@ -11,8 +11,11 @@ using WebApp.Factory;
 using WebApp.Identity;
 using WebApp.Models;
 using WebApp.Utility;
+using System.Linq;
 using static WebApp.Models.ControleFrequenciaEscolarModel;
 using log4net;
+using DocumentFormat.OpenXml.Drawing.Diagrams;
+using System.Globalization;
 
 namespace WebApp.Controllers;
 
@@ -72,7 +75,7 @@ public class ControleFrequenciaEscolarController : BaseController
             };
 
             //var response = await ApiClientFactory.Instance.GetControlesFrequenciasEscolaresByFilter(searchFilter);
-             var responseFrequenciasEscolares =  ApiClientFactory.Instance.GetControlesFrequenciasEscolaresAll();
+            var responseFrequenciasEscolares = ApiClientFactory.Instance.GetControlesFrequenciasEscolaresAll();
 
             var fomento = ApiClientFactory.Instance.GetFomentoByLocalidadeId(Convert.ToInt32(usu.LocalidadeId));
 
@@ -96,6 +99,7 @@ public class ControleFrequenciaEscolarController : BaseController
             }
 
             var etapas = new SelectList(ApiClientFactory.Instance.GetEtapasEnsinoAll(), "Id", "Nome");
+            var disciplinas = new SelectList(ApiClientFactory.Instance.GetDisciplinasAll(), "Id", "Nome");
 
             return View(new ControleFrequenciaEscolarModel()
             {
@@ -103,6 +107,7 @@ public class ControleFrequenciaEscolarController : BaseController
                 ListMunicipios = municipios,
                 ListLocalidades = localidades,
                 ListEtapas = etapas,
+                ListDisciplinas = disciplinas,
                 SearchFilter = searchFilter,
                 IdPerfil = usu.Perfil.Id,
                 ControlesFrequenciasEscolares = responseFrequenciasEscolares//response.FrequenciasEscolares
@@ -151,7 +156,13 @@ public class ControleFrequenciaEscolarController : BaseController
 
         foreach (var aluno in alunos)
         {
-            var freq = ApiClientFactory.Instance.GetControlesFrequenciasEscolaresByAlunoId(aluno.Id);
+            var freq = ApiClientFactory.Instance.GetControlesFrequenciasEscolaresByAlunoId(aluno.Id)
+                       ?? new List<ControleFrequenciaEscolarDto>();
+
+            if (int.TryParse(collection["ddlDisciplina"].ToString().Trim(), out var disciplinaId))
+            {
+                freq = freq.Where(f => f.DisciplinaId == disciplinaId.ToString()).ToList();
+            }
 
             if (freq != null && freq.Any())
             {
@@ -174,7 +185,10 @@ public class ControleFrequenciaEscolarController : BaseController
             Alunos = alunos,
             AlunosComPresencas = presencas,
             ListDisciplinas = disciplinas,
-            ListProfissionais = profissionais
+            ListProfissionais = profissionais,
+            TurmaId = collection["ddlTurma"].ToString(),
+            LocalidadeId = collection["ddlLocalidade"].ToString(),
+            DisciplinaId = collection["ddlDisciplina"].ToString()
         };
 
         return PartialView("_TabelaFrequenciaEscolar", tabelaFrequenciaEscolar);
@@ -190,69 +204,148 @@ public class ControleFrequenciaEscolarController : BaseController
     {
         try
         {
-            var listFalta =
-                (from item in collection where item.Key.Contains("falta") select item.Key)
-                .Select(v => (string)v).ToList();
+            var listFaltas = collection
+                .Where(item => item.Key.Contains("#"))
+                .Select(item => item.Key.Split("#")[1]).ToList();
 
-            var command = new ControleFrequenciaEscolarModel.CreateUpdateControleFrequenciaEscolarCommand()
+            var filter = new AlunosFilterDto()
             {
-                ListFaltas = listFalta,
-                DisciplinaId = collection["ddlDisciplina"].ToString(),
-                SerieId = collection["ddlLocalidade"].ToString(),
-                ProfissionalId = collection["ddlProfissional"].ToString(),
-                DataFrequencia = DateTime.Now.ToString("dd/MM/yyyy") //na api fica assim: DtNascimento = DateTime.ParseExact(request.DtNascimento, "dd/MM/yyyy", CultureInfo.CreateSpecificCulture("pt-BR")),
+                SerieId = collection["turma"].ToString(),
+                LocalidadeId = collection["localidade"].ToString()
             };
 
+            var alunosFilter = await ApiClientFactory.Instance.GetAlunosByFilter(filter);
 
-            //foreach (var freq in frequencias)
-            //{
-            //    if (!DateTime.TryParse(freq.DataFrequencia, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dataFrequencia))
-            //        continue;
+            var alunos = alunosFilter?.Alunos.ToList();
 
-            //    var freqExistentes = ApiClientFactory.Instance
-            //        .GetControlesFrequenciasEscolaresByAlunoId(Convert.ToInt32(freq.AlunoId)) ?? new List<ControleFrequenciaEscolarDto>();
+            var diaHoje = DateTime.Now;
 
-            //    var existente = freqExistentes
-            //        .FirstOrDefault(f =>
-            //            f.SerieId == freq.SerieId &&
-            //            f.DisciplinaId == freq.DisciplinaId &&
-            //            DateTime.Parse(f.DataFrequencia).Date == dataFrequencia.Date
-            //        );
+            if (alunos != null && alunos.Any())
+            {
+                foreach (var aluno in alunos)
+                {
+                    var existentes = ApiClientFactory.Instance
+                        .GetControlesFrequenciasEscolaresByAlunoMesAno(aluno.Id, diaHoje.Month, diaHoje.Year);
 
-            //    if (existente == null)
-            //    {
-            //        var command = new ControleFrequenciaEscolarModel.CreateUpdateControleFrequenciaEscolarCommand()
-            //        {
-            //            Controle = freq.Controle,
-            //            DisciplinaId = freq.DisciplinaId,
-            //            AlunoId = freq.AlunoId,
-            //            SerieId = freq.SerieId,
-            //            ProfissionalId = freq.ProfissionalId,
-            //            DataFrequencia = dataFrequencia.ToString("yyyy-MM-dd")
-            //        };
-            //        await ApiClientFactory.Instance.CreateControleFrequenciaEscolar(command);
-            //    }
-            //    else if (existente.Controle != freq.Controle)
-            //    {
-            //        var command = new ControleFrequenciaEscolarModel.CreateUpdateControleFrequenciaEscolarCommand()
-            //        {
-            //            Id = (int)existente.Id,
-            //            Controle = freq.Controle,
-            //            DisciplinaId = existente.DisciplinaId,
-            //            AlunoId = existente.AlunoId,
-            //            SerieId = existente.SerieId,
-            //            ProfissionalId = existente.ProfissionalId,
-            //            DataFrequencia = dataFrequencia.ToString("yyyy-MM-dd")
-            //        };
-            //        await ApiClientFactory.Instance.UpdateControleFrequenciaEscolar(command.Id, command);
-            //    }
-            //}
+                    var presencaHoje = existentes.FirstOrDefault(e =>
+                        DateTimeOffset.TryParse(e.DataFrequencia, out var data) &&
+                        data.Date == diaHoje.Date && e.DisciplinaId == collection["disciplina"].ToString() &&
+                        e.SerieId == collection["turma"].ToString());
 
-            return Json(new { success = true, message = "Frequências salvas com sucesso!" });
+                    var controle = "P";
+                    if (listFaltas.Contains(aluno.Id.ToString()))
+                    {
+                        controle = "F";
+                    }
+
+                    if (presencaHoje != null)
+                    {
+                        var command = new ControleFrequenciaEscolarModel.CreateUpdateControleFrequenciaEscolarCommand()
+                        {
+                            Id = presencaHoje.Id,
+                            Controle = controle,
+                            DisciplinaId = presencaHoje.DisciplinaId,
+                            AlunoId = presencaHoje.AlunoId,
+                            SerieId = presencaHoje.SerieId,
+                            ProfissionalId = presencaHoje.ProfissionalId,
+                            DataFrequencia = presencaHoje.DataFrequencia
+                        };
+
+                        await ApiClientFactory.Instance.UpdateControleFrequenciaEscolar(presencaHoje.Id, command);
+                    }
+                    else
+                    {
+                        var command = new ControleFrequenciaEscolarModel.CreateUpdateControleFrequenciaEscolarCommand()
+                        {
+                            Controle = controle,
+                            DisciplinaId = collection["disciplina"].ToString(),
+                            AlunoId = aluno.Id.ToString(),
+                            SerieId = collection["turma"].ToString(),
+                            ProfissionalId = collection["ddlProfissional"].ToString(),
+                            DataFrequencia = DateTime
+                                .Parse(collection["data"])
+                                .ToString("yyyy-MM-dd")
+                        };
+
+                        await ApiClientFactory.Instance.CreateControleFrequenciaEscolar(command);
+                    }
+                }
+            }
+
+            return RedirectToAction(nameof(Index), new { crud = (int)EnumCrud.Created });
         }
         catch (Exception e)
         {
-            return Json(new { success = false, message = "Erro ao salvar frequências." });
+            return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = "Erro ao executar esta ação. Favor entrar em contato com o administrador do sistema." });
+        }
+    }
+
+    /// <summary>
+    /// Ação de Alteração da Frequência Escolar
+    /// </summary>
+    /// <param name="collection">Coleção de dados para Alteração das Frequências Escolares</param>
+    /// <returns>Retorna mensagem de alteração através do parâmetro crud</returns>
+    [HttpPost]
+    [ClaimsAuthorize(ClaimType.Laudo, Identity.Claim.Alterar)]
+    public async Task<ActionResult> Edit(IFormCollection collection)
+    {
+        try
+        {
+            var alunoId = collection["editAlunoId"];
+            var dataControle = DateTime.ParseExact(collection["data"].ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            var serieId = collection["editTurmaId"].ToString();
+            var disciplinaId = collection["ddlDisciplinaEdit"].ToString();
+            var profissional = collection["ddlProfissionalEdit"].ToString();
+            var controle = collection["controle"].ToString();
+
+            var existentes = ApiClientFactory.Instance
+                .GetControlesFrequenciasEscolaresByAlunoMesAno(Convert.ToInt32(alunoId), dataControle.Month, dataControle.Year);
+
+            var registroDoDia = existentes.FirstOrDefault(e =>
+                DateTimeOffset.TryParse(e.DataFrequencia, out var data) &&
+                data.Date == dataControle.Date &&
+                e.DisciplinaId == disciplinaId &&
+                e.SerieId == serieId);
+
+            if (registroDoDia != null)
+            {
+                var command = new ControleFrequenciaEscolarModel.CreateUpdateControleFrequenciaEscolarCommand
+                {
+                    Id = registroDoDia.Id,
+                    Controle = controle,
+                    DisciplinaId = registroDoDia.DisciplinaId,
+                    AlunoId = registroDoDia.AlunoId,
+                    SerieId = registroDoDia.SerieId,
+                    ProfissionalId = registroDoDia.ProfissionalId,
+                    DataFrequencia = registroDoDia.DataFrequencia
+                };
+
+                await ApiClientFactory.Instance.UpdateControleFrequenciaEscolar(registroDoDia.Id, command);
+            }
+            else
+            {
+                var command = new ControleFrequenciaEscolarModel.CreateUpdateControleFrequenciaEscolarCommand
+                {
+                    Controle = controle,
+                    DisciplinaId = disciplinaId,
+                    AlunoId = alunoId.ToString(),
+                    SerieId = serieId,
+                    ProfissionalId = profissional,
+                    DataFrequencia = dataControle.ToString("yyyy-MM-dd")
+                };
+
+                await ApiClientFactory.Instance.CreateControleFrequenciaEscolar(command);
+            }
+
+            return RedirectToAction(nameof(Index), new { crud = (int)EnumCrud.Updated });
+        }
+        catch
+        {
+            return RedirectToAction(nameof(Index), new
+            {
+                notify = (int)EnumNotify.Error,
+                message = "Erro ao executar esta ação. Favor entrar em contato com o administrador do sistema."
+            });
         }
     }
 

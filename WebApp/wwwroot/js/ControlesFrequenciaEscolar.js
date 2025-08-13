@@ -2,7 +2,13 @@
     el: "#vControleFrequenciaEscolar",
     data: {
         loading: false,
-        editDto: { Id: "" }
+        editDto: {
+            Id: null,
+            NomeAluno: '',
+            DisciplinaId: '',
+            ProfissionalId: '',
+            TurmaId: ''
+        }
     },
     mounted: function () {
         var self = this;
@@ -10,10 +16,6 @@
             'use strict';
 
             var formid = $('form')[1].id;
-
-            if (formid === "formPesquisarControleFrequenciaEscolar") {
-
-            }
 
             if (formid === "formPesquisarControleFrequenciaEscolar") {
 
@@ -343,63 +345,15 @@
                 });
             });
 
-            // Botão de Marcar aulas do dia atual
-            $(document).on('click', '#btnMarcarDiaAtual', function () {
-                $(".checkbox-dia-hoje:not(:disabled)").prop("checked", true);
-            });
+            if (!$('#ddlDisciplinaEdit').data('select2')) {
+                $('#ddlDisciplinaEdit').select2({ allowClear: true, width: '100%' })
+                    .on('change', function () { self.editDto.DisciplinaId = this.value; });
+            }
 
-            // depreciado - Botão de envio das frequências
-            //$(document).on('click', '#btnSalvarFrequencias', function () {
-            //    var frequencias = [];
-            //    var $btn = $(this);
-            //    $btn.prop('disabled', true);
-
-            //    var serieId = $("#ddlTurma").val();
-            //    var disciplinaId = $("#ddlDisciplina").val();
-            //    var profissionalId = $("#ddlProfissional").val();
-
-            //    var dataAtual = new Date();
-            //    var ano = dataAtual.getFullYear();
-            //    var mes = dataAtual.getMonth() + 1;
-            //    var diaHoje = dataAtual.getDate();
-
-            //    $('#tabela-container input[type="checkbox"]').each(function () {
-            //        var $cb = $(this);
-            //        var dia = $cb.data('dia');
-            //        var alunoId = $cb.data('aluno-id');
-            //        var presente = $cb.is(':checked');
-
-            //        if (dia > diaHoje) return;
-
-            //        var dataFrequencia = ano + '-' +
-            //            String(mes).padStart(2, '0') + '-' +
-            //            String(dia).padStart(2, '0') + 'T00:00:00';
-
-            //        frequencias.push({
-            //            AlunoId: alunoId.toString(),
-            //            SerieId: serieId.toString(),
-            //            DisciplinaId: disciplinaId.toString(),
-            //            ProfissionalId: profissionalId.toString(),
-            //            Controle: presente ? 'P' : 'F',
-            //            DataFrequencia: dataFrequencia
-            //        });
-            //    });
-
-            //    if (frequencias.length === 0) {
-            //        new PNotify({
-            //            title: 'Frequência Escolar',
-            //            text: 'Nenhuma frequência selecionada!',
-            //            type: 'warning'
-            //        });
-            //        $btn.prop('disabled', false);
-            //        return;
-            //    }
-
-            //    self.frequenciaChunks = self.SplitArrayInChunks(frequencias, 200);
-            //    self.btnSalvar = $btn;
-
-            //    self.EnviarChunk(0);
-            //});
+            if (!$('#ddlProfissionalEdit').data('select2')) {
+                $('#ddlProfissionalEdit').select2({ allowClear: true, width: '100%' })
+                    .on('change', function () { self.editDto.ProfissionalId = this.value; });
+            }
 
         }).apply(this, [jQuery]);
     },
@@ -423,88 +377,51 @@
                 self.loading = flag;
             }
         },
-        DeleteControleFrequenciaEscolar: function (id) {
-            var url = "ControleFrequenciaEscolar/Delete/" + id;
-            $("#deleteControleFrequenciaEscolarHref").prop("href", url);
-        },
-        EditControleFrequenciaEscolar: function (id) {
-            var self = this;
+        EditControleFrequenciaEscolar(id) {
+            axios.get("../../Aluno/GetAlunoById", { params: { id } })
+                .then(({ data }) => {
+                    this.editDto.Id = data.id;
+                    this.editDto.NomeAluno = data.nome;
 
-            axios.get("ControleFrequenciaEscolar/GetControleFrequenciaEscolarById/?id=" + id).then(result => {
+                    this.editDto.DisciplinaId = $('#ddlDisciplina').val() || '';
+                    this.editDto.TurmaId = $('#ddlTurma').val() || '';
 
-                self.editDto.Id = result.data.id;
-                self.editDto.Controle = result.data.controle;
-                self.editDto.Data = result.data.data;
-                self.editDto.Justificativa = result.data.justificativa;
-                self.editDto.NomeAluno = result.data.nomeAluno;
-                self.editDto.MunicipioEstado = result.data.municipioEstado;
-                self.editDto.NomeLocalidade = result.data.nomeLocalidade;
-                self.editDto.AlunoId = result.data.alunoId;
+                    const localidadeId = data.localidadeId;
 
-            }).catch(error => {
-                Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
-            });
-        },
-        SplitArrayInChunks: function (arr, chunkSize) {
-            var result = [];
-            for (var i = 0; i < arr.length; i += chunkSize) {
-                result.push(arr.slice(i, i + chunkSize));
-            }
-            return result;
-        },
-        EnviarChunk: function (index) {
-            var self = this;
-            var chunks = self.frequenciaChunks;
-            var $btn = self.btnSalvar;
+                    return axios.get("../../Profissional/GetProfissionaisByLocalidade", {
+                        params: { id: localidadeId }
+                    }).then(({ data: profs }) => {
+                        const $sel = $('#ddlProfissionalEdit');
 
-            if (index >= chunks.length) {
-                new PNotify({
-                    title: 'Frequência Escolar',
-                    text: 'Frequências salvas com sucesso!',
-                    type: 'success'
-                });
-                if ($btn) $btn.prop('disabled', false);
-                setTimeout(function () {
-                    location.reload();
-                }, 2000);
-                return;
-            }
+                        let options = '<option value="">Selecionar o Profissional</option>';
+                        if (Array.isArray(profs) && profs.length) {
+                            profs.forEach(row => {
+                                const value = row.value ?? row.id ?? row.Id;
+                                const text = row.text ?? row.nome ?? row.Nome;
+                                options += `<option value="${value}">${text}</option>`;
+                            });
+                        }
+                        $sel.html(options);
 
-            if (!chunks[index] || !chunks[index].length) {
-                self.EnviarChunk(index + 1);
-                return;
-            }
-
-            $.ajax({
-                url: '/ControleFrequenciaEscolar/SalvarFrequencias',
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(chunks[index]),
-                success: function () {
-                    self.EnviarChunk(index + 1);
-                },
-                error: function () {
-                    new PNotify({
-                        title: 'Frequência Escolar',
-                        text: 'Erro ao salvar frequências (lote ' + (index + 1) + ').',
-                        type: 'error'
+                        $sel.val(this.editDto.ProfissionalId).trigger('change.select2');
                     });
-                    if ($btn) $btn.prop('disabled', false);
-                }
-            });
-        }
+                })
+                .then(() => {
+                    this.$nextTick(() => {
+                        $('#ddlDisciplinaEdit').val(this.editDto.DisciplinaId).trigger('change.select2');
+                        $('#mdEditControleFrequenciaEscolar').modal('show');
+                    });
+                })
+                .catch(e => {
+                    Site.Notification("Erro ao buscar e analisar dados", e.message, "error", 1);
+                });
+        },
     }
 });
 
 var crud = {
-    DeleteModal: function (id) {
-        $('input[name="deleteControleFrequenciaEscolarId"]').attr('value', id);
-        $('#mdDeleteControleFrequenciaEscolar').modal('show');
-        vm.DeleteControleFrequenciaEscolar(id)
-    },
     EditModal: function (id) {
-        $('input[name="editControleFrequenciaEscolarId"]').attr('value', id);
-        $('#mdEditControleFrequenciaEscolar').modal('show');
-        vm.EditControleFrequenciaEscolar(id)
+        $('input[name="editControleFrequenciaEscolarId"]').val(id);
+        vm.EditControleFrequenciaEscolar(id);
     }
 };

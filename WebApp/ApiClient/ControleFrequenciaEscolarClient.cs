@@ -87,6 +87,7 @@ namespace WebApp.ApiClient
                 $"{ResourceControleFrequenciaEscolar}/Aluno/{id}"));
             return Get<List<ControleFrequenciaEscolarDto>>(requestUrl);
         }
+
         /// <summary>
         /// Busca as frequencias escolares por filtro
         /// </summary>
@@ -98,6 +99,18 @@ namespace WebApp.ApiClient
                 $"{ResourceControleFrequenciaEscolar}/Filter"));
             return GetFiltro(requestUrl, searchFilter);
         }
+
+        /// <summary>
+        /// Busca os Controles de FrequenciasEscolares cadastradas de um aluno especifico em um mes especifico
+        /// </summary>
+        /// <returns>Retorna a lista de Frequencia Escolar</returns>
+        public List<ControleFrequenciaEscolarDto> GetControlesFrequenciasEscolaresByAlunoMesAno(int alunoId, int mes, int ano)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceControleFrequenciaEscolar}/Aluno/{alunoId}/Mes/{mes}/Ano/{ano}/"));
+            return Get<List<ControleFrequenciaEscolarDto>>(requestUrl);
+        }
+
         #endregion
 
     }
