@@ -349,6 +349,157 @@ public class ControleFrequenciaEscolarController : BaseController
         }
     }
 
+    /// <summary>
+    /// Ação para abrir a view de impressão de frequências
+    /// </summary>
+    /// <param name="turmaId">ID da turma</param>
+    /// <param name="localidadeId">ID da localidade</param>
+    /// <param name="disciplinaId">ID da disciplina</param>
+    /// <param name="profissionalId">ID do profissional</param>
+    [ClaimsAuthorize(ClaimType.ControlePresenca, Identity.Claim.Consultar)]
+    [HttpGet]
+    public async Task<ActionResult> ImprimirFrequencia(string turmaId, string localidadeId, string disciplinaId, string profissionalId)
+    {
+        try
+        {
+            var filter = new AlunosFilterDto()
+            {
+                SerieId = turmaId,
+                LocalidadeId = localidadeId,
+            };
+
+            var result = await ApiClientFactory.Instance.GetAlunosByFilter(filter);
+            var alunos = result.Alunos;
+            alunos = alunos.OrderBy(a => a.Nome.Split('-').Last().Trim()).ToList();
+
+            var presencas = new List<ControleFrequenciaEscolarDto>();
+
+            foreach (var aluno in alunos)
+            {
+                var freq = ApiClientFactory.Instance.GetControlesFrequenciasEscolaresByAlunoId(aluno.Id)
+                           ?? new List<ControleFrequenciaEscolarDto>();
+
+                if (int.TryParse(disciplinaId?.Trim(), out var disciplinaIdInt))
+                {
+                    freq = freq.Where(f => f.DisciplinaId == disciplinaIdInt.ToString()).ToList();
+                }
+
+                if (freq != null && freq.Any())
+                {
+                    foreach (var registro in freq)
+                    {
+                        presencas.Add(new ControleFrequenciaEscolarDto
+                        {
+                            Id = registro.Id,
+                            AlunoId = aluno.Id.ToString(),
+                            DataFrequencia = registro.DataFrequencia,
+                            Controle = registro.Controle,
+                            DisciplinaId = registro.DisciplinaId
+                        });
+                    }
+                }
+            }
+
+            // Buscar informações adicionais para impressão
+            string localidadeNome = "LOCALIDADE NÃO ENCONTRADA";
+            string profissionalNome = "PROFESSOR NÃO ENCONTRADO";
+            string disciplinaNome = "DISCIPLINA NÃO ENCONTRADA";
+            string serieTurmaNome = "SÉRIE/TURMA NÃO ENCONTRADA";
+
+            // Buscando localidade pelo Id
+            try
+            {
+                if (int.TryParse(localidadeId, out var localidadeIdInt))
+                {
+                    var localidade = ApiClientFactory.Instance.GetLocalidadeById(localidadeIdInt);
+                    if (localidade != null && !string.IsNullOrEmpty(localidade.Nome))
+                    {
+                        localidadeNome = localidade.Nome.ToUpperInvariant();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"Erro ao buscar localidade {localidadeId}: {ex.Message}");
+            }
+
+            // Buscando profissional pelo Id
+            try
+            {
+                if (int.TryParse(profissionalId, out var profissionalIdInt))
+                {
+                    var profissional = ApiClientFactory.Instance.GetProfissionalById(profissionalIdInt);
+                    if (profissional != null && !string.IsNullOrEmpty(profissional.Nome))
+                    {
+                        profissionalNome = profissional.Nome.ToUpperInvariant();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"Erro ao buscar profissional {profissionalId}: {ex.Message}");
+            }
+
+            // Buscando disciplina por Id
+            try
+            {
+                if (int.TryParse(disciplinaId, out var disciplinaIdInt))
+                {
+                    var disciplina = ApiClientFactory.Instance.GetDisciplinaById(disciplinaIdInt);
+                    if (disciplina != null && !string.IsNullOrEmpty(disciplina.Nome))
+                    {
+                        disciplinaNome = disciplina.Nome.ToUpperInvariant();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"Erro ao buscar disciplina {disciplinaId}: {ex.Message}");
+            }
+
+            // Buscando série/turma por Id
+            try
+            {
+                if (int.TryParse(turmaId, out var turmaIdInt))
+                {
+                    var serie = ApiClientFactory.Instance.GetSerieById(turmaIdInt);
+                    if (serie != null && !string.IsNullOrEmpty(serie.Nome) && !string.IsNullOrEmpty(serie.Turma))
+                    {
+                        serieTurmaNome = $"{serie.Nome.ToUpperInvariant()} / {serie.Turma.ToUpperInvariant()}";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"Erro ao buscar série/turma {turmaId}: {ex.Message}");
+            }
+
+            var tabelaFrequenciaEscolar = new TabelaFrequenciasEscolares
+            {
+                Alunos = alunos,
+                AlunosComPresencas = presencas,
+                TurmaId = turmaId,
+                LocalidadeId = localidadeId,
+                DisciplinaId = disciplinaId,
+                ProfissionalId = profissionalId
+            };
+
+            // Adicionar as informações ao ViewBag para uso na view
+            ViewBag.LocalidadeNome = localidadeNome;
+            ViewBag.ProfissionalNome = profissionalNome;
+            ViewBag.DisciplinaNome = disciplinaNome;
+            ViewBag.SerieTurmaNome = serieTurmaNome;
+
+            return View(tabelaFrequenciaEscolar);
+        }
+        catch (Exception e)
+        {
+            _logger.Error($"ControleFrequenciaEscolar.ImprimirFrequencia: {e.StackTrace}");
+            return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = e.Message });
+        }
+    }
+
+
     #endregion
 
     #region Get Methods

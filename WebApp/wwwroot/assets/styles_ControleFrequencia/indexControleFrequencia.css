@@ -1,0 +1,200 @@
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
+
+/* Alterações Globais */
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+body {
+    margin: 0;
+    padding: 0 50px 0;
+    background-color: #9e9e9e;
+    font-size: 14px;
+    font-family: Ubuntu, sans-serif;
+    display: flex;
+    justify-content: center;
+}
+
+/* Barra de navegação fixa */
+.navigation-bar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 50px;
+    height: 100vh;
+    background-color: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 1000;
+    padding: 60px 0;
+    box-sizing: border-box;
+}
+
+/* Container para paginação */
+.page-navigation {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+/* Botões de navegação */
+.nav-button {
+    width: 30px;
+    height: 30px;
+    border: none;
+    background-color: #555;
+    color: white;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s;
+}
+.nav-button:hover {
+    background-color: #666;
+}
+
+/* Contador de páginas */
+.page-counter {
+    color: white;
+    font-size: 12px;
+    text-align: center;
+    margin: 5px 0;
+}
+
+/* Container para botões de ação */
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: auto;
+}
+
+/* Estilo para os ícones dos botões */
+.action-button {
+    width: 35px;
+    height: 35px;
+    border: none;
+    background-color: #555;
+    color: white;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s;
+}
+.action-button:hover {
+    background-color: #666;
+}
+.nav-button.disabled {
+    background-color: #444;
+    cursor: auto;
+    opacity: 0.5;
+}
+
+.nav-button.disabled:hover {
+    background-color: #444;
+}
+
+/* Container de páginas */
+#pages-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    max-width: 297mm; /* Largura máxima baseada no tamanho A4 landscape */
+    padding: 20px 0;
+}
+
+/* Parâmetros New Page*/
+.page-container {
+    width: 100%;
+    min-height: 210mm;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    background-color: white;
+    margin: 20px auto;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+    page-break-after: auto;
+    box-sizing: border-box;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Ajustes para a visualização em diferentes níveis de zoom */
+@media screen and (max-width: 1200px) {
+    body {
+        padding: 0 60px 0 10px; /* Reduz o padding lateral em telas menores */
+    }
+
+    .page-container {
+        transform: scale(1); /* Garante que não haja escala aplicada por padrão */
+        transform-origin: top center;
+    }
+}
+
+/* Estilos específicos para impressão */
+@media print {
+    /* Reset do body para impressão */
+    body {
+        margin: 0 !important;
+        padding: 0 !important;
+        background-color: white;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        height: auto;
+        display: block;
+    }
+
+    /* Ajustes do container para impressão */
+    .page-container {
+        width: 100%;
+        height: 210mm;
+        margin: 0 !important;
+        padding: 0 !important;
+        box-shadow: none;
+        page-break-after: always;
+        page-break-inside: avoid !important;
+        overflow: visible;
+        transform: none !important;
+    }
+
+    /* Última página sem quebra após */
+    .page-container:last-child {
+        page-break-after: avoid !important;
+    }
+
+    /* Ajustes para evitar elementos flutuantes */
+    .navigation-bar {
+        display: none;
+    }
+
+    /* Configurações da página */
+    @page {
+        size: A4 landscape;
+        margin: 0mm !important;
+    }
+
+    /* Corrige o espaçamento entre páginas */
+    #pages-container {
+        gap: 0 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        max-width: none;
+        width: 100%;
+        transform: none !important;
+    }
+}

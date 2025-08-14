@@ -425,3 +425,61 @@ var crud = {
         vm.EditControleFrequenciaEscolar(id);
     }
 };
+
+// Função para imprimir frequências
+function imprimirFrequencias() {
+    var turmaId = $('input[name="turma"]').val();
+    var localidadeId = $('input[name="localidade"]').val();
+    var disciplinaId = $('input[name="disciplina"]').val();
+    var profissionalId = $('#ddlProfissional').val();
+
+    // Debug - para verificar os valores
+    console.log('turmaId:', turmaId);
+    console.log('localidadeId:', localidadeId);
+    console.log('disciplinaId:', disciplinaId);
+    console.log('profissionalId:', profissionalId);
+
+    if (!turmaId || !localidadeId || !disciplinaId) {
+        new PNotify({
+            title: 'Frequência Escolar',
+            text: 'Por favor, certifique-se de que uma pesquisa foi realizada antes de imprimir.',
+            type: 'warning'
+        });
+        return;
+    }
+
+    // Verificação mais robusta para o profissionalId
+    if (!profissionalId || profissionalId === '' || profissionalId === null || profissionalId === undefined) {
+        new PNotify({
+            title: 'Frequência Escolar',
+            text: 'Por favor, selecione um profissional antes de imprimir.',
+            type: 'warning'
+        });
+        return;
+    }
+
+    var url = '../../ControleFrequenciaEscolar/ImprimirFrequencia';
+    var params = new URLSearchParams({
+        turmaId: turmaId,
+        localidadeId: localidadeId,
+        disciplinaId: disciplinaId,
+        profissionalId: profissionalId
+    });
+
+    window.open(url + '?' + params.toString(), '_blank');
+}
+
+// Função para validar se o profissional foi realmente selecionado
+function validarProfissional() {
+    var profissionalId = $('#ddlProfissional').val();
+
+    // Verificação mais robusta para o profissionalId
+    if (!profissionalId || profissionalId === '' || profissionalId === null || profissionalId === undefined) {
+        new PNotify({
+            title: 'Frequência Escolar',
+            text: 'Por favor, selecione um profissional antes de imprimir.',
+            type: 'warning'
+        });
+        return;
+    }
+}

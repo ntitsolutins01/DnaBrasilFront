@@ -1,0 +1,224 @@
+/* Estilos para o relatório de frequência */
+.attendance-container {
+    width: 100%;
+    height: 100%;
+    min-height: 200mm; /* Garante altura mínima */
+    padding: 15px;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    font-size: 12px;
+    position: relative; /* Garante posicionamento adequado */
+}
+
+/* Header do relatório de frequência - melhorado */
+.report-header {
+    width: 100%;
+    height: 100px;
+    background: linear-gradient(107deg, #455e9f 0%, #3ea7b4 100%);
+    padding: 10px 40px;
+    position: relative;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.report-logo {
+    width: 130px;
+    height: 81px;
+    background: url('/assets/logo.png') no-repeat center center;
+    background-size: contain;
+    flex-shrink: 0;
+}
+
+/* Título do relatório */
+.report-title {
+    display: flex;
+    flex-direction: column;
+    text-align: right;
+    color: white;
+    flex-grow: 1;
+    padding: 0 20px;
+}
+
+/* Ícone do relatório */
+.report-icon {
+    width: 70px;
+    height: 70px;
+    background: url('/assets/images/relatorio.png') no-repeat center center;
+    background-size: contain;
+    flex-shrink: 0;
+}
+
+.attendance-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    letter-spacing: 0.5px;
+}
+
+.attendance-description {
+    font-size: 16px;
+    font-weight: 500;
+    margin-top: 5px;
+    letter-spacing: 0.5px;
+}
+
+/* Tabela de informações da classe */
+.class-info-table {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.class-info-table table {
+    width: 100%;
+    border-collapse: collapse;
+    border: none;
+    box-shadow: none; /* Removida a sombra */
+}
+
+.class-info-table td {
+    border: none; /* Removidas as bordas */
+    padding: 8px 12px;
+    font-size: 12px;
+    background-color: #f9f9f9;
+}
+
+.class-info-table strong {
+    color: #294ba1;
+    font-weight: 600;
+}
+
+/* Tabela de frequência principal */
+.attendance-table-container {
+    width: 100%;
+    margin-bottom: 15px;
+    flex: 1;
+    min-height: 50%; /* Garante altura mínima */
+    overflow: visible; /* Previne cortes em diferentes níveis de zoom */
+}
+
+.attendance-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #000;
+    font-size: 11px;
+    table-layout: fixed; /* Melhora comportamento de layout */
+}
+
+.attendance-table th,
+.attendance-table td {
+    border: 1px solid #000;
+    text-align: center;
+    padding: 3px 2px;
+    vertical-align: middle;
+}
+
+.attendance-table .table-header th {
+    background-color: #e6e6e6;
+}
+
+.attendance-table .days-row th {
+    width: 20px;
+    font-size: 10px;
+    background-color: #e6e6e6;
+}
+
+.attendance-table .number-col {
+    width: 20px;
+    text-align: center;
+}
+
+.attendance-table .name-col {
+    width: 180px;
+    text-align: left;
+    padding-left: 5px;
+}
+
+/* Área de assinaturas */
+.signature-area {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+    padding: 10px 40px;
+    position: relative; /* Garante posicionamento adequado */
+    bottom: 0;
+}
+
+.signature-block {
+    flex: 1;
+    max-width: 300px;
+}
+
+.signature-line {
+    text-align: center;
+}
+
+.signature-line hr {
+    border: none;
+    border-top: 1px solid #000;
+    margin-bottom: 5px;
+}
+
+.signature-line p {
+    margin: 0;
+    font-size: 12px;
+}
+
+/* Estilos específicos para impressão */
+@media print {
+    .attendance-container {
+        padding: 10px;
+        height: 210mm; /* Altura fixa igual à altura da página */
+        margin: 0 !important;
+        width: 100%;
+        max-height: none;
+        page-break-inside: avoid !important;
+        page-break-after: always;
+        position: relative;
+    }
+
+    /* Ajustes para as páginas após a primeira */
+    .page-container:not(:first-child) .attendance-container {
+        margin-top: 0 !important;
+    }
+
+    /* Garante que todos os elementos dentro da tabela permaneçam juntos */
+    .attendance-table {
+        page-break-inside: avoid !important;
+    }
+
+    /* Ajuste específico para a altura da tabela */
+    .attendance-table-container {
+        flex: 1;
+        max-height: none; /* Remova a limitação de altura */
+    }
+
+    /* Ajuste para a área de assinaturas */
+    .signature-area {
+        page-break-inside: avoid !important;
+        page-break-before: avoid !important;
+        padding: 10px 40px;
+        margin-top: auto; /* Empurra para o final do container */
+        position: relative;
+        bottom: 0;
+    }
+
+    /* Garante que o cabeçalho mantenha a aparência correta */
+    .report-header {
+        box-shadow: none;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    /* Garante que as bordas das tabelas sejam impressas corretamente */
+    .attendance-table th,
+    .attendance-table td,
+    .class-info-table td {
+        border-color: #000 !important;
+    }
+}
