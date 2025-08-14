@@ -24,6 +24,7 @@
 						<label class="col-sm-2 control-label">Estado:</label>
 						<div class="col-md-4 form-group">
 							@{
+
 								if (Model.IdPerfil == (int)EnumPerfil.Administrador)
 								{
 									<select class="form-control populate select2" name="ddlEstado" id="ddlEstado" style="width: 100%"
@@ -117,7 +118,7 @@
 								}
 								else
 								{
-									if (Model.IdPerfil == (int)EnumPerfil.GestorPedagogico)
+									if (Model.IdPerfil == (int)EnumPerfil.GestorPedagogico || Model.IdPerfil == (int)EnumPerfil.Coordenador)
 									{
 										<select class="form-control populate select2" name="ddlProfissional" id="ddlProfissional"
 												title="Por favor informe o profissional." style="width: 100%"
@@ -250,7 +251,7 @@
 		<div class="panel-body" id="pResult">
 			<div class="form-group row">
 				@{
-					if (Model.IdPerfil == (int)EnumPerfil.Administrador)
+					if (Model.IdPerfil == (int)EnumPerfil.Administrador || Model.IdPerfil == (int)EnumPerfil.Coordenador)
 					{
 						<div class="col-sm-2 pull-right">
 							<a href="@Url.Action("Create", "Aluno")" id="addToTable" class="btn btn-block btn-primary pull-right"><i class="fa fa-plus"></i> &nbsp;&nbsp;Novo Aluno </a>
@@ -287,7 +288,7 @@
 							}
 							<td class="actions text-center">
 							@{
-								if (Model.IdPerfil == (int)EnumPerfil.Administrador)
+									if (Model.IdPerfil == (int)EnumPerfil.Administrador || Model.IdPerfil == (int)EnumPerfil.Coordenador)
 								{
 									<a data-toggle="tooltip" data-placement="top" title="Editar" asp-action="Edit" asp-controller="Aluno" asp-route-Id="@item.Id" class="on-default edit-row" style='color: #FF9800'><i class="fa fa-pencil"></i></a>
 									<a data-toggle="tooltip" data-placement="top" title="Carteirinha"

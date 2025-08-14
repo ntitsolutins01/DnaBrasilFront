@@ -1,3 +1,4 @@
+@using WebApp.Enumerators
 @model AlunoModel
 
 @{
@@ -20,7 +21,7 @@
 					</header>
 					<div class="panel-body">
 						<div class="form-group" id="pAluno">
-							<label class="col-sm-1 control-label">Foto</label>
+							@* <label class="col-sm-1 control-label">Foto</label>
 							<div class="col-sm-4">
 								<div class="fileupload fileupload-new" data-provides="fileupload">
 									<div class="input-append">
@@ -36,7 +37,7 @@
 										<a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload">Remover</a>
 									</div>
 								</div>
-							</div>
+							</div> *@
 							<label class="col-sm-1 control-label">CPF </label>
 							<div class="col-sm-3">
 								<input id="cpf" name="cpf"
@@ -99,12 +100,23 @@
 						<div class="form-group">
 							<label class="col-sm-1 control-label text-sm-right pt-2">Estado <span class="required">*</span></label>
 							<div class="col-md-2">
-								<select class="form-control populate select2" name="ddlEstado" id="ddlEstado"
-										title="Por favor informe um Estado." required style="width:100%"
-										asp-for="EstadoId" asp-items="Model.ListEstados">
-									<option value="">Selecionar Estado</option>
-								</select>
-								@* @(Model.UsuarioLogado.Perfil.Id != (int)EnumPerfil.Administrador ? "disabled" : "") *@
+								@{
+
+									if (Model.IdPerfil == (int)EnumPerfil.Administrador)
+									{
+										<select class="form-control populate select2" name="ddlEstado" id="ddlEstado" style="width: 100%"
+										        asp-for="EstadoId" asp-items="Model.ListEstados">
+											<option value="">Selecionar Estado</option>
+										</select>
+									}
+									else
+									{
+										<select class="form-control populate select2" name="ddlEstado" id="ddlEstado" style="width: 100%" disabled="disabled"
+										        asp-for="EstadoId" asp-items="Model.ListEstados">
+											<option value="">Selecionar Estado</option>
+										</select>
+									}
+								}
 							</div>
 							<label class="col-sm-1 control-label text-sm-right pt-2">Município <span class="required">*</span></label>
 							<div class="col-md-3">
@@ -129,14 +141,6 @@
 								<select class="form-control populate select2" name="ddlFomento" id="ddlFomento" style="width:100%"
 										asp-for="FomentoId" asp-items="Model.ListFomentos">
 									<option value="">Selecionar Fomento</option>
-								</select>
-							</div>
-							<label class="col-sm-1 control-label text-sm-right pt-2">Profissional <span class="required">*</span></label>
-							<div class="col-md-3">
-								<select class="form-control populate select2" name="ddlProfissionalAluno" id="ddlProfissionalAluno"
-										title="Por favor informe o profissional." required style="width:100%"
-										asp-for="ProfissionalId" asp-items="Model.ListProfissionais">
-									<option value="">Selecionar Profissional</option>
 								</select>
 							</div>
 							<label class="col-sm-1 control-label">Celular <span class="required">*</span></label>
@@ -177,7 +181,7 @@
 								</select>
 							</div>
 							<label class="col-sm-1 control-label">Turma <span class="required">*</span></label>
-							<div class="col-md-4">
+							<div class="col-md-3">
 								<select class="form-control populate select2" name="ddlTurma" id="ddlTurma"
 										title="Por favor informe a turma." required
 										asp-for="TurmaId" asp-items="Model.ListTurmas">
@@ -197,7 +201,7 @@
 							<label class="col-sm-1 control-label text-sm-right pt-2">Modalidades<span class="required">*</span></label>
 							<div class="col-md-6">
 								<select class="form-control populate" multiple="multiple" data-plugin-multiselect data-plugin-options='{ "maxHeight": 200, "enableCaseInsensitiveFiltering": true }'
-										id="ddlModalidades" name="ddlModalidades" style="width:100%" asp-for="ModalidadeId" asp-items="Model.ListModalidades" required
+										id="ddlModalidades" name="ddlModalidades" style="width:100%" asp-for="ModalidadeId" asp-items="Model.ListModalidades" 
 										title="Por favor selecione ao menos uma modalidade.">
 								</select>
 							</div>
