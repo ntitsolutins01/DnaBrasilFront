@@ -13,6 +13,8 @@ namespace WebApp.Models
         public List<CertificadoDto> Certificados { get; set; }
         public string FomentoId { get; set; }
         public SelectList ListFomentos { get; set; }
+        public int IdPerfil { get; set; }
+
         public class CreateCertificadoCommand
         {
             public int Id { get; set; }

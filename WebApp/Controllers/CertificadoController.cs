@@ -1,3 +1,4 @@
+using log4net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
@@ -19,21 +20,25 @@ namespace WebApp.Controllers
 
         private readonly IOptions<UrlSettings> _appSettings;
         private readonly IWebHostEnvironment _host;
+        private readonly ILog _logger;
 
         #endregion
 
         #region Constructor
 
         /// <summary>
-        /// Contrutor da página
+        /// Construtor da página
         /// </summary>
-        /// <param name="appSettings">Configurações da aplicação</param>
-        /// <param name="host">Informação do ambiente em que a aplicação está rodando</param>
-        public CertificadoController(IOptions<UrlSettings> appSettings, IWebHostEnvironment host)
+        /// <param name="appSettings">configurações de urls do sistema</param>
+        /// <param name="host">informações da aplicação em execução</param>
+        /// <param name="logger">Log de mensagens da aplicação</param>
+        public CertificadoController(IOptions<UrlSettings> appSettings,
+            IWebHostEnvironment host,
+            ILog logger)
         {
-            _appSettings = appSettings;
-            ApplicationSettings.WebApiUrl = _appSettings.Value.WebApiBaseUrl;
+            ApplicationSettings.WebApiUrl = appSettings.Value.WebApiBaseUrl;
             _host = host;
+            _logger = logger;
         }
         #endregion
 
@@ -47,19 +52,40 @@ namespace WebApp.Controllers
         /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
         /// <returns></returns>
         [ClaimsAuthorize(ClaimType.Certificado, Identity.Claim.Consultar)]
-        public IActionResult Index(int? crud, int? notify, string message = null)
+        public async Task<ActionResult> Index(int? crud, int? notify, string message = null)
         {
-            ViewBag.Status = true;
-            SetNotifyMessage(notify, message);
-            SetCrudMessage(crud);
-            var response = ApiClientFactory.Instance.GetCertificadosAll() ?? new List<CertificadoDto>();
-            var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentosAll(), "Id", "Nome");
-
-            return View(new CertificadoModel()
+            try
             {
-                Certificados = response,
-                ListFomentos = fomentos
-            });
+
+                ViewBag.Status = true;
+                _logger.Info($"Usuario Logado em Certificado.Index User.Identity.Name : {User.Identity.Name}");
+
+                var usuario = User.Identity.Name;
+
+                SetNotifyMessage(notify, message);
+                SetCrudMessage(crud);
+
+                _logger.Info($"GetUsuarioByEmail");
+                var usu = await ApiClientFactory.Instance.GetUsuarioByEmail(usuario);
+                var response = ApiClientFactory.Instance.GetCertificadosAll();
+
+                var fomento = ApiClientFactory.Instance.GetFomentoByLocalidadeId(Convert.ToInt32(usu.LocalidadeId));
+                var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentosAll(), "Id", "Nome", fomento.Id);
+
+                return View(new CertificadoModel()
+                {
+                    Certificados = response,
+                    ListFomentos = fomentos,
+                    IdPerfil = usu.Perfil.Id
+                });
+
+            }
+            catch (Exception e)
+            {
+                _logger.Error($"Aluno.Index: {e.StackTrace}");
+                return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = e.Message });
+
+            }
         }
 
         /// <summary>

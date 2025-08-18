@@ -26,6 +26,7 @@ namespace WebApp.Models
         public List<ModuloEadDto> Modulos { get; set; }
         public List<AulaDto> Aulas { get; set; }
         public List<AlunoAulaDto> AlunosAulas { get; set; }
+        public int IdPerfil { get; set; }
 
         public class CreateUpdateAlunoCursoCommand
         {
