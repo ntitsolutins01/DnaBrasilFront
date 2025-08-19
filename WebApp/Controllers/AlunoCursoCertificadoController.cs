@@ -78,7 +78,7 @@ public class AlunoCursoCertificadoController : BaseController
 
             return View(new AlunoCursoCertificadoModel()
             {
-                AlunoId = aluno.Id,
+                AlunoId = aluno.Id.ToString(),
                 Cursos = cursos,
                 Certificados = certificados,
                 AlunosCursos = alunosCursos
@@ -199,7 +199,7 @@ public class AlunoCursoCertificadoController : BaseController
                 alunos = new SelectList(resultAlunos, "Id", "Nome");
 
             }
-            var certificados = new SelectList(ApiClientFactory.Instance.GetCertificadosAll(), "Id", "NomeImagemFrente");
+            var certificados = new SelectList(ApiClientFactory.Instance.GetCertificadosAll(), "Id", "Nome");
 
             return View(new AlunoCursoCertificadoModel()
             {

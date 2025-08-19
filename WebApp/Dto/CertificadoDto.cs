@@ -9,7 +9,7 @@ namespace WebApp.Dto
         public required string NomeFomento { get; set; }
         public required string Nome { get; set; }
         public required string Url { get; set; }
-        public SelectList? ListFomentos { get; set; }
         public bool Status { get; set; }
+        public SelectList? ListFomentos { get; set; }
     }
 }

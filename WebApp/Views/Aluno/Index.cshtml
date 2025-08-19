@@ -20,7 +20,26 @@
 						<h2 class="panel-title">Filtro de pesquisa</h2>
 					</header>
 					<div class="panel-body" id="pFiltro">
-						
+						<label class="col-sm-2 control-label">Fomento / Contrato: <span class="required">*</span></label>
+						<div class="col-md-4 form-group">
+
+							@{
+								if (Model.IdPerfil == (int)EnumPerfil.Administrador)
+								{
+									<select class="form-control populate select2" name="ddlFomento" id="ddlFomento" style="width: 100%"
+											asp-for="FomentoId" asp-items="Model.ListFomentos">
+										<option value="">Selecionar Fomento / Contrato</option>
+									</select>
+								}
+								else
+								{
+									<select class="form-control populate select2" name="ddlFomento" id="ddlFomento" style="width: 100%" disabled
+											asp-for="FomentoId" asp-items="Model.ListFomentos">
+										<option value="">Selecionar Fomento / Contrato</option>
+									</select>
+								}
+							}
+						</div>
 						<label class="col-sm-2 control-label">Estado:</label>
 						<div class="col-md-4 form-group">
 							@{
@@ -28,14 +47,14 @@
 								if (Model.IdPerfil == (int)EnumPerfil.Administrador)
 								{
 									<select class="form-control populate select2" name="ddlEstado" id="ddlEstado" style="width: 100%"
-									        asp-for="EstadoId" asp-items="Model.ListEstados">
+											asp-for="EstadoId" asp-items="Model.ListEstados">
 										<option value="">Selecionar Estado</option>
 									</select>
 								}
 								else
 								{
 									<select class="form-control populate select2" name="ddlEstado" id="ddlEstado" style="width: 100%" disabled="disabled"
-									        asp-for="EstadoId" asp-items="Model.ListEstados">
+											asp-for="EstadoId" asp-items="Model.ListEstados">
 										<option value="">Selecionar Estado</option>
 									</select>
 								}
@@ -48,7 +67,7 @@
 								if (Model.IdPerfil == (int)EnumPerfil.Administrador)
 								{
 									<select class="form-control populate select2" name="ddlMunicipio" id="ddlMunicipio" style="width: 100%"
-									        asp-for="MunicipioId" asp-items="Model.ListMunicipios">
+											asp-for="MunicipioId" asp-items="Model.ListMunicipios">
 										<option value="">Selecionar Municipio</option>
 									</select>
 								}
@@ -57,14 +76,14 @@
 									if (Model.IdPerfil == (int)EnumPerfil.GestorPedagogico)
 									{
 										<select class="form-control populate select2" name="ddlMunicipio" id="ddlMunicipio" style="width: 100%"
-										        asp-for="MunicipioId" asp-items="Model.ListMunicipios">
+												asp-for="MunicipioId" asp-items="Model.ListMunicipios">
 											<option value="">Selecionar Municipio</option>
 										</select>
 									}
 									else
 									{
 										<select class="form-control populate select2" name="ddlMunicipio" id="ddlMunicipio" style="width: 100%" disabled="disabled"
-										        asp-for="MunicipioId" asp-items="Model.ListMunicipios">
+												asp-for="MunicipioId" asp-items="Model.ListMunicipios">
 											<option value="">Selecionar Municipio</option>
 										</select>
 									}
@@ -148,7 +167,7 @@
 						</div>
 						<label class="col-sm-2 control-label">Etnia:</label>
 						<div class="col-md-4 form-group">
-							<select class="form-control populate select2" name="ddlEtnia" id="ddlEtnia" style="width:100%"
+							<select class="form-control populate select2" name="ddlEtnia" id="ddlEtnia" style="width: 100%"
 									title="Por favor selecione um etnia."
 									asp-for="EtniaId" asp-items="Model.ListEtnias">
 								<option value="">Selecionar Etnia</option>
@@ -156,7 +175,7 @@
 						</div>
 						<label class="col-sm-2 control-label">Sexo:</label>
 						<div class="col-sm-4 form-group">
-							<select class="form-control populate select2" name="ddlSexo" id="ddlSexo" style="width:100%"
+							<select class="form-control populate select2" name="ddlSexo" id="ddlSexo" style="width: 100%"
 									title="Por favor selecione um sexo."
 									asp-for="SexoId" asp-items="Model.ListSexos">
 								<option value="">Selecionar Sexo</option>
@@ -194,7 +213,7 @@
 									</div>
 								}
 							}
-								 
+
 							@{
 								if (Model.IdPerfil == (int)EnumPerfil.Administrador)
 								{
@@ -211,7 +230,7 @@
 								}
 							}
 
-								<!-- Botões à direita -->
+							<!-- Botões à direita -->
 							<div class="col-sm-2 pull-right">
 								<button type="submit" class="btn btn-block btn-info pull-right">
 									<i class="fa fa-search"></i> &nbsp;&nbsp;Pesquisar
@@ -227,12 +246,12 @@
 									</div>
 								}
 							}
-								@* <div class="col-sm-2 pull-right">
+							@* <div class="col-sm-2 pull-right">
                                 <a id="btnImprimirA4" class="btn btn-block btn-success pull-right">
                                     <i class="fa fa-file-pdf-o"></i> &nbsp;&nbsp;Impressão A4
                                 </a>
                             </div> *@
-								</div>
+						</div>
 					</footer>
 				</section>
 			}
@@ -287,53 +306,53 @@
 								<td class="text-center"><span class="label label-danger">NÃO</span></td>
 							}
 							<td class="actions text-center">
-							@{
+								@{
 									if (Model.IdPerfil == (int)EnumPerfil.Administrador || Model.IdPerfil == (int)EnumPerfil.Coordenador)
-								{
-									<a data-toggle="tooltip" data-placement="top" title="Editar" asp-action="Edit" asp-controller="Aluno" asp-route-Id="@item.Id" class="on-default edit-row" style='color: #FF9800'><i class="fa fa-pencil"></i></a>
-									<a data-toggle="tooltip" data-placement="top" title="Carteirinha"
-									   href='javascript:(crud.CarterinhaModal(@item.Id))'
-									   class="on-default edit-row" style='color: #8E24AA'>
-										<i class="fa fa-address-card-o"></i>
-									</a>
-
-									<a href="#" data-id="@item.Id" data-toggle="modal" data-target="#mdUpload"
-									   data-toggle="tooltip" data-placement="top" title="Upload Foto"
-									   class="on-default edit-row" style='color: #303F9F'><i class="fa fa-upload"></i></a>
-
-									<a data-toggle="tooltip" data-placement="top" title="Excluir" href='javascript:(crud.DeleteModal(@item.Id))'
-									   class="on-default remove-row" style="cursor: pointer; color: #F44336"><i class="fa fa-trash"></i></a>
-
-									<a href="#" data-id="@item.Id" data-toggle="modal" data-target="#mdUploadDocumentos"
-									   data-toggle="tooltip" data-placement="top" title="Upload Documentos"
-									   class="on-default edit-row" style='color: #148f77'><i class="fa fa-file-archive-o"></i></a>
-
-									@if (item.Documentos.Any())
 									{
-
-										<a data-toggle="tooltip" data-placement="top" title="Download Documentos"
-										   asp-action="Download" asp-controller="Aluno" asp-route-id="@item.Id" class="on-default edit-row"
-										   style='color: #d4ac0d'><i class="fa fa-download" target="_blank"></i></a>
-
-									}
-									@if (!item.Habilitado)
-									{
-										<a data-toggle="tooltip" data-placement="top" title="Habilitar Aluno" href='javascript:(crud.HabilitarModal(@item.Id))'
-										   class="on-default remove-row" style="cursor: pointer; color: #3498db"><i class="fa fa-check-circle"></i></a>
-
-									}
-								}
-								else
-								{
+										<a data-toggle="tooltip" data-placement="top" title="Editar" asp-action="Edit" asp-controller="Aluno" asp-route-Id="@item.Id" class="on-default edit-row" style='color: #FF9800'><i class="fa fa-pencil"></i></a>
 										<a data-toggle="tooltip" data-placement="top" title="Carteirinha"
 										   href='javascript:(crud.CarterinhaModal(@item.Id))'
 										   class="on-default edit-row" style='color: #8E24AA'>
 											<i class="fa fa-address-card-o"></i>
 										</a>
-								}
-							}
 
-							
+										<a href="#" data-id="@item.Id" data-toggle="modal" data-target="#mdUpload"
+										   data-toggle="tooltip" data-placement="top" title="Upload Foto"
+										   class="on-default edit-row" style='color: #303F9F'><i class="fa fa-upload"></i></a>
+
+										<a data-toggle="tooltip" data-placement="top" title="Excluir" href='javascript:(crud.DeleteModal(@item.Id))'
+										   class="on-default remove-row" style="cursor: pointer; color: #F44336"><i class="fa fa-trash"></i></a>
+
+										<a href="#" data-id="@item.Id" data-toggle="modal" data-target="#mdUploadDocumentos"
+										   data-toggle="tooltip" data-placement="top" title="Upload Documentos"
+										   class="on-default edit-row" style='color: #148f77'><i class="fa fa-file-archive-o"></i></a>
+
+										@if (item.Documentos.Any())
+										{
+
+											<a data-toggle="tooltip" data-placement="top" title="Download Documentos"
+											   asp-action="Download" asp-controller="Aluno" asp-route-id="@item.Id" class="on-default edit-row"
+											   style='color: #d4ac0d'><i class="fa fa-download" target="_blank"></i></a>
+
+										}
+										@if (!item.Habilitado)
+										{
+											<a data-toggle="tooltip" data-placement="top" title="Habilitar Aluno" href='javascript:(crud.HabilitarModal(@item.Id))'
+											   class="on-default remove-row" style="cursor: pointer; color: #3498db"><i class="fa fa-check-circle"></i></a>
+
+										}
+									}
+									else
+									{
+										<a data-toggle="tooltip" data-placement="top" title="Carteirinha"
+										   href='javascript:(crud.CarterinhaModal(@item.Id))'
+										   class="on-default edit-row" style='color: #8E24AA'>
+											<i class="fa fa-address-card-o"></i>
+										</a>
+									}
+								}
+
+
 							</td>
 						</tr>
 					}

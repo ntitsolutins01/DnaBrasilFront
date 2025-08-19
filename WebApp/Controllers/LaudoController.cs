@@ -87,7 +87,12 @@ namespace WebApp.Controllers
                 var searchFilter = new LaudosFilterDto
                 {
                     MunicipioId = usu.MunicipioId.ToString(),
-                    LocalidadeId = usu.LocalidadeId
+                    LocalidadeId = usu.LocalidadeId,
+#if DEBUG
+                    PageSize = 300
+#else
+                    PageSize = 10000
+#endif
                 };
 
                 var response = await ApiClientFactory.Instance.GetLaudosByFilter(searchFilter);
@@ -136,19 +141,25 @@ namespace WebApp.Controllers
                     LocalidadeId = collection["ddlLocalidade"].ToString(),
                     AlunoId = collection["ddlAluno"].ToString(),
                     PossuiFoto = possuiFoto != "",
-                    Finalizado = finalizado != ""
+                    Finalizado = finalizado != "",
+                    PageNumber = 1,
+#if DEBUG
+                    PageSize = 300
+#else
+                    PageSize = 10000
+#endif
                 };
 
                 var response = await ApiClientFactory.Instance.GetLaudosByFilter(searchFilter);
                 
                 var fomento = ApiClientFactory.Instance.GetFomentoByLocalidadeId(Convert.ToInt32(usu.LocalidadeId));
-                var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentosAll(), "Id", "Nome", fomento.Id);
+                var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentosAll(), "Id", "Nome", searchFilter.FomentoId);
 
-                var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome", usu.Uf);
+                var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome", searchFilter.Estado);
 
                 SelectList municipios = null;
 
-                if (!string.IsNullOrEmpty(usu.Uf))
+                if (!string.IsNullOrEmpty(searchFilter.Estado))
                 {
                     municipios = new SelectList(ApiClientFactory.Instance.GetMunicipiosByFomentoId(fomento.Id), "Id", "Nome", searchFilter.MunicipioId);
                 }

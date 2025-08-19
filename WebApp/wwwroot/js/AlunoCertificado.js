@@ -1,17 +1,25 @@
 ﻿var vm = new Vue({
     el: "#vAlunoCertificado",
     data: {
-        params: {
-
-        },
-        loading: false
+        loading: false,
+        editDto: { Id: "", Status: true }
     },
-    mounted: function ()     {
+    mounted: function () {
         var self = this;
         (function ($) {
-
             'use strict';
-            //skin select
+
+            if (typeof Switch !== 'undefined' && $.isFunction(Switch)) {
+
+                $(function () {
+                    $('[data-plugin-ios-switch]').each(function () {
+                        var $this = $(this);
+
+                        $this.themePluginIOS7Switch();
+                    });
+                });
+            }
+
             var $select = $(".select2").select2({
                 allowClear: true
             });
@@ -36,8 +44,52 @@
                 $(this).trigger('blur');
             });
 
+            var formid = $('form').attr('id');
 
-            
+            if (formid === "formEditDisciplina") {
+
+                $("#formEditDisciplina").validate({
+                    highlight: function (label) {
+                        $(label).closest('.form-group').removeClass('has-success').addClass('has-error');
+                    },
+                    success: function (label) {
+                        $(label).closest('.form-group').removeClass('has-error');
+                        label.remove();
+                    },
+                    errorPlacement: function (error, element) {
+                        var placement = element.closest('.input-group');
+                        if (!placement.get(0)) {
+                            placement = element;
+                        }
+                        if (error.text() !== '') {
+                            placement.after(error);
+                        }
+                    }
+                });
+            }
+
+            if (formid === "formDisciplina") {
+
+                $("#formDisciplina").validate({
+                    highlight: function (label) {
+                        $(label).closest('.form-group').removeClass('has-success').addClass('has-error');
+                    },
+                    success: function (label) {
+                        $(label).closest('.form-group').removeClass('has-error');
+                        label.remove();
+                    },
+                    errorPlacement: function (error, element) {
+                        var placement = element.closest('.input-group');
+                        if (!placement.get(0)) {
+                            placement = element;
+                        }
+                        if (error.text() !== '') {
+                            placement.after(error);
+                        }
+                    }
+                });
+            }
+
         }).apply(this, [jQuery]);
     },
     methods: {
@@ -59,9 +111,36 @@
                 $("#" + el).addClass("loading-overlay-showing");
                 self.loading = flag;
             }
+        },
+        DeleteDisciplina: function (id) {
+            var url = "Disciplina/Delete/" + id;
+            $("#deleteDisciplinaHref").prop("href", url);
+        },
+        EditDisciplina: function (id) {
+            var self = this;
+
+            axios.get("Disciplina/GetDisciplinaById/?id=" + id).then(result => {
+
+                self.editDto.Id = result.data.id;
+                self.editDto.Nome = result.data.nome;
+
+
+            }).catch(error => {
+                Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
+            });
         }
     }
 });
-var crud = {
 
+var crud = {
+    DeleteModal: function (id) {
+        $('input[name="DisciplinaId"]').attr('value', id);
+        $('#mdDeleteDisciplina').modal('show');
+        vm.DeleteDisciplina(id)
+    },
+    EditModal: function (id) {
+        $('input[name="DisciplinaId"]').attr('value', id);
+        $('#mdEditDisciplina').modal('show');
+        vm.EditDisciplina(id)
+    }
 };
