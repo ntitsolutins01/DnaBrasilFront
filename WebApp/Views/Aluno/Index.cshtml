@@ -650,18 +650,18 @@
 									   title="Por favor informe a matrícula do aluno" :value="editDto.Id" />
 							</div>
 						</div>
-						// @{
-						// 	var perfil = ((ClaimsIdentity)User.Identity).FindFirst(ClaimTypes.Role)?.Value;
-						// 	if (perfil == EnumPerfil.Administrador.GetDescription())
-						// 	{
-						// 		<div class="form-group row">
-						// 			<label class="col-sm-3 control-label text-sm-right pt-2">Lote Matrícula </label>
-						// 			<div class="col-sm-8">
-						// 				<textarea type="text" id="lote" name="lote" class="form-control" title="Por favor informe as matrículas"></textarea>
-						// 			</div>
-						// 		</div>
-						// 	}
-						// }
+						@{
+							// var perfil = ((ClaimsIdentity)User.Identity).FindFirst(ClaimTypes.Role)?.Value;
+							// if (perfil == EnumPerfil.Administrador.GetDescription())
+							// {
+							// 	<div class="form-group row">
+							// 		<label class="col-sm-3 control-label text-sm-right pt-2">Lote Matrícula </label>
+							// 		<div class="col-sm-8">
+							// 			<textarea type="text" id="lote" name="lote" class="form-control" title="Por favor informe as matrículas"></textarea>
+							// 		</div>
+							// 	</div>
+							// }
+						}
 
 					</div>
 					<div class="modal-footer">
