@@ -25,7 +25,7 @@ namespace WebApp.Controllers
     /// <summary>
     /// Controle de Profissional
     /// </summary>
-    [Authorize(Policy = ModuloAccess.Profissional)]
+    //[Authorize(Policy = ModuloAccess.Profissional)] TODO: verificar acesso do proprio profissional
     public class ProfissionalController : BaseController
     {
         #region Parametros

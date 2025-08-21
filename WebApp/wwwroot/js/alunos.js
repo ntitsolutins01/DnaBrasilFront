@@ -407,7 +407,7 @@ var vm = new Vue({
         HabilitarAluno: function (id) {
             var self = this;
 
-            axios.get("Aluno/GetAlunoById/?id=" + id).then(result => {
+            axios.get("../GetAlunoById/?id=" + id).then(result => {
 
                 self.editDto.Id = result.data.id;
                 self.editDto.Nome = result.data.nome;
