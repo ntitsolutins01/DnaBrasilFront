@@ -270,7 +270,7 @@
 		<div class="panel-body" id="pResult">
 			<div class="form-group row">
 				@{
-					if (Model.IdPerfil == (int)EnumPerfil.Administrador || Model.IdPerfil == (int)EnumPerfil.Coordenador)
+					if (Model.IdPerfil == (int)EnumPerfil.Administrador || Model.IdPerfil == (int)EnumPerfil.Coordenador || Model.IdPerfil == (int)EnumPerfil.Profissional)
 					{
 						<div class="col-sm-2 pull-right">
 							<a href="@Url.Action("Create", "Aluno")" id="addToTable" class="btn btn-block btn-primary pull-right"><i class="fa fa-plus"></i> &nbsp;&nbsp;Novo Aluno </a>
@@ -307,7 +307,7 @@
 							}
 							<td class="actions text-center">
 								@{
-									if (Model.IdPerfil == (int)EnumPerfil.Administrador || Model.IdPerfil == (int)EnumPerfil.Coordenador)
+									if (Model.IdPerfil == (int)EnumPerfil.Administrador || Model.IdPerfil == (int)EnumPerfil.Coordenador || Model.IdPerfil == (int)EnumPerfil.Profissional)
 									{
 										<a data-toggle="tooltip" data-placement="top" title="Editar" asp-action="Edit" asp-controller="Aluno" asp-route-Id="@item.Id" class="on-default edit-row" style='color: #FF9800'><i class="fa fa-pencil"></i></a>
 										<a data-toggle="tooltip" data-placement="top" title="Carteirinha"

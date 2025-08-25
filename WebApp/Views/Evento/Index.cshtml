@@ -17,7 +17,7 @@
 				</header>
 				<div class="panel-body">
 					@{
-						if (Model.IdPerfil == (int)EnumPerfil.Administrador || Model.IdPerfil == (int)EnumPerfil.Coordenador)
+						if (Model.IdPerfil == (int)EnumPerfil.Administrador || Model.IdPerfil == (int)EnumPerfil.Profissional || Model.IdPerfil == (int)EnumPerfil.Coordenador)
 						{
 							<div class="form-group row">
 								<div class="col-sm-12 pull-right">
@@ -37,7 +37,7 @@
 								<th class="text-center">Total de Alunos</th>
 								<th class="text-center">Status</th>
 								@{
-									if (Model.IdPerfil == (int)EnumPerfil.Administrador || Model.IdPerfil == (int)EnumPerfil.Coordenador)
+									if (Model.IdPerfil == (int)EnumPerfil.Administrador || Model.IdPerfil == (int)EnumPerfil.Profissional || Model.IdPerfil == (int)EnumPerfil.Coordenador)
 									{
 										<th class="text-center">Ações</th>
 									}
@@ -64,7 +64,7 @@
 									}
 
 									@{
-										if (Model.IdPerfil == (int)EnumPerfil.Administrador || Model.IdPerfil == (int)EnumPerfil.Coordenador)
+										if (Model.IdPerfil == (int)EnumPerfil.Administrador || Model.IdPerfil == (int)EnumPerfil.Profissional || Model.IdPerfil == (int)EnumPerfil.Coordenador)
 										{
 											<td class="actions text-center">
 												<a data-toggle="tooltip" data-placement="top" title="Controle de Presença" asp-action="IndexControlePresenca" asp-controller="Evento"
