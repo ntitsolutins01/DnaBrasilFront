@@ -227,7 +227,7 @@ namespace WebApp.Controllers
                 var result = await ApiClientFactory.Instance.GetAlunosByFilter(searchFilter);
 
 
-                var fomento = ApiClientFactory.Instance.GetFomentoByLocalidadeId(Convert.ToInt32(usu.LocalidadeId));
+                var fomento = ApiClientFactory.Instance.GetFomentoByLocalidadeId(Convert.ToInt32(searchFilter.LocalidadeId));
                 var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentosAll(), "Id", "Nome", fomento.Id);
 
                 var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome", usu.Uf);
@@ -678,7 +678,6 @@ namespace WebApp.Controllers
             {
                 _logger.Info($"Ação de alteração do aluno - Aluno.Edit: {id}");
 
-                string filePath = null;
 
                 var status = collection["status"].ToString();
                 var habilitado = collection["habilitado"].ToString();
@@ -689,7 +688,6 @@ namespace WebApp.Controllers
                     Id = Convert.ToInt32(id),
                     Etnia = collection["ddlEtnia"] == "" ? null : collection["ddlEtnia"].ToString(),
                     MunicipioId = collection["ddlMunicipio"] == "" ? null : Convert.ToInt32(collection["ddlMunicipio"].ToString()),
-                    ProfissionalId = collection["ddlProfissionalAluno"] == "" ? null : Convert.ToInt32(collection["ddlProfissionalAluno"].ToString()),
                     FomentoId = collection["ddlFomento"] == "" ? null : Convert.ToInt32(collection["ddlFomento"].ToString()),
                     DeficienciaId = collection["ddlDeficiencia"] == "" ? null : Convert.ToInt32(collection["ddlDeficiencia"].ToString()),
                     LocalidadeId = collection["ddlLocalidade"] == "" ? null : Convert.ToInt32(collection["ddlLocalidade"].ToString()),
@@ -706,10 +704,8 @@ namespace WebApp.Controllers
                     Endereco = collection["endereco"] == "" ? null : collection["endereco"].ToString(),
                     Numero = collection["numero"] == "" ? null : collection["numero"].ToString(),
                     Bairro = collection["bairro"] == "" ? null : collection["bairro"].ToString(),
-                    DeficienciasIds = collection["arrDeficiencias"] == "" ? null : collection["arrDeficiencias"].ToString(),
                     Habilitado = habilitado != "",
                     Status = status != "",
-                    NomeFoto = filePath,
                     ModalidadesIds = collection["ddlModalidades"].ToString(),
                     SerieId = collection["ddlTurma"] == "" ? null : Convert.ToInt32(collection["ddlTurma"].ToString())
                 };

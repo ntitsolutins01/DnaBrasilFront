@@ -465,24 +465,24 @@ var vm = new Vue({
                 self.ShowLoad(false, "pStatusLaudos");
             });
 
-            //axios.post("Dashboard/GetGraficosVocacionalByFilter", obj, axiosConfig).then(result => {
-            //    var self = this;
+            axios.post("Dashboard/GetGraficosVocacionalByFilter", obj, axiosConfig).then(result => {
+                var self = this;
 
-            //    self.ShowLoad(true, "pVocacionalPerc");
-            //    self.ShowLoad(true, "pVocacionalTot");
+                self.ShowLoad(true, "pVocacionalPerc");
+                self.ShowLoad(true, "pVocacionalTot");
 
-            //    self.SetGraficoVocacionalPercentual(result);
-            //    self.SetGraficoTotalizadorVocacional(result);
+                self.SetGraficoVocacionalPercentual(result);
+                self.SetGraficoTotalizadorVocacional(result);
 
-            //    self.ShowLoad(false, "pVocacionalPerc");
-            //    self.ShowLoad(false, "pVocacionalTot");
+                self.ShowLoad(false, "pVocacionalPerc");
+                self.ShowLoad(false, "pVocacionalTot");
 
-            //}).catch(error => {
-            //    Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
+            }).catch(error => {
+                Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
 
-            //    self.ShowLoad(false, "pVocacionalPerc");
-            //    self.ShowLoad(false, "pVocacionalTot");
-            //});
+                self.ShowLoad(false, "pVocacionalPerc");
+                self.ShowLoad(false, "pVocacionalTot");
+            });
 
 
             axios.post("Dashboard/GetGraficosSaudeByFilter", obj, axiosConfig).then(result => {
@@ -503,41 +503,41 @@ var vm = new Vue({
                 self.ShowLoad(false, "pSaudeTot");
             });
 
-            //axios.post("Dashboard/GetGraficosEtniaByFilter", obj, axiosConfig).then(result => {
-            //    var self = this;
+            axios.post("Dashboard/GetGraficosEtniaByFilter", obj, axiosConfig).then(result => {
+                var self = this;
 
-            //    self.ShowLoad(true, "pEtniaPerc");
-            //    self.ShowLoad(true, "pEtniaTot");
+                self.ShowLoad(true, "pEtniaPerc");
+                self.ShowLoad(true, "pEtniaTot");
 
-            //    self.SetGraficoEtniaPercentual(result);
-            //    self.SetGraficoTotalizadorEtnia(result);
+                self.SetGraficoEtniaPercentual(result);
+                self.SetGraficoTotalizadorEtnia(result);
 
-            //    self.ShowLoad(false, "pEtniaPerc");
-            //    self.ShowLoad(false, "pEtniaTot");
+                self.ShowLoad(false, "pEtniaPerc");
+                self.ShowLoad(false, "pEtniaTot");
 
-            //}).catch(error => {
-            //    Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
-            //    self.ShowLoad(false, "pEtniaPerc");
-            //    self.ShowLoad(false, "pEtniaTot");
-            //});
+            }).catch(error => {
+                Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
+                self.ShowLoad(false, "pEtniaPerc");
+                self.ShowLoad(false, "pEtniaTot");
+            });
 
-            //axios.post("Dashboard/GetGraficosDeficienciasByFilter", obj, axiosConfig).then(result => {
-            //    var self = this;
+            axios.post("Dashboard/GetGraficosDeficienciasByFilter", obj, axiosConfig).then(result => {
+                var self = this;
 
-            //    self.ShowLoad(true, "pDeficienciaPerc");
-            //    self.ShowLoad(true, "pDeficienciaTot");
+                self.ShowLoad(true, "pDeficienciaPerc");
+                self.ShowLoad(true, "pDeficienciaTot");
 
-            //    self.SetGraficoDeficienciaPercentual(result);
-            //    self.SetGraficoTotalizadorDeficiencia(result);
+                self.SetGraficoDeficienciaPercentual(result);
+                self.SetGraficoTotalizadorDeficiencia(result);
 
-            //    self.ShowLoad(false, "pDeficienciaPerc");
-            //    self.ShowLoad(false, "pDeficienciaTot");
+                self.ShowLoad(false, "pDeficienciaPerc");
+                self.ShowLoad(false, "pDeficienciaTot");
 
-            //}).catch(error => {
-            //    Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
-            //    self.ShowLoad(false, "pDeficienciaPerc");
-            //    self.ShowLoad(false, "pDeficienciaTot");
-            //});
+            }).catch(error => {
+                Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
+                self.ShowLoad(false, "pDeficienciaPerc");
+                self.ShowLoad(false, "pDeficienciaTot");
+            });
 
             axios.post("Dashboard/GetGraficoPercDesempenhoFisicoMotorByFilter", obj, axiosConfig).then(result => {
                 var self = this;
@@ -636,23 +636,23 @@ var vm = new Vue({
                 self.ShowLoad(false, "pEducacionalTot");
             });
 
-            //axios.post("Dashboard/GetGraficosTalentoByFilter", obj, axiosConfig).then(result => {
-            //    var self = this;
+            axios.post("Dashboard/GetGraficosTalentoByFilter", obj, axiosConfig).then(result => {
+                var self = this;
 
-            //    self.ShowLoad(true, "pTalentoPerc");
-            //    self.ShowLoad(true, "pTalentoTot");
+                self.ShowLoad(true, "pTalentoPerc");
+                self.ShowLoad(true, "pTalentoTot");
 
-            //    self.SetGraficoTalentoPercentual(result);
-            //    self.SetGraficoTotalizadorTalento(result);
+                self.SetGraficoTalentoPercentual(result);
+                self.SetGraficoTotalizadorTalento(result);
 
-            //    self.ShowLoad(false, "pTalentoPerc");
-            //    self.ShowLoad(false, "pTalentoTot");
+                self.ShowLoad(false, "pTalentoPerc");
+                self.ShowLoad(false, "pTalentoTot");
 
-            //}).catch(error => {
-            //    Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
-            //    self.ShowLoad(false, "pTalentoPerc");
-            //    self.ShowLoad(false, "pTalentoTot");
-            //});
+            }).catch(error => {
+                Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
+                self.ShowLoad(false, "pTalentoPerc");
+                self.ShowLoad(false, "pTalentoTot");
+            });
 
         },
         GetRelatorioVocacional: function () {
