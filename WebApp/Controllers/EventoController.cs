@@ -267,6 +267,12 @@ public class EventoController : BaseController
 
         var files = ApiClientFactory.Instance.GetFotosAllByEventoId(id);
 
+        if (files == null)
+        {
+            return RedirectToAction(nameof(Index),
+                new { notify = (int)EnumNotify.Warning, message = "Fotos não encontradas." });
+        }
+
         MemoryStream outms = new MemoryStream();
 
         using (ZipArchive zar = new ZipArchive(outms, ZipArchiveMode.Create, false))
