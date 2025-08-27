@@ -1,6 +1,9 @@
+using log4net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
+using NuGet.Protocol.Core.Types;
 using WebApp.Authorization;
 using WebApp.Configuration;
 using WebApp.Dto;
@@ -21,7 +24,7 @@ public class AlunoCursoCertificadoController : BaseController
     #region Parametros
 
     private readonly IOptions<UrlSettings> _appSettings;
-    private readonly IWebHostEnvironment _host;
+    private readonly ILog _logger;
 
     #endregion
 
@@ -30,13 +33,13 @@ public class AlunoCursoCertificadoController : BaseController
     /// <summary>
     /// Construtor da página
     /// </summary>
-    /// <param name="appSettings">Configurações de urls do sistema</param>
-    /// <param name="host">Informações da aplicação em execução</param>
-    public AlunoCursoCertificadoController(IOptions<UrlSettings> appSettings, IWebHostEnvironment host)
+    /// <param name="appSettings">configurações de urls do sistema</param>
+    /// <param name="logger">Log de mensagens da aplicação</param>
+    public AlunoCursoCertificadoController(IOptions<UrlSettings> appSettings,
+        ILog logger)
     {
-        _appSettings = appSettings;
-        ApplicationSettings.WebApiUrl = _appSettings.Value.WebApiBaseUrl;
-        _host = host;
+        ApplicationSettings.WebApiUrl = appSettings.Value.WebApiBaseUrl;
+        _logger = logger;
     }
     #endregion
 
@@ -50,26 +53,44 @@ public class AlunoCursoCertificadoController : BaseController
     [ClaimsAuthorize(ClaimType.Curso, Identity.Claim.Consultar)]
     public async Task<IActionResult> Index(int? crud, int? notify, string message = null)
     {
-        var usuario = User.Identity.Name;
-
-        SetNotifyMessage(notify, message);
-        SetCrudMessage(crud);
-        var aluno = new AlunoDto();
-
-        aluno = ApiClientFactory.Instance.GetAlunoByEmail(usuario) ??
-                await ApiClientFactory.Instance.GetAlunoById(Convert.ToInt32(usuario));
-
-        var cursos = ApiClientFactory.Instance.GetCursosByAlunoId(aluno.Id);
-        var certificados = ApiClientFactory.Instance.GetCertificadosByAlunoId(aluno.Id);
-        var alunosCursos = ApiClientFactory.Instance.GetAlunoCursosByAlunoId(aluno.Id);
-
-        return View(new AlunoCursoCertificadoModel()
+        try
         {
-            AlunoId = aluno.Id,
-            Cursos = cursos,
-            Certificados = certificados,
-            AlunosCursos = alunosCursos
-        });
+
+            ViewBag.Status = true;
+
+            _logger.Info($"Usuario Logado em AlunoCursoCertificado.Index User.Identity.Name : {User.Identity.Name}");
+
+            var usuario = User.Identity.Name;
+
+            SetNotifyMessage(notify, message);
+            SetCrudMessage(crud);
+
+            var usu = await ApiClientFactory.Instance.GetUsuarioByEmail(usuario);
+
+            var aluno = new AlunoDto();
+
+            aluno = ApiClientFactory.Instance.GetAlunoByEmail(usuario) ??
+                    await ApiClientFactory.Instance.GetAlunoById(Convert.ToInt32(usuario));
+
+            var cursos = ApiClientFactory.Instance.GetCursosByAlunoId(aluno.Id);
+            var certificados = ApiClientFactory.Instance.GetCertificadosByAlunoId(aluno.Id);
+            var alunosCursos = ApiClientFactory.Instance.GetAlunoCursosByAlunoId(aluno.Id);
+
+            return View(new AlunoCursoCertificadoModel()
+            {
+                AlunoId = aluno.Id.ToString(),
+                Cursos = cursos,
+                Certificados = certificados,
+                AlunosCursos = alunosCursos
+            });
+
+        }
+        catch (Exception e)
+        {
+            _logger.Error($"Aluno.Index: {e.StackTrace}");
+            return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = e.Message });
+
+        }
     }
 
     /// <summary>
@@ -140,15 +161,53 @@ public class AlunoCursoCertificadoController : BaseController
     {
         try
         {
+            var usuario = User.Identity.Name;
+
             SetNotifyMessage(notify, message);
             SetCrudMessage(crud);
 
-            var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome");
-            var certificados = new SelectList(ApiClientFactory.Instance.GetCertificadosAll(), "Id", "NomeImagemFrente");
+            var usu = await ApiClientFactory.Instance.GetUsuarioByEmail(usuario);
+
+            var fomento = ApiClientFactory.Instance.GetFomentoByLocalidadeId(Convert.ToInt32(usu.LocalidadeId));
+            var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentosAll(), "Id", "Nome", fomento.Id);
+
+            var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome", usu.Uf);
+
+            SelectList municipios = null;
+
+            if (!string.IsNullOrEmpty(usu.Uf))
+            {
+                municipios = new SelectList(ApiClientFactory.Instance.GetMunicipiosByFomentoId(fomento.Id), "Id", "Nome", usu.MunicipioId);
+            }
+
+            SelectList localidades = null;
+
+            if (usu.MunicipioId != null)
+            {
+                var resultLocalidades = ApiClientFactory.Instance.GetLocalidadeByMunicipioId(usu.MunicipioId.ToString());
+
+                if (resultLocalidades != null)
+                    localidades = new SelectList(resultLocalidades, "Id", "Nome", usu.LocalidadeId);
+            }
+
+            SelectList alunos = null;
+
+            if (usu.LocalidadeId != null)
+            {
+                var resultAlunos = ApiClientFactory.Instance.GetAlunosByLocalidadeId(Convert.ToInt32(usu.LocalidadeId));
+
+                alunos = new SelectList(resultAlunos, "Id", "Nome");
+
+            }
+            var certificados = new SelectList(ApiClientFactory.Instance.GetCertificadosAll(), "Id", "Nome");
 
             return View(new AlunoCursoCertificadoModel()
             {
                 ListEstados = estados,
+                ListMunicipios = municipios!,
+                ListLocalidades = localidades!,
+                ListAlunos = alunos,
+                IdPerfil = usu.Perfil.Id,
                 ListCertificados = certificados
             });
         }

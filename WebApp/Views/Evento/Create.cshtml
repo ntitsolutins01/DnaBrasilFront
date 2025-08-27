@@ -83,7 +83,7 @@
 				                    }
 				                    else
 				                    {
-					                    if (Model.IdPerfil == (int)EnumPerfil.GestorPedagogico)
+										if (Model.IdPerfil == (int)EnumPerfil.GestorPedagogico || Model.IdPerfil == (int)EnumPerfil.Coordenador)
 					                    {
 						                    <select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade" style="width: 100%"
 						                            asp-for="LocalidadeId" asp-items="Model.ListLocalidades">

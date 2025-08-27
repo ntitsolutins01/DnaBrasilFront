@@ -9,7 +9,7 @@ namespace WebApp.Models
         public AlunoDto Aluno { get; set; }
         public CursoDto Curso { get; set; }
         public List<AlunoCursoDto> AlunosCursos { get; set; }
-        public int AlunoId { get; set; }
+        public string AlunoId { get; set; }
         public SelectList ListAlunos { get; set; }
         public string CursoId { get; set; }
         public List<CursoDto> Cursos { get; set; }
@@ -26,6 +26,7 @@ namespace WebApp.Models
         public List<ModuloEadDto> Modulos { get; set; }
         public List<AulaDto> Aulas { get; set; }
         public List<AlunoAulaDto> AlunosAulas { get; set; }
+        public int IdPerfil { get; set; }
 
         public class CreateUpdateAlunoCursoCommand
         {

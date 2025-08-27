@@ -1,0 +1,155 @@
+@using Microsoft.IdentityModel.Tokens
+@model ControleFrequenciaEscolarModel.TabelaFrequenciasEscolares
+
+<section class="panel">
+    <header class="panel-heading">
+        <div class="panel-actions">
+            <a href="#" class="card-action card-action-toggle" data-card-toggle></a>
+        </div>
+        <h2 class="panel-title">Listagem de Frequências</h2>
+    </header>
+    <div class="panel-body">
+        @using (@Html.BeginForm("Create", "ControleFrequenciaEscolar", FormMethod.Post, new { id = "formCreateFrequenciaEscolar", @class = "form-horizontal" }))
+        {
+            <input type="hidden" name="turma" value="@Model.TurmaId" />
+            <input type="hidden" name="disciplina" value="@Model.DisciplinaId" />
+            <input type="hidden" name="localidade" value="@Model.LocalidadeId" />
+            <div class="form-group row">
+                <div class="col-sm-3 pull-right" style="margin-top: 29px;">
+                    <button type="submit" id="addToTable" class="btn btn-block btn-success pull-right" onclick="validarProfissional()"><i class="fa fa-save"></i> Salvar Frequências </button>
+                </div>
+                <div class="col-sm-5 pull-right" style="margin-top: 29px;">
+                    <div class="alert alert-danger" style="padding-bottom: 6px;padding-top: 6px; !important; margin-bottom: 0px; !important">
+                        Clique no checkbox para<strong> marcação de FALTAS</strong>.
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <label class="control-label">Profissional:</label>
+                    <select class="form-control populate select2"
+                            required title="Por favor selecione o profissional"
+                            name="ddlProfissional" id="ddlProfissional"
+                            asp-for="ProfissionalId" asp-items="Model.ListProfissionais"
+                            style="width:100%" data-plugin-options='{"width":"100%"}'>
+                        <option value="">Selecionar Profissional</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-3 pull-right">
+                    <button type="button" id="btnImprimirFrequencias" class="btn btn-block btn-dark pull-right" onclick="imprimirFrequencias()">
+                        <i class="fa fa-print"></i> Imprimir Frequências
+                    </button>
+                </div>
+            </div>
+
+            <br/>
+            <table class="table table-bordered table-striped pt-3" id="datatable-default">
+                <thead>
+                    <tr>
+                        <th class="text-center">Matricula - Nome do Aluno</th>
+                        @{
+                            DateTime dataAtual = DateTime.Now;
+                            int ano = dataAtual.Year;
+                            int mes = dataAtual.Month;
+                            int totalDiasNoMes = DateTime.DaysInMonth(ano, mes);
+                            int diaHoje = dataAtual.Day;
+
+                            for (int dia = 1; dia <= totalDiasNoMes; dia++)
+                            {
+                                <th class="text-center">@dia</th>
+                            }
+                        }
+                        <th class="text-center">Ação</th>
+                    </tr>
+                </thead>
+                <input type="hidden" name="data" value="@dataAtual" />
+                <tbody>
+                    @{
+                        var presentes = new HashSet<string>();
+                        var faltas = new HashSet<string>();
+
+                        if (Model.AlunosComPresencas != null)
+                        {
+                            foreach (var p in Model.AlunosComPresencas)
+                            {
+                                var alunoId = p.AlunoId?.ToString();
+                                var dia = ParseDate(p.DataFrequencia).Date.ToString("yyyy-MM-dd");
+
+                                if (string.IsNullOrEmpty(alunoId)) continue;
+
+                                var key = $"{alunoId}|{dia}";
+                                if (p.Controle == "P") presentes.Add(key);
+                                else if (p.Controle == "F") faltas.Add(key);
+                            }
+                        }
+                    }
+
+                    @if (!Model.Alunos.IsNullOrEmpty())
+                    {
+                        foreach (var aluno in Model.Alunos)
+                        {
+                            <tr>
+                                <td class="text-center" style="width:300px;">@aluno.Nome</td>
+
+                                @for (int dia1 = 1; dia1 <= totalDiasNoMes; dia1++)
+                                {
+                                    bool isHoje = (dia1 == diaHoje);
+                                    var diaRef = new DateTime(ano, mes, dia1).Date;
+                                    var key = $"{aluno.Id}|{diaRef:yyyy-MM-dd}";
+
+                                    bool temPresenca = presentes.Contains(key);
+                                    bool temFalta = faltas.Contains(key);
+                                    bool temRegistro = temPresenca || temFalta;
+
+                                    if (dia1 <= diaHoje)
+                                    {
+                                        <td class="text-center">
+                                            @if (isHoje)
+                                            {
+                                                var marcado = temFalta ? "checked=\"checked\"" : "";
+
+                                                <input type="checkbox"
+                                                       id="F-@aluno.Id"
+                                                       name="F#@aluno.Id"
+                                                       data-aluno-id="@aluno.Id"
+                                                       data-dia="@dia1"
+                                                       @Html.Raw(marcado) />
+                                            }
+                                            else
+                                            {
+                                                @Html.Raw(temRegistro ? (temPresenca ? "&bull;" : "F") : "")
+                                            }
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td class="text-center"></td>
+                                    }
+
+                                }
+                                <td class="actions text-center" style="width:100px;">
+                                    <a data-toggle="tooltip" data-placement="top" title="Editar Frequência"
+                                       href='javascript:(crud.EditModal(@aluno.Id))'
+                                       class="on-default edit-row" style='color:#FF9800'>
+                                        <i class="fa fa-pencil"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</section>
+
+@functions {
+    public static DateTime ParseDate(object data)
+    {
+        if (data is DateTime dt)
+            return dt;
+        if (data is string s)
+            return DateTime.Parse(s);
+        return DateTime.MinValue;
+    }
+}

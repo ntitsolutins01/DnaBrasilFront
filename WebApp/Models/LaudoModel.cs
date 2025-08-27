@@ -12,6 +12,7 @@ namespace WebApp.Models
         public EncaminhamentoDto EncaminhamentoImc { get; set; }
         public EncaminhamentoDto EncaminhamentoSaudeBucal { get; set; }
         public EncaminhamentoDto EncaminhamentoConsumoAlimentar { get; set; }
+        public EncaminhamentoDto EncaminhamentoEducacional{ get; set; }
         public ModalidadeDto Modalidade { get; set; }
         public List<EncaminhamentoDto> ListQualidadeDeVida { get; set; }
         public List<EncaminhamentoDto> ListVocacional { get; set; }

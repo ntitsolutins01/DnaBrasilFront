@@ -186,7 +186,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Views\ControleFrequenciaEscolar\" />
     <Folder Include="Views\Base\" />
     <Folder Include="Views\BemVindo\" />
     <Folder Include="wwwroot\assets\styles_Carteirinha\images\" />

@@ -87,7 +87,12 @@ namespace WebApp.Controllers
                 var searchFilter = new LaudosFilterDto
                 {
                     MunicipioId = usu.MunicipioId.ToString(),
-                    LocalidadeId = usu.LocalidadeId
+                    LocalidadeId = usu.LocalidadeId,
+#if DEBUG
+                    PageSize = 300
+#else
+                    PageSize = 10000
+#endif
                 };
 
                 var response = await ApiClientFactory.Instance.GetLaudosByFilter(searchFilter);
@@ -136,19 +141,25 @@ namespace WebApp.Controllers
                     LocalidadeId = collection["ddlLocalidade"].ToString(),
                     AlunoId = collection["ddlAluno"].ToString(),
                     PossuiFoto = possuiFoto != "",
-                    Finalizado = finalizado != ""
+                    Finalizado = finalizado != "",
+                    PageNumber = 1,
+#if DEBUG
+                    PageSize = 300
+#else
+                    PageSize = 10000
+#endif
                 };
 
                 var response = await ApiClientFactory.Instance.GetLaudosByFilter(searchFilter);
                 
                 var fomento = ApiClientFactory.Instance.GetFomentoByLocalidadeId(Convert.ToInt32(usu.LocalidadeId));
-                var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentosAll(), "Id", "Nome", fomento.Id);
+                var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentosAll(), "Id", "Nome", searchFilter.FomentoId);
 
-                var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome", usu.Uf);
+                var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome", searchFilter.Estado);
 
                 SelectList municipios = null;
 
-                if (!string.IsNullOrEmpty(usu.Uf))
+                if (!string.IsNullOrEmpty(searchFilter.Estado))
                 {
                     municipios = new SelectList(ApiClientFactory.Instance.GetMunicipiosByFomentoId(fomento.Id), "Id", "Nome", searchFilter.MunicipioId);
                 }
@@ -202,6 +213,7 @@ namespace WebApp.Controllers
 
             var consumoAlimentar = laudo.ConsumoAlimentarId == null ? null : ApiClientFactory.Instance.GetConsumoAlimentarById((int)laudo.ConsumoAlimentarId);
             var saudeBucal = laudo.SaudeBucalId == null ? null : ApiClientFactory.Instance.GetConsumoAlimentarById((int)laudo.SaudeBucalId);
+            var educacional = laudo.EducacionalId == null ? null : ApiClientFactory.Instance.GetConsumoAlimentarById((int)laudo.EducacionalId);
 
             var aluno = await ApiClientFactory.Instance.GetAlunoById((int)laudo.AlunoId);
             var profissional = laudo.ProfissionalId == null ? null : ApiClientFactory.Instance.GetProfissionalById(Convert.ToInt32(aluno.ProfissionalId));
@@ -211,6 +223,7 @@ namespace WebApp.Controllers
             var vocacional = laudo.VocacionalId == null ? null : ApiClientFactory.Instance.GetEncaminhamentoByVocacional();
             var encaminhamentoConsumoAlimentar = laudo.ConsumoAlimentarId == null ? null : ApiClientFactory.Instance.GetEncaminhamentoById((int)consumoAlimentar.Encaminhamento.Id);
             var encaminhamentoSaudeBucal = laudo.SaudeBucalId == null ? null : ApiClientFactory.Instance.GetEncaminhamentoById((int)saudeBucal.Encaminhamento.Id);
+            var encaminhamentoEducacional = laudo.EducacionalId == null ? null : ApiClientFactory.Instance.GetEncaminhamentoById((int)educacional.Encaminhamento.Id);
             var desempenho = ApiClientFactory.Instance.GetDesempenhoByAluno(Convert.ToInt32(laudo.AlunoId));
             var modalidade = laudo.ModalidadeId == null ? null : ApiClientFactory.Instance.GetModalidadeById((int)laudo.ModalidadeId);
 
@@ -225,6 +238,7 @@ namespace WebApp.Controllers
                 ListVocacional = vocacional,
                 EncaminhamentoSaudeBucal = encaminhamentoSaudeBucal,
                 EncaminhamentoConsumoAlimentar = encaminhamentoConsumoAlimentar,
+                EncaminhamentoEducacional = encaminhamentoEducacional,
                 Desempenho = desempenho,
                 Modalidade = modalidade
             };
@@ -240,6 +254,7 @@ namespace WebApp.Controllers
 
             var consumoAlimentar = laudo.ConsumoAlimentarId == null ? null : ApiClientFactory.Instance.GetConsumoAlimentarById((int)laudo.ConsumoAlimentarId);
             var saudeBucal = laudo.SaudeBucalId == null ? null : ApiClientFactory.Instance.GetSaudeBucalById((int)laudo.SaudeBucalId);
+            var educacional = laudo.EducacionalId == null ? null : ApiClientFactory.Instance.GetConsumoAlimentarById((int)laudo.EducacionalId);
 
             var aluno = await ApiClientFactory.Instance.GetAlunoById((int)laudo.AlunoId);
             var profissional = laudo.ProfissionalId == null ? null : ApiClientFactory.Instance.GetProfissionalById(Convert.ToInt32(aluno.ProfissionalId));
@@ -249,6 +264,7 @@ namespace WebApp.Controllers
             var vocacional = laudo.VocacionalId == null ? null : ApiClientFactory.Instance.GetEncaminhamentoByVocacional();
             var encaminhamentoConsumoAlimentar = laudo.ConsumoAlimentarId == null ? null : ApiClientFactory.Instance.GetEncaminhamentoById((int)consumoAlimentar.Encaminhamento.Id);
             var encaminhamentoSaudeBucal = laudo.SaudeBucalId == null ? null : ApiClientFactory.Instance.GetEncaminhamentoById((int)saudeBucal.Encaminhamento.Id);
+            var encaminhamentoEducacional = laudo.EducacionalId == null ? null : ApiClientFactory.Instance.GetEncaminhamentoById((int)educacional.Encaminhamento.Id);
             var desempenho = ApiClientFactory.Instance.GetDesempenhoByAluno(Convert.ToInt32(laudo.AlunoId));
             var modalidade = ApiClientFactory.Instance.GetModalidadeById(Convert.ToInt32(laudo.ModalidadeId));
 
@@ -289,6 +305,7 @@ namespace WebApp.Controllers
                 ListVocacional = vocacional,
                 EncaminhamentoSaudeBucal = encaminhamentoSaudeBucal,
                 EncaminhamentoConsumoAlimentar = encaminhamentoConsumoAlimentar,
+                EncaminhamentoEducacional = encaminhamentoEducacional,
                 Desempenho = desempenho,
                 Modalidade = modalidade,
                 Percentual = percentual,

@@ -133,7 +133,7 @@ builder.Services.AddAuthorization(o =>
 
     o.AddPolicy(ModuloAccess.ControlePresenca, policy =>
         policy.RequireAssertion(context =>
-            context.User.IsInRole(UserRoles.Coordenador) ||
+            //context.User.IsInRole(UserRoles.Coordenador) ||
             context.User.IsInRole(UserRoles.Profissional) ||
             //context.User.IsInRole(UserRoles.Gestor) ||
             context.User.IsInRole(UserRoles.AdministradorConsulta) ||
@@ -147,7 +147,7 @@ builder.Services.AddAuthorization(o =>
 
     o.AddPolicy(ModuloAccess.Nota, policy =>
         policy.RequireAssertion(context =>
-            context.User.IsInRole(UserRoles.Coordenador) ||
+            //context.User.IsInRole(UserRoles.Coordenador) ||
             context.User.IsInRole(UserRoles.Profissional) ||
             //context.User.IsInRole(UserRoles.Gestor) ||
             context.User.IsInRole(UserRoles.AdministradorConsulta) ||
@@ -155,8 +155,8 @@ builder.Services.AddAuthorization(o =>
 
     o.AddPolicy(ModuloAccess.Profissional, policy =>
         policy.RequireAssertion(context =>
-            context.User.IsInRole(UserRoles.Coordenador) ||
-            context.User.IsInRole(UserRoles.Profissional) ||
+            //context.User.IsInRole(UserRoles.Coordenador) ||
+            //context.User.IsInRole(UserRoles.Profissional) ||
             context.User.IsInRole(UserRoles.Gestor) ||
             context.User.IsInRole(UserRoles.AdministradorConsulta) ||
             context.User.IsInRole(UserRoles.Administrador)));
