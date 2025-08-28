@@ -110,6 +110,7 @@ public class ControleFrequenciaEscolarController : BaseController
                 ListDisciplinas = disciplinas,
                 SearchFilter = searchFilter,
                 IdPerfil = usu.Perfil.Id,
+                LocalidadeId = usu.LocalidadeId,
                 ControlesFrequenciasEscolares = responseFrequenciasEscolares//response.FrequenciasEscolares
             });
 
@@ -133,7 +134,7 @@ public class ControleFrequenciaEscolarController : BaseController
         var filter = new AlunosFilterDto()
         {
             SerieId = collection["ddlTurma"].ToString(),
-            LocalidadeId = collection["ddlLocalidade"].ToString(),
+            LocalidadeId = collection["hdnLocalidadeId"].ToString()
         };
 
         var result = await ApiClientFactory.Instance.GetAlunosByFilter(filter);

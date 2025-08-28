@@ -290,6 +290,25 @@
                 });
             }
 
+            $("#formCreateFrequenciaEscolar").validate({
+                highlight: function (label) {
+                    $(label).closest('.form-group').removeClass('has-success').addClass('has-error');
+                },
+                success: function (label) {
+                    $(label).closest('.form-group').removeClass('has-error');
+                    label.remove();
+                },
+                errorPlacement: function (error, element) {
+                    var placement = element.closest('.input-group');
+                    if (!placement.get(0)) {
+                        placement = element;
+                    }
+                    if (error.text() !== '') {
+                        placement.after(error);
+                    }
+                }
+            });
+
             // Pesquisa de Alunos para preencher a frequência
             $("#formPesquisarControleFrequenciaEscolar").submit(function (e) {
                 e.preventDefault();
@@ -428,8 +447,9 @@ var crud = {
 
 // Função para imprimir frequências
 function imprimirFrequencias() {
+
     var turmaId = $('input[name="turma"]').val();
-    var localidadeId = $('input[name="localidade"]').val();
+    var localidadeId = $('input[name="hdnLocalidadeId"]').val();
     var disciplinaId = $('input[name="disciplina"]').val();
     var profissionalId = $('#ddlProfissional').val();
 
@@ -438,6 +458,25 @@ function imprimirFrequencias() {
     console.log('localidadeId:', localidadeId);
     console.log('disciplinaId:', disciplinaId);
     console.log('profissionalId:', profissionalId);
+
+    $("#formCreateFrequenciaEscolar").validate({
+        highlight: function (label) {
+            $(label).closest('.form-group').removeClass('has-success').addClass('has-error');
+        },
+        success: function (label) {
+            $(label).closest('.form-group').removeClass('has-error');
+            label.remove();
+        },
+        errorPlacement: function (error, element) {
+            var placement = element.closest('.input-group');
+            if (!placement.get(0)) {
+                placement = element;
+            }
+            if (error.text() !== '') {
+                placement.after(error);
+            }
+        }
+    });
 
     if (!turmaId || !localidadeId || !disciplinaId) {
         new PNotify({

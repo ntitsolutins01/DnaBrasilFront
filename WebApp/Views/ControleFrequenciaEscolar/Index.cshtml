@@ -2,315 +2,305 @@
 @using WebApp.Enumerators
 @model WebApp.Models.ControleFrequenciaEscolarModel
 @{
-    ViewData["Title"] = "Listagem de Controle de Frequencia Escolar";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+	ViewData["Title"] = "Listagem de Controle de Frequencia Escolar";
+	Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <div id="vControleFrequenciaEscolar">
-    <div class="row">
-        <div class="col-md-12">
-            @using (@Html.BeginForm("Index", "ControleFrequenciaEscolar", FormMethod.Post, new { id = "formPesquisarControleFrequenciaEscolar", @class = "form-horizontal" }))
-            {
-                <section class="panel">
-                    <header class="panel-heading">
-                        <div class="panel-actions">
-                            <a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
-                        </div>
-                        <h2 class="panel-title">Filtro de pesquisa</h2>
-                    </header>
-                    <div class="panel-body">
-                        <label class="col-sm-2 control-label">Estado:</label>
-                        <div class="col-md-4 form-group">
-                            @{
-                                if (Model.IdPerfil == (int)EnumPerfil.Administrador)
-                                {
-                                    <select class="form-control populate select2" name="ddlEstado" id="ddlEstado" style="width: 100%"
-                                            asp-for="EstadoId" asp-items="Model.ListEstados">
-                                        <option value="">Selecionar Estado</option>
-                                    </select>
-                                }
-                                else
-                                {
-                                    <select class="form-control populate select2" name="ddlEstado" id="ddlEstado" style="width: 100%" disabled="disabled"
-                                            asp-for="EstadoId" asp-items="Model.ListEstados">
-                                        <option value="">Selecionar Estado</option>
-                                    </select>
-                                }
-                            }
-                        </div>
-                        <label class="col-sm-2 control-label">Município:</label>
-                        <div class="col-md-4 form-group">
-                            @{
-                                if (Model.IdPerfil == (int)EnumPerfil.Administrador)
-                                {
-                                    <select class="form-control populate select2" name="ddlMunicipio" id="ddlMunicipio" style="width: 100%"
-                                            asp-for="MunicipioId" asp-items="Model.ListMunicipios">
-                                        <option value="">Selecionar Municipio</option>
-                                    </select>
-                                }
-                                else
-                                {
-                                    if (Model.IdPerfil == (int)EnumPerfil.GestorPedagogico)
-                                    {
-                                        <select class="form-control populate select2" name="ddlMunicipio" id="ddlMunicipio" style="width: 100%"
-                                                asp-for="MunicipioId" asp-items="Model.ListMunicipios">
-                                            <option value="">Selecionar Municipio</option>
-                                        </select>
-                                    }
-                                    else
-                                    {
-                                        <select class="form-control populate select2" name="ddlMunicipio" id="ddlMunicipio" style="width: 100%" disabled="disabled"
-                                                asp-for="MunicipioId" asp-items="Model.ListMunicipios">
-                                            <option value="">Selecionar Municipio</option>
-                                        </select>
-                                    }
-                                }
-                            }
-                        </div>
-                        <label class="col-sm-2 control-label">Localidade:</label>
-                        <div class="col-md-4 form-group">
-                            @{
-                                if (Model.IdPerfil == (int)EnumPerfil.Administrador)
-                                {
-                                    <select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade" style="width: 100%"
-                                            asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
-                                        <option value="">Selecionar Localidade</option>
-                                    </select>
-                                }
-                                else
-                                {
-                                    if (Model.IdPerfil == (int)EnumPerfil.GestorPedagogico)
-                                    {
-                                        <select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade" style="width: 100%"
-                                                asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
-                                            <option value="">Selecionar Localidade</option>
-                                        </select>
-                                    }
-                                    else
-                                    {
-                                        <select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade" style="width: 100%" disabled="disabled"
-                                                asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
-                                            <option value="">Selecionar Localidade</option>
-                                        </select>
-                                    }
+	<div class="row">
+		<div class="col-md-12">
+			@using (@Html.BeginForm("Index", "ControleFrequenciaEscolar", FormMethod.Post, new { id = "formPesquisarControleFrequenciaEscolar", @class = "form-horizontal" }))
+			{
+				<section class="panel">
+					<header class="panel-heading">
+						<div class="panel-actions">
+							<a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
+						</div>
+						<h2 class="panel-title">Filtro de pesquisa</h2>
+					</header>
+					<div class="panel-body">
+						<label class="col-sm-2 control-label">Estado:</label>
+						<div class="col-md-4 form-group">
+							@{
+								if (Model.IdPerfil == (int)EnumPerfil.Administrador)
+								{
+									<select class="form-control populate select2" name="ddlEstado" id="ddlEstado" style="width: 100%"
+											asp-for="EstadoId" asp-items="Model.ListEstados">
+										<option value="">Selecionar Estado</option>
+									</select>
+								}
+								else
+								{
+									<select class="form-control populate select2" name="ddlEstado" id="ddlEstado" style="width: 100%" disabled="disabled"
+											asp-for="EstadoId" asp-items="Model.ListEstados">
+										<option value="">Selecionar Estado</option>
+									</select>
+								}
+							}
+						</div>
+						<label class="col-sm-2 control-label">Município:</label>
+						<div class="col-md-4 form-group">
+							@{
+								if (Model.IdPerfil == (int)EnumPerfil.Administrador)
+								{
+									<select class="form-control populate select2" name="ddlMunicipio" id="ddlMunicipio" style="width: 100%"
+											asp-for="MunicipioId" asp-items="Model.ListMunicipios">
+										<option value="">Selecionar Municipio</option>
+									</select>
+								}
+								else
+								{
+									if (Model.IdPerfil == (int)EnumPerfil.GestorPedagogico)
+									{
+										<select class="form-control populate select2" name="ddlMunicipio" id="ddlMunicipio" style="width: 100%"
+												asp-for="MunicipioId" asp-items="Model.ListMunicipios">
+											<option value="">Selecionar Municipio</option>
+										</select>
+									}
+									else
+									{
+										<select class="form-control populate select2" name="ddlMunicipio" id="ddlMunicipio" style="width: 100%" disabled="disabled"
+												asp-for="MunicipioId" asp-items="Model.ListMunicipios">
+											<option value="">Selecionar Municipio</option>
+										</select>
+									}
+								}
+							}
+						</div>
+						<label class="col-sm-2 control-label">Localidade:</label>
+						<input type="hidden" id="hdnLocalidadeId" name="hdnLocalidadeId" value="@Model.LocalidadeId"/>
+						<div class="col-md-4 form-group">
+							@{
+								if (Model.IdPerfil == (int)EnumPerfil.Administrador || Model.IdPerfil == (int)EnumPerfil.GestorPedagogico)
+								{
+									<select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade" style="width: 100%"
+											asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
+										<option value="">Selecionar Localidade</option>
+									</select>
+								}
+								else
+								{
+									<select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade" style="width: 100%" disabled
+									        asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
+										<option value="">Selecionar Localidade</option>
+									</select>
+								}
+							}
+						</div>
+						<label class="col-sm-2 control-label">Etapa Ensino:</label>
+						<div class="col-md-4 form-group">
+							<select class="form-control populate select2" name="ddlEtapa" id="ddlEtapa" style="width: 100%"
+									title="Por favor informe a série." required
+									asp-for="EtapaId" asp-items="Model.ListEtapas">
+								<option value="">Selecionar Etapa</option>
+							</select>
+						</div>
+						<label class="col-sm-2 control-label">Série:</label>
+						<div class="col-md-4 form-group">
+							<select class="form-control populate select2" name="ddlSerie" id="ddlSerie" style="width: 100%"
+									title="Por favor informe a série." required
+									asp-for="SerieId" asp-items="Model.ListSeries">
+								<option value="">Selecionar Série</option>
+							</select>
+						</div>
+						<label class="col-sm-2 control-label">Turma:</label>
+						<div class="col-md-4 form-group">
+							<select class="form-control populate select2" name="ddlTurma" id="ddlTurma"
+									title="Por favor informe a turma." required style="width: 100%"
+									asp-for="TurmaId" asp-items="Model.ListTurmas">
+								<option value="">Selecionar Turma</option>
+							</select>
+						</div>
+						<label class="col-sm-2 control-label">Disciplina:</label>
+						<div class="col-md-4 form-group">
+							<select class="form-control populate select2" name="ddlDisciplina" id="ddlDisciplina"
+									title="Por favor informe a disciplina." required style="width: 100%"
+									asp-for="DisciplinaId" asp-items="Model.ListDisciplinas">
+								<option value="">Selecionar Disciplina</option>
+							</select>
+						</div>
+					</div>
+					<footer class="panel-footer">
+						<div class="form-group row">
+							<div class="col-sm-2 pull-right">
+								<button type="submit" class="btn btn-block btn-primary pull-right"><i class="fa fa-search"></i> &nbsp;&nbsp;Pesquisar</button>
+							</div>
+						</div>
+					</footer>
+				</section>
+			}
+		</div>
+	</div>
+	@{
+		var tabelaFrequenciasVazia = new WebApp.Models.ControleFrequenciaEscolarModel.TabelaFrequenciasEscolares
+			{
+				Alunos = new List<AlunoIndexDto>(),
+				AlunosComPresencas = new List<ControleFrequenciaEscolarDto>()
+			};
+	}
+	<div id="tabela-container" style="display:none;">
+		@await Html.PartialAsync("_TabelaFrequenciaEscolar", tabelaFrequenciasVazia)
+	</div>
 
-
-                                }
-                            }
-                        </div>
-                        <label class="col-sm-2 control-label">Etapa Ensino:</label>
-                        <div class="col-md-4 form-group">
-                            <select class="form-control populate select2" name="ddlEtapa" id="ddlEtapa" style="width: 100%"
-                                    title="Por favor informe a série." required
-                                    asp-for="EtapaId" asp-items="Model.ListEtapas">
-                                <option value="">Selecionar Etapa</option>
-                            </select>
-                        </div>
-                        <label class="col-sm-2 control-label">Série:</label>
-                        <div class="col-md-4 form-group">
-                            <select class="form-control populate select2" name="ddlSerie" id="ddlSerie" style="width: 100%"
-                                    title="Por favor informe a série." required
-                                    asp-for="SerieId" asp-items="Model.ListSeries">
-                                <option value="">Selecionar Série</option>
-                            </select>
-                        </div>
-                        <label class="col-sm-2 control-label">Turma:</label>
-                        <div class="col-md-4 form-group">
-                            <select class="form-control populate select2" name="ddlTurma" id="ddlTurma"
-                                    title="Por favor informe a turma." required style="width: 100%"
-                                    asp-for="TurmaId" asp-items="Model.ListTurmas">
-                                <option value="">Selecionar Turma</option>
-                            </select>
-                        </div>
-                        <label class="col-sm-2 control-label">Disciplina:</label>
-                        <div class="col-md-4 form-group">
-                            <select class="form-control populate select2" name="ddlDisciplina" id="ddlDisciplina"
-                                    title="Por favor informe a disciplina." required style="width: 100%"
-                                    asp-for="DisciplinaId" asp-items="Model.ListDisciplinas">
-                                <option value="">Selecionar Disciplina</option>
-                            </select>
-                        </div>
-                    </div>
-                    <footer class="panel-footer">
-                        <div class="form-group row">
-                            <div class="col-sm-2 pull-right">
-                                <button type="submit" class="btn btn-block btn-primary pull-right"><i class="fa fa-search"></i> &nbsp;&nbsp;Pesquisar</button>
-                            </div>
-                        </div>
-                    </footer>
-                </section>
-            }
-        </div>
-    </div>
-    @{
-        var tabelaFrequenciasVazia = new WebApp.Models.ControleFrequenciaEscolarModel.TabelaFrequenciasEscolares
-            {
-                Alunos = new List<AlunoIndexDto>(),
-                AlunosComPresencas = new List<ControleFrequenciaEscolarDto>()
-            };
-    }
-    <div id="tabela-container" style="display:none;">
-        @await Html.PartialAsync("_TabelaFrequenciaEscolar", tabelaFrequenciasVazia)
-    </div>
-
-        <!-- Modal -->
-        <div class="modal fade" id="mdEditControleFrequenciaEscolar" tabindex="-1" role="dialog" aria-labelledby="mdEditControleFrequenciaEscolarLabel" aria-hidden="true">
-            <div class="modal-dialog modal-md" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="mdEditControleFrequenciaEscolarLabel">
-                            <i class="fa fa-pencil"></i> &nbsp;&nbsp;<strong>Alterar Frequência</strong>
-                        </h5>
-                    </div>
-                    @using (@Html.BeginForm("Edit", "ControleFrequenciaEscolar", FormMethod.Post, new { id = "formEditControleFrequencia", @class = "form-horizontal" }))
-                    {
-                        <input type="hidden" name="editAlunoId" v-model="editDto.Id" />
-                        <input type="hidden" name="editTurmaId" v-model="editDto.TurmaId" />
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label text-sm-right pt-2">Aluno <span class="required">*</span></label>
-                                <div class="col-md-10">
-                                    <input type="text" name="aluno" class="form-control" v-model="editDto.NomeAluno" readonly />
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-sm-2 control-label text-sm-right pt-2">Disciplina <span class="required">*</span></label>
-                                <div class="col-sm-4">
-                                <select id="ddlDisciplinaEdit" name="ddlDisciplinaEdit"
-                                            class="form-control select2" style="width:100%"
-                                            v-model="editDto.DisciplinaId">
-                                        <option value="">Selecionar a Disciplina</option>
-                                        @foreach (var d in Model.ListDisciplinas) {
-                                            <option value="@d.Value">@d.Text</option>
-                                        }
-                                    </select>
-                                </div>
-                                <label class="col-sm-2 control-label text-sm-right pt-2">Profissional <span class="required">*</span></label>
-                                <div class="col-sm-4">
-                                <select id="ddlProfissionalEdit" name="ddlProfissionalEdit"
-                                            class="form-control select2" style="width:100%"
-                                            v-model="editDto.ProfissionalId">
-                                        <option value="">Selecionar o Profissional</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-sm-2 control-label text-sm-right pt-2">Data <span class="required">*</span></label>
-                                <div class="col-sm-4">
-                                    <div class="input-group">
-                                        <span class="input-group-addon">
-                                            <i class="fa fa-calendar"></i>
-                                        </span>
-                                        <input id="data" name="data"
-                                               required
-                                               title="Por favor informe a data."
-                                               style="z-index: auto;"
-                                               data-plugin-datepicker data-date-format="dd/mm/yyyy" data-plugin-options='{"language": "pt-BR"}'
-                                               placeholder="__/__/____" class="form-control startdate"
-                                               class="form-control">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-sm-2 control-label text-sm-right pt-2">Controle <span class="required">*</span></label>
-                                <div class="col-sm-4">
-                                    <div class="radio-custom radio-success">
-                                        <input type="radio" id="controlePresente" name="controle" value="P" required title="Por favor selecione uma opção" @* :checked="editDto.Controle === 'P'" *@>
-                                        <label>Presente</label>
-                                    </div>
-                                    <div class="radio-custom radio-danger">
-                                        <input type="radio" id="controleFalta" name="controle" value="F" required title="Por favor selecione uma opção" @* :checked="editDto.Controle === 'F'" *@>
-                                        <label>Falta</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-remove"></i> &nbsp;&nbsp;Cancelar</button>
-                            <button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
-                        </div>
-                    }
-                </div>
-            </div>
-        </div>
+	<!-- Modal -->
+	<div class="modal fade" id="mdEditControleFrequenciaEscolar" tabindex="-1" role="dialog" aria-labelledby="mdEditControleFrequenciaEscolarLabel" aria-hidden="true">
+		<div class="modal-dialog modal-md" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="mdEditControleFrequenciaEscolarLabel">
+						<i class="fa fa-pencil"></i> &nbsp;&nbsp;<strong>Alterar Frequência</strong>
+					</h5>
+				</div>
+				@using (@Html.BeginForm("Edit", "ControleFrequenciaEscolar", FormMethod.Post, new { id = "formEditControleFrequencia", @class = "form-horizontal" }))
+				{
+					<input type="hidden" name="editAlunoId" v-model="editDto.Id" />
+					<input type="hidden" name="editTurmaId" v-model="editDto.TurmaId" />
+					<div class="modal-body">
+						<div class="form-group">
+							<label class="col-sm-2 control-label text-sm-right pt-2">Aluno <span class="required">*</span></label>
+							<div class="col-md-10">
+								<input type="text" name="aluno" class="form-control" v-model="editDto.NomeAluno" readonly />
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-sm-2 control-label text-sm-right pt-2">Disciplina <span class="required">*</span></label>
+							<div class="col-sm-4">
+								<select id="ddlDisciplinaEdit" name="ddlDisciplinaEdit"
+										class="form-control select2" style="width:100%"
+										v-model="editDto.DisciplinaId">
+									<option value="">Selecionar a Disciplina</option>
+									@foreach (var d in Model.ListDisciplinas)
+									{
+										<option value="@d.Value">@d.Text</option>
+									}
+								</select>
+							</div>
+							<label class="col-sm-2 control-label text-sm-right pt-2">Profissional <span class="required">*</span></label>
+							<div class="col-sm-4">
+								<select id="ddlProfissionalEdit" name="ddlProfissionalEdit"
+										class="form-control select2" style="width:100%"
+										v-model="editDto.ProfissionalId">
+									<option value="">Selecionar o Profissional</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-sm-2 control-label text-sm-right pt-2">Data <span class="required">*</span></label>
+							<div class="col-sm-4">
+								<div class="input-group">
+									<span class="input-group-addon">
+										<i class="fa fa-calendar"></i>
+									</span>
+									<input id="data" name="data"
+										   required
+										   title="Por favor informe a data."
+										   style="z-index: auto;"
+										   data-plugin-datepicker data-date-format="dd/mm/yyyy" data-plugin-options='{"language": "pt-BR"}'
+										   placeholder="__/__/____" class="form-control startdate"
+										   class="form-control">
+								</div>
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-sm-2 control-label text-sm-right pt-2">Controle <span class="required">*</span></label>
+							<div class="col-sm-4">
+								<div class="radio-custom radio-success">
+									<input type="radio" id="controlePresente" name="controle" value="P" required title="Por favor selecione uma opção" @* :checked="editDto.Controle === 'P'" *@>
+									<label>Presente</label>
+								</div>
+								<div class="radio-custom radio-danger">
+									<input type="radio" id="controleFalta" name="controle" value="F" required title="Por favor selecione uma opção" @* :checked="editDto.Controle === 'F'" *@>
+									<label>Falta</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-remove"></i> &nbsp;&nbsp;Cancelar</button>
+						<button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
+					</div>
+				}
+			</div>
+		</div>
+	</div>
 </div>
 
 @section CssSpecificVendor {
-    <link rel="stylesheet" href="~/assets/vendor/select2/css/select2.css" />
-    <link rel="stylesheet" href="~/assets/vendor/select2-bootstrap-theme/select2-bootstrap.min.css" />
-    <link rel="stylesheet" href="~/assets/vendor/datatables/media/css/dataTables.bootstrap4.css" />
-    <link href="~/assets/vendor/bootstrap-datepicker/css/bootstrap-datepicker3.css" rel="stylesheet" />
+	<link rel="stylesheet" href="~/assets/vendor/select2/css/select2.css" />
+	<link rel="stylesheet" href="~/assets/vendor/select2-bootstrap-theme/select2-bootstrap.min.css" />
+	<link rel="stylesheet" href="~/assets/vendor/datatables/media/css/dataTables.bootstrap4.css" />
+	<link href="~/assets/vendor/bootstrap-datepicker/css/bootstrap-datepicker3.css" rel="stylesheet" />
 }
 @section Scripts {
-    <script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
-    <script src="~/assets/vendor/select2/js/select2.js"></script>
-    <script src="~/assets/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
-    <script src="~/assets/vendor/datatables/media/js/dataTables.bootstrap4.min.js"></script>
-    <script src="~/assets/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
-    <script src="~/assets/vendor/bootstrap-datepicker/locales/bootstrap-datepicker.pt-BR.min.js"></script>
-    <script src="~/js/ControlesFrequenciaEscolar.js"></script>
+	<script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
+	<script src="~/assets/vendor/select2/js/select2.js"></script>
+	<script src="~/assets/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
+	<script src="~/assets/vendor/datatables/media/js/dataTables.bootstrap4.min.js"></script>
+	<script src="~/assets/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+	<script src="~/assets/vendor/bootstrap-datepicker/locales/bootstrap-datepicker.pt-BR.min.js"></script>
+	<script src="~/js/ControlesFrequenciaEscolar.js"></script>
 
-    <script>
-        (function ($) {
-            'use strict';
-            var crud = @ViewBag.CrudMessage;
+	<script>
+		(function ($) {
+			'use strict';
+			var crud = @ViewBag.CrudMessage;
 
-            if (crud === 1) {
-                new PNotify({
-                    title: 'Controle de Frequência',
-                    text: 'Cadastro realizado com sucesso!',
-                    type: 'success'
-                });
-                crud = 0;
-            } else if (crud === 2) {
-                new PNotify({
-                    title: 'Controle de Frequência',
-                    text: 'Dados alterados com sucesso.',
-                    type: 'warning',
-                    icon: 'fa fa-pencil'
-                });
-                crud = 0;
-            } else if (crud === 3) {
-                new PNotify({
-                    title: 'Controle de Frequência',
-                    text: 'Registro excluído com sucesso.',
-                    type: 'error',
-                    icon: 'fa fa-trash-o'
-                });
-                crud = 0;
-            }
+			if (crud === 1) {
+				new PNotify({
+					title: 'Controle de Frequência',
+					text: 'Cadastro realizado com sucesso!',
+					type: 'success'
+				});
+				crud = 0;
+			} else if (crud === 2) {
+				new PNotify({
+					title: 'Controle de Frequência',
+					text: 'Dados alterados com sucesso.',
+					type: 'warning',
+					icon: 'fa fa-pencil'
+				});
+				crud = 0;
+			} else if (crud === 3) {
+				new PNotify({
+					title: 'Controle de Frequência',
+					text: 'Registro excluído com sucesso.',
+					type: 'error',
+					icon: 'fa fa-trash-o'
+				});
+				crud = 0;
+			}
 
 
-            var notify = @ViewBag.NotifyMessage;
-            var messagem = '@ViewBag.Notify';
+			var notify = @ViewBag.NotifyMessage;
+			var messagem = '@ViewBag.Notify';
 
-            if (notify === 0) {
-                new PNotify({
-                    title: 'Controle de Frequência',
-                    text: messagem,
-                    type: 'success'
-                });
-                crud = 0;
-            } else if (notify === 1) {
-                new PNotify({
-                    title: 'Controle de Frequência',
-                    text: messagem,
-                    type: 'warning'
-                });
-                crud = 0;
-            } else if (notify === 2) {
-                new PNotify({
-                    title: 'Controle de Frequência',
-                    text: messagem,
-                    type: 'error'
-                });
-                crud = 0;
-            }
+			if (notify === 0) {
+				new PNotify({
+					title: 'Controle de Frequência',
+					text: messagem,
+					type: 'success'
+				});
+				crud = 0;
+			} else if (notify === 1) {
+				new PNotify({
+					title: 'Controle de Frequência',
+					text: messagem,
+					type: 'warning'
+				});
+				crud = 0;
+			} else if (notify === 2) {
+				new PNotify({
+					title: 'Controle de Frequência',
+					text: messagem,
+					type: 'error'
+				});
+				crud = 0;
+			}
 
-            if ($.isFunction($.fn['tooltip'])) {
-                $('[data-toggle=tooltip],[rel=tooltip]').tooltip({ container: 'body' });
-            }
+			if ($.isFunction($.fn['tooltip'])) {
+				$('[data-toggle=tooltip],[rel=tooltip]').tooltip({ container: 'body' });
+			}
 
-        }).apply(this, [jQuery]);
+		}).apply(this, [jQuery]);
 
-    </script>
+	</script>
 }
