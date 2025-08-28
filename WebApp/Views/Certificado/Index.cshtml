@@ -1,237 +1,320 @@
-﻿@model WebApp.Models.CertificadoModel
+﻿@using WebApp.Enumerators
+@model WebApp.Models.CertificadoModel
 @{
-    ViewData["Title"] = "Listagem de Certificados";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+	ViewData["Title"] = "Listagem de Certificados";
+	Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div id="vCertificado">
-    <div class="row">
-        <div class="col-lg-12">
-            <section class="panel">
-                <header class="panel-heading">
-                    <div class="panel-actions">
-                        <a href="#" class="card-action card-action-toggle" data-card-toggle></a>
-                    </div>
-                    <h2 class="panel-title">Listagem de Certificados</h2>
-                </header>
-                <div class="panel-body">
-                    <div class="form-group row">
-                        <div class="col-sm-12 pull-right">
-                            <a href="@Url.Action("Create", "Certificado")" id="addToTable" class="btn btn-primary pull-right"><i class="fa fa-plus"></i> Novo Certificado </a>
-                        </div>
-                    </div>
-                    <table class="table table-bordered table-striped mb-0" id="datatable-default">
-                        <thead>
-                            <tr>
-                                <th class="text-center">Id</th>
-                                <th class="text-center">Nome do Fomento</th>
-                                <th class="text-center">Status</th>
-                                <th class="text-center">Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model.Certificados)
-                            {
-                                <tr>
-                                    <td class="text-center" style="width:20px;">@Html.DisplayFor(modelItem => item.Id)</td>
-                                    <td class="text-center">@Html.DisplayFor(modelItem => item.NomeFomento)</td>
-                                    @if (item.Status)
-                                    {
-                                        <td class="text-center"><span class="label label-success">ATIVO</span></td>
-                                    }
-                                    else
-                                    {
-                                        <td class="text-center"><span class="label label-danger">INATIVO</span></td>
-                                    }
-                                    <td class="actions text-center">
-                                        <a data-toggle="tooltip" data-placement="top" title="Editar"
-                                           href='@Url.Action("Edit", "Certificado", new { id = item.Id })'
-                                           class="on-default edit-row" style='color: #FF9800'>
-                                            <i class="fa fa-pencil"></i>
-                                        </a>
-                                        <a data-toggle="tooltip" data-placement="top" title="Certificado"
-                                           href='javascript:(crud.CertificadoModal(@item.Id))'
-                                           class="on-default edit-row" style='color: #8E24AA'>
-                                            <i class="fa fa-address-card-o"></i>
-                                        </a>
-                                        <a data-toggle="tooltip" data-placement="top" title="Excluir" href='javascript:(crud.DeleteModal(@item.Id))'
-                                           class="on-default remove-row" style="Certificador: pointer;color: #F44336"><i class="fa fa-trash"></i></a>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-        </div>
-    </div>
-    <!-- Modal Certificado -->
-    <div class="modal fade" id="mdCertificado" tabindex="-1" role="dialog" aria-labelledby="mdCertificadoLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="mdCertificadoLabel">
-                        <i class="fa fa-address-card-o"></i> &nbsp;&nbsp;<strong>Certificado</strong>
-                    </h5>
-                </div>
-                <input type="hidden" name="certificadoId" :value="editDto.Id" />
-                <div class="modal-body">
-                    <div class="row" style="margin: 10px">
-                        <div class="tabs">
-                            <ul class="nav nav-tabs">
-                                <li class="active">
-                                    <a href="#frente" data-toggle="tab">Frente</a>
-                                </li>
-                                <li>
-                                    <a href="#verso" data-toggle="tab">Verso</a>
-                                </li>
-                            </ul>
-                            <div class="tab-content">
-                                <div id="frente" class="tab-pane active" style="position: relative;">
-                                    <!-- Container que agrupa imagem + html overlay -->
-                                    <div style="position: relative; width: 100%; height: auto;">
-                                        <!-- Imagem da Frente -->
-                                        <img :src="editDto.ImagemFrente"
-                                             alt="Frente do Certificado"
-                                             style="width: 100%; height: auto; display: block; object-fit: contain; z-index: 1;" />
+	<div class="row">
+		<div class="col-lg-12">
+			<section class="panel">
+				<header class="panel-heading">
+					<div class="panel-actions">
+						<a href="#" class="card-action card-action-toggle" data-card-toggle></a>
+					</div>
+					<h2 class="panel-title">Listagem de Certificados</h2>
+				</header>
+				<div class="panel-body">
+					@* <div class="form-group row">
+						@{
+							if (Model.IdPerfil == (int)EnumPerfil.Administrador)
+							{
+								<div class="col-sm-2 pull-right">
+									<a href="@Url.Action("CreateAlunoCertificado", "AlunoCursoCertificado")" class="btn btn-block btn-success pull-right">
+										<i class="fa fa-certificate"></i> Cadastrar Certificado
+									</a>
+								</div>
+								<div class="col-sm-12 pull-right">
+									<a href="@Url.Action("Create", "Certificado")" id="addToTable" class="btn btn-primary pull-right"><i class="fa fa-plus"></i> Novo Certificado </a>
+								</div>
+							}
+						}
+					</div> *@
+					<table class="table table-bordered table-striped mb-0" id="datatable-default">
+						<thead>
+							<tr>
+								<th class="text-center">Id</th>
+								<th class="text-center">Nome do Fomento</th>
+								<th class="text-center">Nome do Certificadoo</th>
+								<th class="text-center">Status</th>
+								<th class="text-center">Ações</th>
+							</tr>
+						</thead>
+						<tbody>
+							@foreach (var item in Model.Certificados)
+							{
+								<tr>
+									<td class="text-center" style="width:20px;">@Html.DisplayFor(modelItem => item.Id)</td>
+									<td class="text-center">@Html.DisplayFor(modelItem => item.NomeFomento)</td>
+									<td class="text-center">@Html.DisplayFor(modelItem => item.Nome)</td>
+									@if (item.Status)
+									{
+										<td class="text-center"><span class="label label-success">ATIVO</span></td>
+									}
+									else
+									{
+										<td class="text-center"><span class="label label-danger">INATIVO</span></td>
+									}
+									<td class="actions text-center">
+										<a data-toggle="tooltip" data-placement="top" title="Editar"
+										   href="javascript:void(0);"
+										   onclick="crud.EditModal(@item.Id)"
+										   class="on-default edit-row" style='color: #FF9800'>
+											<i class="fa fa-pencil"></i>
+										</a>
+										<a data-toggle="tooltip" data-placement="top" title="Certificado"
+										   href='javascript:(crud.CertificadoModal(@item.Id))'
+										   class="on-default edit-row" style='color: #8E24AA'>
+											<i class="fa fa-address-card-o"></i>
+										</a>
+										<a data-toggle="tooltip" data-placement="top" title="Excluir" href='javascript:(crud.DeleteModal(@item.Id))'
+										   class="on-default remove-row" style="Certificador: pointer;color: #F44336"><i class="fa fa-trash"></i></a>
+									</td>
+								</tr>
+							}
+						</tbody>
+					</table>
+				</div>
+			</section>
+		</div>
+	</div>
+	<!-- Modal Certificado -->
+	<div class="modal fade" id="mdCertificado" tabindex="-1" role="dialog" aria-labelledby="mdCertificadoLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="mdCertificadoLabel">
+						<i class="fa fa-address-card-o"></i> &nbsp;&nbsp;<strong>Certificado</strong>
+					</h5>
+				</div>
+				<input type="hidden" name="certificadoId" :value="editDto.Id" />
+				<div class="modal-body">
+					<div class="row" style="margin: 10px">
+						<div class="tabs">
+							<ul class="nav nav-tabs">
+								<li class="active">
+									<a href="#frente" data-toggle="tab">Frente</a>
+								</li>
+								<li>
+									<a href="#verso" data-toggle="tab">Verso</a>
+								</li>
+							</ul>
+							<div class="tab-content">
+								<div id="frente" class="tab-pane active" style="position: relative;">
+									<!-- Container que agrupa imagem + html overlay -->
+									<div style="position: relative; width: 100%; height: auto;">
+										<!-- Imagem da Frente -->
+										<img :src="imagemFrenteBase64"
+											 alt="Frente do Certificado"
+											 style="width: 100%; height: auto; display: block; object-fit: contain; z-index: 1;" />
 
-                                        <!-- HTML sobre a imagem -->
-                                        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none;">
-                                            <div v-html="editDto.HtmlFrente" style="color: black;"></div>
-                                        </div>
-                                    </div>
-                                </div>
+										<!-- HTML sobre a imagem -->
+										<div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none;">
+											<div v-html="editDto.HtmlFrente" style="color: black;"></div>
+										</div>
+									</div>
+								</div>
 
-                                <div id="verso" class="tab-pane">
-                                    <div style="position: relative; width: 100%; height: auto;">
-                                        <!-- Imagem do Verso -->
-                                        <img :src="editDto.ImagemVerso"
-                                             alt="Verso do Certificado"
-                                             style="width: 100%; height: auto; display: block; object-fit: contain; z-index: 1;" />
+								<div id="verso" class="tab-pane" style="position: relative;">
+									<div style="position: relative; width: 100%; height: auto;">
+										<img :src="imagemVersoBase64"
+											 alt="Verso do Certificado"
+											 style="width: 100%; height: auto; display: block; object-fit: contain; z-index: 1;" />
+										<div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none;">
+											<div v-html="editDto.HtmlVerso" style="color: black;"></div>
+										</div>
+									</div>
+								</div>
 
-                                        <!-- HTML sobre a imagem -->
-                                        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none;">
-                                            <div v-html="editDto.HtmlVerso" style="color: black;"></div>
-                                        </div>
-                                    </div>
-                                </div>
+							</div>
+						</div>
+					</div>
+				</div>
 
-                            </div>
-                        </div>
-                    </div>
-                </div>
+				<div class="modal-footer">
+					<button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-remove"></i> &nbsp;&nbsp;Fechar</button>
+					<button type="button" class="btn btn-primary" id="btnImprimirCertificado"><i class="fa fa-print"></i> &nbsp;&nbsp;Imprimir</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Modal -->
+	<div class="modal fade" id="mdDeleteCertificado" tabindex="-1" role="dialog" aria-labelledby="mdDeleteCertificadoLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="mdDeleteCertificadoLabel">
+						<i class="fa fa-trash"></i> &nbsp;&nbsp;<strong>Exclusão de Certificado</strong>
+					</h5>
+				</div>
+				<div class="modal-body">
+					<div class="modal-icon">
+						<i class="fa fa-question-circle"></i>
+					</div>
+					<div class="modal-text">
+						<input type="hidden" id="deleteCertificadoId" />
+						<p class="mb-0">Tem certeza que deseja <b>excluir</b> esse registro?</p>
+					</div>
+					<div class="modal-wrapper">
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-thumbs-o-down"></i> &nbsp;&nbsp;Não</button>
+					<a id="deleteCertificadoHref" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-thumbs-o-up"></i> &nbsp;&nbsp;Sim</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Modal -->
+	<div class="modal fade" id="mdEditCertificado" tabindex="-1" role="dialog" aria-labelledby="mdEditCertificadoLabel" aria-hidden="true">
+		<div class="modal-dialog modal-md" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="mdEditCertificadoLabel">
+						<i class="fa fa-pencil"></i> &nbsp;&nbsp;<strong>Alterar Certificado</strong>
+					</h5>
+				</div>
+				@using (@Html.BeginForm("Edit", "Certificado", FormMethod.Post, new { id = "formEditCertificado", @class = "form-horizontal", @enctype = "multipart/form-data" }))
+				{
+					<div class="modal-body">
+						<input type="hidden" name="editCertificadoId" :value="editDto.Id" />
+						<div class="form-group">
+							<label class="col-sm-3 control-label text-sm-right pt-2">Fomento <span class="required">*</span></label>
+							<div class="col-sm-9">
+								<select class="form-control populate select2" name="ddlFomento" id="ddlFomento" style="width:100%"
+										required title="Por favor selecione o fomento"
+										asp-for="FomentoId" asp-items="Model.ListFomentos">
+									<option value="">Selecionar Fomento</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label">Imagem</label>
+							<div class="col-sm-9">
+								<div class="fileupload fileupload-new" data-provides="fileupload">
+									<div class="input-append">
+										<div class="uneditable-input">
+											<i class="fa fa-file fileupload-exists"></i>
+											<span class="fileupload-preview">{{ editDto.Nome }}</span>
+										</div>
+										<span class="btn btn-default btn-file">
+											<span class="fileupload-exists">Alterar</span>
+											<span class="fileupload-new">Selecionar Arquivo</span>
+											<input type="file" id="arquivo" name="arquivo" accept=".pdf" v-on:change="ValidateFileType()" />
+										</span>
+										<a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload">Remover</a>
+									</div>
 
-                <div class="modal-footer">
-                    <button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-remove"></i> &nbsp;&nbsp;Fechar</button>
-                    <button type="button" class="btn btn-primary" id="btnImprimirCertificado"><i class="fa fa-print"></i> &nbsp;&nbsp;Imprimir</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Modal -->
-    <div class="modal fade" id="mdDeleteCertificado" tabindex="-1" role="dialog" aria-labelledby="mdDeleteCertificadoLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="mdDeleteCertificadoLabel">
-                        <i class="fa fa-trash"></i> &nbsp;&nbsp;<strong>Exclusão de Certificado</strong>
-                    </h5>
-                </div>
-                <div class="modal-body">
-                    <div class="modal-icon">
-                        <i class="fa fa-question-circle"></i>
-                    </div>
-                    <div class="modal-text">
-                        <input type="hidden" id="deleteCertificadoId" />
-                        <p class="mb-0">Tem certeza que deseja <b>excluir</b> esse registro?</p>
-                    </div>
-                    <div class="modal-wrapper">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-thumbs-o-down"></i> &nbsp;&nbsp;Não</button>
-                    <a id="deleteCertificadoHref" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-thumbs-o-up"></i> &nbsp;&nbsp;Sim</a>
-                </div>
-            </div>
-        </div>
-    </div>
+									<div v-if="editDto.NomeImagem" class="mt-2">
+										<code>Imagem atual: {{ editDto.Nome }}</code>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-sm-3 control-label text-sm-right pt-2">Status</label>
+							<div class="col-md-3">
+								<div class="switch switch-sm switch-primary">
+									<div v-show="editDto.Status">
+										<input type="checkbox" id="editStatus" name="editStatus" data-plugin-ios-switch checked="checked" />
+									</div>
+									<div v-show="!editDto.Status">
+										<input type="checkbox" id="editStatus" name="editStatus" data-plugin-ios-switch />
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-remove"></i> &nbsp;&nbsp;Cancelar</button>
+						<button type="submit" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
+					</div>
+				}
+			</div>
+		</div>
+	</div>
 </div>
 
 @section CssSpecificVendor {
-    <link rel="stylesheet" href="~/assets/vendor/select2/css/select2.css" />
-    <link rel="stylesheet" href="~/assets/vendor/select2-bootstrap-theme/select2-bootstrap.min.css" />
-    <link rel="stylesheet" href="~/assets/vendor/datatables/media/css/dataTables.bootstrap4.css" />
+	<link rel="stylesheet" href="~/assets/vendor/bootstrap-fileupload/bootstrap-fileupload.min.css" />
+	<link rel="stylesheet" href="~/assets/vendor/select2/css/select2.css" />
+	<link rel="stylesheet" href="~/assets/vendor/select2-bootstrap-theme/select2-bootstrap.min.css" />
+	<link rel="stylesheet" href="~/assets/vendor/datatables/media/css/dataTables.bootstrap4.css" />
 }
 @section Scripts {
-    <script src="~/assets/vendor/select2/js/select2.js"></script>
-    <script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
-    <script src="~/assets/vendor/jquery-mask/jquery.mask.js"></script>
-    <script src="~/assets/vendor/ios7-switch/ios7-switch.js"></script>
-    <script src="~/assets/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
-    <script src="~/assets/vendor/datatables/media/js/dataTables.bootstrap4.min.js"></script>
-    <script src="~/js/formatTable.js"></script>
-    <script src="~/js/Certificado.js"></script>
+	<script src="~/assets/vendor/select2/js/select2.js"></script>
+	<script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
+	<script src="~/assets/vendor/jquery-mask/jquery.mask.js"></script>
+	<script src="~/assets/vendor/ios7-switch/ios7-switch.js"></script>
+	<script src="~/assets/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
+	<script src="~/assets/vendor/datatables/media/js/dataTables.bootstrap4.min.js"></script>
+	<script src="~/assets/vendor/bootstrap-fileupload/bootstrap-fileupload.min.js"></script>
+	<script src="/assets/vendor/pdfjs/build/pdf.js"></script>
+	<script src="/assets/vendor/pdfjs/build/pdf.worker.js"></script>
+	<script src="~/js/formatTable.js"></script>
+	<script src="~/js/Certificado.js"></script>
 
-    <script>
-        (function ($) {
-            'use strict';
-            var crud = @ViewBag.CrudMessage;
+	<script>
+		(function ($) {
+			'use strict';
+			var crud = @ViewBag.CrudMessage;
 
-            if (crud === 1) {
-                new PNotify({
-                    title: 'Certificado',
-                    text: 'Cadastro realizado com sucesso!',
-                    type: 'success'
-                });
-                crud = 0;
-            } else if (crud === 2) {
-                new PNotify({
-                    title: 'Certificado',
-                    text: 'Dados alterados com sucesso.',
-                    type: 'warning',
-                    icon: 'fa fa-pencil'
-                });
-                crud = 0;
-            } else if (crud === 3) {
-                new PNotify({
-                    title: 'Certificado',
-                    text: 'Registro excluído com sucesso.',
-                    type: 'error',
-                    icon: 'fa fa-trash-o'
-                });
-                crud = 0;
-            }
+			if (crud === 1) {
+				new PNotify({
+					title: 'Certificado',
+					text: 'Cadastro realizado com sucesso!',
+					type: 'success'
+				});
+				crud = 0;
+			} else if (crud === 2) {
+				new PNotify({
+					title: 'Certificado',
+					text: 'Dados alterados com sucesso.',
+					type: 'warning',
+					icon: 'fa fa-pencil'
+				});
+				crud = 0;
+			} else if (crud === 3) {
+				new PNotify({
+					title: 'Certificado',
+					text: 'Registro excluído com sucesso.',
+					type: 'error',
+					icon: 'fa fa-trash-o'
+				});
+				crud = 0;
+			}
 
-            var notify = @ViewBag.NotifyMessage;
-            var messagem = '@ViewBag.Notify';
+			var notify = @ViewBag.NotifyMessage;
+			var messagem = '@ViewBag.Notify';
 
-            if (notify === 0) {
-                new PNotify({
-                    title: 'Certificado',
-                    text: messagem,
-                    type: 'success'
-                });
-                crud = 0;
-            } else if (notify === 1) {
-                new PNotify({
-                    title: 'Certificado',
-                    text: messagem,
-                    type: 'warning'
-                });
-                crud = 0;
-            } else if (notify === 2) {
-                new PNotify({
-                    title: 'Certificado',
-                    text: messagem,
-                    type: 'error'
-                });
-                crud = 0;
-            }
+			if (notify === 0) {
+				new PNotify({
+					title: 'Certificado',
+					text: messagem,
+					type: 'success'
+				});
+				crud = 0;
+			} else if (notify === 1) {
+				new PNotify({
+					title: 'Certificado',
+					text: messagem,
+					type: 'warning'
+				});
+				crud = 0;
+			} else if (notify === 2) {
+				new PNotify({
+					title: 'Certificado',
+					text: messagem,
+					type: 'error'
+				});
+				crud = 0;
+			}
 
-            if ($.isFunction($.fn['tooltip'])) {
-                $('[data-toggle=tooltip],[rel=tooltip]').tooltip({ container: 'body' });
-            }
+			if ($.isFunction($.fn['tooltip'])) {
+				$('[data-toggle=tooltip],[rel=tooltip]').tooltip({ container: 'body' });
+			}
 
-        }).apply(this, [jQuery]);
-    </script>
+		}).apply(this, [jQuery]);
+	</script>
 }

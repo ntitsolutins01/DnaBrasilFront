@@ -374,37 +374,24 @@ namespace WebApp.Controllers
                 SetCrudMessage(crud);
 
                 //Busca usuario por email
-                //var usuario = User.Identity.Name;
-                //if (usuario == null) return Redirect("/Account/Logout");
-                //_logger.Info($"Busca Usuario por email: {usuario}");
-                //var usu1 = ApiClientFactory.Instance.GetUsuarioByEmail(usuario);
-
+                var usuario = User.Identity.Name;
+                
                 //Busca usuario por AspNetUserId
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                _logger.Info($"Busca Usuario por AspNetUserId: {userId}");
-                if (userId != null)
-                {
-                    var usu = await ApiClientFactory.Instance.GetUsuarioByAspNetUserId(userId);
-
-                    _logger.Info($"Retorno de GetUsuarioByAspNetUserId");
-                    _logger.Info(Newtonsoft.Json.JsonConvert.SerializeObject(usu));
-
-                    if (usu.Status == false)
-                    {
-                        return Redirect("/Identity/Account/Unauthorized");
-                    }
-
-                    var model = new UsuarioModel
-                    {
-                        Usuario = usu
-                    };
-                    return View(model);
-                }
-                else
-                {
-                    _logger.Warn($"AspNetUserId não encontrado para o email: {User.Identity.Name}");
+                if (usuario == null)
                     throw new Exception($"AspNetUserId não encontrado para o email: {User.Identity.Name}");
+                var usu = await ApiClientFactory.Instance.GetUsuarioByEmail(usuario);
+                    
+                if (usu.Status == false)
+                {
+                    return Redirect("/Identity/Account/Unauthorized");
                 }
+
+                var model = new UsuarioModel
+                {
+                    Usuario = usu
+                };
+                return View(model);
+
             }
             catch (Exception e)
             {

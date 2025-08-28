@@ -36,6 +36,7 @@ public class AulaController : BaseController
     /// <param name="appSettings">Configurações de urls do sistema</param>
     /// <param name="host">Informações da aplicação em execução</param>
     /// <param name="logger">Log de mensagens da aplicação</param>
+    /// <param name="settings">Configurações parametrizadas do sistema</param>
     public AulaController(IOptions<UrlSettings> appSettings, IWebHostEnvironment host,
         ILog logger)
     {
@@ -192,7 +193,13 @@ public class AulaController : BaseController
     {
         try
         {
-            var command = new AulaModel.CreateUpdateAulaCommand
+            var uriMaterial = collection["material"];//new Uri(collection["material"].ToString()); //transforma em Uri String pra salvar no banco 
+            var nomeMaterial = collection["nomeMaterial"].ToString(); //Path.GetFileName(uriMaterial.LocalPath);
+            var uriVideo = collection["video"]; //new Uri(collection["video"].ToString());
+            var nomeVideo = collection["nomeVideo"].ToString(); //Path.GetFileName(uriVideo.LocalPath);
+
+            AulaModel.CreateUpdateAulaCommand command;
+            command = new AulaModel.CreateUpdateAulaCommand
             {
                 Id = Convert.ToInt32(collection["editAulaId"]),
                 Titulo = collection["nome"].ToString(),
@@ -200,8 +207,10 @@ public class AulaController : BaseController
                 Status = collection["editStatus"].ToString() == "" ? false : true,
                 ProfessorId = Convert.ToInt32(collection["ddlProfessor"].ToString()),
                 Ordem = Convert.ToInt32(collection["ordem"].ToString()),
-                Video = collection["video"].ToString(),
-                Material = collection["material"].ToString()
+                Video = uriVideo,
+                NomeVideo = nomeVideo,
+                Material = uriMaterial,
+                NomeMaterial = nomeMaterial
             };
 
             //string aulasPath = Path.Combine(_host.WebRootPath, "Aulas");
@@ -327,9 +336,17 @@ public class AulaController : BaseController
     /// </summary>
     /// <param name="id">Identificador de Aula</param>
     /// <returns>Retorna a Aula</returns>
-    public Task<AulaDto> GetAulaById(int id)
+    public Task<AulaDto> GetAulaById(int id, bool? bloob = null)
     {
         var result = ApiClientFactory.Instance.GetAulaById(id);
+
+        if (bloob != null && (bool)bloob)
+        {
+            result.Material = _appSettings.Value.BloobUrl + result.Material;
+            result.Video = _appSettings.Value.BloobUrl + result.Video;
+        }
+
+
         var professores = result.ProfessorId == null ? null : new SelectList(ApiClientFactory.Instance.GetUsuarioAll().Where(x => x.Perfil.Id == (int)EnumPerfil.Professor), "Id", "Nome", result.ProfessorId);
         result.ListProfessores = professores;
 

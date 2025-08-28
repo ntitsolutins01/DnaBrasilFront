@@ -8,6 +8,7 @@
 
         public int? TalentoEsportivoId { get; set; }
         public int? VocacionalId { get; set; }
+        public int? EducacionalId { get; set; }
         public int? QualidadeDeVidaId { get; set; }
         public int? SaudeId { get; set; }
         public int? ConsumoAlimentarId { get; set; }
@@ -16,7 +17,7 @@
         public int? AlunoId { get; set; }
         public int? ProfissionalId { get; set; }
         public int? EncaminhamentoVocacionalId { get; set; }
-        //public int? EncaminhamentoQualidadeVidaId { get; set; }
+        public int? EncaminhamentoEducacionalId { get; set; }
         public int? EncaminhamentoConsumoAlimentarId { get; set; }
         public int? EncaminhamentoSaudeBucalId { get; set; }
         public int? EncaminhamentoTalentoEsportivoId { get; set; }

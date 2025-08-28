@@ -24,7 +24,7 @@
 						<thead>
 							<tr>
 								<th class="text-center">Id</th>
-								<th class="text-center">Professor</th>
+								<th class="text-center">Curso</th>
 								<th class="text-center">Modulo</th>
 								<th class="text-center">Titulo</th>
 								<th class="text-center">Descrição</th>
@@ -37,7 +37,7 @@
 							{ 
 								<tr>
 									<td class="actions text-center" style="width:20px;">@Html.DisplayFor(modelItem => item.Id)</td>
-									<td class="actions text-center" style="width:250px;">@Html.DisplayFor(modelItem => item.NomeProfessor)</td>
+									<td class="actions text-center" style="width:250px;">@Html.DisplayFor(modelItem => item.NomeCurso)</td>
 									<td class="actions text-center">@Html.DisplayFor(modelItem => item.TituloModuloEad)</td>
 									<td class="actions text-center">@Html.DisplayFor(modelItem => item.Titulo)</td>
 									<td class="actions text-center">@Html.DisplayFor(modelItem => item.Descricao)</td>
@@ -50,8 +50,8 @@
 										<td class="actions text-center"><span class="label label-danger">INATIVO</span></td>
 									}
 									<td class="actions text-center" style="width:100px;">
-										<a data-toggle="tooltip" data-placement="top" title="Visualizar Vídeo" href='javascript:(crud.VisualizarVideoModal(@item.Id))'
-										   class="on-default info-row" style="cursor: pointer;color: #7B1FA2"><i class="fa fa-film"></i></a>
+										@* <a data-toggle="tooltip" data-placement="top" title="Visualizar Vídeo" href='javascript:(crud.VisualizarVideoModal(@item.Id))'
+										   class="on-default info-row" style="cursor: pointer;color: #7B1FA2"><i class="fa fa-film"></i></a> *@
 										
 										<a href="#" data-id="@item.Id" data-toggle="modal" data-target="#mdUpload"
 										   data-toggle="tooltip" data-placement="top" title="Upload Vídeo"
@@ -126,7 +126,7 @@
 							<label class="col-sm-3 control-label text-sm-right pt-2">Titulo da Aula: <span class="required">*</span></label>
 							<div class="col-sm-9">
 								<input type="text" name="nome" :value="editDto.Titulo" class="form-control"
-								       maxlength="150"
+								       maxlength="250"
 								       title="Por favor informe o nome do curso." required/>
 							</div>
 						</div>
@@ -137,18 +137,34 @@
 							</div>
 						</div>
 						<div class="form-group row">
+							<label class="col-sm-3 control-label text-sm-right pt-2">Nome Video: <span class="required">*</span></label>
+							<div class="col-sm-9">
+								<input type="text" name="nomeVideo" :value="editDto.NomeVideo" class="form-control"
+									   maxlength="1000" placeholder="eg.: nome do vídeo.mp4"
+									   title="Por favor informe o nome do vídeo."  />
+							</div>
+						</div>
+						<div class="form-group row">
 							<label class="col-sm-3 control-label text-sm-right pt-2">Video: <span class="required">*</span></label>
 							<div class="col-sm-9">
 								<input type="text" name="video" :value="editDto.Video" class="form-control"
-									   maxlength="150" placeholder="eg.: file path"
+									   maxlength="1000" placeholder="eg.: file path"
 									   title="Por favor informe o file path do vídeo."  />
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-sm-3 control-label text-sm-right pt-2">Nome do Material Didático: <span class="required">*</span></label>
+							<div class="col-sm-9">
+								<input type="text" name="nomeMaterial" :value="editDto.NomeMaterial" class="form-control"
+									   maxlength="1000" placeholder="eg.: nome do material didático.pdf"
+									   title="Por favor informe o nome do material didático."  />
 							</div>
 						</div>
 						<div class="form-group row">
 							<label class="col-sm-3 control-label text-sm-right pt-2">Material Didático: <span class="required">*</span></label>
 							<div class="col-sm-9">
 								<input type="text" name="material" :value="editDto.Material" class="form-control"
-									   maxlength="150" placeholder="eg.: file path"
+									   maxlength="1000" placeholder="eg.: file path"
 									   title="Por favor informe o file path do material didático."  />
 							</div>
 						</div>

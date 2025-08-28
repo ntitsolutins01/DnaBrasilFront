@@ -33,6 +33,7 @@ namespace WebApp.Models
         public SelectList ListSexos { get; set; }
         public string SexoId { get; set; }
         public string? NomePerfil { get; set; }
+        public int IdPerfil { get; set; }
         public AlunosFilterDto SearchFilter { get; set; }
         public ModeloCarteirinhaDto ModeloCarteirinha { get; set; }
         public AtividadeDto Atividade { get; set; }
@@ -50,6 +51,7 @@ namespace WebApp.Models
         public UsuarioDto UsuarioLogado { get; set; }
         public string TextGabarito { get; set; }
         public string AnoGabarito { get; set; }
+        public string SiglaGabarito { get; set; }
 
         public class CreateUpdateDadosAlunoCommand
         {
@@ -106,6 +108,28 @@ namespace WebApp.Models
             public required int AlunoId { get; set; }
             public required string AulaId { get; set; }
             public int? Progresso { get; set; }
+        }
+
+        public class UpdateHabilitarAlunoCommand
+        {
+            public required int AlunoId { get; set; }
+            public required string AspNetUserId { get; set; }
+        }
+
+        public class CreateUpdateProfileAlunoCommand
+        {
+            public string? Telefone { get; set; }
+            public string? Celular { get; set; }
+            public string? Cep { get; set; }
+            public string? Endereco { get; set; }
+            public string? Numero { get; set; }
+            public string? Bairro { get; set; }
+            public string? Email { get; set; }
+        }
+
+        public class CreateUpdateEtapaEnsinoCommand
+        {
+            public string? Nome { get; set; }
         }
     }
 

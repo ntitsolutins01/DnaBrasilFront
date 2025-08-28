@@ -92,6 +92,17 @@ builder.Services.Configure<DataProtectionTokenProviderOptions>(options =>
 
 builder.Services.AddTransient<IEmailSender, EmailService>();
 
+// Habilita CORS para todas as origens
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+    });
+});
+
 // Cria um grupo de pol�ticas de administradores para requisitos de seguran�a de alto n�vel
 builder.Services.AddAuthorization(o =>
 {
@@ -99,8 +110,8 @@ builder.Services.AddAuthorization(o =>
 
     o.AddPolicy(ModuloAccess.Atividade, policy =>
         policy.RequireAssertion(context =>
-            context.User.IsInRole(UserRoles.Coordenador) ||
-            context.User.IsInRole(UserRoles.Gestor) ||
+            //context.User.IsInRole(UserRoles.Coordenador) ||
+            //context.User.IsInRole(UserRoles.Gestor) ||
             context.User.IsInRole(UserRoles.AdministradorConsulta) ||
             context.User.IsInRole(UserRoles.Administrador)));
 
@@ -122,9 +133,9 @@ builder.Services.AddAuthorization(o =>
 
     o.AddPolicy(ModuloAccess.ControlePresenca, policy =>
         policy.RequireAssertion(context =>
-            context.User.IsInRole(UserRoles.Coordenador) ||
+            //context.User.IsInRole(UserRoles.Coordenador) ||
             context.User.IsInRole(UserRoles.Profissional) ||
-            context.User.IsInRole(UserRoles.Gestor) ||
+            //context.User.IsInRole(UserRoles.Gestor) ||
             context.User.IsInRole(UserRoles.AdministradorConsulta) ||
             context.User.IsInRole(UserRoles.Administrador)));
 
@@ -136,35 +147,37 @@ builder.Services.AddAuthorization(o =>
 
     o.AddPolicy(ModuloAccess.Nota, policy =>
         policy.RequireAssertion(context =>
-            context.User.IsInRole(UserRoles.Coordenador) ||
+            //context.User.IsInRole(UserRoles.Coordenador) ||
             context.User.IsInRole(UserRoles.Profissional) ||
-            context.User.IsInRole(UserRoles.Gestor) ||
+            //context.User.IsInRole(UserRoles.Gestor) ||
             context.User.IsInRole(UserRoles.AdministradorConsulta) ||
             context.User.IsInRole(UserRoles.Administrador)));
 
     o.AddPolicy(ModuloAccess.Profissional, policy =>
         policy.RequireAssertion(context =>
-            context.User.IsInRole(UserRoles.Coordenador) ||
-            context.User.IsInRole(UserRoles.Profissional) ||
+            //context.User.IsInRole(UserRoles.Coordenador) ||
+            //context.User.IsInRole(UserRoles.Profissional) ||
             context.User.IsInRole(UserRoles.Gestor) ||
+            context.User.IsInRole(UserRoles.AdministradorConsulta) ||
             context.User.IsInRole(UserRoles.Administrador)));
 
     o.AddPolicy(ModuloAccess.SistemaSocioeconomico, policy =>
         policy.RequireAssertion(context =>
-            context.User.IsInRole(UserRoles.Coordenador) ||
-            context.User.IsInRole(UserRoles.Profissional) ||
-            context.User.IsInRole(UserRoles.Parceiro) ||
-            context.User.IsInRole(UserRoles.Gestor) ||
+            //context.User.IsInRole(UserRoles.Coordenador) ||
+            //context.User.IsInRole(UserRoles.Profissional) ||
+            //context.User.IsInRole(UserRoles.Parceiro) ||
+            //context.User.IsInRole(UserRoles.Gestor) ||
             context.User.IsInRole(UserRoles.AdministradorConsulta) ||
             context.User.IsInRole(UserRoles.Administrador)));
 
     o.AddPolicy(ModuloAccess.PlanoAula, policy =>
         policy.RequireAssertion(context =>
-            context.User.IsInRole(UserRoles.Coordenador) ||
-            context.User.IsInRole(UserRoles.Profissional) ||
-            context.User.IsInRole(UserRoles.Gestor) ||
+            //context.User.IsInRole(UserRoles.Coordenador) ||
+            //context.User.IsInRole(UserRoles.Profissional) ||
+            //context.User.IsInRole(UserRoles.Gestor) ||
             context.User.IsInRole(UserRoles.AdministradorConsulta) ||
             context.User.IsInRole(UserRoles.Administrador)));
+    
 
     o.AddPolicy(ModuloAccess.Aluno, policy =>
         policy.RequireAssertion(context =>
@@ -194,10 +207,14 @@ builder.Services.AddAuthorization(o =>
 
     o.AddPolicy(ModuloAccess.ControleMaterial, policy =>
         policy.RequireAssertion(context =>
-            context.User.IsInRole(UserRoles.Coordenador) ||
-            context.User.IsInRole(UserRoles.Gestor) ||
+            //context.User.IsInRole(UserRoles.Coordenador) ||
+            //context.User.IsInRole(UserRoles.Gestor) ||
             context.User.IsInRole(UserRoles.AdministradorConsulta) ||
             context.User.IsInRole(UserRoles.Administrador)));
+
+    o.AddPolicy(ModuloAccess.ProfileAluno, policy =>
+        policy.RequireAssertion(context =>
+            context.User.IsInRole(UserRoles.Aluno)));
 
 
 
@@ -223,8 +240,14 @@ builder.Services.AddAuthorization(o =>
     o.AddPolicy(ModuloAccess.MeusCursos, policy =>
         policy.RequireAssertion(context =>
             context.User.IsInRole(UserRoles.AdministradorEad) ||
-            context.User.IsInRole(UserRoles.CoordenadorEad) ||
             context.User.IsInRole(UserRoles.Aluno) ||
+            context.User.IsInRole(UserRoles.Administrador)));
+
+    o.AddPolicy(ModuloAccess.Catalogo, policy =>
+        policy.RequireAssertion(context =>
+            context.User.IsInRole(UserRoles.Gestor) ||
+            context.User.IsInRole(UserRoles.AdministradorEad) ||
+            context.User.IsInRole(UserRoles.CoordenadorEad) ||
             context.User.IsInRole(UserRoles.AdministradorConsulta) ||
             context.User.IsInRole(UserRoles.Administrador)));
 
@@ -249,6 +272,9 @@ app.UseRouting();
 app.UseCookiePolicy();
 
 app.UseAuthorization();
+
+// Ativa o CORS
+app.UseCors("AllowAll");
 
 app.UseStaticFiles(new StaticFileOptions
 {

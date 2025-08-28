@@ -94,7 +94,7 @@ namespace WebApp.ApiClient
         /// Busca todos os Eventos cadastrados
         /// </summary>
         /// <returns>Retorna a lista de Eventos</returns>
-        public List<EventoDto> GetEventosAll()
+        public async Task<List<EventoDto>> GetEventosAll()
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
                 $"{ResourceEvento}"));

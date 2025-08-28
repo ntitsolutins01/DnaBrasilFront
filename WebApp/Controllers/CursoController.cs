@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using WebApp.Authorization;
 using WebApp.Configuration;
 using WebApp.Dto;
@@ -16,7 +17,8 @@ namespace WebApp.Controllers;
 /// <summary>
 /// Controle de Curso
 /// </summary>
-[Authorize(Policy = ModuloAccess.ConfiguracaoSistemaEad)]
+//[Authorize(Policy = ModuloAccess.MeusCursos)]
+[Authorize(Policy = ModuloAccess.Catalogo)]
 public class CursoController : BaseController
 {
     #region Parametros
@@ -88,12 +90,37 @@ public class CursoController : BaseController
         }
     }
 
+    [ClaimsAuthorize(ClaimType.Curso, Identity.Claim.Consultar)]
+    public ActionResult CatalogoCursos(int? crud, int? notify, string message = null)
+    {
+        try
+        {
+            SetNotifyMessage(notify, message);
+            SetCrudMessage(crud);
+
+            var tipoCursos = ApiClientFactory.Instance.GetTipoCursosAll();
+
+            var model = new CursoModel()
+            {
+                TiposCursos = tipoCursos
+            };
+
+            return View(model);
+        }
+        catch (Exception e)
+        {
+            Console.Write(e.StackTrace);
+            return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = e.Message });
+
+        }
+    }
+
     /// <summary>
-    /// Ação de Inclusão do Curso
-    /// </summary>
-    /// <param name="collection">Coleção de dados para inclusao de Curso</param>
-    /// <returns>Retorna mensagem de inclusao através do parametro crud</returns>
-    [ClaimsAuthorize(ClaimType.Curso, Identity.Claim.Incluir)]
+        /// Ação de Inclusão do Curso
+        /// </summary>
+        /// <param name="collection">Coleção de dados para inclusao de Curso</param>
+        /// <returns>Retorna mensagem de inclusao através do parametro crud</returns>
+        [ClaimsAuthorize(ClaimType.Curso, Identity.Claim.Incluir)]
     [HttpPost]
     public async Task<ActionResult> Create(IFormCollection collection)
     {
@@ -238,6 +265,9 @@ public class CursoController : BaseController
             return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = "Este curso não pode ser excluído pois possui módulos vinculadas a ele." });
         }
     }
+
+
+
     #endregion
 
     #region Get Methods
@@ -274,6 +304,109 @@ public class CursoController : BaseController
         {
             return Task.FromResult(Json(ex.Message));
         }
+    }
+    public Task<List<ModuloEadDto>> GetModulosEadAllByCursoId(int id)
+    {
+        var result = ApiClientFactory.Instance.GetModulosEadAllByCursoId(id);
+
+        return Task.FromResult(result);
+    }
+    public Task<List<AulaDto>> GetAulasByCursoId(int id)
+    {
+        var result = ApiClientFactory.Instance.GetAulasByCursoId(id);
+
+        return Task.FromResult(result);
+    }
+
+    [HttpGet]
+    public ActionResult GetDetalheCurso(int id)
+    {
+        try
+        {
+            var curso = ApiClientFactory.Instance.GetCursoById(id);
+
+            var modulos = ApiClientFactory.Instance.GetModulosEadAllByCursoId(id);
+
+            var aulas = ApiClientFactory.Instance.GetAulasByCursoId(id);
+
+            return PartialView("_DetalheCurso", new AlunoCursoCertificadoModel
+            {
+                Curso = curso,
+                Modulos = modulos,
+                Aulas = aulas,
+            });
+        }
+        catch (Exception ex)
+        {
+            return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = "Erro ao executar esta ação. Favor entrar em contato com o administrador do sistema." });
+        }
+    }
+
+    [HttpGet]
+    public ActionResult GetAlunosMatriculados(int id, int idTipoCurso)
+    {
+        try
+        {
+            var alunos = ApiClientFactory.Instance.GetAlunosCursosByCursoId(id, idTipoCurso);
+
+            return PartialView("_AlunosMatriculados", new AlunoCursoCertificadoModel
+            {
+                AlunosCursos = alunos
+            });
+        }
+        catch (Exception ex)
+        {
+            return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = "Erro ao executar esta ação. Favor entrar em contato com o administrador do sistema." });
+        }
+    }
+
+    /// <summary>
+    /// Ação de Exibir a Partial View de ordenação no Curso
+    /// </summary>
+    /// <param name="id">identificador do Curso</param>
+    /// <returns>retorna a Partial View de ordenação dos Módulos de um Cursp</returns>
+    [HttpGet]
+    public ActionResult CarregarEstrutura(int cursoId)
+    {
+        try
+        {
+            var curso = ApiClientFactory.Instance.GetCursoById(cursoId);
+            var modulosEad = ApiClientFactory.Instance.GetModulosEadAllByCursoId(cursoId);
+
+            return PartialView("_EstruturaCurso", new EstruturaCursoModel
+            {
+                Curso = curso,
+                ModulosEad = modulosEad
+            });
+        }
+        catch (Exception ex)
+        {
+            return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = "Erro ao executar esta ação. Favor entrar em contato com o administrador do sistema." });
+        }
+    }
+
+    [HttpPost]
+    public JsonResult SalvarOrdem(int cursoId, string novaOrdem)
+    {
+        try
+        {
+            var items = JsonConvert.DeserializeObject<List<NestableItem>>(novaOrdem);
+
+            // Lógica para atualizar a ordem no banco de dados
+            //ApiClientFactory.Instance.AtualizarOrdemCurso(cursoId, items);
+
+            return Json(new { success = true, message = "Ordem salva com sucesso!" });
+        }
+        catch (Exception ex)
+        {
+            return Json(new { success = false, message = ex.Message });
+        }
+    }
+
+    public class NestableItem
+    {
+        public string id { get; set; }
+        public List<NestableItem> children { get; set; }
     }
     #endregion
 }

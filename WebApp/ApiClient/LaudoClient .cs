@@ -71,11 +71,11 @@ namespace WebApp.ApiClient
         /// </summary>
         /// <param name="id">id que busca laudo por Aluno</param>
         /// <returns>retorna a lista de Laudo por Aluno</returns>
-        public LaudoDto GetLaudoByAluno(int id)
+        public LaudoDto? GetLaudoByAluno(int id)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
                 $"{ResourceLaudo}/Aluno/{id}"));
-            return Get<LaudoDto>(requestUrl);
+            return Get<LaudoDto?>(requestUrl);
         }
 
         /// <summary>

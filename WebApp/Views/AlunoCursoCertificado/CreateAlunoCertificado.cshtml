@@ -19,30 +19,29 @@
                     <div class="panel-body">
                         <div class="panel-body">
                             <div class="form-group row">
-                                <label class="col-sm-3 control-label">Estado </label>
-                                <div class="col-md-2 form-group">
+                                <label class="col-sm-2 control-label">Estado </label>
+                                <div class="col-md-4 form-group">
                                     <select class="form-control populate select2" name="ddlEstado" id="ddlEstado" style="width:100%"
                                             asp-for="EstadoId" asp-items="Model.ListEstados">
                                         <option value="">Selecionar Estado</option>
                                     </select>
                                 </div>
-                                <label class="col-sm-1 control-label">Município </label>
-                                <div class="col-md-2 form-group">
+                                <label class="col-sm-2 control-label">Município </label>
+                                <div class="col-md-4 form-group">
                                     <select class="form-control populate select2" name="ddlMunicipio" id="ddlMunicipio" style="width:100%"
                                             asp-for="MunicipioId" asp-items="Model.ListMunicipios">
                                         <option value="">Selecionar Municipio</option>
                                     </select>
                                 </div>
-                                <label class="col-sm-1 control-label">Localidade </label>
-                                <div class="col-md-3 form-group">
-                                    <select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade" style="width:100%"
-                                            asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
-                                        <option value="">Selecionar Localidade</option>
-                                    </select>
-                                </div>
                             </div>
-                            <div class="form-group row">
-                                <label class="col-sm-3 control-label text-sm-right pt-2">Aluno <span class="required">*</span></label>
+								<label class="col-sm-2 control-label">Localidade </label>
+								<div class="col-md-4 form-group">
+									<select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade" style="width:100%"
+											asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
+										<option value="">Selecionar Localidade</option>
+									</select>
+								</div>
+                                <label class="col-sm-2 control-label text-sm-right pt-2">Aluno <span class="required">*</span></label>
                                 <div class="col-sm-4">
                                     <select class="form-control populate select2" name="ddlAluno" id="ddlAluno" style="width:100%"
                                             required title="Por favor selecione o aluno."
@@ -50,16 +49,17 @@
                                         <option value="">Selecionar Aluno</option>
                                     </select>
                                 </div>
-                                <label class="col-sm-1 control-label text-sm-right pt-2">Certificado <span class="required">*</span></label>
-                                <div class="col-sm-4">
-                                    <select class="form-control populate select2" name="ddlCertificado" id="ddlCertificado" style="width:100%"
-                                            required title="Por favor selecione o curso"
-                                            asp-for="CertificadoId" asp-items="Model.ListCertificados">
-                                        <option value="">Selecionar Certificado</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
+						</div>
+						<div class="form-group row">
+							<label class="col-sm-2 control-label text-sm-right pt-2">Certificado <span class="required">*</span></label>
+							<div class="col-sm-4">
+								<select class="form-control populate select2" name="ddlCertificado" id="ddlCertificado" style="width:100%"
+								        required title="Por favor selecione o curso"
+								        asp-for="CertificadoId" asp-items="Model.ListCertificados">
+									<option value="">Selecionar Certificado</option>
+								</select>
+							</div>
+						</div>
                     </div>
                     <footer class="panel-footer">
                         <div class="row">

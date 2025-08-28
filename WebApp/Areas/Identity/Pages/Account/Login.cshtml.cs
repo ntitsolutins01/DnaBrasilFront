@@ -8,6 +8,8 @@ using Microsoft.Extensions.Options;
 using WebApp.Areas.Identity.Models;
 using WebApp.Configuration;
 using WebApp.Enumerators;
+using WebApp.Factory;
+using WebApp.Models;
 using WebApp.Utility;
 
 namespace WebApp.Areas.Identity.Pages.Account
@@ -45,7 +47,7 @@ namespace WebApp.Areas.Identity.Pages.Account
 
         public class LoginInput : IValidatableObject
         {
-            [RegularExpression(@"^(([A-Za-z0-9]+_+)|([A-Za-z0-9]+\-+)|([A-Za-z0-9]+\.+)|([A-Za-z0-9]+\++))*[A-Za-z0-9]+@((\w+\-+)|(\w+\.))*\w{1,63}\.[a-zA-Z]{2,6}$", ErrorMessage = "O e-mail informado deve atender um formato padrão válido.")]
+            //[RegularExpression(@"^(([A-Za-z0-9]+_+)|([A-Za-z0-9]+\-+)|([A-Za-z0-9]+\.+)|([A-Za-z0-9]+\++))*[A-Za-z0-9]+@((\w+\-+)|(\w+\.))*\w{1,63}\.[a-zA-Z]{2,6}$", ErrorMessage = "O e-mail informado deve atender um formato padrão válido.")]
             public string Email { get; set; }
 
             [DataType(DataType.Password)] public string Password { get; set; }
@@ -102,7 +104,7 @@ namespace WebApp.Areas.Identity.Pages.Account
                 var result =
                     await _signInManager.PasswordSignInAsync(Login.Email, Login.Password, Login.RememberMe, true);
 
-                var user = await _userManager.FindByEmailAsync(Login.Email);
+                var user = await _userManager.FindByNameAsync(Login.Email);
 
                 if (user == null)
                 {
@@ -149,7 +151,7 @@ namespace WebApp.Areas.Identity.Pages.Account
                                 //    notify = (int)EnumNotify.Success,
                                 //    message = $"Este usuário não possui permissão de acesso ao sistema DNA."
                                 //});
-                                returnUrl = Url.Content("~/Aluno/Profile");
+                                returnUrl = Url.Content($"~/Aluno/Profile?id={user.UserName}");
                                 break;
                             case UserRoles.AdministradorEad:
                                 returnUrl = Url.Content("~/DashboardEad");
@@ -172,13 +174,13 @@ namespace WebApp.Areas.Identity.Pages.Account
                         //    Expires = DateTime.Now.AddDays(1)
                         //};
 
-                        //var request = new UsuarioModel.LoginUsuarioRequest()
-                        //{
-                        //    Email = user.Email!,
-                        //    Password = Login.Password
-                        //};
+                        var request = new UsuarioModel.LoginUsuarioRequest()
+                        {
+                            Email = user.Email!,
+                            Password = Login.Password
+                        };
 
-                        //var token = await ApiClientFactory.Instance.LoginUsuario(request);
+                        var resultreturn  = await ApiClientFactory.Instance.LoginUsuario(request);
 
                         //Response.Cookies.Append("token", token.AccessToken, cookieOptions);
 

@@ -1,0 +1,114 @@
+﻿@model CursoModel
+@{
+	ViewData["Title"] = "Catálogo de Cursos";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="vCatalogo">
+	<div class="row">
+		<div class="col-md-12">
+			@foreach (var tiposCurso in Model.TiposCursos.Where(tiposCurso => tiposCurso.Cursos.Count > 0))
+			{
+				<section class="panel panel-featured">
+					<header class="panel-heading">
+						<h1 class="panel-title">@tiposCurso.Nome</h1>
+					</header>
+					<div class="panel-body">
+						<div class="owl-carousel owl-theme" data-plugin-carousel data-plugin-options='{ "dots": true, "autoplay": true, "autoplayTimeout": 3000, "loop": true, "margin": 10, "nav": false,   }'>
+							@foreach (var item in tiposCurso.Cursos.Where(x => x.Status))
+							{
+								<a href="#" data-toggle="modal" data-target="#mdDetalheCurso" data-id="@item.Id">
+									<div class="item"><img class="img-thumbnail" src="~/Cursos/@Html.DisplayFor(modelItem => item.Imagem)" alt="@item.Titulo"></div>
+								</a>
+							}
+						</div>
+					</div>
+				</section>
+			}
+		</div>
+	</div>
+	<!-- Modal -->
+	<div class="modal fade" id="mdDetalheCurso" tabindex="-1" role="dialog" aria-labelledby="mdDetalheCursoLabel" aria-hidden="true">
+		<div class="modal-dialog " role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="mdDetalheCursoLabel">
+						<i class="fa fa-info-circle"></i> &nbsp;&nbsp;<strong>Informações do Curso</strong>
+					</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<input type="hidden" id="cursoId" name="cursoId" />
+				<div class="modal-body" id="pDetalheCurso">
+				</div>
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal">
+						<i class="fa fa-times"></i> &nbsp;&nbsp;Fechar
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+@section CssSpecificVendor {
+	<link rel="stylesheet" href="~/assets/vendor/owl.carousel/assets/owl.carousel.css" />
+	<link rel="stylesheet" href="~/assets/vendor/owl.carousel/assets/owl.theme.default.css" />
+}
+@section Scripts {
+	<script src="~/assets/vendor/owl.carousel/owl.carousel.js"></script>
+	<script src="~/js/catalogo.js"></script>
+	<script>
+
+		(function ($) {
+
+			'use strict';
+			var crud = @ViewBag.CrudMessage;
+
+			if (crud === 1) {
+				new PNotify({
+					title: 'Catálogo Curso',
+					text: 'Cadastro realizado com sucesso!',
+					type: 'success'
+				});
+			} else if (crud === 2) {
+				new PNotify({
+					title: 'Catálogo Curso',
+					text: 'Dados alterados com sucesso.',
+					type: 'warning'
+				});
+			} else if (crud === 3) {
+				new PNotify({
+					title: 'Catálogo Curso',
+					text: 'Registro excluído com sucesso.',
+					type: 'error'
+				});
+			}
+
+			var notify = @ViewBag.NotifyMessage;
+			var messagem = '@ViewBag.Notify';
+
+			if (notify === 0) {
+				new PNotify({
+					title: 'Catálogo Curso',
+					text: messagem,
+					type: 'success'
+				});
+			} else if (notify === 1) {
+				new PNotify({
+					title: 'Catálogo Curso',
+					text: messagem,
+					type: 'warning'
+				});
+			} else if (notify === 2) {
+				new PNotify({
+					title: 'Catálogo Curso',
+					text: messagem,
+					type: 'error'
+				});
+			}
+
+		}).apply(this, [jQuery]);
+
+	</script>
+}

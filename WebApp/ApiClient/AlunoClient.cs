@@ -72,6 +72,13 @@ namespace WebApp.ApiClient
             return Put(requestUrl, command);
         }
 
+        public Task<bool> UpdateProfile(int id, AlunoModel.CreateUpdateProfileAlunoCommand updateCommand)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceAlunos}/Profile/{id}"));
+            return Put(requestUrl, updateCommand);
+        }
+
         /// <summary>
         /// Alteração de Qr Code do Aluno
         /// </summary>
@@ -255,6 +262,19 @@ namespace WebApp.ApiClient
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
                 $"{ResourceAlunos}/Documentos"));
             return Post(requestUrl, list);
+        }
+
+        /// <summary>
+        /// Habilita aluno a operar no sistema
+        /// </summary>
+        /// <param name="alunoId">Id do ALuno</param>
+        /// <param name="command">Objeto para habilitar o Aluno</param>
+        /// <returns>Retorna true ou false</returns>
+        public Task<bool> UpdateHabilitarAluno(int alunoId, AlunoModel.UpdateHabilitarAlunoCommand command)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceAlunos}/Habilitar/{alunoId}"));
+            return Put(requestUrl, command);
         }
     }
 }

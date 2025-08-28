@@ -208,16 +208,17 @@ var vm = new Vue({
 
             if ($('#nestable').data('nestable')) {
                 $('#nestable').nestable('destroy');
+                $('#nestable').off('change');
             }
 
             $('#nestable').nestable({
-                maxDepth: 2,
+                maxDepth: 1,
                 group: 1
             }).on('change', function (e) {
                 const serialized = $(this).nestable('serialize');
                 self.novaOrdem = JSON.stringify(serialized);
-                self.AtualizarNumeracaoVisual(serialized); // Atualização imediata
-                self.AtualizarOrdem(serialized); // Persistência no banco
+                self.AtualizarNumeracaoVisual(serialized);
+                self.AtualizarOrdem(serialized);
             });
 
             this.AtualizarNumeracaoVisual($('#nestable').nestable('serialize'));

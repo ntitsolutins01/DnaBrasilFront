@@ -4,8 +4,8 @@
     {
 
         #region SearchFilter
-        public required int PageNumber { get; set; } = 1;
-        public required int PageSize { get; set; } = 10;
+        public int PageNumber { get; set; } = 1;
+        public int PageSize { get; set; } = 10;
         public string FomentoId { get; set; }
         public string Estado { get; set; }
         public string MunicipioId { get; set; }

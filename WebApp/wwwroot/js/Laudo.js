@@ -1,7 +1,8 @@
 var vm = new Vue({
     el: "#vLaudo",
     data: {
-        loading: false
+        loading: false,
+        laudoDto: { Id: "", AlunoId: "", ProfissionalId: ""}
     },
     mounted: function () {
 
@@ -27,10 +28,8 @@ var vm = new Vue({
 
             }).apply(this, [jQuery]);
 
-            //acionado quando o modal está prestes a ser mostrado
             $('#mdUpload').on('show.bs.modal', function (e) {
 
-                //get data-id attribute of the clicked element
                 var id = $(e.relatedTarget).data('id');
                 var alunoId = $(e.relatedTarget).data('alunoid');
                 var localidadeId = $(e.relatedTarget).data('localidadeid');
@@ -39,8 +38,6 @@ var vm = new Vue({
                 $("input[name='alunoId']").val(alunoId);
                 $("input[name='localidadeid']").val(localidadeId);
 
-                console.log("laudoId: " + id + " - alunoId: " + alunoId + " - localidadeId: " + localidadeId);
-
                 var urlProfissional = "../../Profissional/GetProfissionaisByLocalidade";
 
                 $.getJSON(urlProfissional,
@@ -48,7 +45,7 @@ var vm = new Vue({
                     function (data) {
                         if (data.length > 0) {
                             var items = '<option value="">Selecionar Profissional</option>';
-                            $("#ddlProfissional").empty;
+                            $("#ddlProfissional").empty();
                             $.each(data,
                                 function (i, row) {
                                     items += "<option value='" + row.value + "'>" + row.text + "</option>";
@@ -58,15 +55,18 @@ var vm = new Vue({
                         else {
                             new PNotify({
                                 title: 'Profissional',
-                                text: 'Profissional não encontrados.',
+                                text: 'Profissionais não encontrados.',
                                 type: 'warning'
                             });
                         }
                     });
 
+                $("#matriculaReconhecidaGroup").hide();
+                $("#respostasReconhecidasGroup").hide();
             });
 
-            var formid = $('form')[1].id;
+            var forms = $('form');
+            var formid = forms.length > 1 ? forms[1].id : (forms.length > 0 ? forms[0].id : "");
 
             if (formid === "formPesquisarLaudo") {
 
@@ -421,22 +421,49 @@ var vm = new Vue({
                         processData: false,
                         success: function (res) {
                             if (res.sucesso) {
-                                var html = "<b>Matrícula reconhecida:</b> " + (res.matricula || "<i>Não reconhecida</i>") + "<br/><b>Respostas:</b><ul>";
-                                for (var q in res.respostas) {
-                                    html += "<li><b>Questão " + q + ":</b> " + (res.respostas[q] || "<i>Não marcada</i>") + "</li>";
-                                }
-                                html += "</ul>";
-                                $("#respostasReconhecidas").html(html);
-                                $("#btnSalvarGabarito").prop("disabled", false);
+                                $("#matriculaReconhecidaGroup").show();
+                                $("#respostasReconhecidasGroup").show();
 
+                                $("#matriculaReconhecidaSpan").val(res.matricula || "Não reconhecida");
+
+                                var opcoes = ["A", "B", "C", "D", "E", "Inválida"];
+                                var totalRows = 5;
+                                var totalCols = 3;
+                                var opcoes = ["A", "B", "C", "D", "E", "Inválida"];
+                                for (var row = 0; row < totalRows; row++) {
+                                    var linhaHtml = "";
+                                    for (var col = 0; col < totalCols; col++) {
+                                        var qIndex = (col * totalRows) + row + 1;
+                                        var resposta = res.respostas[qIndex] || "Inválida";
+                                        linhaHtml += `<div class="col-md-4">
+                                            <label>Q${qIndex}</label>
+                                            <select class="form-control respostaCombo" data-questao="${qIndex}">
+                                                ${opcoes.map(opt => `<option value="${opt}"${opt === resposta ? ' selected' : ''}>${opt}</option>`).join('')}
+                                            </select>
+                                        </div>`;
+                                    }
+                                    $("#linhaRespostas" + (row + 1)).html(linhaHtml);
+                                }
+
+                                $(".respostaCombo").on("change", function () {
+                                    var respostas = {};
+                                    $(".respostaCombo").each(function () {
+                                        var q = $(this).data("questao");
+                                        respostas[q] = $(this).val();
+                                    });
+                                    $("#respostasReconhecidasHidden").val(JSON.stringify(respostas));
+                                });
+                                $(".respostaCombo").trigger("change");
+
+                                $("#btnSalvarGabarito").prop("disabled", false);
                                 $("#matriculaReconhecidaHidden").val(res.matricula || "");
-                                $("#respostasReconhecidasHidden").val(JSON.stringify(res.respostas));
                             } else {
-                                var mensagem = "Erro ao processar o gabarito. Por favor verifique a iluminação e enquadramento da imagem.";                              
-                                $("#respostasReconhecidas").html("<span class='text-danger'>" + mensagem + "</span>");
+                                $("#matriculaReconhecidaGroup").hide();
+                                $("#respostasReconhecidasGroup").hide();
+                                var mensagem = "Erro ao processar o gabarito. Por favor verifique a iluminação e enquadramento da imagem.";
+                                alert(mensagem);
                                 $("#btnSalvarGabarito").prop("disabled", true);
                             }
-
                         },
                         error: function () {
                             $("#respostasReconhecidas").html("<span class='text-danger'>Erro interno ao processar gabarito.</span>");
@@ -455,6 +482,10 @@ var vm = new Vue({
                     }
                 });
 
+                $("#formUploadGabarito").on("submit", function (e) {
+                    $("#btnSalvarGabarito").prop("disabled", true);
+                    $("#btnProcessarGabarito").prop("disabled", true);
+                });
             }
 
             if (formid === "formEditLaudo") {
@@ -1092,6 +1123,18 @@ var vm = new Vue({
             }
 
             window.open(url, '_blank');
+        },
+        RespostaGabarito: function (id) {
+            var self = this;
+
+            axios.get("../Laudo/GetLaudoById/?id=" + id).then(result => {
+
+                self.laudoDto.Id = result.data.id;
+                self.laudoDto.AlunoId = result.data.alunoId;
+
+            }).catch(error => {
+                Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
+            });
         }
     }
 });
@@ -1107,4 +1150,9 @@ var crud = {
     //    $('#mdEditLaudo').modal('show');
     //    vm.EditLaudo(id)
     //}
+    RespostaModal: function (id) {
+        $('input[name="LaudoId"]').attr('value', id);
+        $('#mdRespostaGabarito').modal('show');
+        vm.RespostaGabarito(id)
+    }
 };

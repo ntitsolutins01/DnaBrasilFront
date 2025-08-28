@@ -1,0 +1,343 @@
+﻿@using Microsoft.IdentityModel.Tokens
+@model WebApp.Models.ControleFrequenciaEscolarModel.TabelaFrequenciasEscolares
+@{
+    ViewData["Title"] = "Impressão da Frequencia Escolhar";
+    Layout = "";
+}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, orientation=landscape" />
+    <title>Frequencia - @DateTime.Now.ToString("MMMM/yyyy", new System.Globalization.CultureInfo("pt-BR")).ToUpper()</title>
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="~/assets/styles_ControleFrequencia/indexControleFrequencia.css" media="all" />
+    <link rel="stylesheet" href="~/assets/styles_ControleFrequencia/tableControleFrequencia.css" media="all" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+</head>
+
+<body>
+    <!-- Barra de navegação fixa -->
+    <div class="navigation-bar">
+        <!-- Navegação de páginas -->
+        <div class="page-navigation">
+            <button class="nav-button" id="prevButton" onclick="previousPage()" title="Página Anterior">
+                <span class="material-icons">arrow_upward</span>
+            </button>
+            <div class="page-counter">
+                <span id="currentPage">0</span>
+                <span>/</span>
+                <span id="totalPages">0</span>
+            </div>
+            <button class="nav-button" id="nextButton" onclick="nextPage()" title="Próxima Página">
+                <span class="material-icons">arrow_downward</span>
+            </button>
+        </div>
+        <!-- Botões de ação -->
+        <div class="action-buttons">
+            <button class="action-button" onclick="printDocument()" title="Imprimir">
+                <span class="material-icons">print</span>
+            </button>
+            <button class="action-button" onclick="downloadDocument()" title="Baixar">
+                <span class="material-icons">download</span>
+            </button>
+        </div>
+    </div>
+    <!-- Container para todas as páginas -->
+    <div id="pages-container">
+        <!-- As páginas serão geradas aqui dinamicamente pelo JavaScript -->
+    </div>
+
+    <!-- Template para página (não visível, usado apenas pelo JavaScript) -->
+    <template id="page-template">
+        <div class="page-container">
+            <div class="attendance-container">
+                <!-- Header da tabela de presença -->
+                <header class="report-header">
+                    <div class="report-logo"></div>
+                    <div class="report-title">
+                        <span class="attendance-title">CONTROLE DE FREQUENCIA</span>
+                        <span class="attendance-description">ESCOLAR</span>
+                    </div>
+                    <div class="report-icon"></div>
+                </header>
+
+                <!-- Informações da turma -->
+                <div class="class-info-table">
+                    <table>
+                        <tr>
+                            <td><strong>LOCALIDADE:</strong> <span class="localidade-nome"></span></td>
+                            <td><strong>PROFESSOR/INSTRUTOR:</strong> <span class="professor-nome"></span></td>
+                            <td><strong>SERIE/TURMA:</strong> <span class="serie-turma"></span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>DISCIPLINA:</strong> <span class="disciplina-nome"></span></td>
+                            <td><strong>PERÍODO:</strong> <span class="periodo"></span></td>
+                            <td><strong>MÊS:</strong> <span class="mes-ano"></span></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- Tabela de frequência -->
+                <div class="attendance-table-container">
+                    <table class="attendance-table">
+                        <thead>
+                            <tr class="table-header">
+                                <th rowspan="2" class="number-col">&nbsp;</th>
+                                <th rowspan="2" class="name-col">NOME COMPLETO DO ALUNO</th>
+                                <th class="days-header">DIAS DO MÊS</th>
+                            </tr>
+                            <tr class="days-row" id="days-row">
+                                <!-- Os dias serão inseridos aqui dinamicamente -->
+                            </tr>
+                        </thead>
+                        <tbody class="students-container">
+                            <!-- Aqui serão inseridos os alunos dinamicamente -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Área de assinaturas -->
+                <div class="signature-area">
+                    <div class="signature-block">
+                        <div class="signature-line">
+                            <hr />
+                            <p><span class="professor-assinatura"></span></p>
+                        </div>
+                    </div>
+                    <div class="signature-block">
+                        <div class="signature-line">
+                            <hr />
+                            <p>Coordenador Pedagógico</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <script>
+        // Dados dos alunos vindos do servidor
+        const studentsData = [
+            @if (!Model.Alunos.IsNullOrEmpty())
+            {
+                        var presentes = new HashSet<string>();
+                        var faltas = new HashSet<string>();
+
+                        if (Model.AlunosComPresencas != null)
+                        {
+                                    foreach (var p in Model.AlunosComPresencas)
+                                    {
+                                                var alunoId = p.AlunoId?.ToString();
+                                                var dia = ParseDate(p.DataFrequencia).Date.ToString("yyyy-MM-dd");
+
+                                                if (string.IsNullOrEmpty(alunoId)) continue;
+
+                                                var key = $"{alunoId}|{dia}";
+                                                if (p.Controle == "P") presentes.Add(key);
+                                                else if (p.Controle == "F") faltas.Add(key);
+                                    }
+                        }
+
+                        DateTime dataAtual = DateTime.Now;
+                        int ano = dataAtual.Year;
+                        int mes = dataAtual.Month;
+                        int totalDiasNoMes = DateTime.DaysInMonth(ano, mes);
+
+                        for (int i = 0; i < Model.Alunos.Count; i++)
+                        {
+                                    var aluno = Model.Alunos[i];
+                                    var nomeEscapado = aluno.Nome.Replace("\"", "\\\"").Replace("\r", "").Replace("\n", "");
+
+                                    <text>{</text>
+                                    <text>id: @aluno.Id,</text>
+                                    <text>name: "@nomeEscapado",</text>
+                                    <text>attendance: {</text>
+
+                                    var attendanceItems = new List<string>();
+
+                                    for (int dia = 1; dia <= totalDiasNoMes; dia++)
+                                    {
+                                                var diaRef = new DateTime(ano, mes, dia).Date;
+                                                var key = $"{aluno.Id}|{diaRef:yyyy-MM-dd}";
+                                                var temPresenca = presentes.Contains(key);
+                                                var temFalta = faltas.Contains(key);
+                                                var diaFormatted = dia.ToString("00");
+
+                                                if (temFalta)
+                                                {
+                                                            attendanceItems.Add($"\"{diaFormatted}\": \"F\"");
+                                                }
+                                                else if (temPresenca)
+                                                {
+                                                            attendanceItems.Add($"\"{diaFormatted}\": \".\"");
+                                                }
+                                    }
+
+                                    @Html.Raw(string.Join(",", attendanceItems))
+
+                                    <text>}</text>
+                                    @if (i < Model.Alunos.Count - 1)
+                                    {
+                                                <text>},</text>
+                                    }
+                                    else
+                                    {
+                                                <text>}</text>
+                                    }
+                        }
+            }
+        ];
+
+        // Informações dinâmicas vindas do servidor
+        const localidadeNome = '@Html.Raw(ViewBag.LocalidadeNome ?? "LOCALIDADE NÃO ENCONTRADA")';
+        const profissionalNome = '@Html.Raw(ViewBag.ProfissionalNome ?? "PROFESSOR NÃO ENCONTRADO")';
+        const disciplinaNome = '@Html.Raw(ViewBag.DisciplinaNome ?? "DISCIPLINA NÃO ENCONTRADA")';
+        const serieTurmaNome = '@Html.Raw(ViewBag.SerieTurmaNome ?? "SÉRIE/TURMA NÃO ENCONTRADA")';
+
+        // Configurações de data
+        let currentMonth = @(DateTime.Now.Month - 1); // JavaScript usa 0-indexed
+        let currentYear = @DateTime.Now.Year;
+
+        // Função para obter os dias de um mês
+        function getDaysInMonth(month, year) {
+            return new Date(year, month + 1, 0).getDate();
+        }
+
+        // Função para gerar array com todos os dias do mês formatados com zero à esquerda
+        function generateDaysArray(month, year) {
+            const totalDays = getDaysInMonth(month, year);
+            const daysArray = [];
+
+            for (let i = 1; i <= totalDays; i++) {
+                daysArray.push(i < 10 ? `0${i}` : `${i}`);
+            }
+
+            return daysArray;
+        }
+
+        // Gera o array de dias para o mês/ano atual
+        const daysInMonth = generateDaysArray(currentMonth, currentYear);
+
+        // Configuração
+        const STUDENTS_PER_PAGE = 25; // Máximo de alunos por página
+
+        // Função principal para gerar as páginas
+        function generatePages() {
+            const pagesContainer = document.getElementById('pages-container');
+            const pageTemplate = document.getElementById('page-template');
+
+            // Limpa o container de páginas
+            pagesContainer.innerHTML = '';
+
+            // Calcula o número de páginas necessárias
+            const totalPages = Math.ceil(studentsData.length / STUDENTS_PER_PAGE);
+
+            // Gera cada página
+            for (let pageNum = 0; pageNum < totalPages; pageNum++) {
+                // Clone o template da página
+                const pageNode = document.importNode(pageTemplate.content, true);
+                const pageElement = pageNode.querySelector('.page-container');
+
+                // Adiciona classe e ID para a página
+                pageElement.classList.add(`page${pageNum + 1}`);
+                pageElement.id = `page-${pageNum + 1}`;
+
+                // Adiciona classe especial para última página
+                if (pageNum === totalPages - 1) {
+                    pageElement.classList.add('last-page');
+                }
+
+                // Pega os alunos para esta página
+                const startIdx = pageNum * STUDENTS_PER_PAGE;
+                const endIdx = Math.min(startIdx + STUDENTS_PER_PAGE, studentsData.length);
+                const pageStudents = studentsData.slice(startIdx, endIdx);
+
+                // Gera os cabeçalhos dos dias do mês dinamicamente
+                const daysHeader = pageElement.querySelector('.days-header');
+                daysHeader.setAttribute('colspan', daysInMonth.length);
+
+                const daysRow = pageElement.querySelector('.days-row');
+                daysRow.innerHTML = ''; // Limpa qualquer conteúdo padrão
+
+                // Adiciona cada dia como um cabeçalho
+                daysInMonth.forEach(day => {
+                    const dayHeader = document.createElement('th');
+                    dayHeader.textContent = day;
+                    daysRow.appendChild(dayHeader);
+                });
+
+                // Adiciona os alunos à tabela
+                const studentsContainer = pageElement.querySelector('.students-container');
+                pageStudents.forEach((student, index) => {
+                    const row = document.createElement('tr');
+
+                    // Célula do número
+                    const numCell = document.createElement('td');
+                    numCell.className = 'number-col';
+                    numCell.textContent = startIdx + index + 1;
+                    row.appendChild(numCell);
+
+                    // Célula do nome
+                    const nameCell = document.createElement('td');
+                    nameCell.className = 'name-col';
+                    nameCell.textContent = student.name;
+                    row.appendChild(nameCell);
+
+                    // Células dos dias
+                    daysInMonth.forEach(day => {
+                        const dayCell = document.createElement('td');
+                        dayCell.textContent = student.attendance[day] || '';
+                        row.appendChild(dayCell);
+                    });
+
+                    studentsContainer.appendChild(row);
+                });
+
+                // Atualiza as informações dinâmicas da turma com dados reais
+                pageElement.querySelector('.localidade-nome').textContent = localidadeNome;
+                pageElement.querySelector('.professor-nome').textContent = profissionalNome;
+                pageElement.querySelector('.serie-turma').textContent = serieTurmaNome;
+                pageElement.querySelector('.disciplina-nome').textContent = disciplinaNome;
+                pageElement.querySelector('.periodo').textContent = 'NÃO DEFINIDO';
+                pageElement.querySelector('.mes-ano').textContent = new Date().toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' }).toUpperCase();
+                pageElement.querySelector('.professor-assinatura').textContent = `${profissionalNome} - ${disciplinaNome}`;
+
+                // Adiciona a página ao container
+                pagesContainer.appendChild(pageElement);
+            }
+
+            // Retorna as páginas geradas
+            return document.querySelectorAll('.page-container');
+        }
+
+        // Inicializa quando o DOM estiver carregado
+        document.addEventListener('DOMContentLoaded', function () {
+            // Gera as páginas
+            const pages = generatePages();
+
+            // Coordena com o sistema de navegação definido em index.js
+            if (typeof setupNavigation === 'function') {
+                setupNavigation(pages);
+            } else {
+                console.error('Função setupNavigation não encontrada. Verifique se index.js está carregado corretamente.');
+            }
+        });
+    </script>
+
+    <script src="~/assets/scripts_Laudo/index.js"></script>
+</body>
+</html>
+
+@functions {
+    public static DateTime ParseDate(object data)
+    {
+        if (data is DateTime dt)
+            return dt;
+        if (data is string s)
+            return DateTime.Parse(s);
+        return DateTime.MinValue;
+    }
+}

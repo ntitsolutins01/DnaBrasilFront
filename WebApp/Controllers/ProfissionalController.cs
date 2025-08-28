@@ -2,6 +2,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.RegularExpressions;
+using Azure;
 using log4net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -24,15 +25,18 @@ namespace WebApp.Controllers
     /// <summary>
     /// Controle de Profissional
     /// </summary>
-    [Authorize(Policy = ModuloAccess.Profissional)]
+    //[Authorize(Policy = ModuloAccess.Profissional)] TODO: verificar acesso do proprio profissional
     public class ProfissionalController : BaseController
     {
+        #region Parametros
 
         private readonly IEmailSender _emailSender;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IWebHostEnvironment _host;
         private readonly ILog _logger;
+
+        #endregion
 
         #region Contructor
 
@@ -72,19 +76,32 @@ namespace WebApp.Controllers
         /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
         /// <returns></returns>
         [ClaimsAuthorize(ClaimType.Profissional, Claim.Consultar)]
-        public IActionResult Index(int? crud, int? notify, string message = null)
+        public async Task<ActionResult> Index(int? crud, int? notify, string message = null)
         {
 
             try
             {
                 SetNotifyMessage(notify, message);
-                SetCrudMessage(crud); var response = ApiClientFactory.Instance.GetProfissionalAll();
-                var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome");
+                SetCrudMessage(crud);
+
+                var usuario = User.Identity.Name;
+                var usu = await ApiClientFactory.Instance.GetUsuarioByEmail(usuario);
+
+                List<ProfissionalDto> response;
+                if (usu.Perfil.Id == (int)EnumPerfil.Administrador)
+                {
+                    response = ApiClientFactory.Instance.GetProfissionalAll();
+                }
+                else
+                {
+                    response = ApiClientFactory.Instance.GetProfissionalAll().Where(x=>x.MunicipioId == Convert.ToInt32(usu.MunicipioId)).ToList();
+                }
+
 
                 return View(new ProfissionalModel()
                 {
                     Profissionais = response,
-                    ListEstados = estados,
+                    IdPerfil = usu.Perfil.Id
                 });
 
             }
@@ -127,7 +144,9 @@ namespace WebApp.Controllers
                     new() { IdNome = "Psicólogo", Nome = "Psicólogo" },
                     new() { IdNome = "Assistente Social", Nome = "Assistente Social" },
                     new() { IdNome = "Estagiário", Nome = "Estagiário" },
-                    new() { IdNome = "Profissional Impressão", Nome = "Profissional Impressão" }
+                    new() { IdNome = "Profissional Impressão", Nome = "Profissional Impressão" },
+                    new() { IdNome = "Dentista", Nome = "Dentista" },
+                    new() { IdNome = "Nutricionista", Nome = "Nutricionista" }
                 };
 
                 var cargos = new SelectList(list, "IdNome", "Nome");
@@ -279,7 +298,9 @@ namespace WebApp.Controllers
                     new() { IdNome = "Psicólogo", Nome = "Psicólogo" },
                     new() { IdNome = "Assistente Social", Nome = "Assistente Social" },
                     new() { IdNome = "Estagiário", Nome = "Estagiário" },
-                    new() { IdNome = "Profissional Impressão", Nome = "Profissional Impressão" }
+                    new() { IdNome = "Profissional Impressão", Nome = "Profissional Impressão" },
+                    new() { IdNome = "Dentista", Nome = "Dentista" },
+                    new() { IdNome = "Nutricionista", Nome = "Nutricionista" }
                 };
 
                 var cargos = new SelectList(list, "IdNome", "Nome", profissional.Cargo);
@@ -455,9 +476,9 @@ namespace WebApp.Controllers
         }
 
         /// <summary>
-        /// Açao de Inclusao de Habiliatar
+        /// Açao de Habiliatar um profissional no sistema
         /// </summary>
-        /// <param name="collection">Coleção de dados para Inclusao de Habiliatr</param>
+        /// <param name="collection">Coleção de dados para Habiliatr um profissional</param>
         /// <returns>Retorna mensagem de inclusao através do parametro crud</returns>
         [HttpPost]
         [ClaimsAuthorize(ClaimType.Profissional, Claim.Habilitar)]

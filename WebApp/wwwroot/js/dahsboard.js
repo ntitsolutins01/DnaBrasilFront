@@ -164,7 +164,74 @@ var vm = new Vue({
 
                     self.ShowLoad(false, "pFiltro");
                 });
+
+                $("#ddlTipoCurso").change(function () {
+                    var tipoCursoId = $("#ddlTipoCurso").val();
+                    var url = "../Curso/GetCursosAllByTipoCursoId";
+
+                    $.getJSON(url,
+                        { id: tipoCursoId },
+                        function (data) {
+                            if (data.length > 0) {
+                                var items = '<option value="">Selecionar Curso</option>';
+                                $("#ddlCurso").empty();
+                                $.each(data,
+                                    function (i, row) {
+                                        items += "<option value='" + row.value + "'>" + row.text + "</option>";
+                                    });
+                                $("#ddlCurso").html(items);
+                            }
+                            else {
+                                new PNotify({
+                                    title: 'Curso',
+                                    text: 'Cursos não encontrados.',
+                                    type: 'warning'
+                                });
+                            }
+                        });
+                });
+
+                //triggered when modal is about to be shown
+                $('#mdAlunosMatriculados').on('show.bs.modal', function (e) {
+                    self.ShowLoad(true, "pAlunosMatriculados");
+
+                    //get data-id attribute of the clicked element
+                    var id = $("#ddlCurso").val();
+                    var idTipoCurso = $("#ddlTipoCurso").val();
+
+                    $("input[name='cursoId']").val(id);
+
+                    //if (id === "" && idTipoCurso != "") {
+                    //    Site.Notification("Catálogo de Curso", "Por favor selecione um curso", "warning", 1);
+                    //}
+
+                    //if (idTipoCurso === "") {
+                    //    Site.Notification("Catálogo de Curso", "Por favor selecione um tipo de curso", "warning", 1);
+                    //}
+
+                    var url = "../Curso/GetAlunosMatriculados";
+
+                    axios.get(url, {
+                        params: {
+                            id: id,
+                            idTipoCurso: idTipoCurso
+                        }
+                    }).then(result => {
+
+                        $("#mdAlunosMatriculados").find(".modal-body").html(result.data);
+                        self.ShowLoad(false, "pAlunosMatriculados");
+                    }).catch(error => {
+                        self.ShowLoad(false, "pAlunosMatriculados");
+                        Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
+
+                    });
+
+
+
+
+                });
             }
+
         }).apply(this, [jQuery]);
     },
     methods: {
@@ -191,10 +258,46 @@ var vm = new Vue({
             var url = "Dashboard/Delete/" + id;
             $("#deleteDashboardHref").prop("href", url);
         },
+        GetPesquisaIndicadoresEad: function () {
+            var self = this;
+            self.ShowLoad(true, "pIndicadoresEad");
+
+            const obj = {
+                cursoId: $("#ddlCurso").val(),
+                tipoCursoId: $("#ddlTipoCurso").val()
+            }
+
+            let axiosConfig = {
+                headers: {
+                    "Content-Type": 'application/json;charset=UTF-8',
+                    "Access-Control-Allow-Origin": "*"
+                }
+            };
+
+            axios.post("Dashboard/GetIndicadoresEadByFilter", obj, axiosConfig).then(result => {
+                var self = this;
+                self.ShowLoad(true, "pIndicadoresEad");
+
+                $("#cursosDisponiveisEad").text(result.data.dashboardEad.cursosDisponiveis);
+                $("#cursosEmAndamentoEad").text(result.data.dashboardEad.cursosEmAndamento);
+                $("#cursosFinalizadosEad").text(result.data.dashboardEad.cursosFinalizados);
+                $("#cadastrosMasculinosEad").text(result.data.dashboardEad.cadastrosMasculinos);
+                $("#cadastrosFemininosEad").text(result.data.dashboardEad.cadastrosFemininos);
+                $("#alunosCadastradosEad").text(result.data.dashboardEad.alunosCadastrados);
+
+                self.ShowLoad(false, "pIndicadoresEad");
+
+            }).catch(error => {
+                Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
+
+                self.ShowLoad(false, "pIndicadoresEad");
+            });
+        },
         GetPesquisaDashboard: function () {
 
             var self = this;
             self.ShowLoad(true, "pIndicadores");
+            self.ShowLoad(true, "pIndicadoresEad");
             self.ShowLoad(true, "pControlePresenca");
             self.ShowLoad(true, "pLaudosPeriodo");
             self.ShowLoad(true, "pStatusLaudos");
@@ -217,6 +320,8 @@ var vm = new Vue({
             self.ShowLoad(true, "pConsumoAlimentarTot");
             self.ShowLoad(true, "pVocacionalPerc");
             self.ShowLoad(true, "pVocacionalTot");
+            self.ShowLoad(true, "pEducacionalPerc");
+            self.ShowLoad(true, "pEducacionalTot");
 
 
             const obj = {
@@ -254,6 +359,27 @@ var vm = new Vue({
                 Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
 
                 self.ShowLoad(false, "pIndicadores");
+            });
+
+            axios.post("Dashboard/GetIndicadoresEadByFilter", obj, axiosConfig).then(result => {
+                var self = this;
+                self.ShowLoad(true, "pIndicadoresEad");
+
+                $("#cursosDisponiveisEad").text(result.data.dashboardEad.cursosDisponiveis);
+                $("#cursosEmAndamentoEad").text(result.data.dashboardEad.cursosEmAndamento);
+                $("#cursosFinalizadosEad").text(result.data.dashboardEad.cursosFinalizados);
+                $("#cadastrosMasculinosEad").text(result.data.dashboardEad.cadastrosMasculinos);
+                $("#cadastrosFemininosEad").text(result.data.dashboardEad.cadastrosFemininos);
+                $("#alunosCadastradosEad").text(result.data.dashboardEad.alunosCadastrados);
+                //$("#laudosMasculinos").text(result.data.dashboard.laudosMasculinos);
+                //$("#laudosFemininos").text(result.data.dashboard.laudosFemininos);
+
+                self.ShowLoad(false, "pIndicadoresEad");
+
+            }).catch(error => {
+                Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
+
+                self.ShowLoad(false, "pIndicadoresEad");
             });
 
             axios.post("Dashboard/GetControlePresencaByFilter", obj, axiosConfig).then(result => {
@@ -324,6 +450,12 @@ var vm = new Vue({
                 $('#progressoVocacional').css('width', percentVocacional);
                 $('#vlProgressoVocacional').text(result.data.dashboard.statusLaudos.progressoVocacional + ' %');
 
+                $("#totEducacionalFinalizado").text(result.data.dashboard.statusLaudos.totEducacionalFinalizado);
+                $("#totEducacionalAndamento").text(result.data.dashboard.statusLaudos.totEducacionalAndamento);
+                var percentEducacional = result.data.dashboard.statusLaudos.progressoEducacional + '%'
+                $('#progressoEducacional').css('width', percentEducacional);
+                $('#vlProgressoEducacional').text(result.data.dashboard.statusLaudos.progressoEducacional + ' %');
+
 
                 self.ShowLoad(false, "pStatusLaudos");
 
@@ -331,20 +463,6 @@ var vm = new Vue({
                 Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
 
                 self.ShowLoad(false, "pStatusLaudos");
-            });
-
-            axios.post("Dashboard/GetEvolutivoByFilter", obj, axiosConfig).then(result => {
-                var self = this;
-                self.ShowLoad(true, "pEvolutivo");
-
-                self.SetGraficoEvolutivo(result);
-
-                self.ShowLoad(false, "pEvolutivo");
-
-            }).catch(error => {
-                Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
-
-                self.ShowLoad(false, "pEvolutivo");
             });
 
             axios.post("Dashboard/GetGraficosVocacionalByFilter", obj, axiosConfig).then(result => {
@@ -496,6 +614,26 @@ var vm = new Vue({
                 Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
                 self.ShowLoad(false, "pSaudeBucalPerc");
                 self.ShowLoad(false, "pSaudeBucalTot");
+            });
+
+
+
+            axios.post("Dashboard/GetGraficosEducacionalByFilter", obj, axiosConfig).then(result => {
+                var self = this;
+
+                self.ShowLoad(true, "pEducacionalPerc");
+                self.ShowLoad(true, "pEducacionalTot");
+
+                self.SetGraficoEducacionalPercentual(result);
+                self.SetGraficoTotalizadorEducacional(result);
+
+                self.ShowLoad(false, "pEducacionalPerc");
+                self.ShowLoad(false, "pEducacionalTot");
+
+            }).catch(error => {
+                Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
+                self.ShowLoad(false, "pEducacionalPerc");
+                self.ShowLoad(false, "pEducacionalTot");
             });
 
             axios.post("Dashboard/GetGraficosTalentoByFilter", obj, axiosConfig).then(result => {
@@ -1776,6 +1914,63 @@ var vm = new Vue({
                 });
             });
         },
+        SetGraficoEducacionalPercentual: function (result) {
+            $(function () {
+
+                Highcharts.chart('containerEducacionalPercentual', {
+                    chart: {
+                        type: 'variablepie'
+                    },
+                    title: {
+                        text: undefined
+                    },
+                    tooltip: {
+                        headerFormat: '',
+                        pointFormat: '<span style="color:{point.color}">\u25CF</span> <b> {point.name}</b><br/>' +
+                            '<b>{point.y} %</b> dos Alunos',
+                        style: {
+                            fontSize: '12px'
+                        }
+                    },
+                    legend: {
+                        itemStyle: {
+                            fontSize: '2px'
+                        }
+                    },
+                    plotOptions: {
+                        variablepie: {
+                            dataLabels: {
+                                enabled: true,
+                                style: {
+                                    fontSize: '12px',
+                                    fontWeight: '400'
+                                }
+                            }
+                        }
+                    },
+                    series: [{
+                        minPointSize: 10,
+                        innerSize: '20%',
+                        zMin: 0,
+                        name: 'Percentual de nivelamento dos alunos',
+                        borderRadius: 5,
+                        data: [{
+                            name: 'DEFASAGEM',
+                            y: result.data.dashboard.listTotalizadorEducacional.percentualEducacional.DEFASAGEM,
+                            z: 50
+                        }, {
+                            name: 'INTERMEDIÁRIO',
+                            y: result.data.dashboard.listTotalizadorEducacional.percentualEducacional.INTERMEDIARIO,
+                            z: 50
+                        }, {
+                            name: 'ADEQUADO',
+                            y: result.data.dashboard.listTotalizadorEducacional.percentualEducacional.ADEQUADO,
+                            z: 50
+                        }]
+                    }]
+                });
+            });
+        },
         SetGraficoTotalizadorBucal: function (result) {
             $(function () {
 
@@ -1840,6 +2035,74 @@ var vm = new Vue({
                     }, {
                         name: 'Masculino',
                         data: [result.data.dashboard.listTotalizadorSaudeBucal.valorTotalizadorSaudeBucalMasculino.CUIDADO, result.data.dashboard.listTotalizadorSaudeBucal.valorTotalizadorSaudeBucalMasculino.ATENCAO, result.data.dashboard.listTotalizadorSaudeBucal.valorTotalizadorSaudeBucalMasculino.MUITOBOM]
+                    }]
+                });
+            });
+        },
+        SetGraficoTotalizadorEducacional: function (result) {
+            $(function () {
+
+                Highcharts.chart('containerEducacional', {
+                    chart: {
+                        type: 'bar'
+                    },
+                    title: {
+                        text: undefined
+                    },
+                    xAxis: {
+                        categories: ['DEFASAGEM', 'INTERMEDIÁRIO', 'ADEQUADO'],
+
+                        labels: {
+                            style: {
+                                fontSize: '12px'
+                            }
+                        }
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: 'Total',
+                            style: {
+                                fontSize: '12px'
+                            }
+                        },
+
+                        labels: {
+                            style: {
+                                fontSize: '12px'
+                            }
+                        }
+                    },
+                    legend: {
+                        reversed: true,
+                        itemStyle: {
+                            fontSize: '12px'
+                        }
+                    },
+                    tooltip: {
+                        style: {
+                            fontSize: '12px'
+                        }
+                    },
+                    plotOptions: {
+                        series: {
+                            stacking: 'normal',
+                            dataLabels: {
+                                enabled: true,
+                                style: {
+                                    fontSize: '12px',
+                                    fontWeight: '400'
+                                }
+                            }
+                        }
+                    },
+                    series: [{
+                        name: 'Feminino',
+                        color: '#EC407A',
+                        data: [result.data.dashboard.listTotalizadorEducacional.valorTotalizadorEducacionalFeminino.DEFASAGEM, result.data.dashboard.listTotalizadorEducacional.valorTotalizadorEducacionalFeminino.INTERMEDIARIO, result.data.dashboard.listTotalizadorEducacional.valorTotalizadorEducacionalFeminino.ADEQUADO]
+                    }, {
+                        name: 'Masculino',
+                        data: [result.data.dashboard.listTotalizadorEducacional.valorTotalizadorEducacionalMasculino.DEFASAGEM, result.data.dashboard.listTotalizadorEducacional.valorTotalizadorEducacionalMasculino.INTERMEDIARIO, result.data.dashboard.listTotalizadorEducacional.valorTotalizadorEducacionalMasculino.ADEQUADO]
                     }]
                 });
             });

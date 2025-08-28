@@ -9,7 +9,7 @@ namespace WebApp.Models
         public SelectList ListEstados { get; set; }
         public string MunicipioId { get; set; }
         public SelectList ListMunicipios { get; set; }
-        public int LocalidadeId { get; set; }
+        public string LocalidadeId { get; set; }
         public SelectList ListLocalidades { get; set; }
         public string AlunoId { get; set; }
         public SelectList ListAlunos { get; set; }
@@ -17,6 +17,7 @@ namespace WebApp.Models
         public List<EventoDto> Eventos { get; set; }
         public List<ControlePresencaDto> ControlesPresencas { get; set; }
         public AlunoIndexDto? Convidado { get; set; }
+        public int IdPerfil { get; set; }
 
 
         public class CreateUpdateEventoCommand
