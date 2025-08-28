@@ -16,7 +16,7 @@
             <input type="hidden" name="localidade" value="@Model.LocalidadeId" />
             <div class="form-group row">
                 <div class="col-sm-3 pull-right" style="margin-top: 29px;">
-                    <button type="submit" id="addToTable" class="btn btn-block btn-success pull-right" onclick="validarProfissional()"><i class="fa fa-save"></i> Salvar Frequências </button>
+                    <button type="submit" id="addToTable" class="btn btn-block btn-success pull-right"><i class="fa fa-save"></i> Salvar Frequências </button>
                 </div>
                 <div class="col-sm-5 pull-right" style="margin-top: 29px;">
                     <div class="alert alert-danger" style="padding-bottom: 6px;padding-top: 6px; !important; margin-bottom: 0px; !important">
@@ -30,8 +30,9 @@
                             name="ddlProfissional" id="ddlProfissional"
                             asp-for="ProfissionalId" asp-items="Model.ListProfissionais"
                             style="width:100%" data-plugin-options='{"width":"100%"}'>
-                        <option value="">Selecionar Profissional</option>
+	                    <option value="">Selecionar Profissional</option>
                     </select>
+                    <label class="error" for="ddlProfissional"></label>
                 </div>
             </div>
             <div class="form-group row">
