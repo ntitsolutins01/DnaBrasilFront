@@ -19,7 +19,7 @@
                     <div class="panel-body">
                         <div class="form-group row">
                             <!-- Página 1 -->
-                            <div class="page-container page1" style="max-width:50%; margin: 0 auto;">
+                            <div class="page-container page1" style="/* max-width:50%; */ margin: 0 auto;">
                                 <div class="newContainer">
                                     <!-- Header -->
                                     <header class="report-header">
@@ -37,9 +37,9 @@
                                         <div class="info-main">
                                             <!-- Perfil -->
                                             <div class="qrcode-side">
-                                                @if (Model.Aluno.ByteImage != null)
+                                                @if (Model.Aluno.QrCode != null)
                                                 {
-                                                    var imgSrc = $"data:image/gif;base64,{Convert.ToBase64String(Model.Aluno.ByteImage)}";
+                                                    var imgSrc = $"data:image/gif;base64,{Convert.ToBase64String(Model.Aluno.QrCode)}";
                                                     <img src="@imgSrc" alt="QRcode do Model.Aluno" class="qrcode-image" />
                                                 }
                                                 else

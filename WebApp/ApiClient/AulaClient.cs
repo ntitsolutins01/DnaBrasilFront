@@ -75,7 +75,7 @@ namespace WebApp.ApiClient
                 $"{ResourceAula}"));
             return Get<List<AulaDto>>(requestUrl);
         }
-        public List<AulaDto> GetAulasByModuloEadId(int id)
+        public List<AulaDto> GetAulasAllByModuloEadId(int id)
         {
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
                 $"{ResourceAula}/ModuloEad/{id}"));
