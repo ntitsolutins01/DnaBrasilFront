@@ -12,7 +12,8 @@ namespace WebApp.Models
         public EncaminhamentoDto EncaminhamentoImc { get; set; }
         public EncaminhamentoDto EncaminhamentoSaudeBucal { get; set; }
         public EncaminhamentoDto EncaminhamentoConsumoAlimentar { get; set; }
-        public EncaminhamentoDto EncaminhamentoEducacional{ get; set; }
+        public EncaminhamentoDto EncaminhamentoMatematica{ get; set; }
+        public EncaminhamentoDto EncaminhamentoPortugues{ get; set; }
         public ModalidadeDto Modalidade { get; set; }
         public List<EncaminhamentoDto> ListQualidadeDeVida { get; set; }
         public List<EncaminhamentoDto> ListVocacional { get; set; }
@@ -80,6 +81,14 @@ namespace WebApp.Models
             public string StatusEducacional { get; set; }
             public string? Imagem { get; set; }
             public string? NomeImagem { get; set; }
+        }
+
+        public class UpdateLaudoEducacionalCommand
+        {
+            public required int Id { get; set; }
+            public required int AlunoId { get; set; }
+            public required int EducacionalId { get; set; }
+            public required string Materia { get; set; }
         }
     }
 }
