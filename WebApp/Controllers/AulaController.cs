@@ -358,12 +358,12 @@ public class AulaController : BaseController
     /// </summary>
     /// <param name="id">Id do módulo ead</param>
     /// <returns>Retorna um json com todas as aulas</returns>
-    public Task<JsonResult> GetAulasByModuloEadId(string id)
+    public Task<JsonResult> GetAulasAllByModuloEadId(string id)
     {
         try
         {
             if (string.IsNullOrEmpty(id)) throw new Exception("Modulo não informado.");
-            var resultLocal = ApiClientFactory.Instance.GetAulasByModuloEadId(Convert.ToInt32(id));
+            var resultLocal = ApiClientFactory.Instance.GetAulasAllByModuloEadId(Convert.ToInt32(id));
 
             return Task.FromResult(Json(new SelectList(resultLocal, "Id", "Titulo")));
 

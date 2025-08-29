@@ -29,7 +29,7 @@ namespace WebApp.Models
             public int Id { get; set; }
             public int AulaId { get; set; }
             public string Referencia { get; set; }
-            public string Pergunta { get; set; }
+            public string Enunciado { get; set; }
             public List<RespostaEadDto>? Respostas { get; set; }
             public required int Questao { get; set; }
             public List<string?> ListTextos { get; set; }
