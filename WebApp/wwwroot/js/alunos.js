@@ -199,48 +199,55 @@ var vm = new Vue({
                             $("#ddlEstado").val(f.sigla).trigger('change');
 
                             // Aguarda um momento para que o evento change do estado seja processado
-                            setTimeout(function () {
-                                // Carrega os municípios do estado
-                                $.getJSON("../../DivisaoAdministrativa/GetMunicipioByUf?uf=" + f.sigla)
-                                    .done(function (municipios) {
-                                        // Limpa e preenche o dropdown de municípios
-                                        var items = '<option value="">Selecionar o Município</option>';
-                                        $.each(municipios, function (i, row) {
-                                            items += "<option value='" + row.value + "'>" + row.text + "</option>";
-                                        });
-                                        $("#ddlMunicipio").html(items);
-                                        $("#ddlMunicipio").val(f.municipioId).trigger('change');
+                            //setTimeout(function () { }, 300);
 
-                                        // Aguarda um momento para que o evento change do município seja processado
-                                        setTimeout(function () {
-                                            // Carrega as localidades do município
-                                            $.getJSON("../../Localidade/GetLocalidadeByMunicipio?id=" + f.municipioId)
-                                                .done(function (localidades) {
-                                                    // Limpa e preenche o dropdown de localidades
-                                                    var localItems = '<option value="">Selecionar a Localidade</option>';
-                                                    $.each(localidades, function (i, row) {
-                                                        localItems += "<option value='" + row.value + "'>" + row.text + "</option>";
-                                                    });
-                                                    $("#ddlLocalidade").html(localItems);
-                                                    $("#ddlLocalidade").val(f.localidadeId);
-                                                })
-                                                .fail(function () {
-                                                    new PNotify({
-                                                        title: 'Erro',
-                                                        text: 'Não foi possível carregar as localidades.',
-                                                        type: 'error'
-                                                    });
-                                                });
-                                        }, 300);
-                                    })
-                                    .fail(function () {
-                                        new PNotify({
-                                            title: 'Erro',
-                                            text: 'Não foi possível carregar os municípios.',
-                                            type: 'error'
-                                        });
+                            // Carrega os municípios do estado
+                            $.getJSON("../../DivisaoAdministrativa/GetMunicipioByUf?uf=" + f.sigla)
+                                .done(function (municipios) {
+                                    // Limpa e preenche o dropdown de municípios
+                                    var items = '<option value="">Selecionar o Município</option>';
+                                    $.each(municipios, function (i, row) {
+                                        items += "<option value='" + row.value + "'>" + row.text + "</option>";
                                     });
-                            }, 300);
+                                    $("#ddlMunicipio").html(items);
+                                    $("#ddlMunicipio").val(f.municipioId).trigger('change');
+
+                                    // Aguarda um momento para que o evento change do município seja processado
+                                    //setTimeout(function () {}, 300);
+
+                                    // Carrega as localidades do município
+                                    $.getJSON("../../Localidade/GetLocalidadeByMunicipio?id=" + f.municipioId)
+                                        .done(function (localidades) {
+                                            // Limpa e preenche o dropdown de localidades
+                                            var localItems = '<option value="">Selecionar a Localidade</option>';
+                                            $.each(localidades, function (i, row) {
+                                                localItems += "<option value='" + row.value + "'>" + row.text + "</option>";
+                                            });
+
+                                            $("#ddlLocalidade").html(localItems);
+
+                                            var items = '<option value="">Selecionar Profissional</option>';
+                                            $("#ddlProfissional").empty;
+                                            $("#ddlProfissional").html(items);
+                                        })
+                                        .fail(function () {
+                                            new PNotify({
+                                                title: 'Erro',
+                                                text: 'Não foi possível carregar as localidades.',
+                                                type: 'error'
+                                            });
+                                        });
+
+                                })
+                                .fail(function () {
+                                    new PNotify({
+                                        title: 'Erro',
+                                        text: 'Não foi possível carregar os municípios.',
+                                        type: 'error'
+                                    });
+                                });
+
+
                         })
                         .fail(function () {
                             new PNotify({
