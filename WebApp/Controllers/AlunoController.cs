@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using QRCoder;
 using WebApp.Authorization;
 using WebApp.Configuration;
@@ -683,32 +684,46 @@ namespace WebApp.Controllers
                 var habilitado = collection["habilitado"].ToString();
 
 
-                var command = new AlunoModel.CreateUpdateDadosAlunoCommand
+                if (string.IsNullOrEmpty(collection["email"]))
                 {
-                    Id = Convert.ToInt32(id),
-                    Etnia = collection["ddlEtnia"] == "" ? null : collection["ddlEtnia"].ToString(),
-                    MunicipioId = collection["ddlMunicipio"] == "" ? null : Convert.ToInt32(collection["ddlMunicipio"].ToString()),
-                    FomentoId = collection["ddlFomento"] == "" ? null : Convert.ToInt32(collection["ddlFomento"].ToString()),
-                    DeficienciaId = collection["ddlDeficiencia"] == "" ? null : Convert.ToInt32(collection["ddlDeficiencia"].ToString()),
-                    LocalidadeId = collection["ddlLocalidade"] == "" ? null : Convert.ToInt32(collection["ddlLocalidade"].ToString()),
-                    Nome = collection["nome"] == "" ? null : collection["nome"].ToString(),
-                    DtNascimento = collection["DtNascimento"] == "" ? null : collection["DtNascimento"].ToString(),
-                    Email = collection["email"] == "" ? null : collection["email"].ToString(),
-                    Sexo = collection["ddlSexo"] == "" ? null : collection["ddlSexo"].ToString(),
-                    NomeMae = collection["nomeMae"] == "" ? null : collection["nomeMae"].ToString(),
-                    NomePai = collection["nomePai"] == "" ? null : collection["nomePai"].ToString(),
-                    Telefone = collection["numTelefone"] == "" ? null : collection["numTelefone"].ToString(),
-                    Cep = collection["cep"] == "" ? null : collection["cep"].ToString(),
-                    Celular = collection["numCelular"] == "" ? null : collection["numCelular"].ToString(),
-                    Cpf = collection["cpf"] == "" ? null : collection["cpf"].ToString(),
-                    Endereco = collection["endereco"] == "" ? null : collection["endereco"].ToString(),
-                    Numero = collection["numero"] == "" ? null : collection["numero"].ToString(),
-                    Bairro = collection["bairro"] == "" ? null : collection["bairro"].ToString(),
-                    Habilitado = habilitado != "",
-                    Status = status != "",
-                    ModalidadesIds = collection["ddlModalidades"].ToString(),
-                    SerieId = collection["ddlTurma"] == "" ? null : Convert.ToInt32(collection["ddlTurma"].ToString())
-                };
+                    return RedirectToAction(nameof(Edit), new { id=id, notify = (int)EnumNotify.Warning, message = "É necessário informar um email." });
+                }
+
+                var result = ApiClientFactory.Instance.GetAlunoByEmail(collection["email"]);
+
+                if (result!=null && result.Id != id)
+                {
+                    return RedirectToAction(nameof(Edit), new { id = id, notify = (int)EnumNotify.Error, message = "Já existe um aluno cadastrado com este email." });
+                }
+
+
+
+                var command = new AlunoModel.CreateUpdateDadosAlunoCommand
+                    {
+                        Id = Convert.ToInt32(id),
+                        Etnia = collection["ddlEtnia"] == "" ? null : collection["ddlEtnia"].ToString(),
+                        MunicipioId = collection["ddlMunicipio"] == "" ? null : Convert.ToInt32(collection["ddlMunicipio"].ToString()),
+                        FomentoId = collection["ddlFomento"] == "" ? null : Convert.ToInt32(collection["ddlFomento"].ToString()),
+                        DeficienciaId = collection["ddlDeficiencia"] == "" ? null : Convert.ToInt32(collection["ddlDeficiencia"].ToString()),
+                        LocalidadeId = collection["ddlLocalidade"] == "" ? null : Convert.ToInt32(collection["ddlLocalidade"].ToString()),
+                        Nome = collection["nome"] == "" ? null : collection["nome"].ToString(),
+                        DtNascimento = collection["DtNascimento"] == "" ? null : collection["DtNascimento"].ToString(),
+                        Email = collection["email"] == "" ? null : collection["email"].ToString(),
+                        Sexo = collection["ddlSexo"] == "" ? null : collection["ddlSexo"].ToString(),
+                        NomeMae = collection["nomeMae"] == "" ? null : collection["nomeMae"].ToString(),
+                        NomePai = collection["nomePai"] == "" ? null : collection["nomePai"].ToString(),
+                        Telefone = collection["numTelefone"] == "" ? null : collection["numTelefone"].ToString(),
+                        Cep = collection["cep"] == "" ? null : collection["cep"].ToString(),
+                        Celular = collection["numCelular"] == "" ? null : collection["numCelular"].ToString(),
+                        Cpf = collection["cpf"] == "" ? null : collection["cpf"].ToString(),
+                        Endereco = collection["endereco"] == "" ? null : collection["endereco"].ToString(),
+                        Numero = collection["numero"] == "" ? null : collection["numero"].ToString(),
+                        Bairro = collection["bairro"] == "" ? null : collection["bairro"].ToString(),
+                        Habilitado = habilitado != "",
+                        Status = status != "",
+                        ModalidadesIds = collection["ddlModalidades"].ToString(),
+                        SerieId = collection["ddlTurma"] == "" ? null : Convert.ToInt32(collection["ddlTurma"].ToString())
+                    };
 
 
 
@@ -734,7 +749,7 @@ namespace WebApp.Controllers
             catch (Exception e)
             {
                 _logger.Error($"Ação de alteração do aluno - Aluno.Edit: {e.StackTrace}");
-                return RedirectToAction(nameof(Index), new { notify = EnumNotify.Error, mesage = e.Message });
+                return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, mesage = e.Message });
             }
         }
 
