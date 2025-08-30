@@ -96,6 +96,7 @@ namespace WebApp.Controllers
                 };
 
                 var response = await ApiClientFactory.Instance.GetLaudosByFilter(searchFilter);
+                var profissionais = new SelectList(ApiClientFactory.Instance.GetProfissionaisByLocalidade(Convert.ToInt32(searchFilter.LocalidadeId)), "Id", "Nome");
 
                 var model = new LaudoModel()
                 {
@@ -105,6 +106,7 @@ namespace WebApp.Controllers
                     ListMunicipios = municipios!,
                     ListLocalidades = localidades!,
                     ListAlunos = alunos,
+                    ListProfissionais = profissionais,
                     SearchFilter = searchFilter,
                     IdPerfil = usu.Perfil.Id
                 };
