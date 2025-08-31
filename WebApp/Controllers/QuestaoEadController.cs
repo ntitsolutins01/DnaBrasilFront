@@ -159,7 +159,7 @@ public class QuestaoEadController : BaseController
                         .Select(v =>
                         {
                             var dictionary = new Dictionary<string, string>();
-                            dictionary.Add(v.Key.ToString(), v.Value.ToString());
+                            dictionary.Add(v.Key.ToString().Replace("multiplo",""), v.Value.ToString());
                             return dictionary;
                         }).ToList();
                     var resultadoCkMulti =

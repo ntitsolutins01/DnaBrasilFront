@@ -368,7 +368,7 @@
                     if ($("#infoMulti").length === 0) {
 
                         $('.wrapperRespostaInfo').append(`
-                            <code id="infoMulti" name="infoMulti">.panel-featured.panel-featured-primary</code>
+                            <code id="infoMulti" name="infoMulti">Selecione as respostas corretas</code>
                                             `);
                     }
 
