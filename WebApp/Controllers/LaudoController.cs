@@ -1455,6 +1455,23 @@ namespace WebApp.Controllers
                 var educacionalId = await ApiClientFactory.Instance.CreateEducacional(command);
 
                 var laudo = ApiClientFactory.Instance.GetLaudoByAluno(matricula);
+
+                var ordem = (laudo?.Ordem ?? 0) + 1;
+
+                if (laudo == null)
+                {
+                    var createLaudocommand = new LaudoModel.CreateUpdateLaudoCommand
+                    {
+                        AlunoId = matricula,
+                        Ordem = ordem
+                    };
+
+                    await ApiClientFactory.Instance.CreateLaudo(createLaudocommand);
+
+                    laudo = ApiClientFactory.Instance.GetLaudoByAluno(matricula);
+                    
+                }
+
                 var materia = gabarito?.Contains("LP", StringComparison.OrdinalIgnoreCase) == true ? "LP" : "MT";
 
                 var updateLaudoCommand = new LaudoModel.UpdateLaudoEducacionalCommand
