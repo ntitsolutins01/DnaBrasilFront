@@ -104,7 +104,7 @@ public class QuestaoEadController : BaseController
             var commandQuestaoEad = new QuestaoEadModel.CreateUpdateQuestaoEadCommand
             {
                 AulaId = Convert.ToInt32(collection["ddlAula"].ToString()),
-                Pergunta = collection["pergunta"].ToString(),
+                Enunciado = collection["enunciado"].ToString(),
                 Questao = Convert.ToInt32(collection["questao"].ToString()),
                 Referencia = collection["referencia"].ToString()
             };
@@ -146,6 +146,27 @@ public class QuestaoEadController : BaseController
                 }
             }
 
+            switch (collection["ddlTipoResposta"])
+            {
+                case "A":
+
+                    break;
+                case "D":
+                    break;
+                case "M":
+                    var listMultiplos =
+                        (from item in collection where item.Key.Contains("multiplo") select item)
+                        .Select(v =>
+                        {
+                            var dictionary = new Dictionary<string, string>();
+                            dictionary.Add(v.Key.ToString(), v.Value.ToString());
+                            return dictionary;
+                        }).ToList();
+                    var resultadoCkMulti =
+                        (from item in collection where item.Key.Contains("ckMulti") select item.Value)
+                        .Sum(v => Convert.ToInt32(v));
+                    break;
+            }
             #endregion
 
             //await ApiClientFactory.Instance.CreateQuestaoEad(command);
@@ -176,7 +197,7 @@ public class QuestaoEadController : BaseController
             {
                 Id = Convert.ToInt32(collection["editQuestaoEadId"]),
                 Referencia = collection["referencia"].ToString(),
-                Pergunta = collection["pergunta"].ToString(),
+                Enunciado = collection["pergunta"].ToString(),
                 Respostas = JsonConvert.DeserializeObject<List<RespostaEadDto>>(collection["respostas"]),
                 Questao = Convert.ToInt32(collection["questao"].ToString()),
             };

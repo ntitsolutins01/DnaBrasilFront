@@ -29,7 +29,7 @@
 .report-logo {
     width: 130px;
     height: 81px;
-    background: url('/assets/logo.png') no-repeat center center;
+    background: url('/assets/images/logo2.png') no-repeat center center;
     background-size: contain;
     flex-shrink: 0;
 }

@@ -1132,6 +1132,29 @@ var vm = new Vue({
                 self.laudoDto.Id = result.data.id;
                 self.laudoDto.AlunoId = result.data.alunoId;
 
+                var urlProfissional = "../../Profissional/GetProfissionaisByLocalidade";
+
+                $.getJSON(urlProfissional,
+                    { id: result.data.localidadeId },
+                    function (data) {
+                        if (data.length > 0) {
+                            var items = '<option value="">Selecionar Profissional</option>';
+                            $("#ddlProfissionalRespostaModal").empty();
+                            $.each(data,
+                                function (i, row) {
+                                    items += "<option value='" + row.value + "'>" + row.text + "</option>";
+                                });
+                            $("#ddlProfissionalRespostaModal").html(items);
+                        }
+                        else {
+                            new PNotify({
+                                title: 'Profissional',
+                                text: 'Profissionais não encontrados.',
+                                type: 'warning'
+                            });
+                        }
+                    });
+
             }).catch(error => {
                 Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
             });
@@ -1153,6 +1176,6 @@ var crud = {
     RespostaModal: function (id) {
         $('input[name="LaudoId"]').attr('value', id);
         $('#mdRespostaGabarito').modal('show');
-        vm.RespostaGabarito(id)
+        vm.RespostaGabarito(id);
     }
 };

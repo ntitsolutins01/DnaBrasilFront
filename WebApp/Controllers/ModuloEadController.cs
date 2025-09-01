@@ -291,7 +291,7 @@ public class ModuloEadController : BaseController
         try
         {
             var modulo = ApiClientFactory.Instance.GetModuloEadById(moduloId);
-            var aulas = ApiClientFactory.Instance.GetAulasByModuloEadId(moduloId);
+            var aulas = ApiClientFactory.Instance.GetAulasAllByModuloEadId(moduloId);
 
             return PartialView("_EstruturaModuloEad", new EstruturaModuloEadModel
             {
