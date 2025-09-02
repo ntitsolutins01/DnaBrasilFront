@@ -39,7 +39,7 @@
                         <div class="col-md-8">
                             <!-- Player de vídeo -->
                             <div class="embed-responsive embed-responsive-16by9 mb-md">
-                                <video id="videoPlayer" class="embed-responsive-item" controls controlsList="nodownload">
+                                <video id="videoPlayer" class="embed-responsive-item" controls controlsList="nodownload noplaybackrate">
                                     <source :src="selectedVideoUrl" type="video/mp4" id="videoSource">
                                     Seu navegador não suporta a tag de vídeo.
                                 </video>
@@ -265,6 +265,10 @@
 
         video::-webkit-media-controls-enclosure {
             overflow: hidden;
+        }
+
+        video::-webkit-media-controls-timeline {
+            display: none !important;
         }
 
     </style>
