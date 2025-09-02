@@ -96,6 +96,7 @@ namespace WebApp.Controllers
                 };
 
                 var response = await ApiClientFactory.Instance.GetLaudosByFilter(searchFilter);
+                var profissionais = new SelectList(ApiClientFactory.Instance.GetProfissionaisByLocalidade(Convert.ToInt32(searchFilter.LocalidadeId)), "Id", "Nome");
 
                 var model = new LaudoModel()
                 {
@@ -105,6 +106,7 @@ namespace WebApp.Controllers
                     ListMunicipios = municipios!,
                     ListLocalidades = localidades!,
                     ListAlunos = alunos,
+                    ListProfissionais = profissionais,
                     SearchFilter = searchFilter,
                     IdPerfil = usu.Perfil.Id
                 };
@@ -213,7 +215,8 @@ namespace WebApp.Controllers
 
             var consumoAlimentar = laudo.ConsumoAlimentarId == null ? null : ApiClientFactory.Instance.GetConsumoAlimentarById((int)laudo.ConsumoAlimentarId);
             var saudeBucal = laudo.SaudeBucalId == null ? null : ApiClientFactory.Instance.GetConsumoAlimentarById((int)laudo.SaudeBucalId);
-            var educacional = laudo.EducacionalId == null ? null : ApiClientFactory.Instance.GetConsumoAlimentarById((int)laudo.EducacionalId);
+            var educacionalMatematica = laudo.EducacionalMatematicaId == null ? null : ApiClientFactory.Instance.GetConsumoAlimentarById((int)laudo.EducacionalMatematicaId);
+            var educacionalPortugues = laudo.EducacionalPortuguesId == null ? null : ApiClientFactory.Instance.GetConsumoAlimentarById((int)laudo.EducacionalPortuguesId);
 
             var aluno = await ApiClientFactory.Instance.GetAlunoById((int)laudo.AlunoId);
             var profissional = laudo.ProfissionalId == null ? null : ApiClientFactory.Instance.GetProfissionalById(Convert.ToInt32(aluno.ProfissionalId));
@@ -223,7 +226,8 @@ namespace WebApp.Controllers
             var vocacional = laudo.VocacionalId == null ? null : ApiClientFactory.Instance.GetEncaminhamentoByVocacional();
             var encaminhamentoConsumoAlimentar = laudo.ConsumoAlimentarId == null ? null : ApiClientFactory.Instance.GetEncaminhamentoById((int)consumoAlimentar.Encaminhamento.Id);
             var encaminhamentoSaudeBucal = laudo.SaudeBucalId == null ? null : ApiClientFactory.Instance.GetEncaminhamentoById((int)saudeBucal.Encaminhamento.Id);
-            var encaminhamentoEducacional = laudo.EducacionalId == null ? null : ApiClientFactory.Instance.GetEncaminhamentoById((int)educacional.Encaminhamento.Id);
+            var encaminhamentoMatematica = laudo.EducacionalMatematicaId == null ? null : ApiClientFactory.Instance.GetEncaminhamentoById((int)educacionalMatematica.Encaminhamento.Id);
+            var encaminhamentoPortugues = laudo.EducacionalPortuguesId == null ? null : ApiClientFactory.Instance.GetEncaminhamentoById((int)educacionalPortugues.Encaminhamento.Id);
             var desempenho = ApiClientFactory.Instance.GetDesempenhoByAluno(Convert.ToInt32(laudo.AlunoId));
             var modalidade = laudo.ModalidadeId == null ? null : ApiClientFactory.Instance.GetModalidadeById((int)laudo.ModalidadeId);
 
@@ -238,7 +242,8 @@ namespace WebApp.Controllers
                 ListVocacional = vocacional,
                 EncaminhamentoSaudeBucal = encaminhamentoSaudeBucal,
                 EncaminhamentoConsumoAlimentar = encaminhamentoConsumoAlimentar,
-                EncaminhamentoEducacional = encaminhamentoEducacional,
+                EncaminhamentoMatematica = encaminhamentoMatematica,
+                EncaminhamentoPortugues = encaminhamentoPortugues,
                 Desempenho = desempenho,
                 Modalidade = modalidade
             };
@@ -254,7 +259,8 @@ namespace WebApp.Controllers
 
             var consumoAlimentar = laudo.ConsumoAlimentarId == null ? null : ApiClientFactory.Instance.GetConsumoAlimentarById((int)laudo.ConsumoAlimentarId);
             var saudeBucal = laudo.SaudeBucalId == null ? null : ApiClientFactory.Instance.GetSaudeBucalById((int)laudo.SaudeBucalId);
-            var educacional = laudo.EducacionalId == null ? null : ApiClientFactory.Instance.GetConsumoAlimentarById((int)laudo.EducacionalId);
+            var educacionalMatematica = laudo.EducacionalMatematicaId == null ? null : ApiClientFactory.Instance.GetConsumoAlimentarById((int)laudo.EducacionalMatematicaId);
+            var educacionalPortugues = laudo.EducacionalPortuguesId == null ? null : ApiClientFactory.Instance.GetConsumoAlimentarById((int)laudo.EducacionalPortuguesId);
 
             var aluno = await ApiClientFactory.Instance.GetAlunoById((int)laudo.AlunoId);
             var profissional = laudo.ProfissionalId == null ? null : ApiClientFactory.Instance.GetProfissionalById(Convert.ToInt32(aluno.ProfissionalId));
@@ -264,7 +270,8 @@ namespace WebApp.Controllers
             var vocacional = laudo.VocacionalId == null ? null : ApiClientFactory.Instance.GetEncaminhamentoByVocacional();
             var encaminhamentoConsumoAlimentar = laudo.ConsumoAlimentarId == null ? null : ApiClientFactory.Instance.GetEncaminhamentoById((int)consumoAlimentar.Encaminhamento.Id);
             var encaminhamentoSaudeBucal = laudo.SaudeBucalId == null ? null : ApiClientFactory.Instance.GetEncaminhamentoById((int)saudeBucal.Encaminhamento.Id);
-            var encaminhamentoEducacional = laudo.EducacionalId == null ? null : ApiClientFactory.Instance.GetEncaminhamentoById((int)educacional.Encaminhamento.Id);
+            var encaminhamentoMatematica = laudo.EducacionalMatematicaId == null ? null : ApiClientFactory.Instance.GetEncaminhamentoById((int)educacionalMatematica.Encaminhamento.Id);
+            var encaminhamentoPortugues = laudo.EducacionalPortuguesId == null ? null : ApiClientFactory.Instance.GetEncaminhamentoById((int)educacionalPortugues.Encaminhamento.Id);
             var desempenho = ApiClientFactory.Instance.GetDesempenhoByAluno(Convert.ToInt32(laudo.AlunoId));
             var modalidade = ApiClientFactory.Instance.GetModalidadeById(Convert.ToInt32(laudo.ModalidadeId));
 
@@ -305,7 +312,8 @@ namespace WebApp.Controllers
                 ListVocacional = vocacional,
                 EncaminhamentoSaudeBucal = encaminhamentoSaudeBucal,
                 EncaminhamentoConsumoAlimentar = encaminhamentoConsumoAlimentar,
-                EncaminhamentoEducacional = encaminhamentoEducacional,
+                EncaminhamentoMatematica = encaminhamentoMatematica,
+                EncaminhamentoPortugues = encaminhamentoPortugues,
                 Desempenho = desempenho,
                 Modalidade = modalidade,
                 Percentual = percentual,
@@ -1444,7 +1452,37 @@ namespace WebApp.Controllers
                     await file.CopyToAsync(fileStream);
                 }
 
-                await ApiClientFactory.Instance.CreateEducacional(command);
+                var educacionalId = await ApiClientFactory.Instance.CreateEducacional(command);
+
+                var laudo = ApiClientFactory.Instance.GetLaudoByAluno(matricula);
+
+                var ordem = (laudo?.Ordem ?? 0) + 1;
+
+                if (laudo == null)
+                {
+                    var createLaudocommand = new LaudoModel.CreateUpdateLaudoCommand
+                    {
+                        AlunoId = matricula,
+                        Ordem = ordem
+                    };
+
+                    await ApiClientFactory.Instance.CreateLaudo(createLaudocommand);
+
+                    laudo = ApiClientFactory.Instance.GetLaudoByAluno(matricula);
+                    
+                }
+
+                var materia = gabarito?.Contains("LP", StringComparison.OrdinalIgnoreCase) == true ? "LP" : "MT";
+
+                var updateLaudoCommand = new LaudoModel.UpdateLaudoEducacionalCommand
+                {
+                    Id = laudo.Id,
+                    AlunoId = matricula,
+                    EducacionalId = checked((int)educacionalId),
+                    Materia = materia
+                };
+
+                await ApiClientFactory.Instance.UpdateLaudoEducacional(updateLaudoCommand.Id ,updateLaudoCommand);
 
                 return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Success, message = "Upload realizado com sucesso." });
             }
@@ -1526,7 +1564,7 @@ namespace WebApp.Controllers
                     TextGabarito = textoGabarito,
                     AnoGabarito = anoGabarito,
                     SiglaGabarito = collection["ddlGabarito"],
-                    ProfissionalId = collection["ddlProfissional"]
+                    ProfissionalId = collection["ddlProfissionalRespostaModal"]
                 };
 
                 return View(model);

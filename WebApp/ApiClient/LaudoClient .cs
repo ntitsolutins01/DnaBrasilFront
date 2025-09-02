@@ -39,6 +39,19 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
+        /// Alteração de Educacional de um Laudo
+        /// </summary>
+        /// <param name="id">Id de alteração de Laudo</param>
+        /// <param name="command">Objeto de alteração de Laudo</param>
+        /// <returns>Retorna true ou false</returns>
+        public Task<bool> UpdateLaudoEducacional(int id, LaudoModel.UpdateLaudoEducacionalCommand command)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceLaudo}/{id}/Educacional"));
+            return Put(requestUrl, command);
+        }
+
+        /// <summary>
         /// Exclusao de laudo
         /// </summary>
         /// <param name="id">Id de exclusão de Laudo</param>

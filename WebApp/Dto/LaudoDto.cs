@@ -1,4 +1,4 @@
-﻿namespace WebApp.Dto
+﻿ namespace WebApp.Dto
 {
     public class LaudoDto
     {
@@ -6,9 +6,10 @@
 
         #region Ids
 
+        public int? EducacionalMatematicaId { get; set; }
+        public int? EducacionalPortuguesId { get; set; }
         public int? TalentoEsportivoId { get; set; }
         public int? VocacionalId { get; set; }
-        public int? EducacionalId { get; set; }
         public int? QualidadeDeVidaId { get; set; }
         public int? SaudeId { get; set; }
         public int? ConsumoAlimentarId { get; set; }
@@ -17,7 +18,8 @@
         public int? AlunoId { get; set; }
         public int? ProfissionalId { get; set; }
         public int? EncaminhamentoVocacionalId { get; set; }
-        public int? EncaminhamentoEducacionalId { get; set; }
+        public int? EncaminhamentoMatematicaId { get; set; }
+        public int? EncaminhamentoPortuguesId { get; set; }
         public int? EncaminhamentoConsumoAlimentarId { get; set; }
         public int? EncaminhamentoSaudeBucalId { get; set; }
         public int? EncaminhamentoTalentoEsportivoId { get; set; }
@@ -59,7 +61,7 @@
         #endregion
 
         #region Edição de Laudo
-        public string? Uf { get; init; }
+        public string? Uf { get; set; }
 
         #endregion
 
