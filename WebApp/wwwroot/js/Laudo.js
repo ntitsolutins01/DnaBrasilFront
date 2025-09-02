@@ -142,6 +142,28 @@ var vm = new Vue({
                     $(this).trigger('blur');
                 });
 
+                $("#ddlFomento").change(function () {
+
+                    var id = $("#ddlFomento").val();
+
+                    var url = "../DivisaoAdministrativa/GetMunicipioByFomento?id=" + id;
+
+
+                    $.getJSON(url,
+                        function (data) {
+                            if (data.length > 0) {
+                                $("#ddlEstado").val(data[1]).trigger("change");
+                            }
+                            else {
+                                new PNotify({
+                                    title: 'Municipios',
+                                    text: 'Municipios não encontradas.',
+                                    type: 'warning'
+                                });
+                            }
+                        });
+                });
+
 
                 //clique de escolha do select
                 $("#ddlEstado").change(function () {
