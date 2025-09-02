@@ -1564,7 +1564,7 @@ namespace WebApp.Controllers
                     TextGabarito = textoGabarito,
                     AnoGabarito = anoGabarito,
                     SiglaGabarito = collection["ddlGabarito"],
-                    ProfissionalId = collection["ddlProfissional"]
+                    ProfissionalId = collection["ddlProfissionalRespostaModal"]
                 };
 
                 return View(model);
