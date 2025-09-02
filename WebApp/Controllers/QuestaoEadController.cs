@@ -105,11 +105,20 @@ public class QuestaoEadController : BaseController
             {
                 AulaId = Convert.ToInt32(collection["ddlAula"].ToString()),
                 Enunciado = collection["enunciado"].ToString(),
-                Questao = Convert.ToInt32(collection["questao"].ToString()),
+                NumeroQuestao = Convert.ToInt32(collection["questao"].ToString()),
                 Referencia = collection["referencia"].ToString()
             };
 
-            var listDdlTipoTextoImagem = (from item in collection where item.Key.Contains("texto") select item.Value).Select(v => (string)v).ToList();
+            var listDdlTipoTextoImagem = (from item in collection where item.Key.Contains("texto") select item)
+                .Select(v =>
+                {
+                    var texto = new Dictionary<int, string>()
+                    {
+                        {Convert.ToInt32(v.Key.ToString().Replace("texto", "")),v.Value}
+                    };
+
+                    return texto;
+                }).ToList();
 
             if (listDdlTipoTextoImagem.Any())
             {
@@ -118,7 +127,7 @@ public class QuestaoEadController : BaseController
 
             if (collection.Files.Any())
             {
-                var listImagens = new List<string?>();
+                var listImagens = new List<Dictionary<int, string>>();
                 string? filePath;
                 string extension = ".jpg";
                 string newFileName = Path.ChangeExtension(
@@ -134,7 +143,10 @@ public class QuestaoEadController : BaseController
                     if (!Directory.Exists(Path.Combine(_host.WebRootPath, $"QuestoesEad")))
                         Directory.CreateDirectory(Path.Combine(_host.WebRootPath, $"QuestoesEad"));
 
-                    listImagens.Add(filePath);
+                    listImagens.Add(new Dictionary<int, string>
+                    {
+                        { Convert.ToInt32(file.Name.Replace("imagem", "")), filePath }
+                    });
 
                     using Stream fileStream = new FileStream(filePath, FileMode.Create);
                     await file.CopyToAsync(fileStream);
@@ -154,22 +166,30 @@ public class QuestaoEadController : BaseController
                 case "D":
                     break;
                 case "M":
-                    var listMultiplos =
+                    var listRespostas =
                         (from item in collection where item.Key.Contains("multiplo") select item)
                         .Select(v =>
                         {
-                            var dictionary = new Dictionary<string, string>();
-                            dictionary.Add(v.Key.ToString(), v.Value.ToString());
-                            return dictionary;
+                            var resposta = new RespostaEadDto()
+                            {
+                                TipoResposta = "M",
+                                ValorPesoResposta = Convert.ToDecimal(v.Key.ToString().Replace("multiplo", "")),
+                                Resposta = v.Value.ToString()
+                            };
+
+                            resposta.RespostaCerta =
+                                (from item in collection where item.Key.Contains("ckMulti") select item.Value)
+                                .Select(v => Convert.ToDecimal(v)).ToList().Any(a => a == resposta.ValorPesoResposta);
+
+                            return resposta;
                         }).ToList();
-                    var resultadoCkMulti =
-                        (from item in collection where item.Key.Contains("ckMulti") select item.Value)
-                        .Sum(v => Convert.ToInt32(v));
+
+                    commandQuestaoEad.Respostas = listRespostas;
                     break;
             }
             #endregion
 
-            //await ApiClientFactory.Instance.CreateQuestaoEad(command);
+            var questaoId = await ApiClientFactory.Instance.CreateQuestaoEad(commandQuestaoEad);
 
             return RedirectToAction(nameof(Index), new { crud = (int)EnumCrud.Created });
         }
@@ -199,7 +219,7 @@ public class QuestaoEadController : BaseController
                 Referencia = collection["referencia"].ToString(),
                 Enunciado = collection["pergunta"].ToString(),
                 Respostas = JsonConvert.DeserializeObject<List<RespostaEadDto>>(collection["respostas"]),
-                Questao = Convert.ToInt32(collection["questao"].ToString()),
+                NumeroQuestao = Convert.ToInt32(collection["questao"].ToString()),
             };
 
             await ApiClientFactory.Instance.UpdateQuestaoEad(command.Id, command);

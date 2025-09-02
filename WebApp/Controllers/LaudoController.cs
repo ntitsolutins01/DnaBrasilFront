@@ -1228,7 +1228,7 @@ namespace WebApp.Controllers
 
 
         /// <summary>
-        /// Impreção de Gabaritos do SAEB para Alunos de uma certa localidade
+        /// Impressão de Gabaritos do SAEB para Alunos de uma certa localidade
         /// </summary>
         /// <param name="ddlEstadoGabarito">Gabarito do SAEB</param>
         /// <param name="ddlMunicipioGabarito">Id do município</param>
