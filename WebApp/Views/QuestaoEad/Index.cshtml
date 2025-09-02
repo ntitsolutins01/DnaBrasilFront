@@ -25,7 +25,7 @@
                             <tr>
                                 <th class="text-center">Id</th>
                                 <th class="text-center">Aula</th>
-                                <th class="text-center">Pergunta</th>
+                                <th class="text-center">Pergunta/Enunciado</th>
                                 <th class="text-center">Questao</th>
                                 <th class="text-center">Ações</th>
                             </tr>
@@ -36,8 +36,8 @@
                                 <tr>
                                     <td class="text-center" style="width:20px;">@Html.DisplayFor(modelItem => item.Id)</td>
                                     <td class="text-center" style="width:100px;">@Html.DisplayFor(modelItem => item.NomeAula)</td>
-                                    <td class="text-center" style="width:500px;">@Html.DisplayFor(modelItem => item.Pergunta)</td>
-                                    <td class="text-center" style="width:20px; !important">@Html.DisplayFor(modelItem => item.Questao)</td>
+                                    <td class="text-center" style="width:500px;">@Html.DisplayFor(modelItem => item.Enunciado)</td>
+                                    <td class="text-center" style="width:20px; !important">@Html.DisplayFor(modelItem => item.NumeroQuestao)</td>
 
                                     <td class="actions text-center" style="width: 20px; !important">
                                         <a data-toggle="tooltip" data-placement="top" title="Editar"

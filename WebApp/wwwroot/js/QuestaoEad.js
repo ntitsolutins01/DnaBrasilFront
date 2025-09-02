@@ -218,8 +218,9 @@
                     case 'T':
 
                         $('.wrapper').append(`
+                                    
                                             <div class="col-sm-7" style="padding-top: 15px;" id="div`+elem+`">
-                                                <textarea class="form-control" rows="3" maxlength="500" name="texto` + elem + `" id="texto` + elem + `"></textarea>
+                                                <textarea class="form-control" rows="3" maxlength="1000" name="texto` + elem + `" id="texto` + elem + `"></textarea>
                                             </div>
                                             <div class="col-sm-1" style="padding-top: 15px;" id="btn`+ elem +`">
                                                 <a type="button" class="ml-xs btn btn-danger" href="javascript:(crud.DelTextoImagem('divDdl`+ elem + `','div` + elem + `','btn` + elem +`'))">
