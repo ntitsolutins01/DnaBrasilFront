@@ -31,9 +31,9 @@ namespace WebApp.Models
             public string Referencia { get; set; }
             public string Enunciado { get; set; }
             public List<RespostaEadDto>? Respostas { get; set; }
-            public required int Questao { get; set; }
-            public List<string?> ListTextos { get; set; }
-            public List<string?> ListImagens { get; set; }
+            public required int NumeroQuestao { get; set; }
+            public List<Dictionary<int, string>>? ListTextos { get; set; }
+            public List<Dictionary<int, string>>? ListImagens { get; set; }
         }
     }
 

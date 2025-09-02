@@ -5,8 +5,8 @@
         public int Id { get; set; }
         public required string NomeAula { get; set; }
         public string? Referencia { get; set; }
-        public required string Pergunta { get; set; }
+        public required string Enunciado { get; set; }
         public List<RespostaEadDto>? Respostas { get; set; }
-        public required int Questao { get; set; }
+        public required int NumeroQuestao { get; set; }
     }
 }
