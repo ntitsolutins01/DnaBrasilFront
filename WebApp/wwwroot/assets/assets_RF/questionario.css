@@ -206,6 +206,36 @@
         background-color: #333;
     }
 
+/* Área de assinaturas */
+.signature-area {
+    display: flex;
+    justify-content: center;
+    margin-top: 80px;
+    padding: 10px 40px;
+    position: relative;
+    bottom: 0;
+}
+
+.signature-block {
+    flex: 1;
+    max-width: 400px;
+}
+
+.signature-line {
+    text-align: center;
+}
+
+    .signature-line hr {
+        border: none;
+        border-top: 1px solid #000;
+        margin-bottom: 5px;
+    }
+
+    .signature-line p {
+        margin: 0;
+        font-size: 12px;
+    }
+
 /* Responsividade para impressão */
 @media print {
     .questionnaire-section {
@@ -218,5 +248,14 @@
 
     .question-column {
         box-shadow: none;
+    }
+
+    /* Ajuste para a área de assinaturas */
+    .signature-area {
+        page-break-inside: avoid !important;
+        page-break-before: avoid !important;
+        padding: 10px 40px;
+        position: relative;
+        bottom: 0;
     }
 }
