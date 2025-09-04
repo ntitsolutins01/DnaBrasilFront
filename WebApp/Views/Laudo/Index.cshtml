@@ -509,25 +509,20 @@
 									<option value="">Selecionar Localidade</option>
 								</select>
 							</div>
-							<label class="col-sm-2 control-label">Aluno: </label>
+							<label class="col-sm-2 control-label">Turma: <span class="required">*</span></label>
 							<div class="col-md-4">
-								<select class="form-control populate select2" name="ddlAlunoGabarito" id="ddlAlunoGabarito" style="width: 100%"
-										asp-for="AlunoId" asp-items="Model.ListAlunos">
-									<option value="">Selecionar Aluno</option>
+								<select class="form-control populate select2" name="ddlTurma" id="ddlTurma"
+								        title="Por favor informe a turma." required style="width: 100%"
+								        asp-for="TurmaId" asp-items="Model.ListTurmas">
+									<option value="">Selecionar Turma</option>
 								</select>
 							</div>
 						</div>
 						<div class="form-group">
-							<label class="col-sm-2 control-label">Turma: <span class="required">*</span></label>
+							<label class="col-sm-2 control-label">Aluno: </label>
 							<div class="col-md-4">
-								@* <select class="form-control populate" multiple="multiple" data-plugin-multiselect data-plugin-options='{ "maxHeight": 200, "enableCaseInsensitiveFiltering": true }'
-										id="ddlTurma" name="ddlTurma" style="width:100%" asp-for="TurmaId" asp-items="Model.ListTurmas" required
-										title="Por favor selecione ao menos uma turma.">
-								</select> *@
-								<select class="form-control populate select2" name="ddlTurma" id="ddlTurma"
-										title="Por favor informe a turma." required style="width: 100%"
-										asp-for="TurmaId" asp-items="Model.ListTurmas">
-									<option value="">Selecionar Turma</option>
+								<select class="form-control populate select2" name="ddlAlunoGabarito" id="ddlAlunoGabarito" style="width: 100%">
+									<option value="">Selecionar Aluno</option>
 								</select>
 							</div>
 						</div>

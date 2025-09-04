@@ -138,7 +138,9 @@ public class ControleFrequenciaEscolarController : BaseController
         };
 
         var result = await ApiClientFactory.Instance.GetAlunosByFilter(filter);
+        
         var alunos = result.Alunos;
+        
         alunos = alunos.OrderBy(a => a.Nome.Split('-').Last().Trim()).ToList();
 
         var disciplinas = new SelectList(ApiClientFactory.Instance.GetDisciplinasAll(), "Id", "Nome");

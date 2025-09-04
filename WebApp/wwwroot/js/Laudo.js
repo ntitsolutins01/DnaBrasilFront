@@ -144,6 +144,14 @@ var vm = new Vue({
 
                 $("#ddlFomento").change(function () {
 
+                    var items = '<option value="">Selecionar Localidade</option>';
+                    $("#ddlLocalidade").empty;
+                    $("#ddlLocalidade").html(items);
+
+                    var items = '<option value="">Selecionar Aluno</option>';
+                    $("#ddlAluno").empty;
+                    $("#ddlAluno").html(items);
+
                     var id = $("#ddlFomento").val();
 
                     var url = "../DivisaoAdministrativa/GetMunicipioByFomento?id=" + id;
@@ -257,6 +265,21 @@ var vm = new Vue({
 
                 //clique de escolha do select
                 $("#ddlEstadoGabarito").change(function () {
+
+                    var self = this;
+
+                    var items = '<option value="">Selecionar Localidade</option>';
+                    $("#ddlLocalidadeGabarito").empty;
+                    $("#ddlLocalidadeGabarito").html(items);
+
+                    var items = '<option value="">Selecionar Aluno</option>';
+                    $("#ddlAlunoGabarito").empty;
+                    $("#ddlAlunoGabarito").html(items);
+
+                    var items = '<option value="">Selecionar Turma</option>';
+                    $("#ddlTurma").empty;
+                    $("#ddlTurma").html(items);
+
                     var sigla = $("#ddlEstadoGabarito").val();
 
                     var url = "../../DivisaoAdministrativa/GetMunicipioByUf?uf=" + sigla;
@@ -311,6 +334,15 @@ var vm = new Vue({
 
                 //clique de escolha do select
                 $("#ddlLocalidadeGabarito").change(function () {
+
+
+                    var items = '<option value="">Selecionar Aluno</option>';
+                    $("#ddlAlunoGabarito").empty;
+                    $("#ddlAlunoGabarito").html(items);
+
+                    var items = '<option value="">Selecionar Turma</option>';
+                    $("#ddlTurma").empty;
+                    $("#ddlTurma").html(items);
 
                     var localidadeId = $("#ddlLocalidadeGabarito").val();
                     var gabarito = $("#ddlGabaritoModal").select2('data')[0].id;
@@ -386,13 +418,13 @@ var vm = new Vue({
                     $.getJSON(url,
                         function (data) {
                             if (data.length > 0) {
-                                var items = '<option value="">Selecionar Série</option>';
-                                $("#ddlAluno").empty;
+                                var items = '<option value="">Selecionar Aluno</option>';
+                                $("#ddlAlunoGabarito").empty;
                                 $.each(data,
                                     function (i, row) {
                                         items += "<option value='" + row.value + "'>" + row.text + "</option>";
                                     });
-                                $("#ddlAluno").html(items);
+                                $("#ddlAlunoGabarito").html(items);
                             }
                             else {
                                 new PNotify({
