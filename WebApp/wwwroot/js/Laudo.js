@@ -315,18 +315,15 @@ var vm = new Vue({
                     var localidadeId = $("#ddlLocalidadeGabarito").val();
                     var gabarito = $("#ddlGabaritoModal").select2('data')[0].id;
 
-                    //if (gabarito === "") {
+                    if (gabarito === "") {
 
-                    //    //Valida form para Impressão do Gabarito
-                    //    $("#formImprimirGabarito").valid();
-
-                    //    new PNotify({
-                    //        title: 'Laudo',
-                    //        text: 'Por favor selecione o gabarito',
-                    //        type: 'warning'
-                    //    });
-                    //    return;
-                    //}
+                        new PNotify({
+                            title: 'Laudo',
+                            text: 'Por favor selecione o gabarito',
+                            type: 'warning'
+                        });
+                        return;
+                    }
 
                     var etapaId = 0;
                     var serie = "";
@@ -378,6 +375,33 @@ var vm = new Vue({
                     }).finally(function () {
                         // sempre será executado
                     });
+                });
+
+                //clique de escolha do select
+                $("#ddlTurma").change(function () {
+                    var id = $("#ddlTurma").val();
+
+                    var url = "../../Aluno/GetAlunosBySerieId?id=" + id;
+
+                    $.getJSON(url,
+                        function (data) {
+                            if (data.length > 0) {
+                                var items = '<option value="">Selecionar Série</option>';
+                                $("#ddlAluno").empty;
+                                $.each(data,
+                                    function (i, row) {
+                                        items += "<option value='" + row.value + "'>" + row.text + "</option>";
+                                    });
+                                $("#ddlAluno").html(items);
+                            }
+                            else {
+                                new PNotify({
+                                    title: 'Alunos',
+                                    text: 'Alunos não encontrados.',
+                                    type: 'warning'
+                                });
+                            }
+                        });
                 });
 
                 //Valida form para Impressão do Gabarito

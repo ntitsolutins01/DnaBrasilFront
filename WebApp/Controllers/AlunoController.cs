@@ -1760,6 +1760,31 @@ namespace WebApp.Controllers
         }
 
         /// <summary>
+        /// Busca de Alunos por Série
+        /// </summary>
+        /// <param name="id">Identificador da série</param>
+        /// <returns>Retorna a lista de alunos</returns>
+        [ClaimsAuthorize(ClaimType.Aluno, Claim.Consultar)]
+        public async Task<JsonResult> GetAlunosBySerieId(string id)
+        {
+            try
+            {
+                _logger.Info($"Busca de alunos por serie GetAlunosBySerieId: {id}");
+
+                if (string.IsNullOrEmpty(id)) throw new Exception("Serie não informada.");
+                var resultLocal = await ApiClientFactory.Instance.GetNomeAlunosBySerieId(Convert.ToInt32(id));
+
+                return new JsonResult(new SelectList(resultLocal, "Id", "Nome"));
+
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"Busca de alunos por serie GetAlunosBySerieId: {ex.StackTrace}");
+                return new JsonResult(ex.StackTrace);
+            }
+        }
+
+        /// <summary>
         /// Busca de Alunos por Localidade
         /// </summary>
         /// <param name="id">Identificador da localidade</param>
