@@ -495,8 +495,8 @@
 							</div>
 							<label class="col-sm-2 control-label">Municipio: <span class="required text-danger">*</span></label>
 							<div class="col-md-4">
-								<select class="form-control populate select2" name="ddlMunicipioGabarito" id="ddlMunicipioGabarito" style="width: 100%"
-										asp-for="MunicipioId" asp-items="Model.ListMunicipios" required>
+                                <select class="form-control populate select2" name="ddlMunicipioGabarito" id="ddlMunicipioGabarito" style="width: 100%" required
+										asp-for="MunicipioId" asp-items="Model.ListMunicipios">
 									<option value="">Selecionar Municipio</option>
 								</select>
 							</div>
@@ -504,16 +504,14 @@
 						<div class="form-group">
 							<label class="col-sm-2 control-label">Localidade: <span class="required text-danger">*</span></label>
 							<div class="col-md-4">
-								<select class="form-control populate select2" name="ddlLocalidadeGabarito" id="ddlLocalidadeGabarito" style="width: 100%"
-										asp-for="LocalidadeId" asp-items="Model.ListLocalidades" required>
+								<select class="form-control populate select2" name="ddlLocalidadeGabarito" id="ddlLocalidadeGabarito" style="width: 100%" required>
 									<option value="">Selecionar Localidade</option>
 								</select>
 							</div>
 							<label class="col-sm-2 control-label">Turma: <span class="required">*</span></label>
 							<div class="col-md-4">
 								<select class="form-control populate select2" name="ddlTurma" id="ddlTurma"
-								        title="Por favor informe a turma." required style="width: 100%"
-								        asp-for="TurmaId" asp-items="Model.ListTurmas">
+								        title="Por favor informe a turma." required style="width: 100%">
 									<option value="">Selecionar Turma</option>
 								</select>
 							</div>

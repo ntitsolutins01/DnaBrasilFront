@@ -192,6 +192,14 @@ var vm = new Vue({
                                         items += "<option value='" + row.value + "'>" + row.text + "</option>";
                                     });
                                 $("#ddlMunicipio").html(items);
+
+                                var items = '<option value="">Selecionar Localidade</option>';
+                                $("#ddlLocalidade").empty;
+                                $("#ddlLocalidade").html(items);
+
+                                var items = '<option value="">Selecionar Aluno</option>';
+                                $("#ddlAluno").empty;
+                                $("#ddlAluno").html(items);
                             }
                             else {
                                 new PNotify({
@@ -870,6 +878,14 @@ var vm = new Vue({
                                         items += "<option value='" + row.value + "'>" + row.text + "</option>";
                                     });
                                 $("#ddlMunicipio").html(items);
+
+                                var items = '<option value="">Selecionar Localidade</option>';
+                                $("#ddlLocalidade").empty;
+                                $("#ddlLocalidade").html(items);
+
+                                var items = '<option value="">Selecionar Aluno</option>';
+                                $("#ddlAluno").empty;
+                                $("#ddlAluno").html(items);
                             }
                             else {
                                 new PNotify({
