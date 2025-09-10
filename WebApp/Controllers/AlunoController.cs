@@ -594,7 +594,7 @@ namespace WebApp.Controllers
                     AutorizacaoSaida = Convert.ToBoolean(collection["autorizado"].ToString()),
                     UtilizacaoImagem = Convert.ToBoolean(collection["utilizacaoImagem"].ToString()),
                     ParticipacaoProgramaCompartilhamentoDados = Convert.ToBoolean(collection["participacao"].ToString()),
-                    CopiaDocAlunoResponsavel = Convert.ToBoolean(collection["copiaDoc"].ToString()),
+                    CopiaDocAlunoResponsavel = false,
                     AutorizacaoConsentimentoAssentimento = collection["agreeterms"].ToString() != "",
                     SerieId = collection["ddlTurma"] == "" ? null : Convert.ToInt32(collection["ddlTurma"].ToString())
 
