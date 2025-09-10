@@ -134,7 +134,7 @@ public class ControleFrequenciaEscolarController : BaseController
         var filter = new AlunosFilterDto()
         {
             SerieId = collection["ddlTurma"].ToString(),
-            LocalidadeId = collection["hdnLocalidadeId"].ToString()
+            //LocalidadeId = collection["hdnLocalidadeId"].ToString()
         };
 
         var result = await ApiClientFactory.Instance.GetAlunosByFilter(filter);
@@ -145,10 +145,10 @@ public class ControleFrequenciaEscolarController : BaseController
 
         var profissionais = new SelectList(new List<object>(), "Id", "Nome");
 
-        if (!filter.LocalidadeId.IsNullOrEmpty())
+        if (!collection["hdnLocalidadeId"].ToString().IsNullOrEmpty())
         {
             var listaProfissionais = ApiClientFactory.Instance
-                .GetProfissionaisByLocalidade(Convert.ToInt32(filter.LocalidadeId));
+                .GetProfissionaisByLocalidade(Convert.ToInt32(collection["hdnLocalidadeId"].ToString()));
 
             profissionais = new SelectList((IEnumerable)listaProfissionais ?? new List<object>(), "Id", "Nome");
         }
