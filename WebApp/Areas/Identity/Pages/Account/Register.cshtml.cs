@@ -99,26 +99,28 @@ namespace WebApp.Areas.Identity.Pages.Account
             ListEstados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome");
             ListFomentos = new SelectList(ApiClientFactory.Instance.GetFomentosAll(), "Id", "Nome");
 
-            List<SelectListDto> list = new List<SelectListDto>
-            {
-                new() { IdNome = "PARDO", Nome = "PARDO" },
-                new() { IdNome = "BRANCO", Nome = "BRANCO" },
-                new() { IdNome = "PRETO", Nome = "PRETO" },
-                new() { IdNome = "INDIGENA", Nome = "INDIGENA" },
-                new() { IdNome = "AMARELO", Nome = "AMARELO" }
-            };
-
-            var etnias = new SelectList(list, "IdNome", "Nome");
-            ListEtnias = etnias;
+            ListEtnias = GetEtniasRacaCor();
 
             var modalidades = new SelectList(ApiClientFactory.Instance.GetModalidadeAll(), "Id", "Nome");
             ListModalidades = modalidades;
 
             var deficiencias = new SelectList(ApiClientFactory.Instance.GetDeficienciaAll().Where(x => x.Status), "Id", "Nome");
             ListDeficiencia = deficiencias;
-
         }
+        private SelectList GetEtniasRacaCor()
+        {
+            List<SelectListDto> list = new List<SelectListDto>
+            {
+                new() { IdNome = "NAODECLARADA", Nome = "NÃO DECLARADA" },
+                new() { IdNome = "PARDA", Nome = "PARDA" },
+                new() { IdNome = "BRANCA", Nome = "BRANCA" },
+                new() { IdNome = "PRETA", Nome = "PRETA" },
+                new() { IdNome = "INDIGENA", Nome = "INDÍGENA" },
+                new() { IdNome = "AMARELA", Nome = "AMARELA" }
+            };
 
+            return new SelectList(list, "IdNome", "Nome"); 
+        }
         public async Task<IActionResult> OnPostAsync(IFormCollection collection)
         {
             var commandAluno = new AlunoModel.CreateUpdateDadosAlunoCommand()
