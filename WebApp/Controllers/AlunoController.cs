@@ -594,7 +594,7 @@ namespace WebApp.Controllers
                     AutorizacaoSaida = Convert.ToBoolean(collection["autorizado"].ToString()),
                     UtilizacaoImagem = Convert.ToBoolean(collection["utilizacaoImagem"].ToString()),
                     ParticipacaoProgramaCompartilhamentoDados = Convert.ToBoolean(collection["participacao"].ToString()),
-                    CopiaDocAlunoResponsavel = Convert.ToBoolean(collection["copiaDoc"].ToString()),
+                    CopiaDocAlunoResponsavel = false,
                     AutorizacaoConsentimentoAssentimento = collection["agreeterms"].ToString() != "",
                     SerieId = collection["ddlTurma"] == "" ? null : Convert.ToInt32(collection["ddlTurma"].ToString())
 
@@ -1232,8 +1232,8 @@ namespace WebApp.Controllers
                     alturaItem = AddInfoRow(document, "MATRÍCULA:", aluno.Id.ToString(), leftMargin, currentY, labelWidth, valueWidth, corAzul);
                     currentY -= alturaItem;
 
-                    // Modalidades
-                    AddFullWidthText(document, aluno.Modalidades, leftMargin, currentY, labelWidth + valueWidth, corAzul, false);
+                    // Modalidades - agora ajustando o currentY com base na altura ocupada
+                    alturaItem = AddFullWidthText(document, aluno.Modalidades, leftMargin, currentY, labelWidth + valueWidth, corAzul, false);
 
                     // Adicionar foto do aluno
                     float rightMargin = 0.91f * 28.35f;
@@ -1755,6 +1755,31 @@ namespace WebApp.Controllers
             catch (Exception ex)
             {
                 _logger.Error($"Busca de alunos por localidade GetAlunosByLocalidadeId: {ex.StackTrace}");
+                return new JsonResult(ex.StackTrace);
+            }
+        }
+
+        /// <summary>
+        /// Busca de Alunos por Série
+        /// </summary>
+        /// <param name="id">Identificador da série</param>
+        /// <returns>Retorna a lista de alunos</returns>
+        [ClaimsAuthorize(ClaimType.Aluno, Claim.Consultar)]
+        public async Task<JsonResult> GetAlunosBySerieId(string id)
+        {
+            try
+            {
+                _logger.Info($"Busca de alunos por serie GetAlunosBySerieId: {id}");
+
+                if (string.IsNullOrEmpty(id)) throw new Exception("Serie não informada.");
+                var resultLocal = await ApiClientFactory.Instance.GetNomeAlunosBySerieId(Convert.ToInt32(id));
+
+                return new JsonResult(new SelectList(resultLocal, "Id", "Nome"));
+
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"Busca de alunos por serie GetAlunosBySerieId: {ex.StackTrace}");
                 return new JsonResult(ex.StackTrace);
             }
         }
@@ -2330,8 +2355,9 @@ namespace WebApp.Controllers
                 alturaItem = AddInfoRow(document, "MATRÍCULA:", aluno.Id.ToString(), leftMargin, currentY, labelWidth, valueWidth, corAzul);
                 currentY -= alturaItem;
 
-                // Modalidades - alterei para "Conhecimento" conforme o modelo
-                AddFullWidthText(document, aluno.Modalidades, leftMargin, currentY, labelWidth + valueWidth, corAzul, false);
+                // Modalidades - agora ajustando o currentY com base na altura ocupada
+                alturaItem = AddFullWidthText(document, aluno.Modalidades, leftMargin, currentY, labelWidth + valueWidth, corAzul, false);
+                currentY -= alturaItem;
 
                 // Adicionar foto do aluno - ajustado para incluir sangria
                 float rightMargin = 0.91f * 28.35f;
@@ -2685,8 +2711,19 @@ namespace WebApp.Controllers
         /// <summary>
         /// Método auxiliar da carteirinha para adicionar texto com largura total (ocupando espaço de label + value)
         /// </summary>
-        private void AddFullWidthText(Document document, string text, float x, float y, float totalWidth, DeviceCmyk color, bool isBold = false)
+        /// <param name="document">O documento onde adicionar o texto</param>
+        /// <param name="text">O texto a ser adicionado</param>
+        /// <param name="x">Posição X</param>
+        /// <param name="y">Posição Y</param>
+        /// <param name="totalWidth">Largura total disponível</param>
+        /// <param name="color">Cor do texto</param>
+        /// <param name="isBold">Se o texto deve ser negrito</param>
+        /// <returns>A altura total ocupada pelo texto, incluindo espaçamento</returns>
+        private float AddFullWidthText(Document document, string text, float x, float y, float totalWidth, DeviceCmyk color, bool isBold = false)
         {
+            if (string.IsNullOrEmpty(text))
+                return 8f; // Altura mínima se não houver texto
+
             Paragraph paragraph = new Paragraph(text);
             paragraph.SetFontSize(6); // Mantendo o tamanho da fonte em 6px
             if (isBold)
@@ -2700,7 +2737,23 @@ namespace WebApp.Controllers
             paragraph.SetMultipliedLeading(1.2f); // Espaçamento entre linhas
             paragraph.SetTextAlignment(TextAlignment.LEFT);
 
+            // Estimar o número de linhas que o texto ocupará
+            float charsPerLine = totalWidth / 3.5f; // Aproximação baseada no tamanho da fonte
+            int linhasEstimadas = (int)Math.Ceiling(text.Length / charsPerLine);
+            float alturaLinha = 8f; // Altura base de uma linha com fonte tamanho 6
+
+            // Se o texto ocupar mais de uma linha, ajustar a posição Y
+            if (linhasEstimadas > 1)
+            {
+                // Ajustar a posição Y para cima para acomodar as linhas extras
+                float adjustedY = y - ((linhasEstimadas - 1) * alturaLinha * 0.8f);
+                paragraph.SetFixedPosition(x, adjustedY, totalWidth);
+            }
+
             document.Add(paragraph);
+
+            // Retornar a altura total ocupada (incluindo um pequeno espaçamento)
+            return Math.Max(alturaLinha, linhasEstimadas * alturaLinha * 0.8f) + 4f;
         }
 
         /// <summary>

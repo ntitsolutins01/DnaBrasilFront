@@ -146,18 +146,28 @@
 
 .question-header {
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     margin-bottom: 15px;
     padding-bottom: 8px;
     border-bottom: 1px solid #adadad;
 }
 
+    .question-header::before {
+        content: '';
+        width: 35px;
+        flex-shrink: 0;
+    }
+
 .option-header {
     font-weight: bold;
     color: #333;
     font-size: 16px;
-    width: 30px;
+    width: 20px;
     text-align: center;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .question-item {
@@ -206,6 +216,36 @@
         background-color: #333;
     }
 
+/* Área de assinaturas */
+.signature-area {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+    padding: 10px 40px;
+    position: relative;
+    bottom: 0;
+}
+
+.signature-block {
+    flex: 1;
+    max-width: 400px;
+}
+
+.signature-line {
+    text-align: center;
+}
+
+    .signature-line hr {
+        border: none;
+        border-top: 1px solid #000;
+        margin-bottom: 5px;
+    }
+
+    .signature-line p {
+        margin: 0;
+        font-size: 12px;
+    }
+
 /* Responsividade para impressão */
 @media print {
     .questionnaire-section {
@@ -218,5 +258,14 @@
 
     .question-column {
         box-shadow: none;
+    }
+
+    /* Ajuste para a área de assinaturas */
+    .signature-area {
+        page-break-inside: avoid !important;
+        page-break-before: avoid !important;
+        padding: 10px 40px;
+        position: relative;
+        bottom: 0;
     }
 }

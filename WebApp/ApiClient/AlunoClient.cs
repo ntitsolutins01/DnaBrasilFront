@@ -192,6 +192,18 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
+        /// Busca Todos Nome de Aluno
+        /// </summary>
+        /// <param name="id">Id da serie a ser buscado</param>
+        /// <returns>Retorna a todos os Aluno</returns>
+        public async Task<List<SelectListDto>> GetNomeAlunosBySerieId(int id)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceAlunos}/NomeAlunos/Serie/{id}"));
+            return Get<List<SelectListDto>>(requestUrl);
+        }
+
+        /// <summary>
         /// Busca Aluno por Filtro 
         /// </summary>
         /// <param name="searchFilter">filtro para pesquisas de Aluno</param>
