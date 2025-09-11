@@ -622,7 +622,7 @@ var vm = new Vue({
                             }
                             else {
                                 new PNotify({
-                                    title: 'Fomento',
+                                    title: 'Laudo',
                                     text: 'Municípios não encontrados.',
                                     type: 'warning'
                                 });
@@ -889,7 +889,7 @@ var vm = new Vue({
                             }
                             else {
                                 new PNotify({
-                                    title: 'Fomento',
+                                    title: 'Laudo',
                                     text: 'Municípios não encontrados.',
                                     type: 'warning'
                                 });

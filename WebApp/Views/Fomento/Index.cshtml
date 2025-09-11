@@ -1,6 +1,6 @@
 ﻿@model WebApp.Models.FomentoModel
 @{
-    ViewData["Title"] = "Listagem de Fomentos / Contratos";
+    ViewData["Title"] = "Listagem de Fomentos/Contratos";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -12,7 +12,7 @@
                     <div class="panel-actions">
                         <a href="#" class="card-action card-action-toggle" data-card-toggle></a>
                     </div>
-                    <h2 class="panel-title">Listagem de Fomentos</h2>
+                    <h2 class="panel-title">Listagem de Fomentos/Contratos</h2>
                 </header>
                 <div class="panel-body">
                     <div class="form-group row">
@@ -24,8 +24,8 @@
                         <thead>
                             <tr>
                                 <th class="text-center">Id</th>
-                                <th class="text-center">Código do Fomento</th>
-                                <th class="text-center">Fomento</th>
+                                <th class="text-center">Código do Fomento/Contrato</th>
+                                <th class="text-center">Fomento/Contrato</th>
                                 <th class="text-center">Localidade - Municipio/UF</th>
 	                            <th class="text-center">Data Inicío</th>
 	                            <th class="text-center">Data fim</th>
@@ -73,7 +73,7 @@
 		    <div class="modal-content">
 			    <div class="modal-header">
 				    <h5 class="modal-title" id="mdDeleteFomentoLabel">
-					    <i class="fa fa-trash"></i> &nbsp;&nbsp;<strong>Exclusão de Fomento</strong>
+					    <i class="fa fa-trash"></i> &nbsp;&nbsp;<strong>Exclusão de Fomento/Contrato</strong>
 				    </h5>
 			    </div>
 			    <div class="modal-body">
@@ -268,14 +268,14 @@
 
             if (crud === 1) {
                 new PNotify({
-                    title: 'Fomento',
+                    title: 'Fomento/Contrato',
                     text: 'Cadastro realizado com sucesso!',
                     type: 'success'
                 });
                 crud = 0;
             } else if (crud === 2) {
                 new PNotify({
-                    title: 'Fomento',
+                    title: 'Fomento/Contrato',
                     text: 'Dados alterados com sucesso.',
                     type: 'warning',
                     icon: 'fa fa-pencil'
@@ -283,7 +283,7 @@
                 crud = 0;
             } else if (crud === 3) {
                 new PNotify({
-                    title: 'Fomento',
+                    title: 'Fomento/Contrato',
                     text: 'Registro excluído com sucesso.',
                     type: 'error',
                     icon: 'fa fa-trash-o'
@@ -297,21 +297,21 @@
 
             if (notify === 0) {
                 new PNotify({
-                    title: 'Fomento',
+                    title: 'Fomento/Contrato',
                     text: messagem,
                     type: 'success'
                 });
                 crud = 0;
             } else if (notify === 1) {
                 new PNotify({
-                    title: 'Fomento',
+                    title: 'Fomento/Contrato',
                     text: messagem,
                     type: 'warning'
                 });
                 crud = 0;
             } else if (notify === 2) {
                 new PNotify({
-                    title: 'Fomento',
+                    title: 'Fomento/Contrato',
                     text: messagem,
                     type: 'error'
                 });

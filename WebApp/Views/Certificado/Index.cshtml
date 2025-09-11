@@ -35,8 +35,8 @@
 						<thead>
 							<tr>
 								<th class="text-center">Id</th>
-								<th class="text-center">Nome do Fomento</th>
-								<th class="text-center">Nome do Certificadoo</th>
+								<th class="text-center">Nome do Fomento/Contrato</th>
+								<th class="text-center">Nome do Certificado</th>
 								<th class="text-center">Status</th>
 								<th class="text-center">Ações</th>
 							</tr>
@@ -180,12 +180,12 @@
 					<div class="modal-body">
 						<input type="hidden" name="editCertificadoId" :value="editDto.Id" />
 						<div class="form-group">
-							<label class="col-sm-3 control-label text-sm-right pt-2">Fomento <span class="required">*</span></label>
+							<label class="col-sm-3 control-label text-sm-right pt-2">Fomento/Contrato <span class="required">*</span></label>
 							<div class="col-sm-9">
 								<select class="form-control populate select2" name="ddlFomento" id="ddlFomento" style="width:100%"
-										required title="Por favor selecione o fomento"
+										required title="Por favor selecione o fomento/contrato"
 										asp-for="FomentoId" asp-items="Model.ListFomentos">
-									<option value="">Selecionar Fomento</option>
+									<option value="">Selecionar Fomento/Contrato</option>
 								</select>
 							</div>
 						</div>

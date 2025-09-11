@@ -94,7 +94,7 @@ var vm = new Vue({
                             }
                             else {
                                 new PNotify({
-                                    title: 'Fomento',
+                                    title: 'Encaminhamento',
                                     text: 'Municípios não encontrados.',
                                     type: 'warning'
                                 });

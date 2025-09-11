@@ -68,7 +68,7 @@
                             }
                             else {
                                 new PNotify({
-                                    title: 'Fomento',
+                                    title: 'Cadastro Novo Aluno',
                                     text: 'Municípios não encontrados.',
                                     type: 'warning'
                                 });
