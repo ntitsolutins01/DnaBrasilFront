@@ -594,7 +594,7 @@ namespace WebApp.Controllers
                     AutorizacaoSaida = Convert.ToBoolean(collection["autorizado"].ToString()),
                     UtilizacaoImagem = Convert.ToBoolean(collection["utilizacaoImagem"].ToString()),
                     ParticipacaoProgramaCompartilhamentoDados = Convert.ToBoolean(collection["participacao"].ToString()),
-                    CopiaDocAlunoResponsavel = Convert.ToBoolean(collection["copiaDoc"].ToString()),
+                    CopiaDocAlunoResponsavel = false,
                     AutorizacaoConsentimentoAssentimento = collection["agreeterms"].ToString() != "",
                     SerieId = collection["ddlTurma"] == "" ? null : Convert.ToInt32(collection["ddlTurma"].ToString())
 
@@ -1755,6 +1755,31 @@ namespace WebApp.Controllers
             catch (Exception ex)
             {
                 _logger.Error($"Busca de alunos por localidade GetAlunosByLocalidadeId: {ex.StackTrace}");
+                return new JsonResult(ex.StackTrace);
+            }
+        }
+
+        /// <summary>
+        /// Busca de Alunos por Série
+        /// </summary>
+        /// <param name="id">Identificador da série</param>
+        /// <returns>Retorna a lista de alunos</returns>
+        [ClaimsAuthorize(ClaimType.Aluno, Claim.Consultar)]
+        public async Task<JsonResult> GetAlunosBySerieId(string id)
+        {
+            try
+            {
+                _logger.Info($"Busca de alunos por serie GetAlunosBySerieId: {id}");
+
+                if (string.IsNullOrEmpty(id)) throw new Exception("Serie não informada.");
+                var resultLocal = await ApiClientFactory.Instance.GetNomeAlunosBySerieId(Convert.ToInt32(id));
+
+                return new JsonResult(new SelectList(resultLocal, "Id", "Nome"));
+
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"Busca de alunos por serie GetAlunosBySerieId: {ex.StackTrace}");
                 return new JsonResult(ex.StackTrace);
             }
         }
