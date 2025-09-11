@@ -1480,6 +1480,10 @@ var vm = new Vue({
                             name: 'AMARELO',
                             y: result.data.dashboard.listTotalizadorEtnia.percTotalizadorEtniaMasculino.AMARELA,
                             z: 50
+                        }}, {
+                            name: 'NAODECLARADA',
+                            y: result.data.dashboard.listTotalizadorEtnia.percTotalizadorEtniaMasculino.NAODECLARADA,
+                            z: 50
                         }]
                     }]
                 });
@@ -1498,7 +1502,7 @@ var vm = new Vue({
                     },
                     xAxis: {
                         categories: ['PARDO', 'BRANCO', 'PRETO',
-                            'INDIGENA', 'AMARELO'],
+                            'INDIGENA', 'AMARELO', 'NAO DECLARADA'],
 
                         labels: {
                             style: {
@@ -1553,6 +1557,7 @@ var vm = new Vue({
                             result.data.dashboard.listTotalizadorEtnia.valorTotalizadorEtniaFeminino.PRETA,
                             result.data.dashboard.listTotalizadorEtnia.valorTotalizadorEtniaFeminino.INDIGENA,
                             result.data.dashboard.listTotalizadorEtnia.valorTotalizadorEtniaFeminino.AMARELA,
+                            result.data.dashboard.listTotalizadorEtnia.valorTotalizadorEtniaFeminino.NAODECLARADA,
                         ]
                     }, {
                         name: 'Masculino',
@@ -1563,6 +1568,7 @@ var vm = new Vue({
                             result.data.dashboard.listTotalizadorEtnia.valorTotalizadorEtniaMasculino.PRETA,
                             result.data.dashboard.listTotalizadorEtnia.valorTotalizadorEtniaMasculino.INDIGENA,
                             result.data.dashboard.listTotalizadorEtnia.valorTotalizadorEtniaMasculino.AMARELA,
+                            result.data.dashboard.listTotalizadorEtnia.valorTotalizadorEtniaMasculino.NAODECLARADA,
                         ]
                     }]
                 });
