@@ -1461,24 +1461,28 @@ var vm = new Vue({
                         name: 'Percentual de Raça/Cor dos Alunos',
                         borderRadius: 5,
                         data: [{
-                            name: 'PARDO',
+                            name: 'PARDA',
                             y: result.data.dashboard.listTotalizadorEtnia.percTotalizadorEtniaMasculino.PARDA,
                             z: 50
                         }, {
-                            name: 'BRANCO',
+                            name: 'BRANCA',
                             y: result.data.dashboard.listTotalizadorEtnia.percTotalizadorEtniaMasculino.BRANCA,
                             z: 50
                         }, {
-                            name: 'PRETO',
+                            name: 'PRETA',
                             y: result.data.dashboard.listTotalizadorEtnia.percTotalizadorEtniaMasculino.PRETA,
                             z: 50
                         }, {
-                            name: 'INDIGENA',
+                            name: 'INDÍGENA',
                             y: result.data.dashboard.listTotalizadorEtnia.percTotalizadorEtniaMasculino.INDIGENA,
                             z: 50
                         }, {
-                            name: 'AMARELO',
+                            name: 'AMARELA',
                             y: result.data.dashboard.listTotalizadorEtnia.percTotalizadorEtniaMasculino.AMARELA,
+                            z: 50
+                        }, {
+                            name: 'NÃO DECLARADA',
+                            y: result.data.dashboard.listTotalizadorEtnia.percTotalizadorEtniaMasculino.NAODECLARADA,
                             z: 50
                         }]
                     }]
@@ -1497,8 +1501,8 @@ var vm = new Vue({
                         text: undefined
                     },
                     xAxis: {
-                        categories: ['PARDO', 'BRANCO', 'PRETO',
-                            'INDIGENA', 'AMARELO'],
+                        categories: ['PARDA', 'BRANCA', 'PRETA',
+                            'INDÍGENA', 'AMARELA', 'NÂO DECLARADA'],
 
                         labels: {
                             style: {
@@ -1553,6 +1557,7 @@ var vm = new Vue({
                             result.data.dashboard.listTotalizadorEtnia.valorTotalizadorEtniaFeminino.PRETA,
                             result.data.dashboard.listTotalizadorEtnia.valorTotalizadorEtniaFeminino.INDIGENA,
                             result.data.dashboard.listTotalizadorEtnia.valorTotalizadorEtniaFeminino.AMARELA,
+                            result.data.dashboard.listTotalizadorEtnia.valorTotalizadorEtniaFeminino.NAODECLARADA,
                         ]
                     }, {
                         name: 'Masculino',
@@ -1563,6 +1568,7 @@ var vm = new Vue({
                             result.data.dashboard.listTotalizadorEtnia.valorTotalizadorEtniaMasculino.PRETA,
                             result.data.dashboard.listTotalizadorEtnia.valorTotalizadorEtniaMasculino.INDIGENA,
                             result.data.dashboard.listTotalizadorEtnia.valorTotalizadorEtniaMasculino.AMARELA,
+                            result.data.dashboard.listTotalizadorEtnia.valorTotalizadorEtniaMasculino.NAODECLARADA,
                         ]
                     }]
                 });
