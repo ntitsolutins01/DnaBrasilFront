@@ -47,11 +47,12 @@ namespace WebApp.Controllers
 
             List<SelectListDto> list = new List<SelectListDto>
             {
-                new() { IdNome = "PARDO", Nome = "PARDO" },
-                new() { IdNome = "BRANCO", Nome = "BRANCO" },
-                new() { IdNome = "PRETO", Nome = "PRETO" },
+                new() { IdNome = "NAODECLARADA", Nome = "NÃO DECLARADA" },
+                new() { IdNome = "PARDA", Nome = "PARDA" },
+                new() { IdNome = "BRANCA", Nome = "BRANCA" },
+                new() { IdNome = "PRETA", Nome = "PRETA" },
                 new() { IdNome = "INDIGENA", Nome = "INDIGENA" },
-                new() { IdNome = "AMARELO", Nome = "AMARELO" }
+                new() { IdNome = "AMARELA", Nome = "AMARELA" }
             };
 
             var etnias = new SelectList(list, "IdNome", "Nome", dashboard.Etnia);

@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
+using NuGet.Protocol;
 using QRCoder;
 using WebApp.Authorization;
 using WebApp.Configuration;
@@ -92,15 +93,12 @@ namespace WebApp.Controllers
             {
 
                 _logger.Info($"Usuario Logado em Aluno.Index User.Identity.Name : {User.Identity.Name}");
-
                 var usuario = User.Identity.Name;
 
                 SetNotifyMessage(notify, message);
                 SetCrudMessage(crud);
 
-                _logger.Info($"GetUsuarioByEmail");
-                //var aluno = await ApiClientFactory.Instance.GetAlunoById(Convert.ToInt32(usuario));
-
+                _logger.Info($"Busca usuário por email: {usuario}");
                 var usu = await ApiClientFactory.Instance.GetUsuarioByEmail(usuario);
 
                 var searchFilter = new AlunosFilterDto
@@ -109,7 +107,7 @@ namespace WebApp.Controllers
                     LocalidadeId = usu.LocalidadeId
                 };
 
-                _logger.Info($"GetAlunosByFilter");
+                _logger.Info($"Busca alunos por filtro do usuário logado: {searchFilter.ToJson()}");
                 var result = await ApiClientFactory.Instance.GetAlunosByFilter(searchFilter);
 
                 var fomento = ApiClientFactory.Instance.GetFomentoByLocalidadeId(Convert.ToInt32(usu.LocalidadeId));
@@ -143,11 +141,12 @@ namespace WebApp.Controllers
 
                 List<SelectListDto> list = new List<SelectListDto>
                 {
-                    new() { IdNome = "PARDO", Nome = "PARDO" },
-                    new() { IdNome = "BRANCO", Nome = "BRANCO" },
-                    new() { IdNome = "PRETO", Nome = "PRETO" },
-                    new() { IdNome = "INDIGENA", Nome = "INDIGENA" },
-                    new() { IdNome = "AMARELO", Nome = "AMARELO" }
+                    new() { IdNome = "NAODECLARADA", Nome = "NÃO DECLARADA" },
+                    new() { IdNome = "PARDA", Nome = "PARDA" },
+                    new() { IdNome = "BRANCA", Nome = "BRANCA" },
+                    new() { IdNome = "PRETA", Nome = "PRETA" },
+                    new() { IdNome = "INDIGENA", Nome = "INDÍGENA" },
+                    new() { IdNome = "AMARELA", Nome = "AMARELA" }
                 };
 
                 var etnias = new SelectList(list, "IdNome", "Nome", searchFilter.Etnia);
@@ -246,11 +245,12 @@ namespace WebApp.Controllers
 
                 List<SelectListDto> list = new List<SelectListDto>
                 {
-                    new() { IdNome = "PARDO", Nome = "PARDO" },
-                    new() { IdNome = "BRANCO", Nome = "BRANCO" },
-                    new() { IdNome = "PRETO", Nome = "PRETO" },
+                    new() { IdNome = "NAODECLARADA", Nome = "NÃO DECLARADA" },
+                    new() { IdNome = "PARDA", Nome = "PARDA" },
+                    new() { IdNome = "BRANCA", Nome = "BRANCA" },
+                    new() { IdNome = "PRETA", Nome = "PRETA" },
                     new() { IdNome = "INDIGENA", Nome = "INDIGENA" },
-                    new() { IdNome = "AMARELO", Nome = "AMARELO" }
+                    new() { IdNome = "AMARELA", Nome = "AMARELA" }
                 };
 
                 var etnias = new SelectList(list, "IdNome", "Nome", searchFilter.Etnia);
@@ -392,11 +392,12 @@ namespace WebApp.Controllers
 
                 List<SelectListDto> list = new List<SelectListDto>
             {
-                new() { IdNome = "PARDO", Nome = "PARDO" },
-                new() { IdNome = "BRANCO", Nome = "BRANCO" },
-                new() { IdNome = "PRETO", Nome = "PRETO" },
-                new() { IdNome = "INDIGENA", Nome = "INDIGENA" },
-                new() { IdNome = "AMARELO", Nome = "AMARELO" }
+                new() { IdNome = "NAODECLARADA", Nome = "NÃO DECLARADA" },
+                new() { IdNome = "PARDA", Nome = "PARDA" },
+                new() { IdNome = "BRANCA", Nome = "BRANCA" },
+                new() { IdNome = "PRETA", Nome = "PRETA" },
+                new() { IdNome = "INDIGENA", Nome = "INDÍGENA" },
+                new() { IdNome = "AMARELA", Nome = "AMARELA" }
             };
 
                 var etnias = new SelectList(list, "IdNome", "Nome");
@@ -510,11 +511,12 @@ namespace WebApp.Controllers
 
                 List<SelectListDto> list = new List<SelectListDto>
                 {
-                    new() { IdNome = "PARDO", Nome = "PARDO" },
-                    new() { IdNome = "BRANCO", Nome = "BRANCO" },
-                    new() { IdNome = "PRETO", Nome = "PRETO" },
-                    new() { IdNome = "INDIGENA", Nome = "INDIGENA" },
-                    new() { IdNome = "AMARELO", Nome = "AMARELO" }
+                    new() { IdNome = "NAODECLARADA", Nome = "NÃO DECLARADA" },
+                    new() { IdNome = "PARDA", Nome = "PARDA" },
+                    new() { IdNome = "BRANCA", Nome = "BRANCA" },
+                    new() { IdNome = "PRETA", Nome = "PRETA" },
+                    new() { IdNome = "INDIGENA", Nome = "INDÍGENA" },
+                    new() { IdNome = "AMARELA", Nome = "AMARELA" }
                 };
 
                 var etnias = new SelectList(list, "IdNome", "Nome", aluno.Etnia);
@@ -1627,11 +1629,12 @@ namespace WebApp.Controllers
 
                 List<SelectListDto> list = new List<SelectListDto>
                 {
-                    new() { IdNome = "PARDO", Nome = "PARDO" },
-                    new() { IdNome = "BRANCO", Nome = "BRANCO" },
-                    new() { IdNome = "PRETO", Nome = "PRETO" },
-                    new() { IdNome = "INDIGENA", Nome = "INDIGENA" },
-                    new() { IdNome = "AMARELO", Nome = "AMARELO" }
+                    new() { IdNome = "NAODECLARADA", Nome = "NÃO DECLARADA" },
+                    new() { IdNome = "PARDA", Nome = "PARDA" },
+                    new() { IdNome = "BRANCA", Nome = "BRANCA" },
+                    new() { IdNome = "PRETA", Nome = "PRETA" },
+                    new() { IdNome = "INDIGENA", Nome = "INDÍGENA" },
+                    new() { IdNome = "AMARELA", Nome = "AMARELA" }
                 };
 
                 var etnias = new SelectList(list, "IdNome", "Nome", aluno.Etnia);
@@ -2800,6 +2803,25 @@ namespace WebApp.Controllers
 
             await _emailSender.SendEmailAsync(user.Email, "Primeiro acesso sistema Dna do Brasil",
                 message);
+        }
+
+        /// <summary>
+        /// Busca Raça Cor para popular a combo
+        /// </summary>
+        /// <returns>Retorna lista de Etnias Raça Cor</returns>
+        private SelectList GetEtniasRacaCor()
+        {
+            List<SelectListDto> list = new List<SelectListDto>
+            {
+                new() { IdNome = "NAODECLARADA", Nome = "NÃO DECLARADA" },
+                new() { IdNome = "PARDA", Nome = "PARDA" },
+                new() { IdNome = "BRANCA", Nome = "BRANCA" },
+                new() { IdNome = "PRETA", Nome = "PRETA" },
+                new() { IdNome = "INDIGENA", Nome = "INDÍGENA" },
+                new() { IdNome = "AMARELA", Nome = "AMARELA" }
+            };
+
+            return new SelectList(list, "IdNome", "Nome");
         }
         #endregion
 

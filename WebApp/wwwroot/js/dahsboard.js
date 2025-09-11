@@ -1458,19 +1458,19 @@ var vm = new Vue({
                         minPointSize: 10,
                         innerSize: '20%',
                         zMin: 0,
-                        name: 'Percentual de Etnia dos Alunos',
+                        name: 'Percentual de Raça/Cor dos Alunos',
                         borderRadius: 5,
                         data: [{
                             name: 'PARDO',
-                            y: result.data.dashboard.listTotalizadorEtnia.percTotalizadorEtniaMasculino.PARDO,
+                            y: result.data.dashboard.listTotalizadorEtnia.percTotalizadorEtniaMasculino.PARDA,
                             z: 50
                         }, {
                             name: 'BRANCO',
-                            y: result.data.dashboard.listTotalizadorEtnia.percTotalizadorEtniaMasculino.BRANCO,
+                            y: result.data.dashboard.listTotalizadorEtnia.percTotalizadorEtniaMasculino.BRANCA,
                             z: 50
                         }, {
                             name: 'PRETO',
-                            y: result.data.dashboard.listTotalizadorEtnia.percTotalizadorEtniaMasculino.PRETO,
+                            y: result.data.dashboard.listTotalizadorEtnia.percTotalizadorEtniaMasculino.PRETA,
                             z: 50
                         }, {
                             name: 'INDIGENA',
@@ -1478,7 +1478,7 @@ var vm = new Vue({
                             z: 50
                         }, {
                             name: 'AMARELO',
-                            y: result.data.dashboard.listTotalizadorEtnia.percTotalizadorEtniaMasculino.AMARELO,
+                            y: result.data.dashboard.listTotalizadorEtnia.percTotalizadorEtniaMasculino.AMARELA,
                             z: 50
                         }]
                     }]
@@ -1548,21 +1548,21 @@ var vm = new Vue({
                         name: 'Feminino',
                         color: '#EC407A',
                         data: [
-                            result.data.dashboard.listTotalizadorEtnia.valorTotalizadorEtniaFeminino.PARDO,
-                            result.data.dashboard.listTotalizadorEtnia.valorTotalizadorEtniaFeminino.BRANCO,
-                            result.data.dashboard.listTotalizadorEtnia.valorTotalizadorEtniaFeminino.PRETO,
+                            result.data.dashboard.listTotalizadorEtnia.valorTotalizadorEtniaFeminino.PARDA,
+                            result.data.dashboard.listTotalizadorEtnia.valorTotalizadorEtniaFeminino.BRANCA,
+                            result.data.dashboard.listTotalizadorEtnia.valorTotalizadorEtniaFeminino.PRETA,
                             result.data.dashboard.listTotalizadorEtnia.valorTotalizadorEtniaFeminino.INDIGENA,
-                            result.data.dashboard.listTotalizadorEtnia.valorTotalizadorEtniaFeminino.AMARELO,
+                            result.data.dashboard.listTotalizadorEtnia.valorTotalizadorEtniaFeminino.AMARELA,
                         ]
                     }, {
                         name: 'Masculino',
                         data: [
 
-                            result.data.dashboard.listTotalizadorEtnia.valorTotalizadorEtniaMasculino.PARDO,
-                            result.data.dashboard.listTotalizadorEtnia.valorTotalizadorEtniaMasculino.BRANCO,
-                            result.data.dashboard.listTotalizadorEtnia.valorTotalizadorEtniaMasculino.PRETO,
+                            result.data.dashboard.listTotalizadorEtnia.valorTotalizadorEtniaMasculino.PARDA,
+                            result.data.dashboard.listTotalizadorEtnia.valorTotalizadorEtniaMasculino.BRANCA,
+                            result.data.dashboard.listTotalizadorEtnia.valorTotalizadorEtniaMasculino.PRETA,
                             result.data.dashboard.listTotalizadorEtnia.valorTotalizadorEtniaMasculino.INDIGENA,
-                            result.data.dashboard.listTotalizadorEtnia.valorTotalizadorEtniaMasculino.AMARELO,
+                            result.data.dashboard.listTotalizadorEtnia.valorTotalizadorEtniaMasculino.AMARELA,
                         ]
                     }]
                 });

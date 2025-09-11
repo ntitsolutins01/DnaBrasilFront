@@ -364,7 +364,7 @@ public class EventoController : BaseController
                     DtNascimento = DateTime.Now.ToString("dd/MM/yyyy"),
                     LocalidadeId = Convert.ToInt32(evento.LocalidadeId),
                     FomentoId = Convert.ToInt32(ApiClientFactory.Instance.GetFomentoByLocalidadeId(Convert.ToInt32(evento.LocalidadeId)).Id),
-                    Etnia = "NA",
+                    Etnia = "NAODECLARADA",
                     Convidado = true
 
 
