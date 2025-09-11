@@ -86,7 +86,7 @@ var vm = new Vue({
                         });
                     $("#ddlFomento").html(items);
                 } else {
-                    Site.Notification("Fomento", "Fomentos não encontrados.", "warning", 1);
+                    Site.Notification("Fomento/Contrato", "Fomentos/Contratos não encontrados.", "warning", 1);
                 }
 
             }).catch(error => {
