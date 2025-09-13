@@ -53,6 +53,7 @@ namespace WebApp.Models
         public string TipoLaudoConsumoAlimentarDescricao { get; set; }
         public string TipoLaudoSaudeBucalDescricao { get; set; }
         public string TipoLaudoVocacionalDescricao { get; set; }
+        public string TipoLaudoEducacionalDescricao { get; set; }
         public List<EducacionalDto> Educacionais { get; set; }
         public int IdPerfil { get; set; }
 

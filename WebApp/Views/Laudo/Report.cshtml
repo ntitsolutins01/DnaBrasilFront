@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="~/assets/styles_Laudo/page-esporte-info.css" media="all">
     <link rel="stylesheet" href="~/assets/styles_Laudo/pgfinal.css" media="all">
     <link rel="stylesheet" href="~/assets/styles_Laudo/page-saude-info.css" media="all">
+    <link rel="stylesheet" href="~/assets/styles_Laudo/page-educacional-info.css" media="all">
     <!-- Serve para gerar html da página de laudos e informações de laudos -->
     <link rel="stylesheet" href="~/assets/styles_Laudo/page-laudo.css" media="all">
     <link rel="stylesheet" href="~/assets/styles_Laudo/page-laudos-info.css" media="all">
@@ -1259,7 +1260,7 @@
                             }
                         </span>
                         <span>
-	                        @Model.TipoLaudoSaudeBucalDescricao
+                            @Model.TipoLaudoEducacionalDescricao
                         </span>
                     </div>
                     <div class="laudo-title">
@@ -1286,31 +1287,34 @@
                     <div class="sideContainer">
                         <div class="cor-educacional" style="top: 0%; height: 100%!important"></div>
                     </div>
-                    <div class="container-main-saude">
-                        <div class="container-2-saude">
-                            <div class="container-icon-saude">
-                                <div class="circle-saude" style="background-color: #00a9a9"></div>
-                                @if (Model.EncaminhamentoSaudeBucal.ByteImage != null)
-                                {
-                                    var base64 = Convert.ToBase64String(Model.EncaminhamentoSaudeBucal.ByteImage);
-                                    var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+                <!-- Matemática -->
+                    <div class="container-main-educacional">
 
-                                    <img src="@imgSrc" class="icon-bucal" />
-                                }
-                                else
-                                {
-                                    <img src="~/assets/assets_Laudo/img-saude-bucal/warning-5-64.png" class="icon-bucal" />
-                                }
+                        <!-- Matemática -->
+                        <div class="container-2-educacional is-matematica">
+                            <div class="container-icon-educacional">
+                                <div class="circle-educacional" style="background-color: #00a9a9"></div>
+                                <img src="~/assets/assets_Laudo/img-educacional-bucal/warning-5-64.png" class="icon-bucal" />
                             </div>
-                            <div class="container-3-saude">
-                                <span>
-                                    @Model.Desempenho.AvisoSaudeBucal
-                                </span>
+                            <div class="container-3-educacional">
+                                <span>Matemática</span>
                             </div>
-                            <div class="container-text-saude" style="top: 90px">
-                                <span>
-                                    @Model.EncaminhamentoSaudeBucal.Descricao
-                                </span>
+                            <div class="container-text-educacional">
+                                <span>Matematica.Descricao</span>
+                            </div>
+                        </div>
+
+                        <!-- Português -->
+                        <div class="container-2-educacional is-portugues">
+                            <div class="container-icon-educacional">
+                                <div class="circle-educacional" style="background-color: #00a9a9"></div>
+                                <img src="~/assets/assets_Laudo/img-educacional-bucal/warning-5-64.png" class="icon-bucal" />
+                            </div>
+                            <div class="container-3-educacional">
+                                <span>Português</span>
+                            </div>
+                            <div class="container-text-educacional">
+                                <span>Portugues.Descricao</span>
                             </div>
                         </div>
                     </div>
