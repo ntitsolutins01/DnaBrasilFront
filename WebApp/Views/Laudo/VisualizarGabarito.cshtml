@@ -15,26 +15,87 @@
                     <h2 class="panel-title">Visualização de Gabaritos</h2>
                 </header>
                 <div class="panel-body">
-                    <div class="form-group row">
-                        @if (Model.Educacionais != null && Model.Educacionais.Any())
-                        {
-                            <div class="row">
-                                @foreach (var edu in Model.Educacionais)
+                    @{
+                        var items = Model.Educacionais
+                        .Where(e => !string.IsNullOrWhiteSpace(e.Imagem))
+                        .ToList();
+                    }
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12">
+                            <div class="panel-group" id="accordionL">
+                                @for (int i = 0; i < items.Count; i += 2)
                                 {
-                                    if (!string.IsNullOrWhiteSpace(edu.Imagem))
-                                    {
-                                        var img = "\\Gabaritos" + edu.Imagem.Split("\\Gabaritos")[1];
-                                        <div class="col-md-12">
-                                            <img src="@img" alt="Imagem do Educacional" class="img-fluid"/>
+                                    var edu = items[i];
+                                    var img = "\\Gabaritos" + edu.Imagem.Split("\\Gabaritos")[1];
+                                    var cid = $"collapseL_{edu.Id}";
+                                    <div class="panel panel-accordion panel-accordion-primary edu-item">
+                                        <div class="panel-heading bg-primary text-white">
+                                            @{
+                                                var displayDate = "";
+                                                DateTimeOffset dto;
+                                                if (edu.DataCriacao is DateTimeOffset)
+                                                    displayDate = ((DateTimeOffset)edu.DataCriacao).ToString("dd/MM/yyyy");
+                                                else if (DateTimeOffset.TryParse(Convert.ToString(edu.DataCriacao), out dto))
+                                                    displayDate = dto.ToString("dd/MM/yyyy");
+                                                else
+                                                    displayDate = Convert.ToString(edu.DataCriacao);
+                                            }
+                                            <h4 class="panel-title">
+                                                <a class="accordion-toggle collapsed text-white acc-header"
+                                                   data-toggle="collapse"
+                                                   href="#@cid" aria-expanded="false" role="button" aria-controls="@cid">
+                                                    <span class="acc-date">@displayDate</span>
+                                                    <span class="acc-title">@edu.NomeImagem</span>
+                                                </a>
+                                            </h4>
                                         </div>
-                                    }
+                                        <div id="@cid" class="panel-collapse collapse">
+                                            <div class="panel-body text-center">
+                                                <img src="@img" class="img-responsive edu-image" alt="Imagem do Educacional">
+                                            </div>
+                                        </div>
+                                    </div>
                                 }
                             </div>
-                        }
-                        else
-                        {
-                            <div class="col-md-4">Nenhuma imagem encontrada para este aluno.</div>
-                        }
+                        </div>
+
+                        <div class="col-md-6 col-sm-12">
+                            <div class="panel-group" id="accordionR">
+                                @for (int i = 1; i < items.Count; i += 2)
+                                {
+                                    var edu = items[i];
+                                    var img = "\\Gabaritos" + edu.Imagem.Split("\\Gabaritos")[1];
+                                    var cid = $"collapseR_{edu.Id}";
+                                    <div class="panel panel-accordion panel-accordion-primary edu-item">
+                                        <div class="panel-heading bg-primary text-white">
+                                            @{
+                                                var displayDate = "";
+                                                DateTimeOffset dto;
+                                                if (edu.DataCriacao is DateTimeOffset)
+                                                    displayDate = ((DateTimeOffset)edu.DataCriacao).ToString("dd/MM/yyyy");
+                                                else if (DateTimeOffset.TryParse(Convert.ToString(edu.DataCriacao), out dto))
+                                                    displayDate = dto.ToString("dd/MM/yyyy");
+                                                else
+                                                    displayDate = Convert.ToString(edu.DataCriacao);
+                                            }
+                                            <h4 class="panel-title">
+                                                <a class="accordion-toggle collapsed text-white acc-header"
+                                                   data-toggle="collapse"
+                                                   href="#@cid" aria-expanded="false" role="button" aria-controls="@cid">
+                                                    <span class="acc-date">@displayDate</span>
+                                                    <span class="acc-title">@edu.NomeImagem</span>
+                                                </a>
+                                            </h4>
+                                        </div>
+                                        <div id="@cid" class="panel-collapse collapse">
+                                            <div class="panel-body text-center">
+                                                <img src="@img" class="img-responsive edu-image" alt="Imagem do Educacional">
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -42,8 +103,44 @@
     </div>
 </div>
 
+@section CssSpecificVendor {
+    <link rel="stylesheet" href="~/assets/vendor/select2/css/select2.css" />
+    <link rel="stylesheet" href="~/assets/vendor/select2-bootstrap-theme/select2-bootstrap.min.css" />
+    <link rel="stylesheet" href="~/assets/vendor/datatables/media/css/dataTables.bootstrap4.css" />
+
+    <style>
+        .acc-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .acc-date {
+            white-space: nowrap;
+            font-size: 12px;
+            opacity: .9;
+            margin-right: 12px;
+        }
+
+        .acc-title {
+            flex: 1;
+            text-align: right;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .acc-icon {
+            margin-left: 8px;
+        }
+    </style>
+}
+
 @section Scripts {
     <script src="~/assets/vendor/ios7-switch/ios7-switch.js"></script>
     <script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
     <script src="~/js/Laudo.js"></script>
+    <script src="~/assets/javascripts/theme.js"></script>
+    <script src="~/assets/javascripts/theme.init.js"></script>
 }
