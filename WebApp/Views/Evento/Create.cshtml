@@ -92,10 +92,12 @@
 					                    }
 					                    else
 					                    {
-						                    <select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade" style="width: 100%" disabled="disabled"
-						                            asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
-							                    <option value="">Selecionar Localidade</option>
-						                    </select>
+                                            <select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade" style="width: 100%" disabled="disabled"
+                                                    asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
+                                                <option value="">Selecionar Localidade</option>
+                                            </select>
+
+											<input type="hidden" id="hdnLocalidadeId" name="hdnLocalidadeId" value="@Model.ListLocalidades.SelectedValue" />
 					                    }
 
 
