@@ -14,12 +14,23 @@
                     </div>
                     <h2 class="panel-title">Visualização de Gabaritos</h2>
                 </header>
+
                 <div class="panel-body">
                     @{
+                        // Com imagem
                         var items = Model.Educacionais
                         .Where(e => !string.IsNullOrWhiteSpace(e.Imagem))
                         .ToList();
+
+                        // Sem imagem
+                        var noImg = Model.Educacionais
+                        .Where(e => string.IsNullOrWhiteSpace(e.Imagem))
+                        .ToList();
+
+                        var alternativasLetras = new[] { "A", "B", "C", "D", "E" };
                     }
+
+                    <!-- ======== COM IMAGEM ======== -->
                     <div class="row">
                         <div class="col-md-6 col-sm-12">
                             <div class="panel-group" id="accordionL">
@@ -28,18 +39,18 @@
                                     var edu = items[i];
                                     var img = "\\Gabaritos" + edu.Imagem.Split("\\Gabaritos")[1];
                                     var cid = $"collapseL_{edu.Id}";
+
+                                    var displayDate = "";
+                                    DateTimeOffset dto;
+                                    if (edu.DataCriacao is DateTimeOffset)
+                                        displayDate = ((DateTimeOffset)edu.DataCriacao).ToString("dd/MM/yyyy");
+                                    else if (DateTimeOffset.TryParse(Convert.ToString(edu.DataCriacao), out dto))
+                                        displayDate = dto.ToString("dd/MM/yyyy");
+                                    else
+                                        displayDate = Convert.ToString(edu.DataCriacao);
+
                                     <div class="panel panel-accordion panel-accordion-primary edu-item">
                                         <div class="panel-heading bg-primary text-white">
-                                            @{
-                                                var displayDate = "";
-                                                DateTimeOffset dto;
-                                                if (edu.DataCriacao is DateTimeOffset)
-                                                    displayDate = ((DateTimeOffset)edu.DataCriacao).ToString("dd/MM/yyyy");
-                                                else if (DateTimeOffset.TryParse(Convert.ToString(edu.DataCriacao), out dto))
-                                                    displayDate = dto.ToString("dd/MM/yyyy");
-                                                else
-                                                    displayDate = Convert.ToString(edu.DataCriacao);
-                                            }
                                             <h4 class="panel-title">
                                                 <a class="accordion-toggle collapsed text-white acc-header"
                                                    data-toggle="collapse"
@@ -51,7 +62,7 @@
                                         </div>
                                         <div id="@cid" class="panel-collapse collapse">
                                             <div class="panel-body text-center">
-                                                <img src="@img" class="img-responsive edu-image" alt="Imagem do Educacional">
+                                                <img src="@img" class="img-responsive edu-image" alt="Imagem do Educacional" />
                                             </div>
                                         </div>
                                     </div>
@@ -66,18 +77,18 @@
                                     var edu = items[i];
                                     var img = "\\Gabaritos" + edu.Imagem.Split("\\Gabaritos")[1];
                                     var cid = $"collapseR_{edu.Id}";
+
+                                    var displayDate = "";
+                                    DateTimeOffset dto;
+                                    if (edu.DataCriacao is DateTimeOffset)
+                                        displayDate = ((DateTimeOffset)edu.DataCriacao).ToString("dd/MM/yyyy");
+                                    else if (DateTimeOffset.TryParse(Convert.ToString(edu.DataCriacao), out dto))
+                                        displayDate = dto.ToString("dd/MM/yyyy");
+                                    else
+                                        displayDate = Convert.ToString(edu.DataCriacao);
+
                                     <div class="panel panel-accordion panel-accordion-primary edu-item">
                                         <div class="panel-heading bg-primary text-white">
-                                            @{
-                                                var displayDate = "";
-                                                DateTimeOffset dto;
-                                                if (edu.DataCriacao is DateTimeOffset)
-                                                    displayDate = ((DateTimeOffset)edu.DataCriacao).ToString("dd/MM/yyyy");
-                                                else if (DateTimeOffset.TryParse(Convert.ToString(edu.DataCriacao), out dto))
-                                                    displayDate = dto.ToString("dd/MM/yyyy");
-                                                else
-                                                    displayDate = Convert.ToString(edu.DataCriacao);
-                                            }
                                             <h4 class="panel-title">
                                                 <a class="accordion-toggle collapsed text-white acc-header"
                                                    data-toggle="collapse"
@@ -89,7 +100,266 @@
                                         </div>
                                         <div id="@cid" class="panel-collapse collapse">
                                             <div class="panel-body text-center">
-                                                <img src="@img" class="img-responsive edu-image" alt="Imagem do Educacional">
+                                                <img src="@img" class="img-responsive edu-image" alt="Imagem do Educacional" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ======== SEM IMAGEM (DISPLAY-ONLY) ======== -->
+                    @{
+                        var alternativas = new[] { "A", "B", "C", "D", "E" };
+                    }
+
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12">
+                            <div class="panel-group" id="accordionLNoImg">
+                                @for (int i = 0; i < noImg.Count; i += 2)
+                                {
+                                    var edu = noImg[i];
+                                    var cid = $"collapseL_noimg_{edu.Id}";
+
+                                    var displayDate = "";
+                                    DateTimeOffset dto;
+                                    if (edu.DataCriacao is DateTimeOffset)
+                                        displayDate = ((DateTimeOffset)edu.DataCriacao).ToString("dd/MM/yyyy");
+                                    else if (DateTimeOffset.TryParse(Convert.ToString(edu.DataCriacao), out dto))
+                                        displayDate = dto.ToString("dd/MM/yyyy");
+                                    else
+                                        displayDate = Convert.ToString(edu.DataCriacao);
+
+                                    Model.AlternativasPorEducacional.TryGetValue(edu.Id, out var letrasStr);
+                                    var letras = (letrasStr ?? "")
+                                    .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                                    .Select(s => s.Trim().ToUpperInvariant())
+                                    .ToList();
+
+                                    <div class="panel panel-accordion panel-accordion-primary edu-item">
+                                        <div class="panel-heading bg-primary text-white">
+                                            <h4 class="panel-title">
+                                                <a class="accordion-toggle collapsed text-white acc-header"
+                                                   data-toggle="collapse"
+                                                   href="#@cid" aria-expanded="false" role="button" aria-controls="@cid">
+                                                    <span class="acc-date">@displayDate</span>
+                                                    <span class="acc-title">@(string.IsNullOrWhiteSpace(edu.NomeImagem) ? "Gabarito (sem imagem)" : edu.NomeImagem)</span>
+                                                </a>
+                                            </h4>
+                                        </div>
+
+                                        <div id="@cid" class="panel-collapse collapse">
+                                            <div class="panel-body">
+                                                <header class="report-header">
+                                                    <div class="report-logo"></div>
+                                                    <div class="report-title">
+                                                        <span class="report-title-large">@* @Model.TextGabarito *@</span>
+                                                        <span class="report-title-small">@* @Model.AnoGabarito *@</span>
+                                                    </div>
+                                                    <div class="report-icon"></div>
+                                                </header>
+
+                                                <!-- Seção de informações -->
+                                                <section class="info-section">
+                                                    <div class="info-main">
+                                                        <div class="qrcode-side">
+                                                            @if (Model.Aluno.QrCode != null)
+                                                            {
+                                                                var imgSrc = $"data:image/gif;base64,{Convert.ToBase64String(Model.Aluno.QrCode)}";
+                                                                <img src="@imgSrc" alt="QRcode do Model.Aluno" class="qrcode-image" />
+                                                            }
+                                                            else
+                                                            {
+                                                                <img src="/assets/images/qrcode.jpg" alt="QRcode padrão" class="qrcode-image" />
+                                                            }
+                                                        </div>
+
+                                                        <div class="student-info">
+                                                            <div class="info-row">
+                                                                <span class="info-label">ALUNO</span>
+                                                                <span class="info-value">@Model.Aluno.Nome</span>
+                                                            </div>
+                                                            <div class="info-row">
+                                                                <span class="info-label">MATRÍCULA</span>
+                                                                <span class="info-value">@Model.Aluno.Id</span>
+                                                            </div>
+                                                            <div class="info-row">
+                                                                <span class="info-label">MUNICIPIO/ESTADO</span>
+                                                                <span class="info-value">@Model.Aluno.MunicipioEstado</span>
+                                                            </div>
+                                                            <div class="info-row">
+                                                                <span class="info-label">UNIDADE ESCOLAR</span>
+                                                                <span class="info-value">@Model.Aluno.NomeLocalidade</span>
+                                                            </div>
+                                                            <div class="info-row" style="display:flex; justify-content:space-between">
+                                                                <div style="display:flex; flex:1">
+                                                                    <span class="info-label">SÉRIE</span>
+                                                                    <span class="info-value">@Model.Aluno.SerieTurma</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </section>
+
+                                                <!-- Seção do questionário -->
+                                                <section class="questionnaire-section">
+                                                    <div class="questionnaire-grid">
+                                                        @for (var col = 0; col < 3; col++)
+                                                        {
+                                                            <div class="question-column">
+                                                                <div class="question-header">
+                                                                    <div class="option-header">A</div>
+                                                                    <div class="option-header">B</div>
+                                                                    <div class="option-header">C</div>
+                                                                    <div class="option-header">D</div>
+                                                                    <div class="option-header">E</div>
+                                                                </div>
+
+                                                                @for (var j = 1; j <= 5; j++)
+                                                                {
+                                                                    var questionNumber = col * 5 + j; // 1..15
+                                                                    <div class="question-item">
+                                                                        <div class="question-number">@questionNumber</div>
+                                                                        <div class="answer-options">
+                                                                            @for (var k = 0; k < 5; k++)
+                                                                            {
+                                                                                var alternative = alternativas[k];
+                                                                                var isMarked = (questionNumber - 1) < letras.Count && letras[questionNumber - 1] == alternative;
+                                                                                <div class="answer-circle@(isMarked ? " is-marked" : "")"></div>
+                                                                            }
+                                                                        </div>
+                                                                    </div>
+                                                                }
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                </section>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-sm-12">
+                            <div class="panel-group" id="accordionRNoImg">
+                                @for (int i = 1; i < noImg.Count; i += 2)
+                                {
+                                    var edu = noImg[i];
+                                    var cid = $"collapseR_noimg_{edu.Id}";
+
+                                    var displayDate = "";
+                                    DateTimeOffset dto;
+                                    if (edu.DataCriacao is DateTimeOffset)
+                                        displayDate = ((DateTimeOffset)edu.DataCriacao).ToString("dd/MM/yyyy");
+                                    else if (DateTimeOffset.TryParse(Convert.ToString(edu.DataCriacao), out dto))
+                                        displayDate = dto.ToString("dd/MM/yyyy");
+                                    else
+                                        displayDate = Convert.ToString(edu.DataCriacao);
+
+                                    Model.AlternativasPorEducacional.TryGetValue(edu.Id, out var letrasStr);
+                                    var letras = (letrasStr ?? "")
+                                    .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                                    .Select(s => s.Trim().ToUpperInvariant())
+                                    .ToList();
+
+                                    <div class="panel panel-accordion panel-accordion-primary edu-item">
+                                        <div class="panel-heading bg-primary text-white">
+                                            <h4 class="panel-title">
+                                                <a class="accordion-toggle collapsed text-white acc-header"
+                                                   data-toggle="collapse"
+                                                   href="#@cid" aria-expanded="false" role="button" aria-controls="@cid">
+                                                    <span class="acc-date">@displayDate</span>
+                                                    <span class="acc-title">@(string.IsNullOrWhiteSpace(edu.NomeImagem) ? "Gabarito (sem imagem)" : edu.NomeImagem)</span>
+                                                </a>
+                                            </h4>
+                                        </div>
+
+                                        <div id="@cid" class="panel-collapse collapse">
+                                            <div class="panel-body">
+                                                <header class="report-header">
+                                                    <div class="report-logo"></div>
+                                                    <div class="report-title">
+                                                        <span class="report-title-large">@* @Model.TextGabarito *@</span>
+                                                        <span class="report-title-small">@* @Model.AnoGabarito *@</span>
+                                                    </div>
+                                                    <div class="report-icon"></div>
+                                                </header>
+
+                                                <section class="info-section">
+                                                    <div class="info-main">
+                                                        <div class="qrcode-side">
+                                                            @if (Model.Aluno.QrCode != null)
+                                                            {
+                                                                var imgSrc = $"data:image/gif;base64,{Convert.ToBase64String(Model.Aluno.QrCode)}";
+                                                                <img src="@imgSrc" alt="QRcode do Model.Aluno" class="qrcode-image" />
+                                                            }
+                                                            else
+                                                            {
+                                                                <img src="/assets/images/qrcode.jpg" alt="QRcode padrão" class="qrcode-image" />
+                                                            }
+                                                        </div>
+
+                                                        <div class="student-info">
+                                                            <div class="info-row">
+                                                                <span class="info-label">ALUNO</span>
+                                                                <span class="info-value">@Model.Aluno.Nome</span>
+                                                            </div>
+                                                            <div class="info-row">
+                                                                <span class="info-label">MATRÍCULA</span>
+                                                                <span class="info-value">@Model.Aluno.Id</span>
+                                                            </div>
+                                                            <div class="info-row">
+                                                                <span class="info-label">MUNICIPIO/ESTADO</span>
+                                                                <span class="info-value">@Model.Aluno.MunicipioEstado</span>
+                                                            </div>
+                                                            <div class="info-row">
+                                                                <span class="info-label">UNIDADE ESCOLAR</span>
+                                                                <span class="info-value">@Model.Aluno.NomeLocalidade</span>
+                                                            </div>
+                                                            <div class="info-row" style="display:flex; justify-content:space-between">
+                                                                <div style="display:flex; flex:1">
+                                                                    <span class="info-label">SÉRIE</span>
+                                                                    <span class="info-value">@Model.Aluno.SerieTurma</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </section>
+
+                                                <section class="questionnaire-section">
+                                                    <div class="questionnaire-grid">
+                                                        @for (var col = 0; col < 3; col++)
+                                                        {
+                                                            <div class="question-column">
+                                                                <div class="question-header">
+                                                                    <div class="option-header">A</div>
+                                                                    <div class="option-header">B</div>
+                                                                    <div class="option-header">C</div>
+                                                                    <div class="option-header">D</div>
+                                                                    <div class="option-header">E</div>
+                                                                </div>
+
+                                                                @for (var j = 1; j <= 5; j++)
+                                                                {
+                                                                    var questionNumber = col * 5 + j;
+                                                                    <div class="question-item">
+                                                                        <div class="question-number">@questionNumber</div>
+                                                                        <div class="answer-options">
+                                                                            @for (var k = 0; k < 5; k++)
+                                                                            {
+                                                                                var alternative = alternativas[k];
+                                                                                var isMarked = (questionNumber - 1) < letras.Count && letras[questionNumber - 1] == alternative;
+                                                                                <div class="answer-circle@(isMarked ? " is-marked" : "")"></div>
+                                                                            }
+                                                                        </div>
+                                                                    </div>
+                                                                }
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                </section>
                                             </div>
                                         </div>
                                     </div>
@@ -107,8 +377,12 @@
     <link rel="stylesheet" href="~/assets/vendor/select2/css/select2.css" />
     <link rel="stylesheet" href="~/assets/vendor/select2-bootstrap-theme/select2-bootstrap.min.css" />
     <link rel="stylesheet" href="~/assets/vendor/datatables/media/css/dataTables.bootstrap4.css" />
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="~/assets/assets_RF/questionario.css" media="all" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
 
     <style>
+        /* header do accordion */
         .acc-header {
             display: flex;
             justify-content: space-between;
@@ -131,9 +405,71 @@
             text-overflow: ellipsis;
         }
 
-        .acc-icon {
-            margin-left: 8px;
+        /* imagem dentro do painel */
+        .edu-image {
+            max-width: 100%;
+            height: auto;
+            object-fit: contain;
         }
+
+        /* espaço entre cards */
+        .edu-item {
+            margin-bottom: 14px;
+        }
+
+        /* gabarito display-only */
+        .questionnaire-grid {
+            display: flex;
+            gap: 24px;
+        }
+
+        .question-column {
+            min-width: 220px;
+        }
+
+        .question-header {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .option-header {
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .question-item {
+            display: flex;
+            align-items: center;
+            margin: 8px 0;
+        }
+
+        .question-number {
+            width: 28px;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        .answer-options {
+            display: grid;
+            grid-template-columns: repeat(5, 26px);
+            gap: 10px;
+            align-items: center;
+        }
+
+        .answer-circle {
+            width: 18px;
+            height: 18px;
+            border: 2px solid #333;
+            border-radius: 50%;
+            box-sizing: border-box;
+        }
+
+            .answer-circle.is-marked {
+                background: radial-gradient(circle at 50% 50%, #111 0 60%, transparent 61% 100%);
+                border-color: #111;
+            }
     </style>
 }
 
