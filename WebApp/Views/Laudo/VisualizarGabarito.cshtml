@@ -133,9 +133,9 @@
 
                                     Model.AlternativasPorEducacional.TryGetValue(edu.Id, out var letrasStr);
                                     var letras = (letrasStr ?? "")
-                                    .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                                    .Select(s => s.Trim().ToUpperInvariant())
-                                    .ToList();
+                                        .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                                        .Select(s => s.Trim().ToUpperInvariant())
+                                        .ToList();
 
                                     <div class="panel panel-accordion panel-accordion-primary edu-item">
                                         <div class="panel-heading bg-primary text-white">
@@ -218,7 +218,7 @@
 
                                                                 @for (var j = 1; j <= 5; j++)
                                                                 {
-                                                                    var questionNumber = col * 5 + j; // 1..15
+                                                                    var questionNumber = col * 5 + j;
                                                                     <div class="question-item">
                                                                         <div class="question-number">@questionNumber</div>
                                                                         <div class="answer-options">
@@ -260,9 +260,9 @@
 
                                     Model.AlternativasPorEducacional.TryGetValue(edu.Id, out var letrasStr);
                                     var letras = (letrasStr ?? "")
-                                    .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                                    .Select(s => s.Trim().ToUpperInvariant())
-                                    .ToList();
+                                        .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                                        .Select(s => s.Trim().ToUpperInvariant())
+                                        .ToList();
 
                                     <div class="panel panel-accordion panel-accordion-primary edu-item">
                                         <div class="panel-heading bg-primary text-white">
@@ -367,6 +367,10 @@
                             </div>
                         </div>
                     </div>
+                    @if (Model.Educacionais.Count == 0)
+                    {
+                        <div class="alert alert-info">Este aluno não possui gabaritos.</div>
+                    }
                 </div>
             </section>
         </div>
@@ -382,7 +386,6 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
 
     <style>
-        /* header do accordion */
         .acc-header {
             display: flex;
             justify-content: space-between;
@@ -405,19 +408,16 @@
             text-overflow: ellipsis;
         }
 
-        /* imagem dentro do painel */
         .edu-image {
             max-width: 100%;
             height: auto;
             object-fit: contain;
         }
 
-        /* espaço entre cards */
         .edu-item {
             margin-bottom: 14px;
         }
 
-        /* gabarito display-only */
         .questionnaire-grid {
             display: flex;
             gap: 24px;
@@ -427,17 +427,25 @@
             min-width: 220px;
         }
 
+        .question-header::before,
+        .question-header::after {
+            content: none !important;
+            display: none !important;
+        }
+
         .question-header {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 8px;
-            margin-bottom: 8px;
+            display: grid !important;
+            grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+            column-gap: 8px;
+            align-items: center;
         }
 
         .option-header {
-            font-weight: 700;
+            margin: 0;
+            min-width: 0;
             text-align: center;
         }
+
 
         .question-item {
             display: flex;
