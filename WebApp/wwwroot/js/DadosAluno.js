@@ -480,7 +480,7 @@ var vm = new Vue({
                     }
                 });
 
-                $("#formEtapaEnsino").validate({
+                $("#formCreateGrauParentesco").validate({
                     highlight: function (label) {
                         $(label).closest('.form-group').removeClass('has-success').addClass('has-error');
                     },
@@ -535,8 +535,6 @@ var vm = new Vue({
                 });
 
             };
-
-
 
             $(function () {
                 datatableInit();

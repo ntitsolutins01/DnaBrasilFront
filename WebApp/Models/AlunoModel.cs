@@ -52,6 +52,8 @@ namespace WebApp.Models
         public string TextGabarito { get; set; }
         public string AnoGabarito { get; set; }
         public string SiglaGabarito { get; set; }
+        public SelectList ListGrauParentescos { get; set; }
+        public string GrauParentescoId { get; set; }
 
         public class CreateUpdateDadosAlunoCommand
         {

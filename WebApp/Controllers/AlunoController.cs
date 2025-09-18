@@ -389,6 +389,7 @@ namespace WebApp.Controllers
                 var deficiencias = new SelectList(ApiClientFactory.Instance.GetDeficienciaAll().Where(x => x.Status), "Id", "Nome");
                 var modalidades = new SelectList(ApiClientFactory.Instance.GetModalidadeAll(), "Id", "Nome");
                 var etapas = new SelectList(ApiClientFactory.Instance.GetEtapasEnsinoAll(), "Id", "Nome");
+                var grauParentescos = new SelectList(ApiClientFactory.Instance.GetGrauParentescosAll(), "Id", "Nome");
 
                 List<SelectListDto> list = new List<SelectListDto>
             {
@@ -414,7 +415,8 @@ namespace WebApp.Controllers
                     ListEtapas = etapas,
                     ListProfissionais = profissionais,
                     UsuarioLogado = usu,
-                    IdPerfil = usu.Perfil.Id
+                    IdPerfil = usu.Perfil.Id,
+                    ListGrauParentescos = grauParentescos
                 });
             }
             catch (Exception e)
@@ -521,7 +523,7 @@ namespace WebApp.Controllers
 
                 var etnias = new SelectList(list, "IdNome", "Nome", aluno.Etnia);
 
-
+                
                 return View(new AlunoModel()
                 {
                     ListEstados = estados,
@@ -536,7 +538,8 @@ namespace WebApp.Controllers
                     ListModalidades = listModalidades,
                     ListEtapas = etapas,
                     ListSeries = series,
-                    ListTurmas = turmas
+                    ListTurmas = turmas,
+
 
                 });
 
@@ -2148,12 +2151,19 @@ namespace WebApp.Controllers
                                 { AlunoId = Convert.ToInt32(id), AspNetUserId = newUser.Id });
                         }
                     }
-
-                    return RedirectToAction(nameof(Index), new
+                    else
                     {
-                        notify = (int)EnumNotify.Success,
-                        message = "Aluno habilitado com sucesso."
-                    });
+                        return RedirectToAction(nameof(Index), new
+                        {
+                            notify = (int)EnumNotify.Success,
+                            message = "Este Aluno ja está habilitado a utilizar o sistema."
+                        });
+                    }
+                        return RedirectToAction(nameof(Index), new
+                        {
+                            notify = (int)EnumNotify.Success,
+                            message = "Aluno habilitado com sucesso."
+                        });
                 }
             }
             catch (Exception e)
