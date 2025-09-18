@@ -13,5 +13,6 @@ namespace WebApp.Dto
         public string? StatusEducacional { get; set; }
         public string? Imagem { get; set; }
         public string? NomeImagem { get; set; }
+        public DateTimeOffset? DataCriacao { get; set; }
     }
 }

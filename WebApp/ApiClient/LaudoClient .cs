@@ -223,8 +223,18 @@ namespace WebApp.ApiClient
             return Post(requestUrl, command);
         }
 
+        /// <summary>
+        /// Busca Alternativas de Quialidade de Vida por id
+        /// </summary>
+        /// <param name="id">Id que busca Alternativas de Educacional por id</param>
+        /// <returns>retorna a lista de Alternativas de Educacional por id</returns>
+        public AlternativasDto GetAlternativasByEducacionalId(int id)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceLaudo}/Alternativas/Educacional/{id}"));
+            return Get<AlternativasDto>(requestUrl);
+        }
     }
-
 
     #endregion
 
