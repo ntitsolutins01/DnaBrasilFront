@@ -39,23 +39,9 @@ namespace WebApp.Controllers
             var fomento = ApiClientFactory.Instance.GetFomentoByLocalidadeId(Convert.ToInt32(usu.LocalidadeId));
             var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentosAll(), "Id", "Nome", fomento.Id);
 
-            var deficiencias = new SelectList(ApiClientFactory.Instance.GetDeficienciaAll().Where(x => x.Status), "Id", "Nome", dashboard.DeficienciaId);
-
             var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome", usu.Uf);
 
             var tipoCurso = new SelectList(ApiClientFactory.Instance.GetTipoCursosAll(), "Id", "Nome");
-
-            List<SelectListDto> list = new List<SelectListDto>
-            {
-                new() { IdNome = "NAODECLARADA", Nome = "NÃO DECLARADA" },
-                new() { IdNome = "PARDA", Nome = "PARDA" },
-                new() { IdNome = "BRANCA", Nome = "BRANCA" },
-                new() { IdNome = "PRETA", Nome = "PRETA" },
-                new() { IdNome = "INDIGENA", Nome = "INDIGENA" },
-                new() { IdNome = "AMARELA", Nome = "AMARELA" }
-            };
-
-            var etnias = new SelectList(list, "IdNome", "Nome", dashboard.Etnia);
 
             SelectList municipios = null;
 
@@ -80,9 +66,7 @@ namespace WebApp.Controllers
                 ListEstados = estados,
                 Dashboard = dashboard,
                 DashboardEad = dashboardEad,
-                ListDeficiencias = deficiencias,
                 ListMunicipios = municipios!,
-                ListEtnias = etnias,
                 ListLocalidades = localidades!,
                 ListTipoCursos = tipoCurso,
                 IdPerfil = usu.Perfil.Id
