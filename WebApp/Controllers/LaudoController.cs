@@ -1509,7 +1509,7 @@ namespace WebApp.Controllers
 
                 foreach (var e in educacionais)
                 {
-                    if (!e.Imagem.IsNullOrEmpty())
+                    if (e.Imagem.IsNullOrEmpty())
                     {
                         var dto = ApiClientFactory.Instance.GetAlternativasByEducacionalId(e.Id);
                         if (dto != null)
