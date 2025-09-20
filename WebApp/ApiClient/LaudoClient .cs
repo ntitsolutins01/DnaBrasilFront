@@ -117,7 +117,7 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
-        /// Busca Encaminhamento de Quialidade de Vida por id
+        /// Busca Encaminhamento de Qualidade de Vida por id
         /// </summary>
         /// <param name="id">Id que busca Encaminhamento de Qualidade de Vidas por id</param>
         /// <returns>retorna a lista de Encaminhamento de Qualidade de Vida por id</returns>
@@ -224,7 +224,7 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
-        /// Busca Alternativas de Quialidade de Vida por id
+        /// Busca Alternativas de id do Educacional
         /// </summary>
         /// <param name="id">Id que busca Alternativas de Educacional por id</param>
         /// <returns>retorna a lista de Alternativas de Educacional por id</returns>
@@ -233,6 +233,18 @@ namespace WebApp.ApiClient
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
                 $"{ResourceLaudo}/Alternativas/Educacional/{id}"));
             return Get<AlternativasDto>(requestUrl);
+        }
+
+        /// <summary>
+        /// Busca Educacionais de pelo id do Aluno
+        /// </summary>
+        /// <param name="id">Id que busca Educacionais de Aluno por id</param>
+        /// <returns>retorna a lista de Educacionais de Aluno por id</returns>
+        public List<EducacionalDto> GetEducacionaisByAluno(int? id)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceLaudo}/Educacional/Aluno/{id}"));
+            return Get<List<EducacionalDto>>(requestUrl);
         }
     }
 
