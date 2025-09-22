@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using NuGet.Protocol.Core.Types;
 using WebApp.Authorization;
@@ -1500,23 +1501,22 @@ namespace WebApp.Controllers
                 _logger.Info("Ação de Visualiza Gabarito do aluno - Laudo.VisualizarGabarito");
 
                 var laudo = ApiClientFactory.Instance.GetLaudoById(id);
-
                 var aluno = await ApiClientFactory.Instance.GetAlunoById((int)laudo.AlunoId);
-
-                var educacionais = ApiClientFactory.Instance.GetEducacionaisAll()
-                    .Where(a => a.Aluno.Id == laudo.AlunoId)
-                    .ToList();
+                var educacionais = ApiClientFactory.Instance.GetEducacionaisByAluno(laudo.AlunoId);
 
                 var alternativasDtos = new List<AlternativasDto>();
                 var altDict = new Dictionary<int, string>();
 
                 foreach (var e in educacionais)
                 {
-                    var dto = ApiClientFactory.Instance.GetAlternativasByEducacionalId(e.Id);
-                    if (dto != null)
+                    if (e.Imagem.IsNullOrEmpty())
                     {
-                        alternativasDtos.Add(dto);
-                        altDict[e.Id] = dto.Alternativas ?? string.Empty;
+                        var dto = ApiClientFactory.Instance.GetAlternativasByEducacionalId(e.Id);
+                        if (dto != null)
+                        {
+                            alternativasDtos.Add(dto);
+                            altDict[e.Id] = dto.Alternativas ?? string.Empty;
+                        }
                     }
                 }
 
