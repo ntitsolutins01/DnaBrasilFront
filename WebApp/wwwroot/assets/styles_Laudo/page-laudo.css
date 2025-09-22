@@ -63,7 +63,7 @@
 
 .container-laudo-text {
     width: 37.78%;
-    height: 18.67%;
+    min-height: 30%;
     padding: 10px;
     margin: 5px;
     position: absolute;
@@ -97,12 +97,12 @@
 
 
 .laudo-title {
-    width: 26.19%;
+    width: 35%;
     height: 11.09%;
     padding: 25px 0px;
     position: absolute;
     top: 5.73%;
-    left: 63.85%;
+    left: 55.85%;
 }
 .laudo-title span {
     width: 100%;

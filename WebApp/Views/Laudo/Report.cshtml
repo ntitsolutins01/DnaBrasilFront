@@ -1287,37 +1287,46 @@
                     <div class="sideContainer">
                         <div class="cor-educacional" style="top: 0%; height: 100%!important"></div>
                     </div>
-                <!-- Matemática -->
-                    <div class="container-main-educacional">
+                        <div class="container-main-vida">
+                            @* @{
+                                var indexEducacional = 1;
+                            }
 
-                        <!-- Matemática -->
-                        <div class="container-2-educacional is-matematica">
-                            <div class="container-icon-educacional">
-                                <div class="circle-educacional" style="background-color: #00a9a9"></div>
-                                <img src="~/assets/assets_Laudo/img-educacional-bucal/warning-5-64.png" class="icon-bucal" />
-                            </div>
-                            <div class="container-3-educacional">
-                                <span>Matemática</span>
-                            </div>
-                            <div class="container-text-educacional">
-                                <span>Matematica.Descricao</span>
-                            </div>
-                        </div>
+                            @foreach (var item in Model.ListVocacional)
+                            { *@
+                                    <div class="row-vida">
+                                        <div class="label-vida">
+                                            <div class="label-vida-container-1"
+                                                 style="background-color: #00a9a9;">
+                                                <div class="label-vida-icon" style="background-size: cover;">
+                                                    @* @if (item.ByteImage != null)
+                                                    {
+                                                        var base64 = Convert.ToBase64String(item.ByteImage);
+                                                        var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
 
-                        <!-- Português -->
-                        <div class="container-2-educacional is-portugues">
-                            <div class="container-icon-educacional">
-                                <div class="circle-educacional" style="background-color: #00a9a9"></div>
-                                <img src="~/assets/assets_Laudo/img-educacional-bucal/warning-5-64.png" class="icon-bucal" />
-                            </div>
-                            <div class="container-3-educacional">
-                                <span>Português</span>
-                            </div>
-                            <div class="container-text-educacional">
-                                <span>Portugues.Descricao</span>
-                            </div>
+                                                        <img src="@imgSrc" style="width:100%;" />
+                                                    }
+                                                    else
+                                                    { *@
+                                                        <img src="~/assets/assets_Laudo/img-vocacao/laudo-vocacao-1.png" style="width:100%;" />
+                                                    @*}*@
+                                                </div>
+                                            </div>
+                                            <div class="label-vida-container-2">
+                                                <span>Disciplina.Nome</span>
+                                            </div>
+                                        </div>
+                                        <div class="value-vida">
+                                            <span>
+                                                Disciplina.Descricao
+                                            </span>
+                                        </div>
+                                    </div>
+                            @*
+                                indexEducacional++;
+                            }*@
+
                         </div>
-                    </div>
                 </div>
             </div>
         </div>
