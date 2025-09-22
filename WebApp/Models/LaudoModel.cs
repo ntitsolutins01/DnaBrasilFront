@@ -56,8 +56,10 @@ namespace WebApp.Models
         public string TipoLaudoEducacionalDescricao { get; set; }
         public List<EducacionalDto> Educacionais { get; set; }
         public int IdPerfil { get; set; }
+        public List<AlternativasDto> AlternativasDosEducacionais { get; set; } = new();
+        public Dictionary<int, string> AlternativasPorEducacional { get; set; } = new();
 
-        public class CreateUpdateLaudoCommand
+    public class CreateUpdateLaudoCommand
         {
             public int Id { get; set; }
             public required int AlunoId { get; set; }

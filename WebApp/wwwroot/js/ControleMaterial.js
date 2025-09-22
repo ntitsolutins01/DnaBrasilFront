@@ -93,7 +93,7 @@ var vm = new Vue({
                             }
                             else {
                                 new PNotify({
-                                    title: 'Fomento',
+                                    title: 'Controle Materiais',
                                     text: 'Municípios não encontrados.',
                                     type: 'warning'
                                 });

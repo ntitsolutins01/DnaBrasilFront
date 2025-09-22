@@ -72,7 +72,7 @@
                             }
                             else {
                                 new PNotify({
-                                    title: 'Fomento',
+                                    title: 'Série',
                                     text: 'Municípios não encontrados.',
                                     type: 'warning'
                                 });

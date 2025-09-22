@@ -180,7 +180,7 @@ var vm = new Vue({
                             }
                             else {
                                 new PNotify({
-                                    title: 'Fomento',
+                                    title: 'Controle Acesso Aula',
                                     text: 'Municípios não encontrados.',
                                     type: 'warning'
                                 });

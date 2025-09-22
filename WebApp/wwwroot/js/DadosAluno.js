@@ -256,8 +256,8 @@ var vm = new Vue({
                             $("#ddlFomento").html(items);
                         } else {
                             new PNotify({
-                                title: 'Fomento',
-                                text: 'Fomento não encontrado.',
+                                title: 'Fomento/Contrato',
+                                text: 'Fomento/Contrato não encontrado.',
                                 type: 'warning'
                             });
                         }

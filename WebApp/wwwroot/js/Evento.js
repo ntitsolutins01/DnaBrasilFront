@@ -213,7 +213,7 @@ var vm = new Vue({
                             }
                             else {
                                 new PNotify({
-                                    title: 'Fomento',
+                                    title: 'Evento',
                                     text: 'Municípios não encontrados.',
                                     type: 'warning'
                                 });
