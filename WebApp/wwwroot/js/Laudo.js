@@ -1247,7 +1247,7 @@ var vm = new Vue({
 
             const fillSelectOptions = (selectId, options, placeholderText = "Selecionar") => {
                 const $sel = $(selectId);
-                const current = $sel.val(); // tenta preservar a seleção
+                const current = $sel.val();
                 $sel.empty();
                 $sel.append(`<option value="">${placeholderText}</option>`);
                 options.forEach(o => $sel.append(new Option(o.text, o.value)));
@@ -1261,13 +1261,11 @@ var vm = new Vue({
                     $.getJSON(url, data, resolve).fail((xhr, status, err) => reject(err || status));
                 });
 
-            // ===== Fluxo =====
             axios.get(`../Laudo/GetLaudoById/?id=${encodeURIComponent(id)}`)
                 .then(({ data }) => {
                     self.laudoDto.Id = data.id;
                     self.laudoDto.AlunoId = data.alunoId;
 
-                    // Reseta selects antes de preencher
                     $("#ddlGabarito").empty()
                         .append('<option value="">Selecionar Gabarito</option>')
                         .trigger("change.select2");
@@ -1275,14 +1273,12 @@ var vm = new Vue({
                         .append('<option value="">Selecionar Profissional</option>')
                         .trigger("change.select2");
 
-                    // Carregar profissionais (por localidade) + aluno (para pegar SerieTurma) em paralelo
                     const profsPromise = getJSONAsPromise("../../Profissional/GetProfissionaisByLocalidade", { id: data.localidadeId });
                     const alunoPromise = axios.get(`../../Aluno/GetAlunoById?id=${encodeURIComponent(self.laudoDto.AlunoId)}`);
 
                     return Promise.all([profsPromise, alunoPromise]);
                 })
                 .then(([profs, alunoResp]) => {
-                    // === Preenche Profissionais ===
                     if (Array.isArray(profs) && profs.length > 0) {
                         let items = '<option value="">Selecionar Profissional</option>';
                         $.each(profs, function (i, row) {
@@ -1297,11 +1293,10 @@ var vm = new Vue({
                         });
                     }
 
-                    // === Monta Gabaritos com base na SerieTurma do aluno ===
                     const aluno = alunoResp?.data || {};
                     const serieTurma = aluno?.serieTurma ?? aluno?.SerieTurma ?? "";
                     self.laudoDto.SerieTurma = serieTurma;
-                    self.laudoDto.Gabarito = ""; // limpa seleção atual (se houver)
+                    self.laudoDto.Gabarito = "";
 
                     const gabaritos = buildGabaritoOptions(serieTurma);
                     fillSelectOptions("#ddlResponderGabarito", gabaritos, "Selecionar Gabarito");
