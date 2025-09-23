@@ -1,3 +1,4 @@
+@using WebApp.Enumerators
 @model WebApp.Models.ControlePresencaModel
 @{
     ViewData["Title"] = "Listagem de ControlePresencas";
@@ -17,41 +18,118 @@
                         <h2 class="panel-title">Filtro de pesquisa</h2>
                     </header>
                     <div class="panel-body">
-                        @* <label class="col-sm-2 control-label">Fomento:</label>
-                        <div class="col-md-4 form-group">
-                            <select class="form-control populate select2" name="ddlFomento" id="ddlFomento" style="width:100%"
-                                    asp-for="FomentoId" asp-items="Model.ListFomentos">
-                                <option value="">Selecionar Fomento</option>
-                            </select>
-                        </div> *@
                         <label class="col-sm-2 control-label">Estado:</label>
                         <div class="col-md-4 form-group">
-                            <select class="form-control populate select2" name="ddlEstado" id="ddlEstado" style="width:100%"
-                                    asp-for="EstadoId" asp-items="Model.ListEstados">
-                                <option value="">Selecionar Estado</option>
-                            </select>
+                            @{
+
+                                if (Model.IdPerfil == (int)EnumPerfil.Administrador)
+                                {
+                                    <select class="form-control populate select2" name="ddlEstado" id="ddlEstado" style="width: 100%"
+                                            asp-for="EstadoId" asp-items="Model.ListEstados">
+                                        <option value="">Selecionar Estado</option>
+                                    </select>
+                                }
+                                else
+                                {
+                                    <select class="form-control populate select2" name="ddlEstado" id="ddlEstado" style="width: 100%" disabled="disabled"
+                                            asp-for="EstadoId" asp-items="Model.ListEstados">
+                                        <option value="">Selecionar Estado</option>
+                                    </select>
+                                }
+                            }
                         </div>
                         <label class="col-sm-2 control-label">Municipio:</label>
                         <div class="col-md-4 form-group">
-                            <select class="form-control populate select2" name="ddlMunicipio" id="ddlMunicipio" style="width:100%"
-                                    asp-for="MunicipioId" asp-items="Model.ListMunicipios">
-                                <option value="">Selecionar Municipio</option>
-                            </select>
+                            @{
+                                if (Model.IdPerfil == (int)EnumPerfil.Administrador)
+                                {
+                                    <select class="form-control populate select2" name="ddlMunicipio" id="ddlMunicipio" style="width: 100%"
+                                            asp-for="MunicipioId" asp-items="Model.ListMunicipios">
+                                        <option value="">Selecionar Municipio</option>
+                                    </select>
+                                }
+                                else
+                                {
+                                    if (Model.IdPerfil == (int)EnumPerfil.GestorPedagogico)
+                                    {
+                                        <select class="form-control populate select2" name="ddlMunicipio" id="ddlMunicipio" style="width: 100%"
+                                                asp-for="MunicipioId" asp-items="Model.ListMunicipios">
+                                            <option value="">Selecionar Municipio</option>
+                                        </select>
+                                    }
+                                    else
+                                    {
+                                        <select class="form-control populate select2" name="ddlMunicipio" id="ddlMunicipio" style="width: 100%" disabled="disabled"
+                                                asp-for="MunicipioId" asp-items="Model.ListMunicipios">
+                                            <option value="">Selecionar Municipio</option>
+                                        </select>
+                                    }
+                                }
+                            }
                         </div>
                         <label class="col-sm-2 control-label">Localidade:</label>
                         <div class="col-md-4 form-group">
-                            <select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade" style="width:100%"
-                                    asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
-                                <option value="">Selecionar Localidade</option>
-                            </select>
+                            @{
+                                if (Model.IdPerfil == (int)EnumPerfil.Administrador)
+                                {
+                                    <select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade" style="width: 100%"
+                                            asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
+                                        <option value="">Selecionar Localidade</option>
+                                    </select>
+                                }
+                                else
+                                {
+                                    if (Model.IdPerfil == (int)EnumPerfil.GestorPedagogico)
+                                    {
+                                        <select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade" style="width: 100%"
+                                                asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
+                                            <option value="">Selecionar Localidade</option>
+                                        </select>
+                                    }
+                                    else
+                                    {
+                                        <select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade" style="width: 100%" disabled="disabled"
+                                                asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
+                                            <option value="">Selecionar Localidade</option>
+                                        </select>
+                                    }
+
+
+                                }
+                            }
                         </div>
                         <label class="col-sm-2 control-label">Profissional:</label>
                         <div class="col-md-4 form-group">
-                            <select class="form-control populate select2" name="ddlProfissional" id="ddlProfissional"
-                                    title="Por favor informe o profissional." required style="width:100%"
-                                    asp-for="ProfissionalId" asp-items="Model.ListProfissionais">
-                                <option value="">Selecionar Profissional</option>
-                            </select>
+                            @{
+                                if (Model.IdPerfil == (int)EnumPerfil.Administrador)
+                                {
+                                    <select class="form-control populate select2" name="ddlProfissional" id="ddlProfissional"
+                                            title="Por favor informe o profissional." style="width: 100%"
+                                            asp-for="ProfissionalId" asp-items="Model.ListProfissionais">
+                                        <option value="">Selecionar Profissional</option>
+                                    </select>
+                                }
+                                else
+                                {
+                                    if (Model.IdPerfil == (int)EnumPerfil.GestorPedagogico || Model.IdPerfil == (int)EnumPerfil.Coordenador)
+                                    {
+                                        <select class="form-control populate select2" name="ddlProfissional" id="ddlProfissional"
+                                                title="Por favor informe o profissional." style="width: 100%"
+                                                asp-for="ProfissionalId" asp-items="Model.ListProfissionais">
+                                            <option value="">Selecionar Profissional</option>
+                                        </select>
+                                    }
+                                    else
+                                    {
+                                        <select class="form-control populate select2" name="ddlProfissional" id="ddlProfissional" disabled="disabled"
+                                                title="Por favor informe o profissional." style="width: 100%"
+                                                asp-for="ProfissionalId" asp-items="Model.ListProfissionais">
+                                            <option value="">Selecionar Profissional</option>
+                                        </select>
+                                    }
+
+                                }
+                            }
                         </div>
                         <label class="col-sm-2 control-label">Atividade / Modalidade:</label>
                         <div class="col-sm-4 form-group">

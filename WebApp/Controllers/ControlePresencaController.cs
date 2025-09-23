@@ -149,7 +149,8 @@ namespace WebApp.Controllers
                     ListAlunos = alunos,
                     ControlesPresencas = response.ControlesPresencas,
                     //ListAtividadesModalidades = modalidades,
-                    ListProfissionais = profissionais!
+                    ListProfissionais = profissionais!,
+                    IdPerfil = usu.Perfil.Id
 
                 };
                 return View(model);

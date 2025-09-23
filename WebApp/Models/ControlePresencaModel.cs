@@ -28,6 +28,8 @@ namespace WebApp.Models
         public string DiasSemana { get; set; }
         public string Categoria { get; set; }
         public List<AtividadeAlunosDto> ListAtividadeAlunos { get; set; }
+        public string? NomePerfil { get; set; }
+        public int IdPerfil { get; set; }
 
         public class CreateUpdateControlePresencaCommand
         {
