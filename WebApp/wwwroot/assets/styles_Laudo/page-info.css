@@ -206,17 +206,17 @@
 }
 
 .container-main-info {
-    width: 318px;
+    width: 320px;
     margin: 10px;
     opacity: 1;
     position: absolute;
-    top: 206px;
-    left: 82px;
+    top: 200px;
+    left: 70px;
 }
 
 .user-img-info {
-    width: 105px;
-    height: 105px;
+    width: 120px;
+    height: 120px;
     opacity: 1;
     position: absolute;
     top: 0px;
@@ -232,17 +232,16 @@
     }
 
 .turma-user-info {
-    width: 105px;
+    width: 180px;
     height: 105px;
     opacity: 1;
     position: absolute;
-    top: 0px;
-    left: 125px;
+    top: 10px;
+    left: 135px;
     overflow: hidden;
 }
 
     .turma-user-info span {
-        width: 92px;
         color: rgba(128, 128, 128, 1);
         position: absolute;
         top: 31px;
@@ -260,7 +259,7 @@
     max-height: 150px;
     opacity: 1;
     position: absolute;
-    top: 115px;
+    top: 140px;
     left: 10px;
     overflow: hidden;
 }
@@ -294,7 +293,7 @@
     padding: 40px 0px;
     opacity: 1;
     position: absolute;
-    top: 237px;
+    top: 245px;
     left: 10px;
     overflow: hidden;
 }
@@ -324,7 +323,7 @@
 }
 
 .container-4-info {
-    width: 300px;
+    width: 310px;
     font-family: Ubuntu, sans-serif;
     font-size: 15px;
     opacity: 1;
@@ -341,7 +340,7 @@
 }
 
 .label-info {
-    width: 120px;
+    width: 140px;
     color: #808080;
     text-align: left;
 }

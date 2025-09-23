@@ -2,7 +2,7 @@ var vm = new Vue({
     el: "#vLaudo",
     data: {
         loading: false,
-        laudoDto: { Id: "", AlunoId: "", ProfissionalId: ""}
+        laudoDto: { Id: "", AlunoId: "", ProfissionalId: "", SerieTurma: "" }
     },
     mounted: function () {
 
@@ -171,7 +171,6 @@ var vm = new Vue({
                             }
                         });
                 });
-
 
                 //clique de escolha do select
                 $("#ddlEstado").change(function () {
@@ -1006,7 +1005,7 @@ var vm = new Vue({
                                 $("#liVocacional").hide();
                                 $("#liEducacional3Lp").hide();
                             }
-                                //$("#liEducacional3Lp").show();
+                            //$("#liEducacional3Lp").show();
                         });
                 });
 
@@ -1221,37 +1220,98 @@ var vm = new Vue({
         RespostaGabarito: function (id) {
             var self = this;
 
-            axios.get("../Laudo/GetLaudoById/?id=" + id).then(result => {
+            // ===== Helpers internas =====
+            const buildGabaritoOptions = (serieTurma) => {
+                const st = String(serieTurma || "").toUpperCase();
+                const opts = [];
 
-                self.laudoDto.Id = result.data.id;
-                self.laudoDto.AlunoId = result.data.alunoId;
+                if (st.includes("3")) {
+                    opts.push(
+                        { value: "3LP", text: "LÍNGUA PORTUGUESA 3ª Série do Ensino Médio" },
+                        { value: "3MT", text: "MATEMÁTICA 3ª Série do Ensino Médio" },
+                    );
+                } else if (st.includes("5")) {
+                    opts.push(
+                        { value: "5LP", text: "LÍNGUA PORTUGUESA 5º Ano do Ensino Fundamental" },
+                        { value: "5MT", text: "MATEMÁTICA 5º Ano do Ensino Fundamental" },
+                    );
+                } else if (st.includes("9")) {
+                    opts.push(
+                        { value: "9LP", text: "LÍNGUA PORTUGUESA 9º Ano do Ensino Fundamental" },
+                        { value: "9MT", text: "MATEMÁTICA 9º Ano do Ensino Fundamental" },
+                    );
+                }
 
-                var urlProfissional = "../../Profissional/GetProfissionaisByLocalidade";
+                return opts;
+            };
 
-                $.getJSON(urlProfissional,
-                    { id: result.data.localidadeId },
-                    function (data) {
-                        if (data.length > 0) {
-                            var items = '<option value="">Selecionar Profissional</option>';
-                            $("#ddlProfissionalRespostaModal").empty();
-                            $.each(data,
-                                function (i, row) {
-                                    items += "<option value='" + row.value + "'>" + row.text + "</option>";
-                                });
-                            $("#ddlProfissionalRespostaModal").html(items);
-                        }
-                        else {
-                            new PNotify({
-                                title: 'Profissional',
-                                text: 'Profissionais não encontrados.',
-                                type: 'warning'
-                            });
-                        }
-                    });
+            const fillSelectOptions = (selectId, options, placeholderText = "Selecionar") => {
+                const $sel = $(selectId);
+                const current = $sel.val();
+                $sel.empty();
+                $sel.append(`<option value="">${placeholderText}</option>`);
+                options.forEach(o => $sel.append(new Option(o.text, o.value)));
 
-            }).catch(error => {
-                Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
-            });
+                const canKeep = options.some(o => o.value === current);
+                $sel.val(canKeep ? current : "").trigger("change.select2");
+            };
+
+            const getJSONAsPromise = (url, data) =>
+                new Promise((resolve, reject) => {
+                    $.getJSON(url, data, resolve).fail((xhr, status, err) => reject(err || status));
+                });
+
+            axios.get(`../Laudo/GetLaudoById/?id=${encodeURIComponent(id)}`)
+                .then(({ data }) => {
+                    self.laudoDto.Id = data.id;
+                    self.laudoDto.AlunoId = data.alunoId;
+
+                    $("#ddlGabarito").empty()
+                        .append('<option value="">Selecionar Gabarito</option>')
+                        .trigger("change.select2");
+                    $("#ddlProfissionalRespostaModal").empty()
+                        .append('<option value="">Selecionar Profissional</option>')
+                        .trigger("change.select2");
+
+                    const profsPromise = getJSONAsPromise("../../Profissional/GetProfissionaisByLocalidade", { id: data.localidadeId });
+                    const alunoPromise = axios.get(`../../Aluno/GetAlunoById?id=${encodeURIComponent(self.laudoDto.AlunoId)}`);
+
+                    return Promise.all([profsPromise, alunoPromise]);
+                })
+                .then(([profs, alunoResp]) => {
+                    if (Array.isArray(profs) && profs.length > 0) {
+                        let items = '<option value="">Selecionar Profissional</option>';
+                        $.each(profs, function (i, row) {
+                            items += `<option value="${row.value}">${row.text}</option>`;
+                        });
+                        $("#ddlProfissionalRespostaModal").html(items).trigger("change.select2");
+                    } else {
+                        new PNotify({
+                            title: 'Profissional',
+                            text: 'Profissionais não encontrados.',
+                            type: 'warning'
+                        });
+                    }
+
+                    const aluno = alunoResp?.data || {};
+                    const serieTurma = aluno?.serieTurma ?? aluno?.SerieTurma ?? "";
+                    self.laudoDto.SerieTurma = serieTurma;
+                    self.laudoDto.Gabarito = "";
+
+                    const gabaritos = buildGabaritoOptions(serieTurma);
+                    fillSelectOptions("#ddlResponderGabarito", gabaritos, "Selecionar Gabarito");
+
+                    if (gabaritos.length === 0) {
+                        new PNotify({
+                            title: 'Gabarito',
+                            text: 'Nenhuma opção disponível para esta Série/Turma.',
+                            type: 'warning'
+                        });
+                    }
+                })
+                .catch(error => {
+                    Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
+                });
         }
     }
 });

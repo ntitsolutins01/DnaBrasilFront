@@ -95,9 +95,12 @@
 						<div><span class="info-label">Raça/Cor:</span> @etnia</div>
 						<div><span class="info-label">Deficiência:</span> @nomeDeficiencia</div>
 					</div>
-					<div class="detail-row">
-						<div><span class="info-label">Data de Nascimento:</span> @dtNascimento</div>
-					</div>
+                    <div class="detail-row">
+                        <div><span class="info-label">Data de Nascimento:</span> @dtNascimento</div>
+                    </div>
+                    <div class="detail-row">
+                        <div><span class="info-label">Data do Laudo:</span> {dataCriacao} / Laudo #{ordem}</div>
+                    </div>
 				</div>
 			</div>
 		</div>
@@ -223,6 +226,15 @@
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
 	<link rel="stylesheet" href="~/assets/styles_Laudo/indexLote.css" media="all" />
 	<link rel="stylesheet" href="~/assets/styles_Laudo/pages.css" media="all" />
+	<style>
+		/* Estilo para Laudo Educacional */
+		.educacional {
+			color: #00a9a9!important;
+		}
+		.education-section {
+			margin-bottom: 20px;
+		}
+	</style>
 </head>
 <body>
 	<div class="navigation-bar">
@@ -359,110 +371,172 @@
 			</div>
 		</div>
 
-		<div class="page-container page1">
-			<div class="newContainer">
-				@if (laudoResumido.QualidadeDeVidaId != null)
-				{
+        <div class="page-container page1">
+            <div class="newContainer">
+                @if (laudoResumido.QualidadeDeVidaId != null)
+                {
 
-					if (desempenho != null)
-					{
-						<section class="quality-section">
-							@{
-								await RenderSectionHeaderAsync("Qualidade de Vida", desempenho.ScoreVida, "#23bfff", "#c8eeff");
-							}
+                    if (desempenho != null)
+                    {
+                        <section class="quality-section">
+                            @{
+                                await RenderSectionHeaderAsync("Qualidade de Vida", desempenho.ScoreVida, "#23bfff", "#c8eeff");
+                            }
 
-							<div class="quality-grid">
-								@{
-									var textosVida = new List<string>
-					{
-					desempenho.TextoBemEstar,
-					desempenho.TextoAutoestima,
-					desempenho.TextoFamilia,
-					desempenho.TextoContexto
-					};
+                            <div class="quality-grid">
+                                @{
+                                    var textosVida = new List<string>
+                                    {
+                                        desempenho.TextoBemEstar,
+                                        desempenho.TextoAutoestima,
+                                        desempenho.TextoFamilia,
+                                        desempenho.TextoContexto
+                                    };
 
-									for (var i = 0; i < laudoResumido.EncaminhamentoQualidadeDeVida.Count; i++)
-									{
-										<div class="quality-card">
-											<h3>@laudoResumido.EncaminhamentoQualidadeDeVida[i].Nome</h3>
-											<p>@(i < textosVida.Count ? textosVida[i] : "Informação não disponível")</p>
-										</div>
-									}
-								}
-							</div>
-						</section>
-					}
-					else
-					{
-						<section class="quality-section">
-							<div class="section-header">
-								<div class="card-header qualidade de vida">
-									<div class="card-title">Qualidade de Vida</div>
-									<div class="card-score">
-										<div>Dados não disponíveis</div>
-									</div>
-								</div>
-							</div>
-						</section>
-					}
-				}
+                                    for (var i = 0; i < laudoResumido.EncaminhamentoQualidadeDeVida.Count; i++)
+                                    {
+                                        <div class="quality-card">
+                                            <h3>@laudoResumido.EncaminhamentoQualidadeDeVida[i].Nome</h3>
+                                            <p>@(i < textosVida.Count ? textosVida[i] : "Informação não disponível")</p>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </section>
+                    }
+                    else
+                    {
+                        <section class="quality-section">
+                            <div class="section-header">
+                                <div class="card-header qualidade de vida">
+                                    <div class="card-title">Qualidade de Vida</div>
+                                    <div class="card-score">
+                                        <div>Dados não disponíveis</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    }
+                }
 
-				@if (laudoResumido.TalentoEsportivoId != null && laudoResumido.TalentoEsportivo != null && desempenho != null)
-				{
-					<section class="sport-section">
-						@{
-							await RenderSectionHeaderAsync("Esporte", desempenho.ScoreTalentoEsportivo, "#df436c", "#f7d1db");
-						}
+                @* Seção do Laudo Educacional - sempre exibida com dados estáticos *@
+                @* aqui precisa incluir a verificação se existe laudo educacional *@
+                @if ((laudoResumido.TalentoEsportivoId == null && laudoResumido.TalentoEsportivo == null && desempenho == null) || (laudoResumido.QualidadeDeVidaId == null)) {
+                    <section class="education-section">
+                        @{
+                            await RenderSectionHeaderAsync("Educacional", 85, "#00a9a9", "#b3e0e0");
+                        }
 
-						<div class="sport-grid">
-							@{
-								// Verificar se ImcSaude não é nulo
-								var imcValue = laudoResumido.ImcSaude != null ? laudoResumido.ImcSaude.ToString() : "N/A";
-								await RenderSportCardAsync("Índice de Massa Corporal", "imc",
-								imcValue, desempenho.AvisoImc,
-								desempenho.TextoImc, true);
+                        <div class="quality-grid">
+                            <div class="quality-card">
+                                <h3>Habilidades Cognitivas</h3>
+                                <p>O aluno demonstra boa capacidade de raciocínio lógico e resolução de problemas. Apresenta facilidade para compreender conceitos abstratos e estabelecer conexões entre diferentes áreas do conhecimento.</p>
+                            </div>
+                            <div class="quality-card">
+                                <h3>Desempenho Acadêmico</h3>
+                                <p>Apresenta rendimento satisfatório nas disciplinas curriculares, com destaque para áreas que envolvem análise e síntese. Demonstra interesse em atividades que estimulam o pensamento crítico.</p>
+                            </div>
+                            <div class="quality-card">
+                                <h3>Habilidades Socioemocionais</h3>
+                                <p>Possui boa capacidade de relacionamento interpessoal e trabalho em equipe. Demonstra empatia e consegue expressar suas ideias de forma clara e respeitosa.</p>
+                            </div>
+                            <div class="quality-card">
+                                <h3>Potencial de Aprendizagem</h3>
+                                <p>O aluno apresenta bom potencial para desenvolvimento de novas competências. Mostra-se receptivo a feedback e demonstra autonomia na busca por conhecimento.</p>
+                            </div>
+                        </div>
+                    </section>
+                }
 
-								// Verificar se Velocidade não é nulo
-								var velocidadeValue = laudoResumido.TalentoEsportivo.Velocidade != null ?
-								laudoResumido.TalentoEsportivo.Velocidade.ToString() : "N/A";
-								await RenderSportCardAsync("Velocidade 20m", "seg",
-								velocidadeValue, "",
-								desempenho.TextoVelocidade);
+                @if (laudoResumido.TalentoEsportivoId != null && laudoResumido.TalentoEsportivo != null && desempenho != null)
+                {
+                    <section class="sport-section">
+                        @{
+                            await RenderSectionHeaderAsync("Esporte", desempenho.ScoreTalentoEsportivo, "#df436c", "#f7d1db");
+                        }
 
-								// Verificar se ImpulsaoHorizontal não é nulo
-								var impulsaoValue = laudoResumido.TalentoEsportivo.ImpulsaoHorizontal != null ?
-								laudoResumido.TalentoEsportivo.ImpulsaoHorizontal.ToString() : "N/A";
-								await RenderSportCardAsync("Impulsão Horizontal", "cm",
-								impulsaoValue, desempenho.AvisoImpulsao,
-								desempenho.TextoImpulsao, true);
+                        <div class="sport-grid">
+                            @{
+                                // Verificar se ImcSaude não é nulo
+                                var imcValue = laudoResumido.ImcSaude != null ? laudoResumido.ImcSaude.ToString() : "N/A";
+                                await RenderSportCardAsync("Índice de Massa Corporal", "imc",
+                                    imcValue, desempenho.AvisoImc,
+                                    desempenho.TextoImc, true);
 
-								// Verificar se Flexibilidade não é nulo
-								var flexibilidadeValue = laudoResumido.TalentoEsportivo.Flexibilidade != null ?
-								laudoResumido.TalentoEsportivo.Flexibilidade.ToString() : "N/A";
-								await RenderSportCardAsync("Flexibilidade", "cm",
-								flexibilidadeValue, desempenho.AvisoFlexibilidadeMuscular,
-								desempenho.TextoFlexibilidadeMuscular, true);
+                                // Verificar se Velocidade não é nulo
+                                var velocidadeValue = laudoResumido.TalentoEsportivo.Velocidade != null ?
+                                    laudoResumido.TalentoEsportivo.Velocidade.ToString() : "N/A";
+                                await RenderSportCardAsync("Velocidade 20m", "seg",
+                                    velocidadeValue, "",
+                                    desempenho.TextoVelocidade);
 
-								// Verificar se Vo2Max não é nulo
-								var vo2MaxValue = laudoResumido.TalentoEsportivo.Vo2Max != null ?
-								laudoResumido.TalentoEsportivo.Vo2Max.ToString() : "N/A";
-								await RenderSportCardAsync("Aptidão Aeróbica", "seg",
-								vo2MaxValue, "",
-								desempenho.TextoAptidaoCardio);
+                                // Verificar se ImpulsaoHorizontal não é nulo
+                                var impulsaoValue = laudoResumido.TalentoEsportivo.ImpulsaoHorizontal != null ?
+                                    laudoResumido.TalentoEsportivo.ImpulsaoHorizontal.ToString() : "N/A";
+                                await RenderSportCardAsync("Impulsão Horizontal", "cm",
+                                    impulsaoValue, desempenho.AvisoImpulsao,
+                                    desempenho.TextoImpulsao, true);
 
-								// Verificar se PreensaoManual não é nulo
-								var preensaoValue = laudoResumido.TalentoEsportivo.PreensaoManual != null ?
-								laudoResumido.TalentoEsportivo.PreensaoManual.ToString() : "N/A";
-								await RenderSportCardAsync("Preensão Manual", "kg",
-								preensaoValue, desempenho.AvisoForcaMembrosSup,
-								desempenho.TextoForcaMembrosSup, true);
-							}
-						</div>
-					</section>
-				}
-			</div>
-		</div>
+                                // Verificar se Flexibilidade não é nulo
+                                var flexibilidadeValue = laudoResumido.TalentoEsportivo.Flexibilidade != null ?
+                                    laudoResumido.TalentoEsportivo.Flexibilidade.ToString() : "N/A";
+                                await RenderSportCardAsync("Flexibilidade", "cm",
+                                    flexibilidadeValue, desempenho.AvisoFlexibilidadeMuscular,
+                                    desempenho.TextoFlexibilidadeMuscular, true);
 
+                                // Verificar se Vo2Max não é nulo
+                                var vo2MaxValue = laudoResumido.TalentoEsportivo.Vo2Max != null ?
+                                    laudoResumido.TalentoEsportivo.Vo2Max.ToString() : "N/A";
+                                await RenderSportCardAsync("Aptidão Aeróbica", "seg",
+                                    vo2MaxValue, "",
+                                    desempenho.TextoAptidaoCardio);
+
+                                // Verificar se PreensaoManual não é nulo
+                                var preensaoValue = laudoResumido.TalentoEsportivo.PreensaoManual != null ?
+                                    laudoResumido.TalentoEsportivo.PreensaoManual.ToString() : "N/A";
+                                await RenderSportCardAsync("Preensão Manual", "kg",
+                                    preensaoValue, desempenho.AvisoForcaMembrosSup,
+                                    desempenho.TextoForcaMembrosSup, true);
+                            }
+                        </div>
+                    </section>
+                }
+            </div>
+        </div>
+
+		@* aqui precisa incluir a verificação se existe laudo educacional *@
+        @if ((laudoResumido.TalentoEsportivoId != null && laudoResumido.TalentoEsportivo != null && desempenho != null) && (laudoResumido.QualidadeDeVidaId != null))
+		{
+			        <div class="page-container page1">
+            <div class="newContainer">
+                @* Seção do Laudo Educacional - sempre exibida com dados estáticos por enquanto *@
+                    <section class="education-section">
+                        @{
+                            await RenderSectionHeaderAsync("Educacional", 85, "#00a9a9", "#b3e0e0");
+                        }
+
+                        <div class="quality-grid">
+                            <div class="quality-card">
+                                <h3>Habilidades Cognitivas</h3>
+                                <p>O aluno demonstra boa capacidade de raciocínio lógico e resolução de problemas. Apresenta facilidade para compreender conceitos abstratos e estabelecer conexões entre diferentes áreas do conhecimento.</p>
+                            </div>
+                            <div class="quality-card">
+                                <h3>Desempenho Acadêmico</h3>
+                                <p>Apresenta rendimento satisfatório nas disciplinas curriculares, com destaque para áreas que envolvem análise e síntese. Demonstra interesse em atividades que estimulam o pensamento crítico.</p>
+                            </div>
+                            <div class="quality-card">
+                                <h3>Habilidades Socioemocionais</h3>
+                                <p>Possui boa capacidade de relacionamento interpessoal e trabalho em equipe. Demonstra empatia e consegue expressar suas ideias de forma clara e respeitosa.</p>
+                            </div>
+                            <div class="quality-card">
+                                <h3>Potencial de Aprendizagem</h3>
+                                <p>O aluno apresenta bom potencial para desenvolvimento de novas competências. Mostra-se receptivo a feedback e demonstra autonomia na busca por conhecimento.</p>
+                            </div>
+                        </div>
+                    </section>
+            </div>
+        </div>
+		}
 	}
 
 	<script src="~/assets/scripts_Laudo/index.js"></script>

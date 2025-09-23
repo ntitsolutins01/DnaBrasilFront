@@ -170,11 +170,15 @@ body {
     background: #E96D53;
 }
 
+.cor-educacional {
+    background: #00a9a9;
+}
+
 /* Logo */
 .logo {
     width: 150px;
     height: 94px;
-    background: url('/assets/assets_Laudo/logo_1.png');
+    background: url('/assets/images/logo.png');
     background-repeat: no-repeat;
     background-position: center center;
     background-size: cover;

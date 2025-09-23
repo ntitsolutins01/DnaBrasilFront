@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using NuGet.Protocol.Core.Types;
 using WebApp.Authorization;
@@ -320,8 +321,8 @@ namespace WebApp.Controllers
                 TipoLaudoQualidadeVidaDescricao = tiposLaudos.First(x => x.Id == (int)EnumTipoLaudo.QualidadeVida).Descricao,
                 TipoLaudoConsumoAlimentarDescricao = tiposLaudos.First(x => x.Id == (int)EnumTipoLaudo.ConsumoAlimentar).Descricao,
                 TipoLaudoSaudeBucalDescricao = tiposLaudos.First(x => x.Id == (int)EnumTipoLaudo.SaudeBucal).Descricao,
-                TipoLaudoVocacionalDescricao = tiposLaudos.First(x => x.Id == (int)EnumTipoLaudo.Vocacional).Descricao
-
+                TipoLaudoVocacionalDescricao = tiposLaudos.First(x => x.Id == (int)EnumTipoLaudo.Vocacional).Descricao,
+                TipoLaudoEducacionalDescricao = tiposLaudos.First(x => x.Id == (int)EnumTipoLaudo.Educacional3MT).Descricao
             };
             return View(model);
         }
@@ -1497,25 +1498,44 @@ namespace WebApp.Controllers
         {
             try
             {
-                _logger.Info($"Ação de Visualiza Gabarito  do aluno - Laudo.VisualizarGabarito");
+                _logger.Info("Ação de Visualiza Gabarito do aluno - Laudo.VisualizarGabarito");
 
                 var laudo = ApiClientFactory.Instance.GetLaudoById(id);
-                var educacionais = ApiClientFactory.Instance.GetEducacionaisAll()
-                    .Where(a => a.Aluno.Id == laudo.AlunoId)
-                    .ToList();
+                var aluno = await ApiClientFactory.Instance.GetAlunoById((int)laudo.AlunoId);
+                var educacionais = ApiClientFactory.Instance.GetEducacionaisByAluno(laudo.AlunoId);
 
-                var model = new LaudoModel()
+                var alternativasDtos = new List<AlternativasDto>();
+                var altDict = new Dictionary<int, string>();
+
+                foreach (var e in educacionais)
                 {
+                    if (e.Imagem.IsNullOrEmpty())
+                    {
+                        var dto = ApiClientFactory.Instance.GetAlternativasByEducacionalId(e.Id);
+                        if (dto != null)
+                        {
+                            alternativasDtos.Add(dto);
+                            altDict[e.Id] = dto.Alternativas ?? string.Empty;
+                        }
+                    }
+                }
+
+                var model = new LaudoModel
+                {
+                    Aluno = aluno,
                     AlunoId = laudo.AlunoId.ToString(),
-                    Educacionais = educacionais
+                    Educacionais = educacionais,
+                    AlternativasDosEducacionais = alternativasDtos,
+                    AlternativasPorEducacional = altDict
                 };
 
                 return View(model);
             }
             catch (Exception e)
             {
-                _logger.Error($"Ação de visualizar gabarito do aluno - Laudoo.VisualizarGabarito: {e.StackTrace}");
-                return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = e.Message });
+                _logger.Error($"Ação de visualizar gabarito do aluno - Laudo.VisualizarGabarito: {e}");
+                return RedirectToAction(nameof(Index),
+                    new { notify = (int)EnumNotify.Error, message = e.Message });
             }
         }
 
