@@ -472,8 +472,7 @@
                         <i class="fa fa-plus"></i> &nbsp;&nbsp;<strong>Novo Grau de Parentêsco</strong>
                     </h5>
                 </div>
-                @using (@Html.BeginForm("CreateGrauParentesco", "Aluno", FormMethod.Post, new { id = "formCreateGrauParentesco", @class = "form-horizontal" }))
-                {
+                <form id="formCreateGrauParentesco" class="form-horizontal">
                     <div class="modal-body">
                         <div class="form-group row">
 
@@ -487,10 +486,9 @@
                     </div>
                     <div class="modal-footer">
                         <button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-remove"></i> &nbsp;&nbsp;Fechar</button>
-                        <button type="button" class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</button>
+                        <a href="#" onclick='javascript:(crud.CreateGrauParentesco(nomeGrauParentesco.value));' class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-save"></i> &nbsp;&nbsp;Salvar</a>
                     </div>
-
-                }
+                </form>
             </div>
         </div>
     </div>

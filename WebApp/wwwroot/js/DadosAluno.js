@@ -710,7 +710,7 @@ var vm = new Vue({
 
             $("#ddlModalidadeAluno").select2("val", "0");
         },
-        CreateEtapaEnsino() {
+        CreateEtapaEnsino: function (etapa) {
             var nome = $("#nomeEtapaEnsino").val();
             var url = "CreateEtapaEnsino";
             $.getJSON(url,
@@ -733,6 +733,38 @@ var vm = new Vue({
                         });
                     }
                 });
+        },
+        CreateGrauParentesco: function(grau) {
+
+            var url = "../../Aluno/CreateGrauParentesco/";
+
+            $.getJSON(url,
+                { nome: grau },
+                function (data) {
+                    if (data.length > 0) {
+                        var items = '<option value="">Selecionar Grau de Parentêsco</option>';
+                        $("#ddlGrauParentesco").empty;
+                        $.each(data,
+                            function (i, row) {
+                                items += "<option value='" + row.value + "'>" + row.text + "</option>";
+                            });
+                        $("#ddlGrauParentesco").html(items);
+                        $('#mdGrauParentesco').modal('hide');
+                        new PNotify({
+                            title: 'Aluno',
+                            text: 'Grau de Parentêsco cadastrado com sucesso.',
+                            type: 'success'
+                        });
+                    }
+                    else {
+                        new PNotify({
+                            title: 'Aluno',
+                            text: 'Grau de Parentêsco não encontrados.',
+                            type: 'warning'
+                        });
+                        $('#mdGrauParentesco').modal('hide');
+                    }
+                });
         }
     }
 });
@@ -744,5 +776,9 @@ var crud = {
     CreateEtapaEnsino: function () {
         
         vm.CreateEtapaEnsino();
+    },
+    CreateGrauParentesco: function (grau) {
+        //console.log(grau);
+        vm.CreateGrauParentesco(grau);
     }
 };

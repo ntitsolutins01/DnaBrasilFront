@@ -21,66 +21,25 @@
                         <div asp-validation-summary="All" class="alert alert-mini alert-danger margin-bottom-30"></div>
                     }
                     <div class="form-group mb-lg">
-                        <label>Estado</label>
-                        <select class="form-control populate select2" name="ddlEstado" id="ddlEstado"
-                                title="Por favor informe um Estado." required
-                                asp-for="EstadoId" asp-items="Model.ListEstados">
-                            <option value="">Selecionar Estado</option>
-                        </select>
-                    </div>
-                    <div class="form-group mb-lg">
-                        <label>Municipio</label>
-                        <select class="form-control populate select2" name="ddlMunicipio" id="ddlMunicipio"
-                                title="Por favor informe um Municipio." required
-                                asp-for="MunicipioId" asp-items="Model.ListMunicipios">
-                            <option value="">Selecionar Município</option>
-                        </select>
-                    </div>
-                    <div class="form-group mb-lg">
-                        <label>Localidade</label>
-                        <select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade"
-                                title="Por favor informe o localidade." required
-                                asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
-                            <option value="">Selecionar Localidade</option>
-                        </select>
-                    </div>
-                    <div class="form-group mb-lg">
-                        <label>Endereço</label>
-                        <input name="endereco" id="endereco" type="text" class="form-control" required
-                               title="Por favor informe o endereço." maxlength="400" oninput="this.value = this.value.toUpperCase()" />
-                    </div>
-                    <div class="form-group mb-lg">
-                        <label>Modalidade</label><br/>
-                        <select class="form-control populate select2" name="ddlModalidadeDesejada" id="ddlModalidadeDesejada" style="width:100%"
-								title="Por favor selecione a modalidade desejada." required
-                                asp-for="ModalidadeId" asp-items="Model.ListModalidades">
-                            <option value="">Selecionar Modalidade Desejada</option>
-                        </select>
-                    </div>
-                    <div class="form-group mb-lg">
-                        <label>Nome completo do Aluno</label>
-                        <input name="nome" id="nome" type="text" class="form-control" required
+                        <label>NOME CIVIL</label><span class="required">*</span>
+                        <input name="nome" id="nome" type="text" class="form-control" required placeholder="Ex: JOÃO CARLOS  ALVES DA SILVA"
                                title="Por favor informe o nome completo." maxlength="300" oninput="this.value = this.value.toUpperCase()" />
                         <p>
                             <code>Sem abreviações</code>
                         </p>
                     </div>
                     <div class="form-group mb-lg">
+                        <label>COMO VOCÊ QUER SER CHAMADO?</label>
+                        <input name="apelido" id="apelido" type="text" class="form-control" placeholder="Ex: JOCA"
+                               title="Por favor informe o apelido." maxlength="50" oninput="this.value = this.value.toUpperCase()" />
+                    </div>
+                    <div class="form-group mb-lg">
                         <label>CPF</label>
-                        <input name="cpf" id="cpf" type="text" class="form-control" required
+                        <input name="cpf" id="cpf" type="text" class="form-control" placeholder="Ex: 222.222.222-22"
                                title="Por favor informe o cpf." />
                     </div>
                     <div class="form-group mb-lg">
-                        <label>Sexo</label>
-                        <select class="form-control populate select2" name="ddlSexo" id="ddlSexo"
-                                title="Por favor selecione um sexo." required>
-                            <option value="">Selecionar Sexo</option>
-                            <option value="M">MASCULINO</option>
-                            <option value="F">FEMININO</option>
-                        </select>
-                    </div>
-                    <div class="form-group mb-lg">
-                        <label>Data Nascimento</label>
+                        <label>DATA DE NASCIMENTO</label><span class="required">*</span>
                         <input id="dtNasc" name="dtNasc"
                                required
                                title="Por favor informe a data de nascimento."
@@ -90,93 +49,156 @@
                                class="form-control">
                     </div>
                     <div class="form-group mb-lg">
-                        <label>E-mail</label>
-                        <input name="email" id="email" type="email" class="form-control" required
-                               title="Por favor informe o email." maxlength="200" oninput="this.value = this.value.toLowerCase()" />
+                        <label>SEXO</label><span class="required">*</span>
+                        <select class="form-control populate select2" name="ddlSexo" id="ddlSexo"
+                                title="Por favor selecione um sexo." required>
+                            <option value="">Selecionar Sexo</option>
+                            <option value="M">MASCULINO</option>
+                            <option value="F">FEMININO</option>
+                        </select>
                     </div>
                     <div class="form-group mb-lg">
-                        <label>Celular</label>
+                        <label>COR OU RAÇA</label><span class="required">*</span>
+                        <select class="form-control populate select2" name="ddlEtnia" id="ddlEtnia" style="width:100%"
+                                title="Por favor selecione um raça/cor." required
+                                asp-for="EtniaId" asp-items="Model.ListEtnias">
+                            <option value="">Selecionar cor ou raça</option>
+                        </select>
+                    </div>
+                    <div class="form-group mb-lg">
+                        <label>ESTADO</label><span class="required">*</span>
+                        <select class="form-control populate select2" name="ddlEstado" id="ddlEstado"
+                                title="Por favor informe um Estado." required
+                                asp-for="EstadoId" asp-items="Model.ListEstados">
+                            <option value="">Selecionar Estado</option>
+                        </select>
+                    </div>
+                    <div class="form-group mb-lg">
+                        <label>MUNICÍPIO</label><span class="required">*</span>
+                        <select class="form-control populate select2" name="ddlMunicipio" id="ddlMunicipio"
+                                title="Por favor informe um Município." required
+                                asp-for="MunicipioId" asp-items="Model.ListMunicipios">
+                            <option value="">Selecionar Município</option>
+                        </select>
+                    </div>
+                    <div class="form-group mb-lg">
+                        <label>ENDEREÇO</label>
+                        <input name="endereco" id="endereco" type="text" class="form-control" placeholder="Ex: rua xxx, quadra xxxx, lote xxxx"
+                               title="Por favor informe o endereço." maxlength="400" oninput="this.value = this.value.toUpperCase()" />
+                    </div>
+                    <div class="form-group mb-lg">
+                        <label>BAIRRO</label>
+                        <input name="bairro" id="bairro" type="text" class="form-control" placeholder="Ex: Setor Nova Olinda"
+                               title="Por favor informe o bairro." maxlength="200" oninput="this.value = this.value.toUpperCase()" />
+                    </div>
+                    <div class="form-group mb-lg">
+                        <label>CEP</label>
+                        <input name="cep" id="cep" type="text" class="form-control" placeholder="Ex: 22222.222"
+                               title="Por favor informe o bairro." maxlength="9" oninput="this.value = this.value.toUpperCase()" />
+                    </div>
+                    <div class="form-group mb-lg">
+                        <label>TELEFONE PARA CONTATO</label><span class="required">*</span>
                         <div class="input-group">
                             <span class="input-group-addon">
                                 <i class="fa fa-phone"></i>
                             </span>
-                            <input id="numCelular" name="numCelular" class="form-control"
-                                   maxlength="15" required title="Por favor informe o celular.">
+                            <input id="numTelefone" name="numTelefone" class="form-control"
+                                   maxlength="14" required title="Por favor informe o telefone para contato.">
                         </div>
                     </div>
                     <div class="form-group mb-lg">
-                        <label>Raça/Cor</label>
-                        <select class="form-control populate select2" name="ddlEtnia" id="ddlEtnia" style="width:100%"
-                                title="Por favor selecione uma raça/cor." required
-                                asp-for="EtniaId" asp-items="Model.ListEtnias">
-                            <option value="">Selecionar Raça/Cor</option>
-                        </select>
+                        <label>E-MAIL</label><span class="required">*</span>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="fa fa-envelope"></i>
+                            </span>
+                            <input type="text" name="email" maxlength="100" class="form-control"
+                                   required title="Por favor informe o email." oninput="this.value = this.value.toLowerCase()" />
+                        </div>
                     </div>
                     <div class="form-group mb-lg">
-                        <label>Deficiência</label>
+                        <label>Possui alguma deficiência ou condição que requeira atendimento especializado?</label>
                         <select class="form-control populate select2" name="ddlDeficiencia" id="ddlDeficiencia" style="width:100%"
                                 title="Por favor selecione uma deficiência." required
                                 asp-for="DeficienciaId" asp-items="Model.ListDeficiencia">
                             <option value="">Selecionar Deficiência</option>
                         </select>
                     </div>
+
                     <div class="form-group mb-lg">
-                        <label>Nome completo da Mãe</label>
-                        <input name="nomeMae" id="nomeMae" type="text" class="form-control" required
-                               title="Por favor informe o nome da mãe." maxlength="300" oninput="this.value = this.value.toUpperCase()" />
-                        <p>
-                            <code>Sem abreviações</code>
-                        </p>
+                        <p><span class="highlight">DADOS DO RESPONSÁVEL</span></p>
+                        <label>NOME COMPLETO</label><span class="required">*</span>
+                        <input name="nomeResponsavel" id="nomeResponsavel" type="text" class="form-control" required placeholder="Ex: JOÃO CARLOS  ALVES DA SILVA"
+                               title="Por favor informe o nome completo do responsável." maxlength="200" oninput="this.value = this.value.toLowerCase()" />
+                    </div>
+
+                    <div class="form-group mb-lg">
+                        <label>CPF</label><span class="required">*</span>
+                        <input name="cpfResponsavel" id="cpfResponsavel" type="text" class="form-control" placeholder="Ex: 222.222.222-22"
+                               title="Por favor informe o cpf do responsável." required/>
+                    </div>
+
+                    <div class="form-group mb-lg">
+                        <label>GRAU DE PARENTESCO</label><span class="required">*</span>
+                        <select class="form-control populate select2" name="ddlGrauParentesco" id="ddlGrauParentesco" style="width:100%"
+                                title="Por favor selecione um grau de parentêsco." required
+                                asp-for="GrauParentescoId" asp-items="Model.ListGrauParentescos">
+                            <option value="">Selecionar Grau de Parentesco</option>
+                        </select>
                     </div>
                     <div class="form-group mb-lg">
-                        <label>Nome completo do Responsável</label>
-                        <input name="nomeResp" id="nomeResp" type="text" class="form-control" required
-                               title="Por favor informe o nome do responsável." maxlength="300" oninput="this.value = this.value.toUpperCase()" />
-                        <p>
-                            <code>Sem abreviações</code>
-                        </p>
-                    </div>
-                    
-                    <div class="form-group mb-lg">
-                        <label>Participação no programa DNA DO BRASIL TALENTOS e compartilhamento dos dados pessoais do estudante.</label><br />
-                        <div class="radio-custom radio-success">
-                            <input type="radio" id="participacaoSim" name="participacao" value="true" required title="Por favor selecione uma opção">
-                            <label>Sim</label>
+                        <label>TELEFONE PARA CONTATO</label><span class="required">*</span>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="fa fa-phone"></i>
+                            </span>
+                            <input id="numTelefoneResponsavel" name="numTelefoneResponsavel" class="form-control"
+                                   maxlength="14" required title="Por favor informe o telefone para contato.">
                         </div>
-                        <div class="radio-custom radio-danger">
-                            <input type="radio" id="participacaoNao" name="participacao" value="false" required title="Por favor selecione uma opção">
-                            <label>Não</label>
-                        </div>
-                        <label class="error" for="participacao"></label>
                     </div>
                     <div class="form-group mb-lg">
-                        <label>Utilização da imagem</label><br />
-                        <div class="radio-custom radio-success">
-                            <input type="radio" id="utilizacaoImagemSim" name="utilizacaoImagem" value="true" required title="Por favor selecione uma opção">
-                            <label>Sim</label>
+                        <label>E-MAIL</label>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="fa fa-envelope"></i>
+                            </span>
+                            <input type="text" id="emailResponsavel" name="emailResponsavel" maxlength="100" class="form-control"
+                                   title="Por favor informe o email." oninput="this.value = this.value.toLowerCase()" />
                         </div>
-                        <div class="radio-custom radio-danger">
-                            <input type="radio" id="utilizacaoImagemNao" name="utilizacaoImagem" value="false" required title="Por favor selecione uma opção">
-                            <label>Não</label>
+                    </div>
+
+                    <div class="form-group mb-lg">
+                        <div class="checkbox-custom checkbox-default">
+                            <input id="AgreeTerms" id="agreeterms" name="agreeterms" type="checkbox" required title="Por favor leia com atenção para aceitar ao termo." />
+                            <label for="AgreeTerms">Declaro, como responsável legal, estar ciente e de acordo com a participação do(a) menor nas atividades do Projeto, autorizando a inscrição nesta etapa inicial. Comprometo-me a comparecer presencialmente para entrega da documentação e finalização da matrícula.</label>
+                            <span class="required">*</span>
                         </div>
-                        <label class="error" for="utilizacaoImagem"></label>
+                        <label class="error" for="agreeterms"></label>
+                    </div>
+
+                    <div class="form-group mb-lg">
+                        <label>UNIDADE DE INTERESSE</label><span class="required">*</span>
+                        <select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade"
+                                title="Por favor informe a unidade de interesse." required=""
+                                asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
+                            <option value="">Selecionar a unidade de interesse</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group mb-lg">
                         <p>
-                            <code>O Idecace, a título gratuito e não oneroso, para fins de divulgação/publicação em qualquer material de foto, vídeo, documentos em geral, relatórios bem como em todo e qualquer veículo de comunicação</code>
+                            <code><b>Atenção</b>: Anote o número de inscrição gerado ao final do formulário. Compareça ao centro escolhido para confirmar sua matrícula, levando os seguintes documentos: Comprovante de residência; RG e CPF do aluno e do responsável; Laudo médico (no caso de Pessoas com Deficiência – PcD).</code>
                         </p>
                     </div>
                     <div class="row">
                         <div class="col-sm-8">
-                            <div class="checkbox-custom checkbox-default">
-                                <input id="AgreeTerms" id="agreeterms" name="agreeterms" type="checkbox" required title="Por favor leia com atenção para aceitar ao termo."/>
-                                <label for="AgreeTerms">Eu concordo com os <a href="#" data-toggle="modal" data-target="#mdTermo">termos</a></label>
-                            </div>
-                            <label class="error" for="agreeterms"></label>
                         </div>
                         <div class="col-sm-4 text-right">
                             <button type="submit" class="btn btn-primary hidden-xs">Registrar</button>
                             <button type="submit" class="btn btn-primary btn-block btn-lg visible-xs mt-lg">Registrar</button>
                         </div>
                     </div>
+
                 </form>
             </div>
         </div>
@@ -184,33 +206,6 @@
         <p class="text-center text-muted mt-md mb-md">&copy; Copyright 2024. Todos os direitos reservados.</p>
     </div>
 </section>
-<!-- Modal -->
-<div class="modal fade" id="mdTermo" tabindex="-1" role="dialog" aria-labelledby="mdTermoLabel" aria-hidden="true">
-    <div class="modal-dialog modal-md" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="mdTermoLabel">
-                    <i class="fa fa-file"></i> &nbsp;&nbsp;<strong>TERMO DE AUTORIZAÇÃO E CONSENTIMENTO / ASSENTIMENTO</strong>
-                </h5>
-            </div>
-
-            <div class="modal-body">
-                <ul class="list-unstyled search-results-list">
-                    <li>
-                        <div class="result-data">
-                            <p class="text-justify">
-                                O Programa DNA DO BRASIL-TALENTOS objetiva a integração do desenvolvimento acadêmico e esportivo dos estudantes, com domínio nas áreas de oportunização, promoção e desenvolvimento no esporte, na saúde, no desenvolvimento psicossocial e na vocação profissionalizante. O Programa utiliza, com exclusividade, uma metodologia para análise psicossocial e vocacional, as quais permitem nortear o talento esportivo ou a carreira e potencializar a construção do Plano de Desenvolvimento Pessoal e Profissional de cada indivíduo avaliado. Para participação no Programa, faz-se necessária a autorização dos pais e/ou responsáveis, bem como o consentimento para a aplicação do protocolo avaliativo, em 3 períodos distintos, o qual direcionará o estudante conforme o seu talento profissional ou esportivo. A participação é voluntária, podendo ser interrompida sem que nenhuma implicação recaia sobre o avaliado. O Programa trabalha com 5 dimensões centrais do desenvolvimento humano (físico-motor, saúde, qualidade de vida, vocacional e educacional) e, também, levanta dados e trabalha com recursos sobre a violência contra crianças e adolescentes, sobre a saúde bucal, sobre a educação alimentar e sobre indicadores educacionais. Os dados serão inseridos em uma plataforma própria e os pais e/ou responsáveis terão acesso a esses dados por meio do aplicativo do estudante/famílias. Serão gerados automaticamente laudos e relatórios indicando fragilidades e potencialidades em cada uma das variáveis. DECLARO que: 1. Estou ciente que o tratamento de dados pessoais coletados é condição para a participação do estudantes no Programa DNA DO BRASIL TALENTOS e que posso requerer, como titular dos dados, a qualquer momento e mediante requisição, os direitos elencados no Art. 18, da Lei 13.709, de 14 de agosto de 2018 - LGPD. 2 - O(a) estudante não possui qualquer enfermidade que o/a impeça da prática esportiva e não passou por qualquer procedimento cirúrgico nos últi prática; 3. Tenho conhecimento de que a bateria de testes poderá consistir na realização de testes físico motores,índices de saúde, inventários psicossociais,e teste de aptidão e interesses profissionais. - Para crianças e adolescentes (maiores que 6 anos e menores de 18 anos de idade) e para legalmente incapaz. O Instituto para o Desenvolvimento da Criança e do Adolescente pela Cultura e Esporte (IDECACE) convida você a participar do estudo Extração e Modelagem de Features do Programa DNA do Brasil - Talentos: desenvolvimento físico-motor, saúde e qualidade de vida de crianças e adolescentes. Informamos que seu pai/mãe ou responsável legal permitiu a sua participação. Analisamos a aplicação de protocolo avaliativo com estudantes para a prática de diferentes modalidades esportivas nos estados e municípios brasileiros, empregando dados do Programa DNA do Brasil – Talentos. Gostaríamos muito de contar com a sua participação, porém, você não é obrigado a participar e não tem problema em desistir. Outras crianças e/ou adolescentes participantes desta pesquisa tem de 6 a 17 anos de idade. A pesquisa será feita no ambiente onde os participantes (crianças/adolescente) realizarão os testes físico-motores e responderão os questionários psicossocial, vocacional, nutricional e odontológico. A sua participação é importante, pois através dos testes serão gerados automaticamente laudos e relatórios indicando fragilidades e potencialidades individuais. As suas informações ficarão sob sigilo, ninguém saberá que você está participando da pesquisa. Não compartilharemos com outras pessoas as suas informações. Os resultados da pesquisa serão utilizados para produção de material cientifico sem identificar (dados pessoais, vídeos, imagens e áudios de gravações) os participantes (crianças/adolescentes). Aceito participar da pesquisa Extração e Modelagem de Features do Programa DNA do Brasil - Talentos: desenvolvimento físico-motor, saúde e qualidade de vida de crianças e adolescentes. Entendi as coisas ruins e as coisas boas que podem acontecer. Entendi que posso dizer “sim” e participar, mas que, a qualquer momento, posso dizer “não” e desistir e que ninguém vai ficar com raiva/chateado comigo. Os pesquisadores esclareceram minhas dúvidas e conversaram com os meus familiares/responsável legal. Recebi uma cópia deste termo de assentimento, li e quero/concordo em participar da pesquisa/estudo.
-                            </p>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-            <div class="modal-footer">
-                <button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-remove"></i> &nbsp;&nbsp;Fechar</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 @section Scripts {
     <script src="~/js/register.js"></script>

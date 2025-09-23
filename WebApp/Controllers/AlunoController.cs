@@ -2214,6 +2214,35 @@ namespace WebApp.Controllers
             }
         }
 
+
+        /// <summary>
+        /// Açao de inclusão de grau de parentêsco
+        /// </summary>
+        /// <param name="collection">Coleção de dados para grau de parentêsco</param>
+        /// <returns>Retorna mensagem de inclusao através do parametro crud</returns>
+        [HttpGet]
+        [ClaimsAuthorize(ClaimType.Aluno, Claim.Incluir)]
+        public async Task<JsonResult> CreateGrauParentesco(string nome)
+        {
+            try
+            {
+                var command = new GrauParentescoModel.CreateUpdateGrauParentescoCommand()
+                {
+                    Nome = nome
+                };
+
+                await ApiClientFactory.Instance.CreateGrauParentesco(command);
+
+                var result = ApiClientFactory.Instance.GetGrauParentescosAll();
+
+                return await Task.FromResult(Json(new SelectList(result, "Id", "Nome")));
+            }
+            catch (Exception ex)
+            {
+                return await Task.FromResult(Json(ex.Message));
+            }
+        }
+
         #endregion
 
         #region Private Methods
