@@ -1,0 +1,205 @@
+.container-main-educacional {
+    position: relative;
+    width: 772px;
+    height: auto;
+    min-height: 950px;
+    background: url('../images/v149_65.png') center/cover no-repeat;
+    padding: 40px;
+    margin: 15px 0;
+    overflow: visible;
+}
+
+.container-2-educacional {
+    position: absolute;
+    left: 136px;
+    width: 500px;
+    height: 273px;
+    padding: 5px;
+    border-top-left-radius: 16px;
+    border-bottom-left-radius: 16px;
+}
+
+    .container-2-educacional.is-matematica {
+        top: 100px;
+    }
+
+    .container-2-educacional.is-portugues {
+        top: 400px;
+    }
+
+.container-icon-educacional {
+    width: 60px;
+    height: 60px;
+    opacity: 1;
+    position: absolute;
+    top: 5px;
+    left: 220px;
+    overflow: hidden;
+}
+
+.circle-educacional {
+    width: 60px;
+    height: 60px;
+    background: #ffbe67;
+    opacity: 1;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    border-radius: 50%;
+}
+
+.icon-educacional {
+    width: 40px;
+    height: 40px;
+    opacity: 1;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    overflow: hidden;
+}
+
+.icon-vocacao {
+    width: 50px;
+    height: 40px;
+    opacity: 1;
+    position: absolute;
+    top: 10px;
+    left: 5px;
+    overflow: hidden;
+}
+
+.icon-bucal {
+    width: 40px;
+    height: 40px;
+    opacity: 1;
+    position: absolute;
+    top: 8px;
+    left: 10px;
+    overflow: hidden;
+}
+
+.container-3-educacional {
+    width: 207px;
+    height: 60px;
+    padding: 10px 0px;
+    opacity: 1;
+    position: absolute;
+    top: 65px;
+    left: 146px;
+    overflow: hidden;
+}
+
+    .container-3-educacional span:nth-child(1) {
+        width: 207px;
+        color: rgba(0, 0, 0, 1);
+        position: absolute;
+        top: 8px;
+        left: 0px;
+        font-family: Nunito;
+        font-weight: Bold;
+        font-size: 18px;
+        opacity: 1;
+        text-align: center;
+    }
+
+    .container-3-educacional span:nth-child(2) {
+        width: 164px;
+        color: rgba(0, 0, 0, 1);
+        position: absolute;
+        top: 33px;
+        left: 21px;
+        font-family: Nunito;
+        font-weight: Regular;
+        font-size: 14px;
+        opacity: 1;
+        text-align: center;
+    }
+
+.container-4-educacional {
+    width: 490px;
+    height: 25px;
+    opacity: 1;
+    position: absolute;
+    top: 125px;
+    left: 5px;
+    overflow: hidden;
+}
+
+    .container-4-educacional span:nth-child(1) {
+        width: 28px;
+        color: rgba(0, 0, 0, 1);
+        position: absolute;
+        top: 0px;
+        left: 5px;
+        font-family: Nunito;
+        font-weight: Regular;
+        font-size: 18px;
+        opacity: 1;
+        text-align: left;
+    }
+
+    .container-4-educacional span:nth-child(2) {
+        width: 452px;
+        color: rgba(0, 234, 188, 1);
+        position: absolute;
+        top: 1px;
+        left: 33px;
+        font-family: Nunito;
+        font-weight: ExtraBold;
+        font-size: 16px;
+        opacity: 1;
+        text-align: right;
+    }
+
+.container-bar-educacional {
+    width: 490px;
+    height: 12px;
+    opacity: 1;
+    position: absolute;
+    top: 150px;
+    left: 5px;
+    overflow: hidden;
+}
+
+    .container-bar-educacional div {
+        height: 12px;
+        opacity: 1;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        overflow: hidden;
+        border-radius: 20px;
+    }
+
+.bar-main-educacional {
+    width: 490px;
+    background: rgba(192, 250, 238, 1);
+}
+
+.bar-second-educacional {
+    background: rgba(0, 234, 188, 1);
+}
+
+.container-text-educacional {
+    width: 490px;
+    height: 106px;
+    padding: 15px 0px;
+    margin: 10px;
+    opacity: 1;
+    position: absolute;
+    top: 162px;
+    left: 5px;
+}
+
+    .container-text-educacional span {
+        width: 490px;
+        color: rgba(0, 0, 0, 1);
+        position: absolute;
+        top: 15px;
+        left: 0px;
+        font-family: Nunito;
+        font-weight: Regular;
+        font-size: 14px;
+        opacity: 1;
+        text-align: left;
+    }

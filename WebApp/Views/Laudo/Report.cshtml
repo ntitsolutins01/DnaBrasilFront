@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="~/assets/styles_Laudo/page-esporte-info.css" media="all">
     <link rel="stylesheet" href="~/assets/styles_Laudo/pgfinal.css" media="all">
     <link rel="stylesheet" href="~/assets/styles_Laudo/page-saude-info.css" media="all">
+    <link rel="stylesheet" href="~/assets/styles_Laudo/page-educacional-info.css" media="all">
     <!-- Serve para gerar html da página de laudos e informações de laudos -->
     <link rel="stylesheet" href="~/assets/styles_Laudo/page-laudo.css" media="all">
     <link rel="stylesheet" href="~/assets/styles_Laudo/page-laudos-info.css" media="all">
@@ -75,11 +76,12 @@
                 <div class="container-background-img-info"></div>
                 <div class="sideContainer">
                     <div class="cor-esporte" style="top: 0%;"></div>
-                    <div class="cor-saude" style="top: 16.66%;"></div>
-                    <div class="cor-vida" style="top: 33.32%;"></div>
-                    <div class="cor-vocacao" style="top: 49.98%;"></div>
-                    <div class="cor-alimento" style="top: 66.64%;"></div>
-                    <div class="cor-bucal" style="top: 83.3%;"></div>
+                    <div class="cor-saude" style="top: 14.28%;"></div>
+                    <div class="cor-vida" style="top: 28.56%;"></div>
+                    <div class="cor-vocacao" style="top: 42.84%;"></div>
+                    <div class="cor-alimento" style="top: 57.12%;"></div>
+                    <div class="cor-bucal" style="top: 71.4%;"></div>
+                    <div class="cor-educacional" style="top: 85.68%;"></div>
                 </div>
                 <div class="container-wrapper-info">
                     <div class="container-title-info">
@@ -300,6 +302,13 @@
                                 <span class="value-info">@Model.Desempenho.AvisoSaudeBucal</span>
                             </div>
                         }
+                        @*if (Model.EncaminhamentoSaudeBucal != null)
+                        {*@
+                            <div class="row-info">
+                                <span class="label-info">Educacional </span>
+                                <span class="value-info">AvisoEducacional</span>
+                            </div>
+                        @*}*@
                         @* <div class="row-info">
                         <span class="label-info">NomeModalidade</span>
                         <span class="value-info">
@@ -329,7 +338,7 @@
                     <div class="laudo-img"
                          style="background: url('/assets/assets_Laudo/background-esporte.png'); background-size: cover;"></div>
                     <div class="sideContainer">
-                        <div class="cor-esporte" style="top: 0%;"></div>
+                        <div class="cor-esporte" style="top: 0%; height: 100%!important"></div>
                     </div>
                     <div class="container-indicadores">
 	                    <div>
@@ -410,7 +419,7 @@
             <div class="newContainer">
                 <div class="newContainer2">
                     <div class="sideContainer">
-                        <div class="cor-esporte" style="top: 0%;"></div>
+                        <div class="cor-esporte" style="top: 0%; height: 100%!important"></div>
                     </div>
                     <div class="v102_488">
                         <!-- Card IMC -->
@@ -608,7 +617,7 @@
                     <div class="laudo-img"
                          style="background: url('/assets/assets_Laudo/background-saude.png'); background-size: cover;"></div>
                     <div class="sideContainer">
-                        <div class="cor-saude" style="top: 16.66%;"></div>
+                        <div class="cor-saude" style="top: 0%; height: 100%!important"></div>
                     </div>
                     <div class="container-indicadores">
                         <div>
@@ -660,7 +669,7 @@
             <div class="newContainer">
                 <div class="newContainer2">
                     <div class="sideContainer">
-                        <div class="cor-saude" style="top: 16.66%;"></div>
+                        <div class="cor-saude" style="top: 0%; height: 100%!important"></div>
                     </div>
                     <div class="container-main-saude">
                         <div class="container-2-saude">
@@ -709,7 +718,7 @@
                          style="background: url('/assets/assets_Laudo/background-vida.png'); background-size: cover;">
                     </div>
                     <div class="sideContainer">
-                        <div class="cor-vida" style="top: 33.32%;"></div>
+                        <div class="cor-vida" style="top: 0%; height: 100%!important"></div>
                     </div>
                     @* <div class="container-indicadores">
                         <div>
@@ -791,7 +800,7 @@
             <div class="newContainer">
                 <div class="newContainer2">
                     <div class="sideContainer">
-                        <div class="cor-vida" style="top: 33.32%;"></div>
+                        <div class="cor-vida" style="top: 0%; height: 100%!important"></div>
                     </div>
                     <div class="container-main-vida">
                         <!-- O laço For vai clonar essa div -->
@@ -854,7 +863,7 @@
                     <div class="laudo-img"
                          style="background: url('/assets/assets_Laudo/background-vocacao.png'); background-size: cover;"></div>
                     <div class="sideContainer">
-                        <div class="cor-vocacao" style="top: 49.98%;"></div>
+                        <div class="cor-vocacao" style="top: 0%; height: 100%!important"></div>
                     </div>
                     @* <div class="container-indicadores">
                         <div>
@@ -927,7 +936,7 @@
                 <div class="newContainer2">
                     <div class="newContainer2">
                         <div class="sideContainer">
-                            <div class="cor-vocacao" style="top: 49.98%;"></div>
+                            <div class="cor-vocacao" style="top: 0% height: 100%!important"></div>
                         </div>
                         <div class="container-main-vida">
                             <!-- O laço For vai clonar essa div -->
@@ -1018,7 +1027,7 @@
                     <div class="laudo-img"
                          style="background: url('/assets/assets_Laudo/background-consumoalimentar.jpg'); background-size: cover;"></div>
                     <div class="sideContainer">
-                        <div class="cor-alimento" style="top: 66.64%;"></div>
+                        <div class="cor-alimento" style="top: 0%; height: 100%!important"></div>
                     </div>
                     @* <div class="container-indicadores">
                         <div>
@@ -1118,7 +1127,7 @@
                     <div class="laudo-img"
                          style="background: url('/assets/assets_Laudo/background-saudebucaljpg.jpg'); background-size: cover;"></div>
                     <div class="sideContainer">
-                        <div class="cor-bucal" style="top: 83.3%;"></div>
+                        <div class="cor-bucal" style="top: 0%; height: 100%!important"></div>
                     </div>
                     @* <div class="container-indicadores">
                         <div>
@@ -1175,7 +1184,7 @@
             <div class="newContainer">
                 <div class="newContainer2">
                     <div class="sideContainer">
-                        <div class="cor-bucal" style="top: 83.3%;"></div>
+                        <div class="cor-bucal" style="top: 0%; height: 100%!important"></div>
                     </div>
                     <div class="container-main-saude">
                         <div class="container-2-saude">
@@ -1209,6 +1218,119 @@
             </div>
         </div>
     }
+    
+    <!-- Laudo Educacional -->
+    @* @if (@Model.Laudo.SaudeBucalId != null)
+    {  *@
+        <div class="page-container">
+            <div class="newContainer">
+                <div class="newContainer2">
+                    <div class="laudo-img"
+                         style="background: url('/assets/assets_Laudo/background-educacional.png'); background-size: cover;"></div>
+                    <div class="sideContainer">
+                        <div class="cor-educacional" style="top: 0%; height: 100%!important"></div>
+                    </div>
+                    @* <div class="container-indicadores">
+                        <div>
+                            <span>0%</span>
+                            <span>–</span>
+                            <span>Atenção</span>
+                        </div>
+                        <div>
+                            <span>0%</span>
+                            <span>–</span>
+                            <span>Cuidado</span>
+                        </div>
+                        <div>
+                            <span>0%</span>
+                            <span>–</span>
+                            <span>Muito Bom</span>
+                        </div>
+                    </div> *@
+                    <div class="container-laudo-text">
+                        <span>Profissional</span>
+                        <span>
+                            @if (Model.Profissional == null)
+                            {
+                                <text>Não Definido</text>
+                            }
+                            else
+                            {
+                                <text>@Model.Profissional.Nome</text>
+                            }
+                        </span>
+                        <span>
+                            @Model.TipoLaudoEducacionalDescricao
+                        </span>
+                    </div>
+                    <div class="laudo-title">
+                        <span>Educacional</span>
+                        <span>Laudo</span>
+                    </div>
+                    <div class="container-graph">
+                        <div class="circle-graph-external"></div>
+                        <div class="circle-graph-principal"
+                             style="background: conic-gradient(#00a9a9 0 80deg, #cbf2f2 80deg 360deg);"></div>
+                        <span class="graph-text">Score</span>
+                        <span class="graph-value"
+                              style="color:#00a9a9">@Model.Desempenho.ScoreSaudeBucal</span>
+                    </div>
+                    <div class="logo"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Info Laudo Educacional -->
+        <div class="page-container">
+            <div class="newContainer">
+                <div class="newContainer2">
+                    <div class="sideContainer">
+                        <div class="cor-educacional" style="top: 0%; height: 100%!important"></div>
+                    </div>
+                        <div class="container-main-vida">
+                            @* @{
+                                var indexEducacional = 1;
+                            }
+
+                            @foreach (var item in Model.ListVocacional)
+                            { *@
+                                    <div class="row-vida">
+                                        <div class="label-vida">
+                                            <div class="label-vida-container-1"
+                                                 style="background-color: #00a9a9;">
+                                                <div class="label-vida-icon" style="background-size: cover;">
+                                                    @* @if (item.ByteImage != null)
+                                                    {
+                                                        var base64 = Convert.ToBase64String(item.ByteImage);
+                                                        var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+
+                                                        <img src="@imgSrc" style="width:100%;" />
+                                                    }
+                                                    else
+                                                    { *@
+                                                        <img src="~/assets/assets_Laudo/img-vocacao/laudo-vocacao-1.png" style="width:100%;" />
+                                                    @*}*@
+                                                </div>
+                                            </div>
+                                            <div class="label-vida-container-2">
+                                                <span>Disciplina.Nome</span>
+                                            </div>
+                                        </div>
+                                        <div class="value-vida">
+                                            <span>
+                                                Disciplina.Descricao
+                                            </span>
+                                        </div>
+                                    </div>
+                            @*
+                                indexEducacional++;
+                            }*@
+
+                        </div>
+                </div>
+            </div>
+        </div>
+    @*}*@
 
     <!-- Página Final -->
     <div class="page-container">
