@@ -621,12 +621,34 @@
 
                                         if (laudo.StatusLaudo == "A")
                                         {
-                                            <li class="nav-parent nav-expanded">
-                                                <a href="@Url.Action("Edit", "Laudo", new {id = laudoId, acessoAluno = true})">
-                                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                                                    <span>Protocolo Avaliativo</span>
-                                                </a>
-                                            </li>
+                                            if (laudo.Idade >= 14 && laudo.ConsumoAlimentarId == null || laudo.QualidadeDeVidaId == null || laudo.SaudeBucalId == null ||
+                                                laudo.VocacionalId == null)
+                                            {
+                                                <li class="nav-parent nav-expanded">
+                                                    <a href="@Url.Action("Edit", "Laudo", new {id = laudoId, acessoAluno = true})">
+                                                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                                        <span>Protocolo Avaliativo</span>
+                                                    </a>
+                                                </li>
+                                            }
+                                            else if (laudo.Idade >= 12 && laudo.ConsumoAlimentarId == null || laudo.QualidadeDeVidaId == null || laudo.SaudeBucalId == null)
+                                            {
+                                                <li class="nav-parent nav-expanded">
+                                                    <a href="@Url.Action("Edit", "Laudo", new {id = laudoId, acessoAluno = true})">
+                                                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                                        <span>Protocolo Avaliativo</span>
+                                                    </a>
+                                                </li>
+                                            }
+                                            else if (laudo.ConsumoAlimentarId == null)
+                                            {
+                                                <li class="nav-parent nav-expanded">
+                                                    <a href="@Url.Action("Edit", "Laudo", new {id = laudoId, acessoAluno = true})">
+                                                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                                        <span>Protocolo Avaliativo</span>
+                                                    </a>
+                                                </li>
+                                            }
                                         }
                                         else
                                         {
@@ -647,7 +669,7 @@
                                             </a>
                                         </li>
                                     }
-                                    
+
 
                                     <li class="nav-parent nav-expanded">
                                         <a href="@Url.Action($"Carteirinha", "Aluno", new {id = Convert.ToInt32(User.Identity.Name)})">
