@@ -1,4 +1,5 @@
-﻿@model LaudoModel
+﻿@using WebApp.Enumerators
+@model LaudoModel
 @{
     ViewData["Title"] = "Alteração de Laudo";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -21,16 +22,16 @@
                             <label class="col-sm-2 control-label text-sm-right pt-2">Estado <span class="required">*</span></label>
                             <div class="col-md-4">
                                 <select class="form-control populate select2" name="ddlEstado" id="ddlEstado"
-                                title="Por favor informe um Estado." required disabled
-                                asp-for="EstadoId" asp-items="Model.ListEstados">
+                                        title="Por favor informe um Estado." required disabled
+                                        asp-for="EstadoId" asp-items="Model.ListEstados">
                                     <option value="">Selecionar Estado</option>
                                 </select>
                             </div>
                             <label class="col-sm-2 control-label text-sm-right pt-2">Município <span class="required">*</span></label>
                             <div class="col-md-4">
                                 <select class="form-control populate select2" name="ddlMunicipio" id="ddlMunicipio"
-                                title="Por favor informe um Municipio." required disabled
-                                asp-for="MunicipioId" asp-items="Model.ListMunicipios">
+                                        title="Por favor informe um Municipio." required disabled
+                                        asp-for="MunicipioId" asp-items="Model.ListMunicipios">
                                     <option value="">Selecionar Município</option>
                                 </select>
                             </div>
@@ -39,16 +40,16 @@
                             <label class="col-sm-2 control-label text-sm-right pt-2">Localidade <span class="required">*</span></label>
                             <div class="col-md-4">
                                 <select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade"
-                                title="Por favor informe a localidade." required disabled
-                                asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
+                                        title="Por favor informe a localidade." required disabled
+                                        asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
                                     <option value="">Selecionar Localidade</option>
                                 </select>
                             </div>
                             <label class="col-sm-2 control-label text-sm-right pt-2">Profissional <span class="required">*</span></label>
                             <div class="col-md-4">
                                 <select class="form-control populate select2" name="ddlProfissional" id="ddlProfissional"
-                                title="Por favor informe o profissional." required
-                                asp-for="ProfissionalId" asp-items="Model.ListProfissionais">
+                                        title="Por favor informe o profissional." required
+                                        asp-for="ProfissionalId" asp-items="Model.ListProfissionais">
                                     <option value="">Selecionar Profissional</option>
                                 </select>
                             </div>
@@ -57,8 +58,8 @@
                             <label class="col-sm-2 control-label text-sm-right pt-2">Aluno <span class="required">*</span></label>
                             <div class="col-md-4">
                                 <select class="form-control populate select2" name="ddlAluno" id="ddlAluno"
-                                title="Por favor informe um Aluno." required disabled
-                                asp-for="AlunoId" asp-items="Model.ListAlunos">
+                                        title="Por favor informe um Aluno." required disabled
+                                        asp-for="AlunoId" asp-items="Model.ListAlunos">
                                     <option value="">Selecionar Aluno</option>
                                 </select>
                             </div>
@@ -74,49 +75,63 @@
                     <div class="col-md-12">
                         <div class="tabs tabs-vertical tabs-left">
                             <ul class="nav nav-tabs col-sm-2 col-xs-4">
-                                <li class="active">
-                                    <a href="#saude" data-toggle="tab" aria-expanded="false">
-                                        <i class="fa fa-heartbeat" style="color: #d2322d;"></i>
-                                        <span style="color: #d2322d;">Saúde</span>
-                                    </a>
-                                </li>
-                                <li class="">
-                                    <a href="#talento-esportivo" data-toggle="tab" aria-expanded="true">
-                                        <i class="fa fa-trophy" style="color: #ed9c28;"></i>
-                                        <span style="color: #ed9c28;">Talento Esportivo</span>
-                                    </a>
-                                </li>
-                                <li class="">
-                                    <a href="#consumo-alimentar" data-toggle="tab" aria-expanded="false">
-                                        <i class="fa fa-cutlery" style="color: #47a447;"></i>
-                                        <span style="color: #47a447;">Consumo Alimentar</span>
-                                    </a>
-                                </li>
-                                <li class="">
-                                    <a href="#saude-bucal"
-                                    data-toggle="tab" aria-expanded="false">
-                                        <i class="fa fa-medkit" style="color: #5bc0de;"></i>
-                                        <span style="color: #5bc0de;">Saúde Bucal</span>
-                                    </a>
-                                </li>
-                                @if (Model.Aluno.Idade >= 12)
-                                {
+                                @{
+                                    if (Model.IdPerfil != (int)EnumPerfil.Aluno)
+                                    {
+                                        <li class="active">
+                                            <a href="#saude" data-toggle="tab" aria-expanded="false">
+                                                <i class="fa fa-heartbeat" style="color: #d2322d;"></i>
+                                                <span style="color: #d2322d;">Saúde</span>
+                                            </a>
+                                        </li>
+                                        <li class="">
+                                            <a href="#talento-esportivo" data-toggle="tab" aria-expanded="true">
+                                                <i class="fa fa-trophy" style="color: #ed9c28;"></i>
+                                                <span style="color: #ed9c28;">Talento Esportivo</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    else
+                                    {
+                                        <input type="hidden" id="hdnAluno" name="hdnAluno" value="@Model.AcessoAluno.Value.ToString()" />
+                                    }
+
+                                    if (Model.ConsumoAlimentar.Id != 0 && Model.IdPerfil != (int)EnumPerfil.Aluno)
+                                    {
+                                        <li class="">
+                                            <a href="#consumo-alimentar" data-toggle="tab" aria-expanded="false">
+                                                <i class="fa fa-cutlery" style="color: #47a447;"></i>
+                                                <span style="color: #47a447;">Consumo Alimentar</span>
+                                            </a>
+                                        </li>
+                                    }
                                     <li class="">
-                                        <a href="#qualidade-vida" data-toggle="tab" aria-expanded="false">
-                                            <i class="fa fa-thumbs-up" style="color: #00a4a9;"></i>
-                                            <span style="color: #00a4a9;">Qualidade de Vida</span>
+                                        <a href="#saude-bucal"
+                                           data-toggle="tab" aria-expanded="false">
+                                            <i class="fa fa-medkit" style="color: #5bc0de;"></i>
+                                            <span style="color: #5bc0de;">Saúde Bucal</span>
                                         </a>
                                     </li>
-                                }
-                                @if (Model.Aluno.Idade >= 14)
-                                {
-                                    <li class="">
-                                        <a href="#vocacional"
-                                        data-toggle="tab" aria-expanded="false">
-                                            <i class="fa fa-star" style="color: #a787c0;"></i>
-                                            <span style="color: #a787c0;">Vocacional</span>
-                                        </a>
-                                    </li>
+                                    if (Model.Aluno.Idade >= 12)
+                                    {
+                                        <li class="">
+                                            <a href="#qualidade-vida" data-toggle="tab" aria-expanded="false">
+                                                <i class="fa fa-thumbs-up" style="color: #00a4a9;"></i>
+                                                <span style="color: #00a4a9;">Qualidade de Vida</span>
+                                            </a>
+                                        </li>
+                                    }
+
+                                    if (Model.Aluno.Idade >= 14)
+                                    {
+                                        <li class="">
+                                            <a href="#vocacional"
+                                               data-toggle="tab" aria-expanded="false">
+                                                <i class="fa fa-star" style="color: #a787c0;"></i>
+                                                <span style="color: #a787c0;">Vocacional</span>
+                                            </a>
+                                        </li>
+                                    }
                                 }
                             </ul>
                             <div class="tab-content">
@@ -130,16 +145,16 @@
                                                 {
                                                     var altura = Model.TalentoEsportivo.Altura;
                                                     var alturaFormatada = altura != null ? Math.Round((decimal)altura, 0) : 0;
-                                                    <input type="text" class="form-control altura-mask" id="alturaSaude" name="alturaSaude" 
+                                                    <input type="text" class="form-control altura-mask" id="alturaSaude" name="alturaSaude"
                                                            maxlength="3" placeholder="000"
-                                                    required value="@alturaFormatada" title="Por favor informe a Altura (cm)" />
+                                                           required value="@alturaFormatada" title="Por favor informe a Altura (cm)" />
                                                 }
                                                 else
                                                 {
                                                     var altura = Model.Saude.Altura;
-                                                    var alturaFormatada = altura != null ? Math.Round((decimal)altura, 0): 0;
+                                                    var alturaFormatada = altura != null ? Math.Round((decimal)altura, 0) : 0;
                                                     <input type="text" class="form-control altura-mask" id="alturaSaude" name="alturaSaude" maxlength="3" placeholder="000"
-                                                    required value="@alturaFormatada" title="Por favor informe a Altura (cm)" />
+                                                           required value="@alturaFormatada" title="Por favor informe a Altura (cm)" />
                                                 }
 
                                             </div>
@@ -150,15 +165,15 @@
                                                 @if (Model.Saude.Massa != null)
                                                 {
                                                     var peso = Model.Saude.Massa;
-                                                    <input type="text" class="form-control numeric" id="massaCorporalSaude" name="massaCorporalSaude" 
-                                                           maxlength="6" placeholder="000.00" required value="@peso.ToString().Replace(",", ".")" 
+                                                    <input type="text" class="form-control numeric" id="massaCorporalSaude" name="massaCorporalSaude"
+                                                           maxlength="6" placeholder="000.00" required value="@peso.ToString().Replace(",", ".")"
                                                            title="Por favor informe a Massa Corporal (kg)" />
                                                 }
                                                 else
                                                 {
                                                     var peso = Model.TalentoEsportivo.Peso;
-                                                    <input type="text" class="form-control numeric" id="massaCorporalSaude" name="massaCorporalSaude" 
-                                                           maxlength="6" placeholder="000.00" required value="@(peso != null ? peso.ToString().Replace(",", ".") : "")" 
+                                                    <input type="text" class="form-control numeric" id="massaCorporalSaude" name="massaCorporalSaude"
+                                                           maxlength="6" placeholder="000.00" required value="@(peso != null ? peso.ToString().Replace(",", ".") : "")"
                                                            title="Por favor informe a Massa Corporal (kg)" />
                                                 }
                                             </div>
@@ -191,7 +206,7 @@
                                         <div>
                                             @{
                                                 var alturaTalentoEsportivo = Model.TalentoEsportivo.Altura;
-                                                var alturaFormatadaTalentoEsportivo = alturaTalentoEsportivo != null ? Math.Round((decimal)alturaTalentoEsportivo, 0) : 0; 
+                                                var alturaFormatadaTalentoEsportivo = alturaTalentoEsportivo != null ? Math.Round((decimal)alturaTalentoEsportivo, 0) : 0;
                                             }
                                             <label class="col-sm-2 control-label"><strong>Altura (cm) </strong> <span class="required">*</span></label>
                                             <div class="col-sm-3">
@@ -206,9 +221,9 @@
                                             }
                                             <label class="col-sm-3 control-label"><strong>Massa Corporal (kg)</strong> <span class="required">*</span></label>
                                             <div class="col-sm-3">
-                                                <input type="text" class="form-control numeric-peso" id="massaCorporal" name="massaCorporal" 
-                                                       maxlength="6" placeholder="000.00" required 
-                                                       value="@pesoFormatadoTalentoEsportivo.ToString().Replace(",", ".")" 
+                                                <input type="text" class="form-control numeric-peso" id="massaCorporal" name="massaCorporal"
+                                                       maxlength="6" placeholder="000.00" required
+                                                       value="@pesoFormatadoTalentoEsportivo.ToString().Replace(",", ".")"
                                                        title="Favor informe Massa Corporal (kg)" />
                                             </div>
                                         </div>
@@ -254,9 +269,9 @@
                                                     <span class="input-group-addon">
                                                         <i class="fa fa-clock-o"></i>
                                                     </span>
-                                                    <input type="text" class="form-control numeric-tempo" id="testeVelocidade" name="testeVelocidade" 
-                                                           maxlength="5" placeholder="00.00" 
-                                                           value="@(Model.TalentoEsportivo.Velocidade != null ? Model.TalentoEsportivo.Velocidade.ToString().Replace(",", ".") : "")" 
+                                                    <input type="text" class="form-control numeric-tempo" id="testeVelocidade" name="testeVelocidade"
+                                                           maxlength="5" placeholder="00.00"
+                                                           value="@(Model.TalentoEsportivo.Velocidade != null ? Model.TalentoEsportivo.Velocidade.ToString().Replace(",", ".") : "")"
                                                            required title="Favor informe Teste de Velocidade 20m (seg)" />
                                                 </div>
                                             </div>
@@ -266,9 +281,9 @@
                                         <div>
                                             <label class="col-sm-2 control-label"><strong>Aptidão Física (mLO2/min)</strong> <span class="required">*</span></label>
                                             <div class="col-sm-3">
-                                                <input type="text" class="form-control numeric-tempo" id="aptidaoFisica" name="aptidaoFisica" 
-                                                       maxlength="5" placeholder="00.00" 
-                                                       value="@(Model.TalentoEsportivo.Vo2Max != null ? Model.TalentoEsportivo.Vo2Max.ToString().Replace(",", ".") : "")" 
+                                                <input type="text" class="form-control numeric-tempo" id="aptidaoFisica" name="aptidaoFisica"
+                                                       maxlength="5" placeholder="00.00"
+                                                       value="@(Model.TalentoEsportivo.Vo2Max != null ? Model.TalentoEsportivo.Vo2Max.ToString().Replace(",", ".") : "")"
                                                        required title="Favor informe Aptidão Física (mLO2/min)" />
                                             </div>
                                         </div>
@@ -279,9 +294,9 @@
                                                     <span class="input-group-addon">
                                                         <i class="fa fa-clock-o"></i>
                                                     </span>
-                                                    <input type="text" class="form-control numeric-tempo" id="agilidade" name="agilidade" 
-                                                           maxlength="5" placeholder="00.00" 
-                                                           value="@(Model.TalentoEsportivo.ShuttleRun != null ? Model.TalentoEsportivo.ShuttleRun.ToString().Replace(",", ".") : "")" 
+                                                    <input type="text" class="form-control numeric-tempo" id="agilidade" name="agilidade"
+                                                           maxlength="5" placeholder="00.00"
+                                                           value="@(Model.TalentoEsportivo.ShuttleRun != null ? Model.TalentoEsportivo.ShuttleRun.ToString().Replace(",", ".") : "")"
                                                            required title="Favor informe Agilidade (seg)" />
                                                 </div>
                                             </div>

@@ -251,9 +251,6 @@ namespace WebApp.Controllers
             return View(model);
         }
 
-
-
-        //[ClaimsAuthorize(ClaimType.Laudo, Claim.Ver)]
         public async Task<ActionResult> Report(int id)
         {
             var laudo = ApiClientFactory.Instance.GetLaudoById(id);
@@ -328,7 +325,7 @@ namespace WebApp.Controllers
         }
 
         [ClaimsAuthorize(ClaimType.Laudo, Claim.Incluir)]
-        public async Task<ActionResult> Create(int? crud, int? notify, bool? aluno = null, string message = null)
+        public async Task<ActionResult> Create(int? crud, int? notify, bool? acessoAluno = null, string message = null)
         {
             try
             {
@@ -339,7 +336,7 @@ namespace WebApp.Controllers
 
                 UsuarioDto usu;
                 AlunoDto aln = null;
-                if (aluno != null && (bool)aluno)
+                if (acessoAluno != null && (bool)acessoAluno)
                 {
                     aln = await ApiClientFactory.Instance.GetAlunoById(Convert.ToInt32(usuario));
                     usu = await ApiClientFactory.Instance.GetUsuarioByEmail(aln.Email);
@@ -387,7 +384,7 @@ namespace WebApp.Controllers
                 {
                     IEnumerable<AlunoIndexDto> resultAlunos;
 
-                    if (aluno != null && (bool)aluno)
+                    if (acessoAluno != null && (bool)acessoAluno)
                     {
                         resultAlunos = ApiClientFactory.Instance
                             .GetAlunosByLocalidadeId(Convert.ToInt32(usu.LocalidadeId))
@@ -410,7 +407,7 @@ namespace WebApp.Controllers
                     profissionais = new SelectList(resultProfissionais, "Id", "Nome");
                 }
 
-                return View(new LaudoModel()
+                var model = new LaudoModel()
                 {
                     ListQuestionarioVocacional = questionarioVocacional,
                     ListQuestionarioQualidadeVida = questionarioQualidadeVida,
@@ -422,8 +419,11 @@ namespace WebApp.Controllers
                     ListLocalidades = localidades!,
                     ListAlunos = alunos!,
                     ListProfissionais = profissionais!,
-                    IdPerfil = usu.Perfil.Id
-                });
+                    IdPerfil = usu.Perfil.Id,
+                    AcessoAluno = acessoAluno
+                };
+
+                return View(model);
 
             }
             catch (Exception e)
@@ -444,6 +444,8 @@ namespace WebApp.Controllers
                 {
                     return RedirectToAction(nameof(Create), new { notify = (int)EnumNotify.Error, message = "Favor Informar o Aluno." });
                 }
+
+                bool? acessoAluno = Convert.ToBoolean(collection["hdnAluno"].ToString());
 
                 int ordem;
 
@@ -842,7 +844,11 @@ namespace WebApp.Controllers
                         StatusSaude = "F"
                     };
 
-                    command.SaudeId = (int)await ApiClientFactory.Instance.CreateSaude(commandSaude);
+                    if (commandSaude.EnvergaduraSaude == 0 && commandSaude.MassaCorporalSaude == 0 && commandSaude.AlturaSaude == 0)
+                    {
+                        command.SaudeId = (int)await ApiClientFactory.Instance.CreateSaude(commandSaude);
+                    }
+
                 }
 
                 if (laudo.TalentoEsportivoId != null)
@@ -942,12 +948,26 @@ namespace WebApp.Controllers
         }
 
         [ClaimsAuthorize(ClaimType.Laudo, Claim.Alterar)]
-        public async Task<ActionResult> Edit(int id, int? crud, int? notify, string message = null)
+        public async Task<ActionResult> Edit(int id, int? crud, int? notify, bool? acessoAluno = null, string message = null)
         {
             try
             {
                 SetNotifyMessage(notify, message);
                 SetCrudMessage(crud);
+
+                var usuario = User.Identity.Name;
+
+                UsuarioDto usu;
+                AlunoDto aln = null;
+                if (acessoAluno != null && (bool)acessoAluno)
+                {
+                    aln = await ApiClientFactory.Instance.GetAlunoById(Convert.ToInt32(usuario));
+                    usu = await ApiClientFactory.Instance.GetUsuarioByEmail(aln.Email);
+                }
+                else
+                {
+                    usu = await ApiClientFactory.Instance.GetUsuarioByEmail(usuario);
+                }
 
                 var questionarioVocacional =
                     ApiClientFactory.Instance.GetQuestionarioByTipoLaudo((int)EnumTipoLaudo.Vocacional).OrderBy(o => o.Questao).ToList();
@@ -1034,7 +1054,9 @@ namespace WebApp.Controllers
                     Vocacional = vocacional,
                     ConsumoAlimentar = consumoAlimentar,
                     QualidadeVida = qualidadeVida,
-                    SaudeBucal = saudeBucal
+                    SaudeBucal = saudeBucal,
+                    IdPerfil = usu.Perfil.Id,
+                    AcessoAluno = acessoAluno
                 });
             }
             catch (Exception e)
@@ -1044,7 +1066,6 @@ namespace WebApp.Controllers
 
             }
         }
-
 
         [ClaimsAuthorize(ClaimType.Laudo, Claim.Consultar)]
         public async Task<IActionResult> Print([FromQuery] string ddlFomento, [FromQuery] string ddlEstado,
