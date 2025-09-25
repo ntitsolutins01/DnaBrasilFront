@@ -1877,6 +1877,18 @@ namespace WebApp.Controllers
         }
 
         /// <summary>
+        /// Busca aluno por Id
+        /// </summary>
+        /// <param name="id">Id do Aluno</param>
+        /// <returns>retorna o aluno</returns>
+        [ClaimsAuthorize(ClaimType.Aluno, Claim.Consultar)]
+        public async Task<JsonResult> GetAlunoTurmaById(int id)
+        {
+            var aluno = await ApiClientFactory.Instance.GetAlunoTurmaById(id);
+            return Json(aluno);
+        }
+
+        /// <summary>
         /// Busca carteirinha por fomentoId
         /// </summary>
         /// <param name="fomentoId">Id do Fomento</param>
