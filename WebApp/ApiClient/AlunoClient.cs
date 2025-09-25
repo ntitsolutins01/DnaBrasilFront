@@ -144,6 +144,18 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
+        /// Busca um único Aluno
+        /// </summary>
+        /// <param name="id">Id de Aluno a ser buscado</param>
+        /// <returns>Retorna o objeto de Aluno</returns>
+        public async Task<AlunoTurmaDto> GetAlunoTurmaById(int id)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceAlunos}/AlunoTurma/{id}"));
+            return Get<AlunoTurmaDto>(requestUrl);
+        }
+
+        /// <summary>
         /// Busca Aluno por Email
         /// </summary>
         /// <param name="email">email</param>
