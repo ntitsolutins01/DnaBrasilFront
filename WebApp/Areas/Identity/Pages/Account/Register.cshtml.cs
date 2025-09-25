@@ -108,6 +108,9 @@ namespace WebApp.Areas.Identity.Pages.Account
 
             var deficiencias = new SelectList(ApiClientFactory.Instance.GetDeficienciaAll().Where(x => x.Status), "Id", "Nome");
             ListDeficiencia = deficiencias;
+
+            var grausParentescos = new SelectList(ApiClientFactory.Instance.GetGrauParentescosAll(), "Id", "Nome");
+            ListGrauParentescos = grausParentescos;
         }
         private SelectList GetEtniasRacaCor()
         {
