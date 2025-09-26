@@ -1274,7 +1274,7 @@ var vm = new Vue({
                         .trigger("change.select2");
 
                     const profsPromise = getJSONAsPromise("../../Profissional/GetProfissionaisByLocalidade", { id: data.localidadeId });
-                    const alunoPromise = axios.get(`../../Aluno/GetAlunoById?id=${encodeURIComponent(self.laudoDto.AlunoId)}`);
+                    const alunoPromise = axios.get(`../../Aluno/GetAlunoTurmaById?id=${encodeURIComponent(self.laudoDto.AlunoId)}`);
 
                     return Promise.all([profsPromise, alunoPromise]);
                 })

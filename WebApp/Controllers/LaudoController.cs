@@ -1647,7 +1647,7 @@ namespace WebApp.Controllers
                     Aluno = aluno,
                     TextGabarito = textoGabarito,
                     AnoGabarito = anoGabarito,
-                    SiglaGabarito = collection["ddlGabarito"],
+                    SiglaGabarito = collection["ddlResponderGabarito"],
                     ProfissionalId = collection["ddlProfissionalRespostaModal"]
                 };
 

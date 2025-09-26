@@ -1880,6 +1880,18 @@ namespace WebApp.Controllers
         }
 
         /// <summary>
+        /// Busca aluno por Id
+        /// </summary>
+        /// <param name="id">Id do Aluno</param>
+        /// <returns>retorna o aluno</returns>
+        [ClaimsAuthorize(ClaimType.Aluno, Claim.Consultar)]
+        public async Task<JsonResult> GetAlunoTurmaById(int id)
+        {
+            var aluno = await ApiClientFactory.Instance.GetAlunoTurmaById(id);
+            return Json(aluno);
+        }
+
+        /// <summary>
         /// Busca carteirinha por fomentoId
         /// </summary>
         /// <param name="fomentoId">Id do Fomento</param>
@@ -2082,7 +2094,7 @@ namespace WebApp.Controllers
                             Status = true
                         };
 
-                        var newUser = new IdentityUser { UserName = result.Id.ToString(), Email = command.Email };
+                        var newUser = new IdentityUser { UserName = result.Id.ToString(), Email = command.Email, EmailConfirmed = true};
                         var userCreated = await _userManager.CreateAsync(newUser, $"senha{result.Id.ToString()}");
 
                         command.PerfilId = (int)EnumPerfil.Aluno;
