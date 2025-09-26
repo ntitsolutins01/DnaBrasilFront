@@ -2091,7 +2091,7 @@ namespace WebApp.Controllers
                             Status = true
                         };
 
-                        var newUser = new IdentityUser { UserName = result.Id.ToString(), Email = command.Email };
+                        var newUser = new IdentityUser { UserName = result.Id.ToString(), Email = command.Email, EmailConfirmed = true};
                         var userCreated = await _userManager.CreateAsync(newUser, $"senha{result.Id.ToString()}");
 
                         command.PerfilId = (int)EnumPerfil.Aluno;
