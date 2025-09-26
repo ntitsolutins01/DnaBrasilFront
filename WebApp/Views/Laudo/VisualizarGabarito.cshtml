@@ -138,13 +138,47 @@
                                         .ToList();
 
                                     <div class="panel panel-accordion panel-accordion-primary edu-item">
+
+                                        @{
+                                            var textoGabarito = "";
+                                            var anoGabarito = "";
+
+                                            switch (edu.Gabarito)
+                                            {
+                                                case "3LP":
+                                                    textoGabarito = "LÍNGUA PORTUGUESA";
+                                                    anoGabarito = " 3ª Série do Ensino Médio";
+                                                    break;
+                                                case "3MT":
+                                                    textoGabarito = "MATEMÁTICA";
+                                                    anoGabarito = " 3ª Série do Ensino Médio";
+                                                    break;
+                                                case "5LP":
+                                                    textoGabarito = "LÍNGUA PORTUGUESA";
+                                                    anoGabarito = " 5º Ano do Ensino Médio";
+                                                    break;
+                                                case "5MT":
+                                                    textoGabarito = "MATEMÁTICA";
+                                                    anoGabarito = " 5º Ano do Ensino Médio";
+                                                    break;
+                                                case "9LP":
+                                                    textoGabarito = "LÍNGUA PORTUGUESA";
+                                                    anoGabarito = " 9º Ano do Ensino Médio";
+                                                    break;
+                                                case "9MT":
+                                                    textoGabarito = "MATEMÁTICA";
+                                                    anoGabarito = " 9º Ano do Ensino Médio";
+                                                    break;
+                                            }
+                                        }
+
                                         <div class="panel-heading bg-primary text-white">
                                             <h4 class="panel-title">
                                                 <a class="accordion-toggle collapsed text-white acc-header"
                                                    data-toggle="collapse"
                                                    href="#@cid" aria-expanded="false" role="button" aria-controls="@cid">
                                                     <span class="acc-date">@displayDate</span>
-                                                    <span class="acc-title">@(string.IsNullOrWhiteSpace(edu.NomeImagem) ? "Gabarito (sem imagem)" : edu.NomeImagem)</span>
+                                                    <span class="acc-title">@(string.IsNullOrWhiteSpace(edu.Imagem) ? textoGabarito + " -" + anoGabarito + " (sem imagem)" : textoGabarito + " -" + anoGabarito)</span>
                                                 </a>
                                             </h4>
                                         </div>
@@ -154,8 +188,8 @@
                                                 <header class="report-header">
                                                     <div class="report-logo"></div>
                                                     <div class="report-title">
-                                                        <span class="report-title-large">@* @Model.TextGabarito *@</span>
-                                                        <span class="report-title-small">@* @Model.AnoGabarito *@</span>
+                                                        <span class="report-title-large">@textoGabarito</span>
+                                                        <span class="report-title-small">@anoGabarito</span>
                                                     </div>
                                                     <div class="report-icon"></div>
                                                 </header>
@@ -167,11 +201,11 @@
                                                             @if (Model.Aluno.QrCode != null)
                                                             {
                                                                 var imgSrc = $"data:image/gif;base64,{Convert.ToBase64String(Model.Aluno.QrCode)}";
-                                                                <img src="@imgSrc" alt="QRcode do Model.Aluno" class="qrcode-image" />
+                                                                <img src="@imgSrc" alt="QRcode do Model.Aluno" class="qrcode-image"/>
                                                             }
                                                             else
                                                             {
-                                                                <img src="/assets/images/qrcode.jpg" alt="QRcode padrão" class="qrcode-image" />
+                                                                <img src="/assets/images/qrcode.jpg" alt="QRcode padrão" class="qrcode-image"/>
                                                             }
                                                         </div>
 
@@ -265,13 +299,47 @@
                                         .ToList();
 
                                     <div class="panel panel-accordion panel-accordion-primary edu-item">
+                                        
+                                        @{
+                                            var textoGabarito = "";
+                                            var anoGabarito = "";
+
+                                            switch (edu.Gabarito)
+                                            {
+                                                case "3LP":
+                                                    textoGabarito = "LÍNGUA PORTUGUESA";
+                                                    anoGabarito = " 3ª Série do Ensino Médio";
+                                                    break;
+                                                case "3MT":
+                                                    textoGabarito = "MATEMÁTICA";
+                                                    anoGabarito = " 3ª Série do Ensino Médio";
+                                                    break;
+                                                case "5LP":
+                                                    textoGabarito = "LÍNGUA PORTUGUESA";
+                                                    anoGabarito = " 5º Ano do Ensino Médio";
+                                                    break;
+                                                case "5MT":
+                                                    textoGabarito = "MATEMÁTICA";
+                                                    anoGabarito = " 5º Ano do Ensino Médio";
+                                                    break;
+                                                case "9LP":
+                                                    textoGabarito = "LÍNGUA PORTUGUESA";
+                                                    anoGabarito = " 9º Ano do Ensino Médio";
+                                                    break;
+                                                case "9MT":
+                                                    textoGabarito = "MATEMÁTICA";
+                                                    anoGabarito = " 9º Ano do Ensino Médio";
+                                                    break;
+                                            }
+                                        }
+
                                         <div class="panel-heading bg-primary text-white">
                                             <h4 class="panel-title">
                                                 <a class="accordion-toggle collapsed text-white acc-header"
                                                    data-toggle="collapse"
                                                    href="#@cid" aria-expanded="false" role="button" aria-controls="@cid">
                                                     <span class="acc-date">@displayDate</span>
-                                                    <span class="acc-title">@(string.IsNullOrWhiteSpace(edu.NomeImagem) ? "Gabarito (sem imagem)" : edu.NomeImagem)</span>
+                                                    <span class="acc-title">@(string.IsNullOrWhiteSpace(edu.Imagem) ? textoGabarito + " -" + anoGabarito + " (sem imagem)" : textoGabarito + " -" + anoGabarito)</span>
                                                 </a>
                                             </h4>
                                         </div>
@@ -281,8 +349,8 @@
                                                 <header class="report-header">
                                                     <div class="report-logo"></div>
                                                     <div class="report-title">
-                                                        <span class="report-title-large">@* @Model.TextGabarito *@</span>
-                                                        <span class="report-title-small">@* @Model.AnoGabarito *@</span>
+                                                        <span class="report-title-large">@textoGabarito</span>
+                                                        <span class="report-title-small">@anoGabarito</span>
                                                     </div>
                                                     <div class="report-icon"></div>
                                                 </header>
