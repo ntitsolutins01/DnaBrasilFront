@@ -389,6 +389,7 @@ namespace WebApp.Controllers
                 var deficiencias = new SelectList(ApiClientFactory.Instance.GetDeficienciaAll().Where(x => x.Status), "Id", "Nome");
                 var modalidades = new SelectList(ApiClientFactory.Instance.GetModalidadeAll(), "Id", "Nome");
                 var etapas = new SelectList(ApiClientFactory.Instance.GetEtapasEnsinoAll(), "Id", "Nome");
+                var grauParentescos = new SelectList(ApiClientFactory.Instance.GetGrauParentescosAll(), "Id", "Nome");
 
                 List<SelectListDto> list = new List<SelectListDto>
             {
@@ -414,7 +415,8 @@ namespace WebApp.Controllers
                     ListEtapas = etapas,
                     ListProfissionais = profissionais,
                     UsuarioLogado = usu,
-                    IdPerfil = usu.Perfil.Id
+                    IdPerfil = usu.Perfil.Id,
+                    ListGrauParentescos = grauParentescos
                 });
             }
             catch (Exception e)
@@ -521,7 +523,7 @@ namespace WebApp.Controllers
 
                 var etnias = new SelectList(list, "IdNome", "Nome", aluno.Etnia);
 
-
+                
                 return View(new AlunoModel()
                 {
                     ListEstados = estados,
@@ -536,7 +538,8 @@ namespace WebApp.Controllers
                     ListModalidades = listModalidades,
                     ListEtapas = etapas,
                     ListSeries = series,
-                    ListTurmas = turmas
+                    ListTurmas = turmas,
+
 
                 });
 
@@ -2160,12 +2163,19 @@ namespace WebApp.Controllers
                                 { AlunoId = Convert.ToInt32(id), AspNetUserId = newUser.Id });
                         }
                     }
-
-                    return RedirectToAction(nameof(Index), new
+                    else
                     {
-                        notify = (int)EnumNotify.Success,
-                        message = "Aluno habilitado com sucesso."
-                    });
+                        return RedirectToAction(nameof(Index), new
+                        {
+                            notify = (int)EnumNotify.Success,
+                            message = "Este Aluno ja está habilitado a utilizar o sistema."
+                        });
+                    }
+                        return RedirectToAction(nameof(Index), new
+                        {
+                            notify = (int)EnumNotify.Success,
+                            message = "Aluno habilitado com sucesso."
+                        });
                 }
             }
             catch (Exception e)
@@ -2207,6 +2217,35 @@ namespace WebApp.Controllers
                 await ApiClientFactory.Instance.CreateEtapaEnsino(command);
 
                 var result = ApiClientFactory.Instance.GetEtapasEnsinoAll();
+
+                return await Task.FromResult(Json(new SelectList(result, "Id", "Nome")));
+            }
+            catch (Exception ex)
+            {
+                return await Task.FromResult(Json(ex.Message));
+            }
+        }
+
+
+        /// <summary>
+        /// Açao de inclusão de grau de parentêsco
+        /// </summary>
+        /// <param name="collection">Coleção de dados para grau de parentêsco</param>
+        /// <returns>Retorna mensagem de inclusao através do parametro crud</returns>
+        [HttpGet]
+        [ClaimsAuthorize(ClaimType.Aluno, Claim.Incluir)]
+        public async Task<JsonResult> CreateGrauParentesco(string nome)
+        {
+            try
+            {
+                var command = new GrauParentescoModel.CreateUpdateGrauParentescoCommand()
+                {
+                    Nome = nome
+                };
+
+                await ApiClientFactory.Instance.CreateGrauParentesco(command);
+
+                var result = ApiClientFactory.Instance.GetGrauParentescosAll();
 
                 return await Task.FromResult(Json(new SelectList(result, "Id", "Nome")));
             }

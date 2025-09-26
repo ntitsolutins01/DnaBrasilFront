@@ -71,6 +71,8 @@ namespace WebApp.Areas.Identity.Pages.Account
         public string Notify { get; set; }
         public string FomentoId { get; set; }
         public SelectList ListFomentos { get; set; }
+        public SelectList ListGrauParentescos { get; set; }
+        public string GrauParentescoId { get; set; }
 
         public async Task OnGetAsync(int? notify, string message = null, string returnUrl = null)
         {
@@ -106,6 +108,9 @@ namespace WebApp.Areas.Identity.Pages.Account
 
             var deficiencias = new SelectList(ApiClientFactory.Instance.GetDeficienciaAll().Where(x => x.Status), "Id", "Nome");
             ListDeficiencia = deficiencias;
+
+            var grausParentescos = new SelectList(ApiClientFactory.Instance.GetGrauParentescosAll(), "Id", "Nome");
+            ListGrauParentescos = grausParentescos;
         }
         private SelectList GetEtniasRacaCor()
         {
