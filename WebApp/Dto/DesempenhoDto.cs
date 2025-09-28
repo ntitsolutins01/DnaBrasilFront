@@ -8,7 +8,8 @@
         public int ScoreVocacional { get; set; }
         public int ScoreSaudeBucal { get; set; }
         public int ScoreConsumoAlimentar { get; set; }
-        public int ScoreEducacional { get; set; }
+        public int ScoreMatematica { get; set; }
+        public int ScorePortugues { get; set; }
         public int ScoreDna { get; set; }
         public string? AvisoVelocidade { get; set; }
         public string? AvisoImpulsao { get; set; }
@@ -30,7 +31,8 @@
         public DateTimeOffset? DataVocacional { get; set; }
         public DateTimeOffset? DataConsumoAlimentar { get; set; }
         public DateTimeOffset? DataSaudeBucal { get; set; }
-        public DateTimeOffset? DataEducacional { get; set; }
+        public DateTimeOffset? DataMatematica { get; set; }
+        public DateTimeOffset? DataPortugues { get; set; }
         public string? TextoVelocidade { get; set; }
         public string? TextoImpulsao { get; set; }
         public string? TextoShuttleRun { get; set; }
@@ -46,6 +48,7 @@
         public string? TextoVocacional { get; set; }
         public string? TextoConsumoAlimentar { get; set; }
         public string? TextoSaudeBucal { get; set; }
-        public string? TextoEducacional { get; set; }
+        public string? TextoMatematica { get; set; }
+        public string? TextoPortugues { get; set; }
     }
 }
