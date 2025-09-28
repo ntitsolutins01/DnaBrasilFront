@@ -271,7 +271,7 @@ namespace WebApp.Controllers
             var encaminhamentoMatematica = laudo.EducacionalMatematicaId == null ? null : ApiClientFactory.Instance.GetEncaminhamentoById((int)educacionalMatematica.Encaminhamento.Id);
             var encaminhamentoPortugues = laudo.EducacionalPortuguesId == null ? null : ApiClientFactory.Instance.GetEncaminhamentoById((int)educacionalPortugues.Encaminhamento.Id);
             var desempenho = ApiClientFactory.Instance.GetDesempenhoByAluno(Convert.ToInt32(laudo.AlunoId));
-            var modalidade = ApiClientFactory.Instance.GetModalidadeById(Convert.ToInt32(laudo.ModalidadeId));
+            var modalidade = laudo.ModalidadeId == null ? null : ApiClientFactory.Instance.GetModalidadeById((int)laudo.ModalidadeId);
 
             var percentual = new PercentualLaudoDto();
 
