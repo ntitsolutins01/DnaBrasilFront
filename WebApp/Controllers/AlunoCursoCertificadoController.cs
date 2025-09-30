@@ -67,10 +67,39 @@ public class AlunoCursoCertificadoController : BaseController
 
             var usu = await ApiClientFactory.Instance.GetUsuarioByEmail(usuario);
 
-            var aluno = new AlunoDto();
+            var aluno = ApiClientFactory.Instance.GetAlunoByEmail(usuario);
 
-            aluno = ApiClientFactory.Instance.GetAlunoByEmail(usuario) ??
-                    await ApiClientFactory.Instance.GetAlunoById(Convert.ToInt32(usuario));
+            if (aluno == null && usu.Perfil.Id != (int)EnumPerfil.Aluno)
+            {
+                var fomento = ApiClientFactory.Instance.GetFomentoByLocalidadeId(Convert.ToInt32(usu.LocalidadeId));
+
+                var commandAluno = new AlunoModel.CreateUpdateDadosAlunoCommand()
+                {
+                    AspNetUserId = usu.AspNetUserId,
+                    Nome = usu.Nome,
+                    MunicipioId = usu.MunicipioId,
+                    Cpf = usu.CpfCnpj,
+                    DtNascimento = DateTime.Now.AddYears(-18).ToString("dd/MM/yyyy"),
+                    Email = usu.Email,
+                    Etnia = "NAODECLARADA",
+                    Sexo = "M",
+                    LocalidadeId = Convert.ToInt32(usu.LocalidadeId),
+                    FomentoId = fomento.Id,
+                    Convidado = false,
+                    Status = true,
+                    Habilitado = true
+                };
+
+                var alunoId = await ApiClientFactory.Instance.CreateDados(commandAluno);
+
+                aluno = await ApiClientFactory.Instance.GetAlunoById((int)alunoId);
+            }
+            else
+            {
+                aluno = aluno != null
+                    ? await ApiClientFactory.Instance.GetAlunoById(Convert.ToInt32(aluno.Id))
+                    : await ApiClientFactory.Instance.GetAlunoById(Convert.ToInt32(usuario));
+            }
 
             var cursos = ApiClientFactory.Instance.GetCursosByAlunoId(aluno.Id);
             var certificados = ApiClientFactory.Instance.GetCertificadosByAlunoId(aluno.Id);
