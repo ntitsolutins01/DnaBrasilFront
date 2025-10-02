@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using log4net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
@@ -19,19 +20,26 @@ namespace WebApp.Controllers;
 [Authorize(Policy = ModuloAccess.ConfiguracaoSistemaEad)]
 public class TipoMaterialController : BaseController
 {
+    #region Parametros
+
+    private readonly ILog _logger;
+
+    #endregion
+
     #region Constructor
-    private readonly IOptions<UrlSettings> _appSettings;
 
     /// <summary>
     /// Construtor da página
     /// </summary>
-    /// <param name="app">configurações de urls do sistema</param>
-    /// <param name="host">informações da aplicação em execução</param>
-    public TipoMaterialController(IOptions<UrlSettings> appSettings)
+    /// <param name="appSettings">configurações de urls do sistema</param>
+    /// <param name="logger">Log de mensagens da aplicação</param>
+    public TipoMaterialController(IOptions<UrlSettings> appSettings,
+        ILog logger)
     {
-        _appSettings = appSettings;
-        ApplicationSettings.WebApiUrl = _appSettings.Value.WebApiBaseUrl;
+        _logger = logger;
+        ApplicationSettings.WebApiUrl = appSettings.Value.WebApiBaseUrl;
     }
+
     #endregion
 
     #region Main Methods
@@ -40,16 +48,31 @@ public class TipoMaterialController : BaseController
     /// </summary>
     /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
     /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
-    /// <param name="collection">lista de filtros selecionados para pesquisa de alunos</param>
     /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
     [ClaimsAuthorize(ClaimType.TipoMaterial, Identity.Claim.Consultar)]
     public IActionResult Index(int? crud, int? notify, string message = null)
     {
-        SetNotifyMessage(notify, message);
-        SetCrudMessage(crud);
-        var response = ApiClientFactory.Instance.GetTiposMateriaisAll();
+        try
+        {
+            _logger.Info($"Usuario Logado em Aula.Index User.Identity.Name : {User.Identity.Name}");
 
-        return View(new TipoMaterialModel() { TiposMateriais = response });
+            SetNotifyMessage(notify, message);
+            SetCrudMessage(crud);
+            var response = ApiClientFactory.Instance.GetTiposMateriaisAll();
+
+            return View(new TipoMaterialModel() { TiposMateriais = response });
+        }
+        catch (Exception e)
+        {
+            _logger.Error($"Aula.Index: {e.StackTrace}");
+            return RedirectToRoute(new
+            {
+                controller = "Home",
+                action = "Error",
+                message = e.Message,
+                stackTrace = e.StackTrace
+            });
+        }
     }
 
     /// <summary>

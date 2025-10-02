@@ -23,9 +23,14 @@ namespace WebApp.Controllers
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        public IActionResult Error([FromQuery] string message = null, string stackTrace = null)
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View(new ErrorViewModel
+            {
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier, 
+                Message = message,
+                StackTrace = stackTrace
+            });
         }
 
         // Novo route catch-all para qualquer rota desconhecida cair no index.html e a landing page react funcionar corretamente

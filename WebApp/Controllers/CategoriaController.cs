@@ -1,3 +1,4 @@
+using log4net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -22,6 +23,7 @@ public class CategoriaController : BaseController
     #region Parametros
 
     private readonly IOptions<UrlSettings> _appSettings;
+    private readonly ILog _logger;
 
     #endregion
 
@@ -30,11 +32,13 @@ public class CategoriaController : BaseController
     /// <summary>
     /// Construtor da página
     /// </summary>
-    /// <param name="appSettings">Configurações de urls do sistema</param>
-    public CategoriaController(IOptions<UrlSettings> appSettings)
+    /// <param name="appSettings">configurações de urls do sistema</param>
+    /// <param name="logger">Log de mensagens da aplicação</param>
+    public CategoriaController(IOptions<UrlSettings> appSettings,
+        ILog logger)
     {
-        _appSettings = appSettings;
-        ApplicationSettings.WebApiUrl = _appSettings.Value.WebApiBaseUrl;
+        ApplicationSettings.WebApiUrl = appSettings.Value.WebApiBaseUrl;
+        _logger = logger;
     }
     #endregion
 
@@ -48,11 +52,28 @@ public class CategoriaController : BaseController
     [ClaimsAuthorize(ClaimType.Categoria, Claim.Consultar)]
     public IActionResult Index(int? crud, int? notify, string message = null)
     {
-        SetNotifyMessage(notify, message);
-        SetCrudMessage(crud);
-        var response = ApiClientFactory.Instance.GetCategoriasAll();
+        try
+        {
+            _logger.Info($"Usuario Logado em Categoria.Index User.Identity.Name : {User.Identity.Name}");
 
-        return View(new CategoriaModel() { Categorias = response });
+            SetNotifyMessage(notify, message);
+            SetCrudMessage(crud);
+            var response = ApiClientFactory.Instance.GetCategoriasAll();
+
+            return View(new CategoriaModel() { Categorias = response });
+
+        }
+        catch (Exception e)
+        {
+            _logger.Error($"Categoria.Index: {e.StackTrace}");
+            return RedirectToRoute(new
+            {
+                controller = "Home",
+                action = "Error",
+                message = e.Message,
+                stackTrace = e.StackTrace
+            });
+        }
     }
 
     /// <summary>

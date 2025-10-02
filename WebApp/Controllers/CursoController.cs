@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using log4net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
@@ -24,6 +25,7 @@ public class CursoController : BaseController
     #region Parametros
 
     private readonly IWebHostEnvironment _host;
+    private readonly ILog _logger;
 
     #endregion
 
@@ -34,8 +36,9 @@ public class CursoController : BaseController
     /// </summary>
     /// <param name="appSettings">Configurações da aplicação</param>
     /// <param name="host">Informação do ambiente em que a aplicação está rodando</param>
-    public CursoController(IOptions<UrlSettings> appSettings, IWebHostEnvironment host)
+    public CursoController(IOptions<UrlSettings> appSettings, IWebHostEnvironment host, ILog logger)
     {
+        _logger = logger;
         ApplicationSettings.WebApiUrl = appSettings.Value.WebApiBaseUrl;
         _host = host;
     }
@@ -52,11 +55,28 @@ public class CursoController : BaseController
     [ClaimsAuthorize(ClaimType.Curso, Identity.Claim.Consultar)]
     public IActionResult Index(int? crud, int? notify, string message = null)
     {
-        SetNotifyMessage(notify, message);
-        SetCrudMessage(crud);
-        var response = ApiClientFactory.Instance.GetCursosAll();
 
-        return View(new CursoModel() { Cursos = response });
+        try
+        {
+            _logger.Info($"Usuario Logado em Curso.Index User.Identity.Name : {User.Identity.Name}");
+
+            SetNotifyMessage(notify, message);
+            SetCrudMessage(crud);
+            var response = ApiClientFactory.Instance.GetCursosAll();
+
+            return View(new CursoModel() { Cursos = response });
+        }
+        catch (Exception e)
+        {
+            _logger.Error($"Curso.Index: {e.StackTrace}");
+            return RedirectToRoute(new
+            {
+                controller = "Home",
+                action = "Error",
+                message = e.Message,
+                stackTrace = e.StackTrace
+            });
+        }
     }
 
     /// <summary>
@@ -116,11 +136,11 @@ public class CursoController : BaseController
     }
 
     /// <summary>
-        /// Ação de Inclusão do Curso
-        /// </summary>
-        /// <param name="collection">Coleção de dados para inclusao de Curso</param>
-        /// <returns>Retorna mensagem de inclusao através do parametro crud</returns>
-        [ClaimsAuthorize(ClaimType.Curso, Identity.Claim.Incluir)]
+    /// Ação de Inclusão do Curso
+    /// </summary>
+    /// <param name="collection">Coleção de dados para inclusao de Curso</param>
+    /// <returns>Retorna mensagem de inclusao através do parametro crud</returns>
+    [ClaimsAuthorize(ClaimType.Curso, Identity.Claim.Incluir)]
     [HttpPost]
     public async Task<ActionResult> Create(IFormCollection collection)
     {

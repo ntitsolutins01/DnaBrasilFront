@@ -1,3 +1,4 @@
+using log4net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -14,69 +15,98 @@ namespace WebApp.Controllers
     [Authorize(Policy = ModuloAccess.Dashboard)]
     public class DashboardController : BaseController
     {
-        private readonly ILogger<DashboardController> _logger;
+        #region Parametros
+        private readonly ILog _logger;
         private readonly IOptions<UrlSettings> _appSettings;
+        #endregion
 
+        #region Constructor
 
-        public DashboardController(ILogger<DashboardController> logger, IOptions<UrlSettings> appSettings)
+        public DashboardController(IOptions<UrlSettings> appSettings, IWebHostEnvironment host, ILog logger)
         {
             _logger = logger;
-            _appSettings = appSettings;
-            ApplicationSettings.WebApiUrl = _appSettings.Value.WebApiBaseUrl;
+            ApplicationSettings.WebApiUrl = appSettings.Value.WebApiBaseUrl;
         }
+        #endregion
+
+        #region Main Methods
+
+        /// <summary>
+        /// Dashboard
+        /// </summary>
+        /// <param name="collection">Coleção de dados para inclusao de Curso</param>
+        /// <returns>Retorna dados para montar os gráficos no dashboard</returns>
         public async Task<IActionResult> Index(IFormCollection collection)
         {
-            var usuario = User?.Identity.Name;
-            //var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            //userName = User.FindFirstValue(ClaimTypes.Name); // will give the user's userName
-            //email = User.FindFirstValue(ClaimTypes.Email);
-
-            var usu = await ApiClientFactory.Instance.GetUsuarioByEmail(usuario);
-
-            var dashboard = new DashboardDto();
-            var dashboardEad = new DashboardEadDto();
-
-            var fomento = ApiClientFactory.Instance.GetFomentoByLocalidadeId(Convert.ToInt32(usu.LocalidadeId));
-            var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentosAll(), "Id", "Nome", fomento.Id);
-
-            var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome", usu.Uf);
-
-            var tipoCurso = new SelectList(ApiClientFactory.Instance.GetTipoCursosAll(), "Id", "Nome");
-
-            SelectList municipios = null;
-
-            if (!string.IsNullOrEmpty(usu.Uf))
+            try
             {
-                municipios = new SelectList(ApiClientFactory.Instance.GetMunicipiosByFomentoId(fomento.Id), "Id", "Nome");
+                _logger.Info($"Usuario Logado em Dashboard.Index User.Identity.Name : {User.Identity.Name}");
+
+                var usuario = User?.Identity.Name;
+
+                var usu = await ApiClientFactory.Instance.GetUsuarioByEmail(usuario);
+
+                var dashboard = new DashboardDto();
+                var dashboardEad = new DashboardEadDto();
+
+                var fomento = ApiClientFactory.Instance.GetFomentoByLocalidadeId(Convert.ToInt32(usu.LocalidadeId));
+                var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentosAll(), "Id", "Nome", fomento.Id);
+
+                var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome", usu.Uf);
+
+                var tipoCurso = new SelectList(ApiClientFactory.Instance.GetTipoCursosAll(), "Id", "Nome");
+
+                SelectList municipios = null;
+
+                if (!string.IsNullOrEmpty(usu.Uf))
+                {
+                    municipios = new SelectList(ApiClientFactory.Instance.GetMunicipiosByFomentoId(fomento.Id), "Id", "Nome");
+                }
+
+                SelectList localidades = null;
+
+                if (usu.MunicipioId != null)
+                {
+                    var resultLocalidades = ApiClientFactory.Instance.GetLocalidadeByMunicipioId(usu.MunicipioId.ToString());
+
+                    if (resultLocalidades != null)
+                        localidades = new SelectList(resultLocalidades, "Id", "Nome");
+                }
+
+                var model = new DashboardModel
+                {
+                    ListFomentos = fomentos,
+                    ListEstados = estados,
+                    Dashboard = dashboard,
+                    DashboardEad = dashboardEad,
+                    ListMunicipios = municipios!,
+                    ListLocalidades = localidades!,
+                    ListTipoCursos = tipoCurso,
+                    IdPerfil = usu.Perfil.Id
+                };
+
+                model.Dashboard.StatusLaudos = new StatusLaudosDto();
+
+
+                return View(model);
+
             }
-
-            SelectList localidades = null;
-
-            if (usu.MunicipioId != null)
+            catch (Exception e)
             {
-                var resultLocalidades = ApiClientFactory.Instance.GetLocalidadeByMunicipioId(usu.MunicipioId.ToString());
-
-                if (resultLocalidades != null)
-                    localidades = new SelectList(resultLocalidades, "Id", "Nome");
+                _logger.Error($"Dashboard.Index: {e.StackTrace}");
+                return RedirectToRoute(new
+                {
+                    controller = "Home",
+                    action = "Error",
+                    message = e.Message,
+                    stackTrace = e.StackTrace
+                });
             }
-
-            var model = new DashboardModel
-            {
-                ListFomentos = fomentos,
-                ListEstados = estados,
-                Dashboard = dashboard,
-                DashboardEad = dashboardEad,
-                ListMunicipios = municipios!,
-                ListLocalidades = localidades!,
-                ListTipoCursos = tipoCurso,
-                IdPerfil = usu.Perfil.Id
-            };
-
-            model.Dashboard.StatusLaudos = new StatusLaudosDto();
-
-
-            return View(model);
+            
         }
+        #endregion
+
+        #region Get Methods
         public Task<JsonResult> GetMunicipioByUf(string uf)
         {
             try
@@ -525,5 +555,6 @@ namespace WebApp.Controllers
                 return Json(ex);
             }
         }
+        #endregion
     }
 }

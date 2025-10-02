@@ -16,12 +16,11 @@ namespace WebApp.Controllers;
 /// <summary>
 /// Controle de Inventario
 /// </summary>
-[Authorize(Policy = ModuloAccess.ConfiguracaoSistemaEad)]
 public class InventarioController : BaseController
 {
     #region Parametros
 
-    private readonly IOptions<UrlSettings> _appSettings;
+    private readonly ILog _logger;
     private readonly IWebHostEnvironment _host;
 
     #endregion
@@ -32,13 +31,14 @@ public class InventarioController : BaseController
     /// <summary>
     /// Construtor da página
     /// </summary>
-    /// <param name="app">configurações de urls do sistema</param>
+    /// <param name="appSettings">configurações de urls do sistema</param>
     /// <param name="host">informações da aplicação em execução</param>
+    /// <param name="logger">Log de mensagens da aplicação</param>
     public InventarioController(IOptions<UrlSettings> appSettings, IWebHostEnvironment host,
     ILog logger)
     {
-        _appSettings = appSettings;
-        ApplicationSettings.WebApiUrl = _appSettings.Value.WebApiBaseUrl;
+        _logger = logger;
+        ApplicationSettings.WebApiUrl = appSettings.Value.WebApiBaseUrl;
         _host = host;
     }
     #endregion
@@ -54,37 +54,53 @@ public class InventarioController : BaseController
     //[ClaimsAuthorize(ClaimType.Inventario, Identity.Claim.Consultar)]
     public async Task<ActionResult> Index(int? crud, int? notify, IFormCollection collection, string message = null)
     {
-        var usuario = User.Identity.Name;
-
-        SetNotifyMessage(notify, message);
-        SetCrudMessage(crud);
-
-        var usu = await ApiClientFactory.Instance.GetUsuarioByEmail(usuario);
-
-        var localidades = new SelectList(ApiClientFactory.Instance.GetLocalidadeAll(), "Id", "Nome");
-        var gruposMateriais = new SelectList(ApiClientFactory.Instance.GetGruposMateriaisAll(), "Id", "Nome");
-        var arquivosInventarios = ApiClientFactory.Instance.GetArquivosInventariosAll();
-
-        var searchFilter = new InventariosFilterDto
+        try
         {
-            Id = collection["material"].ToString(),
-            LocalidadeId = collection["ddlLocalidade"].ToString() == "" ? usu.LocalidadeId : collection["ddlLocalidade"].ToString(),
-            NomeMaterial = collection["nomeMaterial"].ToString(),
-            MaterialId = collection["ddlMaterial"].ToString(),
-        };
-        var result = await ApiClientFactory.Instance.GetInventariosByFilter(searchFilter);
+            _logger.Info($"Usuario Logado em Inventario.Index User.Identity.Name : {User.Identity.Name}");
 
-        var model = new InventarioModel
+            var usuario = User.Identity.Name;
+
+            SetNotifyMessage(notify, message);
+            SetCrudMessage(crud);
+
+            var usu = await ApiClientFactory.Instance.GetUsuarioByEmail(usuario);
+
+            var localidades = new SelectList(ApiClientFactory.Instance.GetLocalidadeAll(), "Id", "Nome");
+            var gruposMateriais = new SelectList(ApiClientFactory.Instance.GetGruposMateriaisAll(), "Id", "Nome");
+            var arquivosInventarios = ApiClientFactory.Instance.GetArquivosInventariosAll();
+
+            var searchFilter = new InventariosFilterDto
+            {
+                Id = collection["material"].ToString(),
+                LocalidadeId = collection["ddlLocalidade"].ToString() == "" ? usu.LocalidadeId : collection["ddlLocalidade"].ToString(),
+                NomeMaterial = collection["nomeMaterial"].ToString(),
+                MaterialId = collection["ddlMaterial"].ToString(),
+            };
+            var result = await ApiClientFactory.Instance.GetInventariosByFilter(searchFilter);
+
+            var model = new InventarioModel
+            {
+                ListLocalidades = localidades,
+                ListGruposMateriais = gruposMateriais,
+                LocalidadeId = Convert.ToInt32(!string.IsNullOrEmpty(searchFilter.LocalidadeId) ? searchFilter.LocalidadeId : usu.LocalidadeId),
+                ArquivosInventarios = arquivosInventarios,
+                Inventarios = result.Inventarios,
+                SearchFilter = searchFilter
+
+            };
+            return View(model);
+        }
+        catch (Exception e)
         {
-            ListLocalidades = localidades,
-            ListGruposMateriais = gruposMateriais,
-            LocalidadeId = Convert.ToInt32(!string.IsNullOrEmpty(searchFilter.LocalidadeId) ? searchFilter.LocalidadeId : usu.LocalidadeId),
-            ArquivosInventarios = arquivosInventarios,
-            Inventarios = result.Inventarios,
-            SearchFilter = searchFilter
-
-        };
-        return View(model);
+            _logger.Error($"Inventario.Index: {e.StackTrace}");
+            return RedirectToRoute(new
+            {
+                controller = "Home",
+                action = "Error",
+                message = e.Message,
+                stackTrace = e.StackTrace
+            });
+        }
     }
 
     /// <summary>

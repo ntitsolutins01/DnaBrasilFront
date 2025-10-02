@@ -24,20 +24,31 @@ namespace WebApp.Controllers
     //[Authorize(Policy = ModuloAccess.Laudo)]
     public class LaudoController : BaseController
     {
-        private readonly IOptions<UrlSettings> _appSettings;
+        #region Parametros
+
         private readonly IWebHostEnvironment _host;
         private readonly ILog _logger;
 
+        #endregion
+
+        #region Constructor
+        /// <summary>
+        /// Construtor da página
+        /// </summary>
+        /// <param name="appSettings">configurações de urls do sistema</param>
+        /// <param name="host">informações da aplicação em execução</param>
+        /// <param name="logger"></param>
         public LaudoController(IOptions<UrlSettings> appSettings,
             IWebHostEnvironment host,
             ILog logger)
         {
-            _appSettings = appSettings;
             _host = host;
             _logger = logger;
-            ApplicationSettings.WebApiUrl = _appSettings.Value.WebApiBaseUrl;
+            ApplicationSettings.WebApiUrl = appSettings.Value.WebApiBaseUrl;
         }
+        #endregion
 
+        #region Main Methods
         [ClaimsAuthorize(ClaimType.Laudo, Claim.Consultar)]
         [HttpGet]
         public async Task<IActionResult> Index(int? crud, int? notify, string message = null)
@@ -116,9 +127,14 @@ namespace WebApp.Controllers
             }
             catch (Exception e)
             {
-                _logger.Error(e.StackTrace);
-                return RedirectToAction(nameof(Error), new { notify = (int)EnumNotify.Error, message = e.Message });
-
+                _logger.Error($"Laudo.Index: {e.StackTrace}");
+                return RedirectToRoute(new
+                {
+                    controller = "Home",
+                    action = "Error",
+                    message = e.Message,
+                    stackTrace = e.StackTrace
+                });
             }
         }
 
@@ -1700,5 +1716,6 @@ namespace WebApp.Controllers
 
             return Task.FromResult(result);
         }
+        #endregion
     }
 }

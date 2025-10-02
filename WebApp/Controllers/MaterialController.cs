@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using log4net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
@@ -19,19 +20,25 @@ namespace WebApp.Controllers;
 [Authorize(Policy = ModuloAccess.ConfiguracaoSistemaEad)]
 public class MaterialController : BaseController
 {
+    #region Parametros
+
+    private readonly ILog _logger;
+
+    #endregion
+
     #region Constructor
-    private readonly IOptions<UrlSettings> _appSettings;
 
     /// <summary>
     /// Construtor da página
     /// </summary>
-    /// <param name="app">configurações de urls do sistema</param>
-    /// <param name="host">informações da aplicação em execução</param>
-    public MaterialController(IOptions<UrlSettings> appSettings)
+    /// <param name="appSettings">configurações de url da api</param>
+    /// <param name="logger">Log de mensagens da aplicação</param>
+    public MaterialController(IOptions<UrlSettings> appSettings, ILog logger)
     {
-        _appSettings = appSettings;
-        ApplicationSettings.WebApiUrl = _appSettings.Value.WebApiBaseUrl;
+        _logger = logger;
+        ApplicationSettings.WebApiUrl = appSettings.Value.WebApiBaseUrl;
     }
+
     #endregion
 
     #region Main Methods
@@ -45,44 +52,60 @@ public class MaterialController : BaseController
     [ClaimsAuthorize(ClaimType.Material, Identity.Claim.Consultar)]
     public async Task<ActionResult> Index(int? crud, int? notify, IFormCollection collection, string message = null)
     {
-        SetNotifyMessage(notify, message);
-        SetCrudMessage(crud);
-
-        var gruposMateriais = new SelectList(ApiClientFactory.Instance.GetGruposMateriaisAll(), "Id", "Nome");
-        //var tiposMateriais = new SelectList(ApiClientFactory.Instance.GetTiposMateriaisAll(), "Id", "Nome");
-
-        List<SelectListDto> list = new List<SelectListDto>
+        try
         {
-            new() { IdNome = "CAIXA", Nome = "CAIXA" },
-            new() { IdNome = "DIARIA", Nome = "DIARIA" },
-            new() { IdNome = "KIT", Nome = "KIT" },
-            new() { IdNome = "PACOTE", Nome = "PACOTE" },
-            new() { IdNome = "SERVICOS", Nome = "SERVICOS" },
-            new() { IdNome = "UNIDADE", Nome = "UNIDADE" },
-            new() { IdNome = "UNIDADE KIT", Nome = "UNIDADE KIT" },
-            new() { IdNome = "UNIDADE-PAR", Nome = "UNIDADE-PAR" }
-        };
+            _logger.Info($"Usuario Logado em Aula.Index User.Identity.Name : {User.Identity.Name}");
 
-        var undMedidas = new SelectList(list, "IdNome", "Nome");
+            SetNotifyMessage(notify, message);
+            SetCrudMessage(crud);
 
-        var searchFilter = new MateriaisFilterDto
+            var gruposMateriais = new SelectList(ApiClientFactory.Instance.GetGruposMateriaisAll(), "Id", "Nome");
+            //var tiposMateriais = new SelectList(ApiClientFactory.Instance.GetTiposMateriaisAll(), "Id", "Nome");
+
+            List<SelectListDto> list = new List<SelectListDto>
+            {
+                new() { IdNome = "CAIXA", Nome = "CAIXA" },
+                new() { IdNome = "DIARIA", Nome = "DIARIA" },
+                new() { IdNome = "KIT", Nome = "KIT" },
+                new() { IdNome = "PACOTE", Nome = "PACOTE" },
+                new() { IdNome = "SERVICOS", Nome = "SERVICOS" },
+                new() { IdNome = "UNIDADE", Nome = "UNIDADE" },
+                new() { IdNome = "UNIDADE KIT", Nome = "UNIDADE KIT" },
+                new() { IdNome = "UNIDADE-PAR", Nome = "UNIDADE-PAR" }
+            };
+
+            var undMedidas = new SelectList(list, "IdNome", "Nome");
+
+            var searchFilter = new MateriaisFilterDto
+            {
+                Id = collection["material"].ToString(),
+                NomeMaterial = collection["nomeMaterial"].ToString(),
+                GrupoMaterialId = collection["ddlGrupoMaterial"].ToString(),
+                TipoMaterialId = collection["ddlTipoMaterial"].ToString(),
+            };
+            var result = await ApiClientFactory.Instance.GetMateriaisByFilter(searchFilter);
+
+            var model = new MaterialModel
+            {
+                ListGruposMateriais = gruposMateriais,
+                ListUnidadesMedidas = undMedidas,
+                Materiais = result.Materiais,
+                SearchFilter = searchFilter
+
+            };
+            return View(model);
+        }
+        catch (Exception e)
         {
-            Id = collection["material"].ToString(),
-            NomeMaterial = collection["nomeMaterial"].ToString(),
-            GrupoMaterialId = collection["ddlGrupoMaterial"].ToString(),
-            TipoMaterialId = collection["ddlTipoMaterial"].ToString(),
-        };
-        var result = await ApiClientFactory.Instance.GetMateriaisByFilter(searchFilter);
-
-        var model = new MaterialModel
-        {
-            ListGruposMateriais = gruposMateriais,
-            ListUnidadesMedidas = undMedidas,
-            Materiais = result.Materiais,
-            SearchFilter = searchFilter
-
-        };
-        return View(model);
+            _logger.Error($"Aula.Index: {e.StackTrace}");
+            return RedirectToRoute(new
+            {
+                controller = "Home",
+                action = "Error",
+                message = e.Message,
+                stackTrace = e.StackTrace
+            });
+        }
     }
 
     /// <summary>

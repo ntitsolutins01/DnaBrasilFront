@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using log4net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
@@ -24,6 +25,7 @@ public class QuestaoEadController : BaseController
     #region Parametros
 
     private readonly IWebHostEnvironment _host;
+    private readonly ILog _logger;
 
     #endregion
 
@@ -34,10 +36,12 @@ public class QuestaoEadController : BaseController
     /// </summary>
     /// <param name="appSettings">Configurações da aplicação</param>
     /// <param name="host">Informação do ambiente em que a aplicação está rodando</param>
-    public QuestaoEadController(IOptions<UrlSettings> appSettings, IWebHostEnvironment host)
+    /// <param name="logger">Log de mensagens da aplicação</param>
+    public QuestaoEadController(IOptions<UrlSettings> appSettings, IWebHostEnvironment host, ILog logger)
     {
         ApplicationSettings.WebApiUrl = appSettings.Value.WebApiBaseUrl;
         _host = host;
+        _logger = logger;
     }
     #endregion
 
@@ -52,11 +56,27 @@ public class QuestaoEadController : BaseController
     [ClaimsAuthorize(ClaimType.QuestaoEad, Identity.Claim.Consultar)]
     public IActionResult Index(int? crud, int? notify, string message = null)
     {
-        SetNotifyMessage(notify, message);
-        SetCrudMessage(crud);
-        var response = ApiClientFactory.Instance.GetQuestaoEadAll();
+        try
+        {
+            _logger.Info($"Usuario Logado em QuestaoEad.Index User.Identity.Name : {User.Identity.Name}");
 
-        return View(new QuestaoEadModel() { QuestoesEad = response });
+            SetNotifyMessage(notify, message);
+            SetCrudMessage(crud);
+            var response = ApiClientFactory.Instance.GetQuestaoEadAll();
+
+            return View(new QuestaoEadModel() { QuestoesEad = response });
+        }
+        catch (Exception e)
+        {
+            _logger.Error($"QuestaoEad.Index: {e.StackTrace}");
+            return RedirectToRoute(new
+            {
+                controller = "Home",
+                action = "Error",
+                message = e.Message,
+                stackTrace = e.StackTrace
+            });
+        }
     }
 
     /// <summary>

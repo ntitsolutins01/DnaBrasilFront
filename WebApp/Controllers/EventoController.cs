@@ -1,4 +1,5 @@
 ﻿using System.IO.Compression;
+using log4net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -21,17 +22,25 @@ namespace WebApp.Controllers;
 [Authorize(Policy = ModuloAccess.Evento)]
 public class EventoController : BaseController
 {
-    #region Constructor
+    #region Parametros
 
+    private readonly ILog _logger;
     private readonly IWebHostEnvironment _host;
+
+
+    #endregion
+
+    #region Constructor
 
     /// <summary>
     /// Construtor da página
     /// </summary>
-    /// <param name="app">configurações de urls do sistema</param>
+    /// <param name="appSettings">configurações de url da api</param>
+    /// <param name="logger">Log de mensagens da aplicação</param>
     /// <param name="host">informações da aplicação em execução</param>
-    public EventoController(IOptions<UrlSettings> appSettings, IWebHostEnvironment host)
+    public EventoController(IOptions<UrlSettings> appSettings, IWebHostEnvironment host, ILog logger)
     {
+        _logger = logger;
         _host = host;
         ApplicationSettings.WebApiUrl = appSettings.Value.WebApiBaseUrl;
     }
@@ -48,26 +57,44 @@ public class EventoController : BaseController
     [ClaimsAuthorize(ClaimType.Evento, Identity.Claim.Consultar)]
     public async Task<ActionResult> Index(int? crud, int? notify, string message = null)
     {
-        SetNotifyMessage(notify, message);
-        SetCrudMessage(crud);
-
-        var usuario = User.Identity.Name;
-        var usu = await ApiClientFactory.Instance.GetUsuarioByEmail(usuario);
-
-        List<EventoDto> response;
-
-        if (usu.Perfil.Id == (int)EnumPerfil.Administrador)
+        try
         {
-            response = await ApiClientFactory.Instance.GetEventosAll();
-        }
-        else
-        {
-            response = await ApiClientFactory.Instance.GetEventosAll();
-        }
+            _logger.Info($"Usuario Logado em Evento.Index User.Identity.Name : {User.Identity.Name}");
 
-        return View(new EventoModel() { Eventos = response.Where(x=>x.EstadoId == usu.Uf).ToList(),
-            IdPerfil = usu.Perfil.Id
-        });
+            SetNotifyMessage(notify, message);
+            SetCrudMessage(crud);
+
+            var usuario = User.Identity.Name;
+            var usu = await ApiClientFactory.Instance.GetUsuarioByEmail(usuario);
+
+            List<EventoDto> response;
+
+            if (usu.Perfil.Id == (int)EnumPerfil.Administrador)
+            {
+                response = await ApiClientFactory.Instance.GetEventosAll();
+            }
+            else
+            {
+                response = await ApiClientFactory.Instance.GetEventosAll();
+            }
+
+            return View(new EventoModel()
+            {
+                Eventos = response.Where(x => x.EstadoId == usu.Uf).ToList(),
+                IdPerfil = usu.Perfil.Id
+            });
+        }
+        catch (Exception e)
+        {
+            _logger.Error($"Evento.Index: {e.StackTrace}");
+            return RedirectToRoute(new
+            {
+                controller = "Home",
+                action = "Error",
+                message = e.Message,
+                stackTrace = e.StackTrace
+            });
+        }
     }
 
     /// <summary>

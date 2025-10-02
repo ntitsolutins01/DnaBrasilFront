@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using log4net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -20,19 +21,25 @@ namespace WebApp.Controllers;
 [Authorize(Policy = ModuloAccess.Nota)]
 public class NotaController : BaseController
 {
+    #region Parametros
+
+    private readonly ILog _logger;
+
+    #endregion
+
     #region Constructor
-    private readonly IOptions<UrlSettings> _appSettings;
 
     /// <summary>
     /// Construtor da página
     /// </summary>
-    /// <param name="app">configurações de urls do sistema</param>
-    /// <param name="host">informações da aplicação em execução</param>
-    public NotaController(IOptions<UrlSettings> appSettings)
+    /// <param name="appSettings">configurações de url da api</param>
+    /// <param name="logger">Log de mensagens da aplicação</param>
+    public NotaController(IOptions<UrlSettings> appSettings, ILog logger)
     {
-        _appSettings = appSettings;
-        ApplicationSettings.WebApiUrl = _appSettings.Value.WebApiBaseUrl;
+        _logger = logger;
+        ApplicationSettings.WebApiUrl = appSettings.Value.WebApiBaseUrl;
     }
+
     #endregion
 
     #region Mian Methods
@@ -46,11 +53,27 @@ public class NotaController : BaseController
     [ClaimsAuthorize(ClaimType.Nota, Identity.Claim.Consultar)]
     public IActionResult Index(int? crud, int? notify, string message = null)
     {
-        SetNotifyMessage(notify, message);
-        SetCrudMessage(crud);
-        var response = ApiClientFactory.Instance.GetNotasAll();
+        try
+        {
+            _logger.Info($"Usuario Logado em Nota.Index User.Identity.Name : {User.Identity.Name}");
 
-        return View(new NotaModel() { Notas = response });
+            SetNotifyMessage(notify, message);
+            SetCrudMessage(crud);
+            var response = ApiClientFactory.Instance.GetNotasAll();
+
+            return View(new NotaModel() { Notas = response });
+        }
+        catch (Exception e)
+        {
+            _logger.Error($"Nota.Index: {e.StackTrace}");
+            return RedirectToRoute(new
+            {
+                controller = "Home",
+                action = "Error",
+                message = e.Message,
+                stackTrace = e.StackTrace
+            });
+        }
     }
 
     /// <summary>

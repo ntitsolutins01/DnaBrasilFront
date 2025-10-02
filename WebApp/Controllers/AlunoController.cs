@@ -1,7 +1,9 @@
+using System.Diagnostics;
 using System.Drawing;
 using System.IO.Compression;
 using System.Text.Encodings.Web;
 using System.Text.RegularExpressions;
+using DocumentFormat.OpenXml.Spreadsheet;
 using iText.IO.Image;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
@@ -30,6 +32,7 @@ using WebApp.Utility;
 using Claim = WebApp.Identity.Claim;
 using Path = System.IO.Path;
 using Rectangle = iText.Kernel.Geom.Rectangle;
+using Text = iText.Layout.Element.Text;
 
 namespace WebApp.Controllers
 {
@@ -190,7 +193,13 @@ namespace WebApp.Controllers
             catch (Exception e)
             {
                 _logger.Error($"Aluno.Index: {e.StackTrace}");
-                return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = e.Message });
+                return RedirectToRoute(new
+                {
+                    controller = "Home",
+                    action = "Error",
+                    message = e.Message,
+                    stackTrace = e.StackTrace
+                });
 
             }
         }
@@ -504,10 +513,13 @@ namespace WebApp.Controllers
                 }
                 else
                 {
-                    turmas = new SelectList(
-                       ApiClientFactory.Instance
-                           .GetTurmasByLocalidadeIdEtapaIdSerie(Convert.ToInt32(aluno.LocalidadeId), Convert.ToInt32(aluno.EtapaId), aluno.SerieNome)
-                           .Select(s => new { Id = s.Id, Turma = s.Turma }).ToList(), "Id", "Turma", aluno.SerieId);
+                    if (aluno.SerieNome != null)
+                        turmas = new SelectList(
+                            ApiClientFactory.Instance
+                                .GetTurmasByLocalidadeIdEtapaIdSerie(Convert.ToInt32(aluno.LocalidadeId),
+                                    Convert.ToInt32(aluno.EtapaId), aluno.SerieNome)
+                                .Select(s => new { Id = s.Id, Turma = s.Turma }).ToList(), "Id", "Turma",
+                            aluno.SerieId);
                 }
 
 

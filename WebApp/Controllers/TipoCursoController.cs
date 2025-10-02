@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using log4net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using WebApp.Authorization;
@@ -18,19 +19,26 @@ namespace WebApp.Controllers;
 [Authorize(Policy = ModuloAccess.ConfiguracaoSistemaEad)]
 public class TipoCursoController : BaseController
 {
+    #region Parametros
+
+    private readonly ILog _logger;
+
+    #endregion
+
     #region Constructor
-    private readonly IOptions<UrlSettings> _appSettings;
 
     /// <summary>
     /// Construtor da página
     /// </summary>
-    /// <param name="app">configurações de urls do sistema</param>
-    /// <param name="host">informações da aplicação em execução</param>
-    public TipoCursoController(IOptions<UrlSettings> appSettings)
+    /// <param name="appSettings">configurações de urls do sistema</param>
+    /// <param name="logger">Log de mensagens da aplicação</param>
+    public TipoCursoController(IOptions<UrlSettings> appSettings,
+        ILog logger)
     {
-        _appSettings = appSettings;
-        ApplicationSettings.WebApiUrl = _appSettings.Value.WebApiBaseUrl;
+        _logger = logger;
+        ApplicationSettings.WebApiUrl = appSettings.Value.WebApiBaseUrl;
     }
+
     #endregion
 
     #region Main Methods
@@ -44,11 +52,27 @@ public class TipoCursoController : BaseController
     [ClaimsAuthorize(ClaimType.TipoCurso, Identity.Claim.Consultar)]
     public IActionResult Index(int? crud, int? notify, string message = null)
     {
-        SetNotifyMessage(notify, message);
-        SetCrudMessage(crud);
-        var response = ApiClientFactory.Instance.GetTipoCursosAll();
+        try
+        {
+            _logger.Info($"Usuario Logado em TipoCurso.Index User.Identity.Name : {User.Identity.Name}");
 
-        return View(new TipoCursoModel() { TiposCursos = response });
+            SetNotifyMessage(notify, message);
+            SetCrudMessage(crud);
+            var response = ApiClientFactory.Instance.GetTipoCursosAll();
+
+            return View(new TipoCursoModel() { TiposCursos = response });
+        }
+        catch (Exception e)
+        {
+            _logger.Error($"TipoCurso.Index: {e.StackTrace}");
+            return RedirectToRoute(new
+            {
+                controller = "Home",
+                action = "Error",
+                message = e.Message,
+                stackTrace = e.StackTrace
+            });
+        }
     }
 
     /// <summary>

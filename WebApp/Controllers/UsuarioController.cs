@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.RegularExpressions;
@@ -74,16 +73,32 @@ namespace WebApp.Controllers
         [ClaimsAuthorize(ClaimType.Usuario, Identity.Claim.Consultar)]
         public IActionResult Index(int? crud, int? notify, string message = null)
         {
-            SetNotifyMessage(notify, message);
-            SetCrudMessage(crud);
-            var response = ApiClientFactory.Instance.GetUsuarioAll(); var localidades = new SelectList(ApiClientFactory.Instance.GetLocalidadeAll(), "Id", "Nome");
-            var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome");
-
-            return View(new UsuarioModel()
+            try
             {
-                Usuarios = response,
-                ListEstados = estados
-            });
+                _logger.Info($"Usuario Logado em Usuario.Index User.Identity.Name : {User.Identity.Name}");
+
+                SetNotifyMessage(notify, message);
+                SetCrudMessage(crud);
+                var response = ApiClientFactory.Instance.GetUsuarioAll(); var localidades = new SelectList(ApiClientFactory.Instance.GetLocalidadeAll(), "Id", "Nome");
+                var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome");
+
+                return View(new UsuarioModel()
+                {
+                    Usuarios = response,
+                    ListEstados = estados
+                });
+            }
+            catch (Exception e)
+            {
+                _logger.Error($"Usuario.Index: {e.StackTrace}");
+                return RedirectToRoute(new
+                {
+                    controller = "Home",
+                    action = "Error",
+                    message = e.Message,
+                    stackTrace = e.StackTrace
+                });
+            }
         }
 
         /// <summary>

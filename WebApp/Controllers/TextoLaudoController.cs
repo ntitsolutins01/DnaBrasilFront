@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using log4net;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
 using WebApp.Configuration;
 using WebApp.Dto;
 using WebApp.Enumerators;
 using WebApp.Factory;
+using WebApp.Identity;
 using WebApp.Models;
 using WebApp.Utility;
 
@@ -13,12 +16,13 @@ namespace WebApp.Controllers
     /// <summary>
     /// Controle Texto de Laudo 
     /// </summary>
+    [Authorize(Policy = ModuloAccess.ConfiguracaoSistema)]
     public class TextoLaudoController : BaseController
     {
 
         #region Parametros
 
-        private readonly IOptions<UrlSettings> _appSettings;
+        private readonly ILog _logger;
 
         #endregion
 
@@ -28,10 +32,12 @@ namespace WebApp.Controllers
         /// Construtor da página
         /// </summary>
         /// <param name="appSettings">configurações de urls do sistema</param>
-        public TextoLaudoController(IOptions<UrlSettings> appSettings)
+        /// <param name="logger">Log de mensagens da aplicação</param>
+        public TextoLaudoController(IOptions<UrlSettings> appSettings,
+            ILog logger)
         {
-            _appSettings = appSettings;
-            ApplicationSettings.WebApiUrl = _appSettings.Value.WebApiBaseUrl;
+            _logger = logger;
+            ApplicationSettings.WebApiUrl = appSettings.Value.WebApiBaseUrl;
         }
 
         #endregion
@@ -44,14 +50,29 @@ namespace WebApp.Controllers
         /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
         /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
         /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
-        /// <returns></returns>
         public IActionResult Index(int? crud, int? notify, string message = null)
         {
-            SetNotifyMessage(notify, message);
-            SetCrudMessage(crud);
-            var response = ApiClientFactory.Instance.GetTextosLaudosAll();
+            try
+            {
+                _logger.Info($"Usuario Logado em Aula.Index User.Identity.Name : {User.Identity.Name}");
 
-            return View(new TextoLaudoModel() { TextosLaudos = response });
+                SetNotifyMessage(notify, message);
+                SetCrudMessage(crud);
+                var response = ApiClientFactory.Instance.GetTextosLaudosAll();
+
+                return View(new TextoLaudoModel() { TextosLaudos = response });
+            }
+            catch (Exception e)
+            {
+                _logger.Error($"Aula.Index: {e.StackTrace}");
+                return RedirectToRoute(new
+                {
+                    controller = "Home",
+                    action = "Error",
+                    message = e.Message,
+                    stackTrace = e.StackTrace
+                });
+            }
         }
 
         /// <summary>
@@ -76,7 +97,6 @@ namespace WebApp.Controllers
             {
                 Console.Write(e.StackTrace);
                 return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = e.Message });
-
             }
         }
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using log4net;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using WebApp.Authorization;
 using WebApp.Configuration;
@@ -15,19 +16,25 @@ namespace WebApp.Controllers;
 /// </summary>
 public class GrupoMaterialController : BaseController
 {
+    #region Parametros
+
+    private readonly ILog _logger;
+
+    #endregion
+
     #region Constructor
-    private readonly IOptions<UrlSettings> _appSettings;
 
     /// <summary>
     /// Construtor da página
     /// </summary>
-    /// <param name="app">configurações de urls do sistema</param>
-    /// <param name="host">informações da aplicação em execução</param>
-    public GrupoMaterialController(IOptions<UrlSettings> appSettings)
+    /// <param name="appSettings">configurações de url da api</param>
+    /// <param name="logger">Log de mensagens da aplicação</param>
+    public GrupoMaterialController(IOptions<UrlSettings> appSettings, ILog logger)
     {
-        _appSettings = appSettings;
-        ApplicationSettings.WebApiUrl = _appSettings.Value.WebApiBaseUrl;
+        _logger = logger;
+        ApplicationSettings.WebApiUrl = appSettings.Value.WebApiBaseUrl;
     }
+
     #endregion
 
     #region Main Methods
@@ -36,16 +43,31 @@ public class GrupoMaterialController : BaseController
     /// </summary>
     /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
     /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
-    /// <param name="collection">lista de filtros selecionados para pesquisa de alunos</param>
     /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
     [ClaimsAuthorize(ClaimType.GrupoMaterial, Identity.Claim.Consultar)]
     public IActionResult Index(int? crud, int? notify, string message = null)
     {
-        SetNotifyMessage(notify, message);
-        SetCrudMessage(crud);
-        var response = ApiClientFactory.Instance.GetGruposMateriaisAll();
+        try
+        {
+            _logger.Info($"Usuario Logado em GrupoMaterial.Index User.Identity.Name : {User.Identity.Name}");
 
-        return View(new GrupoMaterialModel() { GruposMateriais = response });
+            SetNotifyMessage(notify, message);
+            SetCrudMessage(crud);
+            var response = ApiClientFactory.Instance.GetGruposMateriaisAll();
+
+            return View(new GrupoMaterialModel() { GruposMateriais = response });
+        }
+        catch (Exception e)
+        {
+            _logger.Error($"GrupoMaterial.Index: {e.StackTrace}");
+            return RedirectToRoute(new
+            {
+                controller = "Home",
+                action = "Error",
+                message = e.Message,
+                stackTrace = e.StackTrace
+            });
+        }
     }
 
     /// <summary>

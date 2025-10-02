@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using log4net;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using WebApp.Authorization;
 using WebApp.Configuration;
@@ -16,18 +17,24 @@ namespace WebApp.Controllers;
 /// </summary>
 public class ControleAcessoAulaController : BaseController
 {
-    #region Constructor
+    #region Parametros
     private readonly IOptions<UrlSettings> _appSettings;
+    private readonly ILog _logger;
+    #endregion
 
+    #region Constructor
     /// <summary>
     /// Construtor da página
     /// </summary>
-    /// <param name="appSettings">Configurações de urls do sistema</param>
-    /// <param name="host">Informações da aplicação em execução</param>
-    public ControleAcessoAulaController(IOptions<UrlSettings> appSettings)
+    /// <param name="appSettings">configurações de urls do sistema</param>
+    /// <param name="host">informações da aplicação em execução</param>
+    /// <param name="logger">Log de mensagens da aplicação</param>
+    public ControleAcessoAulaController(IOptions<UrlSettings> appSettings,
+        IWebHostEnvironment host,
+        ILog logger)
     {
-        _appSettings = appSettings;
-        ApplicationSettings.WebApiUrl = _appSettings.Value.WebApiBaseUrl;
+        ApplicationSettings.WebApiUrl = appSettings.Value.WebApiBaseUrl;
+        _logger = logger;
     }
     #endregion
 
@@ -42,11 +49,29 @@ public class ControleAcessoAulaController : BaseController
     [ClaimsAuthorize(ClaimType.ControleAcessoAula, Identity.Claim.Consultar)]
     public IActionResult Index(int? crud, int? notify, string message = null)
     {
-        SetNotifyMessage(notify, message);
-        SetCrudMessage(crud);
-        var response = ApiClientFactory.Instance.GetControlesAcessosAulasAll();
+        
+        try
+        {
+            _logger.Info($"Usuario Logado em ControleAcessoAula.Index User.Identity.Name : {User.Identity.Name}");
 
-        return View(new ControleAcessoAulaModel() { ControlesAcessosAulas = response });
+            SetNotifyMessage(notify, message);
+            SetCrudMessage(crud);
+            var response = ApiClientFactory.Instance.GetControlesAcessosAulasAll();
+
+            return View(new ControleAcessoAulaModel() { ControlesAcessosAulas = response });
+
+        }
+        catch (Exception e)
+        {
+            _logger.Error($"ControleAcessoAula.Index: {e.StackTrace}");
+            return RedirectToRoute(new
+            {
+                controller = "Home",
+                action = "Error",
+                message = e.Message,
+                stackTrace = e.StackTrace
+            });
+        }
     }
 
     /// <summary>

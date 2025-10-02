@@ -81,6 +81,8 @@ namespace WebApp.Controllers
 
             try
             {
+                _logger.Info($"Usuario Logado em Profissional.Index User.Identity.Name : {User.Identity.Name}");
+
                 SetNotifyMessage(notify, message);
                 SetCrudMessage(crud);
 
@@ -107,8 +109,14 @@ namespace WebApp.Controllers
             }
             catch (Exception e)
             {
-                Console.Write(e.StackTrace);
-                return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = e.Message });
+                _logger.Error($"Profissional.Index: {e.StackTrace}");
+                return RedirectToRoute(new
+                {
+                    controller = "Home",
+                    action = "Error",
+                    message = e.Message,
+                    stackTrace = e.StackTrace
+                });
 
             }
         }

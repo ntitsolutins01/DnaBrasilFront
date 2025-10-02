@@ -78,13 +78,17 @@ namespace WebApp.Controllers
                     ListFomentos = fomentos,
                     IdPerfil = usu.Perfil.Id
                 });
-
             }
             catch (Exception e)
             {
-                _logger.Error($"Aluno.Index: {e.StackTrace}");
-                return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = e.Message });
-
+                _logger.Error($"Certificado.Index: {e.StackTrace}");
+                return RedirectToRoute(new
+                {
+                    controller = "Home",
+                    action = "Error",
+                    message = e.Message,
+                    stackTrace = e.StackTrace
+                });
             }
         }
 
