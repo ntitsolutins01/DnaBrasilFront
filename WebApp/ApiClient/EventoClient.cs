@@ -100,7 +100,20 @@ namespace WebApp.ApiClient
                 $"{ResourceEvento}"));
             return Get<List<EventoDto>>(requestUrl);
         }
+
+        /// <summary>
+        /// Busca Eventos por Filtro
+        /// </summary>
+        /// <param name="searchFilter">Filtro para pesquisa de Evento</param>
+        /// <returns>Retorna a lista de Evento por Filtro</returns>
+        public Task<EventosFilterDto?> GetEventosByFilter(EventosFilterDto searchFilter)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceEvento}/Filter"));
+            return GetFiltro(requestUrl, searchFilter);
+        }
         #endregion
+
 
     }
 }

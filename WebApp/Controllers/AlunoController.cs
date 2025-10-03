@@ -86,7 +86,6 @@ namespace WebApp.Controllers
         /// </summary>
         /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
         /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
-        /// <param name="collection">Lista de filtros selecionados para pesquisa de alunos</param>
         /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
         [ClaimsAuthorize(ClaimType.Aluno, Claim.Consultar)]
         [HttpGet]

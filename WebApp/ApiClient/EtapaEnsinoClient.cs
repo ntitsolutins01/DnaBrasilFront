@@ -11,17 +11,18 @@ namespace WebApp.ApiClient
         private const string ResourceEtapaEnsino = "EtapasEnsino";
         #region Main Methods
 
-        ///// <summary>
-        ///// Inclusão de Etapas de Ensino
-        ///// </summary>
-        ///// <param name="command">Objeto de inclusão de Etapas de Ensino</param>
-        ///// <returns>Id de EtapaEnsino inserido</returns>
-        //public Task<long> CreateEtapaEnsino(EtapaEnsinoModel.CreateUpdateEtapaEnsinoCommand command)
-        //{
-        //    var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-        //        $"{ResourceEtapaEnsino}"));
-        //    return Post(requestUrl, command);
-        //}
+        /// <summary>
+        /// Inclusão de Estapa Ensino
+        /// </summary>
+        /// <param name="command">Objeto de inclusão de Etapa ENsino</param>
+        /// <returns>Lista de Estapa Ensino</returns>
+        public Task<long> CreateEtapaEnsino(EtapaEnsinoModel.CreateEtapaEnsinoCommand command)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceEtapaEnsino}"));
+            return Post(requestUrl, command);
+        }
+
 
         ///// <summary>
         ///// Alteração de Etapas de Ensino
@@ -29,24 +30,24 @@ namespace WebApp.ApiClient
         ///// <param name="id">Id de alteração de Etapas de Ensino</param>
         ///// <param name="command">Objeto de alteração de Etapas de Ensino</param>
         ///// <returns>Retorna true ou false</returns>
-        //public Task<bool> UpdateEtapaEnsino(int id, EtapaEnsinoModel.CreateUpdateEtapaEnsinoCommand command)
-        //{
-        //    var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-        //        $"{ResourceEtapaEnsino}/{id}"));
-        //    return Put(requestUrl, command);
-        //}
+        public Task<bool> UpdateEtapaEnsino(int id, EtapaEnsinoModel.UpdateEtapaEnsinoCommand command)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+            $"{ResourceEtapaEnsino}/{id}"));
+            return Put(requestUrl, command);
+        }
 
         ///// <summary>
         ///// Exclusão de Etapas de Ensino
         ///// </summary>
         ///// <param name="id">Id de Exclusão de Etapas de Ensino</param>
         ///// <returns>Retorna true ou false</returns>
-        //public Task<bool> DeleteEtapaEnsino(int id)
-        //{
-        //    var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-        //        $"{ResourceEtapaEnsino}/{id}"));
-        //    return Delete<bool>(requestUrl);
-        //}
+        public Task<bool> DeleteEtapaEnsino(int id)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+            $"{ResourceEtapaEnsino}/{id}"));
+            return Delete<bool>(requestUrl);
+        }
 
         #endregion
 
@@ -76,6 +77,17 @@ namespace WebApp.ApiClient
         }
 
         /// <summary>
+        /// Busca todas as Etapas de Ensino cadastradas e ativas
+        /// </summary>
+        /// <returns>Retorna a lista de Etapas de Ensino</returns>
+        public List<EtapaEnsinoDto> GetEtapasEnsinoAtivas()
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceEtapaEnsino}/Ativas"));
+            return Get<List<EtapaEnsinoDto>>(requestUrl);
+        }
+
+        /// <summary>
         /// Busca uma lista de Etapas por Localidade
         /// </summary>
         /// <param name="id">Id da localidade</param>
@@ -85,18 +97,6 @@ namespace WebApp.ApiClient
             var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
                 $"{ResourceEtapaEnsino}/Localidade/{id}"));
             return Get<List<EtapaEnsinoDto>>(requestUrl);
-        }
-
-        /// <summary>
-        /// Inclusão de Estapa Ensino
-        /// </summary>
-        /// <param name="command">Objeto de inclusão de Etapa ENsino</param>
-        /// <returns>Lista de Estapa Ensino</returns>
-        public Task<long> CreateEtapaEnsino(AlunoModel.CreateUpdateEtapaEnsinoCommand command)
-        {
-            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                $"{ResourceEtapaEnsino}"));
-            return Post(requestUrl, command);
         }
 
         #endregion

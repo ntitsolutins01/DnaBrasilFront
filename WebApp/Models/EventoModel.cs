@@ -5,6 +5,8 @@ namespace WebApp.Models
 {
     public class EventoModel
     {
+        public string FomentoId { get; set; }
+        public SelectList ListFomentos { get; set; }
         public string EstadoId { get; set; }
         public SelectList ListEstados { get; set; }
         public string MunicipioId { get; set; }
@@ -14,10 +16,11 @@ namespace WebApp.Models
         public string AlunoId { get; set; }
         public SelectList ListAlunos { get; set; }
         public EventoDto Evento { get; set; }
-        public List<EventoDto> Eventos { get; set; }
+        public PaginatedListDto<EventoDto>? Eventos { get; set; }
         public List<ControlePresencaDto> ControlesPresencas { get; set; }
         public AlunoIndexDto? Convidado { get; set; }
         public int IdPerfil { get; set; }
+        public EventosFilterDto SearchFilter { get; set; }
 
 
         public class CreateUpdateEventoCommand
