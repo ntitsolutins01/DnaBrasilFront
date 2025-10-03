@@ -128,11 +128,6 @@ namespace WebApp.Models
             public string? Bairro { get; set; }
             public string? Email { get; set; }
         }
-
-        public class CreateUpdateEtapaEnsinoCommand
-        {
-            public string? Nome { get; set; }
-        }
     }
 
 }
