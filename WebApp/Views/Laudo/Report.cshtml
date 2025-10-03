@@ -1220,8 +1220,8 @@
     }
     
     <!-- Laudo Educacional -->
-    @* @if (@Model.Laudo.SaudeBucalId != null)
-    {  *@
+    @* @if (@Model.Laudo.EducacionalMatematicaId != null || @Model.Laudo.EducacionalPortuguesId != null)
+    {  *@ 
         <div class="page-container">
             <div class="newContainer">
                 <div class="newContainer2">
@@ -1330,7 +1330,7 @@
                 </div>
             </div>
         </div>
-    @*}*@
+    @* } *@
 
     <!-- Página Final -->
     <div class="page-container">
