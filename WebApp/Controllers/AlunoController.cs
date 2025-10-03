@@ -2208,36 +2208,6 @@ namespace WebApp.Controllers
         }
 
 
-
-        /// <summary>
-        /// Açao de inclusão de etapa de ensino
-        /// </summary>
-        /// <param name="collection">Coleção de dados para etapa de ensino</param>
-        /// <returns>Retorna mensagem de inclusao através do parametro crud</returns>
-        [HttpPost]
-        [ClaimsAuthorize(ClaimType.Aluno, Claim.Incluir)]
-        public async Task<JsonResult> CreateEtapaEnsino(string nome)
-        {
-            try
-            {
-                var command = new AlunoModel.CreateUpdateEtapaEnsinoCommand
-                {
-                    Nome = nome
-                };
-
-                await ApiClientFactory.Instance.CreateEtapaEnsino(command);
-
-                var result = ApiClientFactory.Instance.GetEtapasEnsinoAll();
-
-                return await Task.FromResult(Json(new SelectList(result, "Id", "Nome")));
-            }
-            catch (Exception ex)
-            {
-                return await Task.FromResult(Json(ex.Message));
-            }
-        }
-
-
         /// <summary>
         /// Açao de inclusão de grau de parentêsco
         /// </summary>
