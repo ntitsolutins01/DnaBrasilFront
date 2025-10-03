@@ -272,7 +272,9 @@ public class EventoController : BaseController
         {
             var command = new EventoModel.CreateUpdateEventoCommand
             {
-                LocalidadeId = Convert.ToInt32(collection["ddlLocalidade"].ToString()),
+                LocalidadeId = collection["ddlLocalidade"].ToString() == ""
+                    ? Convert.ToInt32(collection["hdnLocalidadeId"].ToString())
+                    : Convert.ToInt32(collection["ddlLocalidade"].ToString()),
                 Titulo = collection["titulo"].ToString(),
                 Descricao = collection["descricao"].ToString(),
                 DataEvento = collection["dtEvento"].ToString(),
