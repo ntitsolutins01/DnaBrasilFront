@@ -50,6 +50,12 @@ namespace WebApp.ApiClient
                 $"{ResourceQuestaoEad}/TipoLaudo/{id}"));
             return Get<List<QuestaoEadDto>>(requestUrl);
         }
+        public List<QuestaoEadDto> GetQuestoesEadByAulaId(int id)
+        {
+            var requestUrl = CreateRequestUri(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                $"{ResourceQuestaoEad}/Aula/{id}"));
+            return Get<List<QuestaoEadDto>>(requestUrl);
+        }
 
         #endregion
     }

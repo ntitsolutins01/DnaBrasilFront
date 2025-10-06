@@ -41,7 +41,7 @@ public class QuestaoEadController : BaseController
     }
     #endregion
 
-    #region Mian Methods
+    #region Main Methods
     /// <summary>
     /// Listagem de Questao Ead
     /// </summary>
