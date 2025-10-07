@@ -14,5 +14,6 @@ namespace WebApp.Dto
         public string? Imagem { get; set; }
         public string? NomeImagem { get; set; }
         public DateTimeOffset? DataCriacao { get; set; }
+        public EncaminhamentoDto? Encaminhamento { get; set; }
     }
 }
