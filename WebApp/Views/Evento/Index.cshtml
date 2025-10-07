@@ -68,7 +68,7 @@
                                 }
                                 else
                                 {
-                                    if (Model.IdPerfil == (int)EnumPerfil.GestorPedagogico)
+                                    if (Model.IdPerfil == (int)EnumPerfil.GestorPedagogico || Model.IdPerfil == (int)EnumPerfil.CoordenadorGeral || Model.IdPerfil == (int)EnumPerfil.EquipeItinerante)
                                     {
                                         <select class="form-control populate select2" name="ddlMunicipio" id="ddlMunicipio" style="width: 100%"
                                                 asp-for="MunicipioId" asp-items="Model.ListMunicipios">
@@ -97,7 +97,7 @@
                                 }
                                 else
                                 {
-                                    if (Model.IdPerfil == (int)EnumPerfil.GestorPedagogico)
+                                    if (Model.IdPerfil == (int)EnumPerfil.GestorPedagogico || Model.IdPerfil == (int)EnumPerfil.CoordenadorGeral || Model.IdPerfil == (int)EnumPerfil.EquipeItinerante)
                                     {
                                         <select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade" style="width: 100%"
                                                 asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
@@ -139,7 +139,7 @@
                 </header>
                 <div class="panel-body">
                     @{
-                        if (Model.IdPerfil == (int)EnumPerfil.Administrador || Model.IdPerfil == (int)EnumPerfil.Profissional || Model.IdPerfil == (int)EnumPerfil.Coordenador)
+                        if (Model.IdPerfil == (int)EnumPerfil.Administrador || Model.IdPerfil == (int)EnumPerfil.Profissional || Model.IdPerfil == (int)EnumPerfil.Coordenador || Model.IdPerfil == (int)EnumPerfil.CoordenadorGeral || Model.IdPerfil == (int)EnumPerfil.EquipeItinerante)
                         {
                             <div class="form-group row">
                                 <div class="col-sm-12 pull-right">
@@ -159,7 +159,7 @@
                                 <th class="text-center">Total de Alunos</th>
                                 <th class="text-center">Status</th>
                                 @{
-                                    if (Model.IdPerfil == (int)EnumPerfil.Administrador || Model.IdPerfil == (int)EnumPerfil.Profissional || Model.IdPerfil == (int)EnumPerfil.Coordenador)
+                                    if (Model.IdPerfil == (int)EnumPerfil.Administrador || Model.IdPerfil == (int)EnumPerfil.Profissional || Model.IdPerfil == (int)EnumPerfil.Coordenador || Model.IdPerfil == (int)EnumPerfil.CoordenadorGeral || Model.IdPerfil == (int)EnumPerfil.EquipeItinerante)
                                     {
                                         <th class="text-center">Ações</th>
                                     }
@@ -192,7 +192,7 @@
                                     }
 
                                     @{
-                                        if (Model.IdPerfil == (int)EnumPerfil.Administrador || Model.IdPerfil == (int)EnumPerfil.Profissional || Model.IdPerfil == (int)EnumPerfil.Coordenador)
+                                        if (Model.IdPerfil == (int)EnumPerfil.Administrador || Model.IdPerfil == (int)EnumPerfil.Profissional || Model.IdPerfil == (int)EnumPerfil.Coordenador || Model.IdPerfil == (int)EnumPerfil.CoordenadorGeral || Model.IdPerfil == (int)EnumPerfil.EquipeItinerante)
                                         {
                                             <td class="actions text-center">
                                                 <a data-toggle="tooltip" data-placement="top" title="Controle de Presença" asp-action="IndexControlePresenca" asp-controller="Evento"
