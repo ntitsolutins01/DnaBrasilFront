@@ -9,6 +9,7 @@
     <div class="row">
         <div class="col-md-12">
             @using (@Html.BeginForm("Create", "Evento", FormMethod.Post, new { id = "formEvento", @class = "form-horizontal" }))
+
             {
                 <section class="panel">
                     <header class="panel-heading">
@@ -19,122 +20,122 @@
                         <h2 class="panel-title">Cadastro de Evento</h2>
                     </header>
                     <div class="panel-body">
-	                    <div class="form-group">
-		                    <label class="col-sm-2 control-label text-sm-right pt-2">Estado <span class="required">*</span></label>
-		                    <div class="col-md-4">
-			                    @{
-				                    if (Model.IdPerfil == (int)EnumPerfil.Administrador)
-				                    {
-					                    <select class="form-control populate select2" name="ddlEstado" id="ddlEstado" style="width: 100%"
-					                            asp-for="EstadoId" asp-items="Model.ListEstados">
-						                    <option value="">Selecionar Estado</option>
-					                    </select>
-				                    }
-				                    else
-				                    {
-					                    <select class="form-control populate select2" name="ddlEstado" id="ddlEstado" style="width: 100%" disabled="disabled"
-					                            asp-for="EstadoId" asp-items="Model.ListEstados">
-						                    <option value="">Selecionar Estado</option>
-					                    </select>
-				                    }
-			                    }
-		                    </div>
-		                    <label class="col-sm-2 control-label text-sm-right pt-2">Município <span class="required">*</span></label>
-		                    <div class="col-md-4">
-			                    @{
-				                    if (Model.IdPerfil == (int)EnumPerfil.Administrador)
-				                    {
-					                    <select class="form-control populate select2" name="ddlMunicipio" id="ddlMunicipio" style="width: 100%"
-					                            asp-for="MunicipioId" asp-items="Model.ListMunicipios">
-						                    <option value="">Selecionar Municipio</option>
-					                    </select>
-				                    }
-				                    else
-				                    {
-					                    if (Model.IdPerfil == (int)EnumPerfil.GestorPedagogico)
-					                    {
-						                    <select class="form-control populate select2" name="ddlMunicipio" id="ddlMunicipio" style="width: 100%"
-						                            asp-for="MunicipioId" asp-items="Model.ListMunicipios">
-							                    <option value="">Selecionar Municipio</option>
-						                    </select>
-					                    }
-					                    else
-					                    {
-						                    <select class="form-control populate select2" name="ddlMunicipio" id="ddlMunicipio" style="width: 100%" disabled="disabled"
-						                            asp-for="MunicipioId" asp-items="Model.ListMunicipios">
-							                    <option value="">Selecionar Municipio</option>
-						                    </select>
-					                    }
-				                    }
-			                    }
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label text-sm-right pt-2">Estado <span class="required">*</span></label>
+                            <div class="col-md-4">
+                                @{
+                                    if (Model.IdPerfil == (int)EnumPerfil.Administrador)
+                                    {
+                                        <select class="form-control populate select2" name="ddlEstado" id="ddlEstado" style="width: 100%"
+                                                asp-for="EstadoId" asp-items="Model.ListEstados">
+                                            <option value="">Selecionar Estado</option>
+                                        </select>
+                                    }
+                                    else
+                                    {
+                                        <select class="form-control populate select2" name="ddlEstado" id="ddlEstado" style="width: 100%" disabled="disabled"
+                                                asp-for="EstadoId" asp-items="Model.ListEstados">
+                                            <option value="">Selecionar Estado</option>
+                                        </select>
+                                    }
+                                }
+                            </div>
+                            <label class="col-sm-2 control-label text-sm-right pt-2">Município <span class="required">*</span></label>
+                            <div class="col-md-4">
+                                @{
+                                    if (Model.IdPerfil == (int)EnumPerfil.Administrador)
+                                    {
+                                        <select class="form-control populate select2" name="ddlMunicipio" id="ddlMunicipio" style="width: 100%"
+                                                asp-for="MunicipioId" asp-items="Model.ListMunicipios">
+                                            <option value="">Selecionar Municipio</option>
+                                        </select>
+                                    }
+                                    else
+                                    {
+                                        if (Model.IdPerfil == (int)EnumPerfil.GestorPedagogico || Model.IdPerfil == (int)EnumPerfil.CoordenadorGeral || Model.IdPerfil == (int)EnumPerfil.EquipeItinerante)
+                                        {
+                                            <select class="form-control populate select2" name="ddlMunicipio" id="ddlMunicipio" style="width: 100%"
+                                                    asp-for="MunicipioId" asp-items="Model.ListMunicipios">
+                                                <option value="">Selecionar Municipio</option>
+                                            </select>
+                                        }
+                                        else
+                                        {
+                                            <select class="form-control populate select2" name="ddlMunicipio" id="ddlMunicipio" style="width: 100%" disabled="disabled"
+                                                    asp-for="MunicipioId" asp-items="Model.ListMunicipios">
+                                                <option value="">Selecionar Municipio</option>
+                                            </select>
+                                        }
+                                    }
+                                }
                             </div>
                         </div>
                         <div class="form-group row">
-		                    <label class="col-sm-2 control-label text-sm-right pt-2">Localidade <span class="required">*</span></label>
-		                    <div class="col-md-4">
-			                    @{
-				                    if (Model.IdPerfil == (int)EnumPerfil.Administrador)
-				                    {
-					                    <select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade" style="width: 100%"
-					                            asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
-						                    <option value="">Selecionar Localidade</option>
-					                    </select>
-				                    }
-				                    else
-				                    {
-										if (Model.IdPerfil == (int)EnumPerfil.GestorPedagogico || Model.IdPerfil == (int)EnumPerfil.Coordenador)
-					                    {
-						                    <select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade" style="width: 100%"
-						                            asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
-							                    <option value="">Selecionar Localidade</option>
-						                    </select>
-					                    }
-					                    else
-					                    {
+                            <label class="col-sm-2 control-label text-sm-right pt-2">Localidade <span class="required">*</span></label>
+                            <div class="col-md-4">
+                                @{
+                                    if (Model.IdPerfil == (int)EnumPerfil.Administrador)
+                                    {
+                                        <select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade" style="width: 100%"
+                                                asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
+                                            <option value="">Selecionar Localidade</option>
+                                        </select>
+                                    }
+                                    else
+                                    {
+                                        if (Model.IdPerfil == (int)EnumPerfil.GestorPedagogico || Model.IdPerfil == (int)EnumPerfil.Coordenador || Model.IdPerfil == (int)EnumPerfil.CoordenadorGeral || Model.IdPerfil == (int)EnumPerfil.EquipeItinerante)
+                                        {
+                                            <select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade" style="width: 100%"
+                                                    asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
+                                                <option value="">Selecionar Localidade</option>
+                                            </select>
+                                        }
+                                        else
+                                        {
                                             <select class="form-control populate select2" name="ddlLocalidade" id="ddlLocalidade" style="width: 100%" disabled="disabled"
                                                     asp-for="LocalidadeId" asp-items="Model.ListLocalidades">
                                                 <option value="">Selecionar Localidade</option>
                                             </select>
 
-											<input type="hidden" id="hdnLocalidadeId" name="hdnLocalidadeId" value="@Model.ListLocalidades.SelectedValue" />
-					                    }
+                                            <input type="hidden" id="hdnLocalidadeId" name="hdnLocalidadeId" value="@Model.ListLocalidades.SelectedValue" />
+                                        }
 
 
-				                    }
-			                    }
-		                    </div>
-	                    </div>
-	                    <div class="form-group row">
-		                    <label class="col-sm-2 control-label text-sm-right pt-2">Titulo <span class="required">*</span></label>
-		                    <div class="col-sm-10">
-			                    <input type="text" name="titulo" class="form-control"
+                                    }
+                                }
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 control-label text-sm-right pt-2">Titulo <span class="required">*</span></label>
+                            <div class="col-sm-10">
+                                <input type="text" name="titulo" class="form-control"
                                        maxlength="250"
-			                           title="Por favor informe o Nome." required />
-		                    </div>
-	                    </div>
-	                    <div class="form-group">
-		                    <label class="col-sm-2 control-label text-sm-right pt-2">Descrição </label>
-		                    <div class="col-sm-10">
-			                    <textarea class="form-control" rows="3" maxlength="500" name="descricao"></textarea>
-		                    </div>
-	                    </div>
-	                    <div class="form-group">
-		                    <label class="col-sm-2 control-label">Data do evento <span class="required">*</span></label>
-		                    <div class="col-sm-4">
-			                    <div class="input-group">
-				                    <span class="input-group-addon">
-					                    <i class="fa fa-calendar"></i>
-				                    </span>
-				                    <input id="dtEvento" name="dtEvento"
-				                           required
-				                           title="Por favor informe a data do evento."
-				                           style="z-index: auto;"
-				                           data-plugin-datepicker data-date-format="dd/mm/yyyy" data-plugin-options='{"language": "pt-BR"}'
-				                           placeholder="__/__/____" class="form-control startdate"
-				                           class="form-control">
-			                    </div>
-		                    </div>
-	                    </div>
+                                       title="Por favor informe o Nome." required />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label text-sm-right pt-2">Descrição </label>
+                            <div class="col-sm-10">
+                                <textarea class="form-control" rows="3" maxlength="500" name="descricao"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Data do evento <span class="required">*</span></label>
+                            <div class="col-sm-4">
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <i class="fa fa-calendar"></i>
+                                    </span>
+                                    <input id="dtEvento" name="dtEvento"
+                                           required
+                                           title="Por favor informe a data do evento."
+                                           style="z-index: auto;"
+                                           data-plugin-datepicker data-date-format="dd/mm/yyyy" data-plugin-options='{"language": "pt-BR"}'
+                                           placeholder="__/__/____" class="form-control startdate"
+                                           class="form-control">
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <footer class="panel-footer">
                         <div class="row">
@@ -155,6 +156,7 @@
     <link rel="stylesheet" href="~/assets/vendor/select2-bootstrap-theme/select2-bootstrap.min.css" />
     <link href="~/assets/vendor/bootstrap-datepicker/css/bootstrap-datepicker3.css" rel="stylesheet" />
 }
+
 @section Scripts {
     <script src="~/assets/vendor/select2/js/select2.js"></script>
     <script src="~/assets/vendor/jquery-validation/jquery.validate.js"></script>
