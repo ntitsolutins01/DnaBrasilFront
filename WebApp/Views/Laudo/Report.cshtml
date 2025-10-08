@@ -1090,7 +1090,7 @@
                 <div class="newContainer2">
                     <div class="newContainer2">
                         <div class="sideContainer">
-                            <div class="cor-alimento" style="top: 66.64%;"></div>
+                            <div class="cor-alimento" style="top: 0%; height: 100%!important;"></div>
                         </div>
                         <div class="container-main-saude">
                             <div class="container-2-saude">
@@ -1279,7 +1279,7 @@
                 </div>
             </div>
         </div>
-
+    
         <!-- Info Laudo Educacional -->
         <div class="page-container">
             <div class="newContainer">
@@ -1287,50 +1287,173 @@
                     <div class="sideContainer">
                         <div class="cor-educacional" style="top: 0%; height: 100%!important"></div>
                     </div>
-                        <div class="container-main-vida">
-                            @* @{
-                                var indexEducacional = 1;
-                            }
-
-                            @foreach (var item in Model.ListVocacional)
-                            { *@
-                                    <div class="row-vida">
-                                        <div class="label-vida">
-                                            <div class="label-vida-container-1"
-                                                 style="background-color: #00a9a9;">
-                                                <div class="label-vida-icon" style="background-size: cover;">
-                                                    @* @if (item.ByteImage != null)
-                                                    {
-                                                        var base64 = Convert.ToBase64String(item.ByteImage);
-                                                        var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
-
-                                                        <img src="@imgSrc" style="width:100%;" />
-                                                    }
-                                                    else
-                                                    { *@
-                                                        <img src="~/assets/assets_Laudo/img-vocacao/laudo-vocacao-1.png" style="width:100%;" />
-                                                    @*}*@
-                                                </div>
-                                            </div>
-                                            <div class="label-vida-container-2">
-                                                <span>Disciplina.Nome</span>
-                                            </div>
-                                        </div>
-                                        <div class="value-vida">
-                                            <span>
-                                                Disciplina.Descricao
-                                            </span>
+                    <div class="container-main-educacional">
+                        <!-- Língua Portuguesa - Amarelo -->
+                        <div class="row-educacional">
+                            <div class="label-educacional">
+                                <div class="label-educacional-container-1 educacional-circle-amarelo">
+                                    <div class="label-educacional-icon" style="background-size: cover;">
+                                        <img src="~/assets/assets_Laudo/img-educacional/portugues.png" style="width:100%;" />
+                                    </div>
+                                </div>
+                                <div class="label-educacional-container-2">
+                                    <span>Língua Portuguesa</span>
+                                </div>
+                            </div>
+                            <div class="value-educacional educacional-card-amarelo">
+                                <div class="educacional-status">
+                                    <div class="educacional-status-header">
+                                        <span class="educacional-nivel">Amarelo</span>
+                                        <div class="educacional-score-container">
+                                            <div class="educacional-score-external"></div>
+                                            <div class="educacional-score-principal" style="background: conic-gradient(#F1C40F 0 216deg, #F7DC6F 216deg 360deg);"></div>
+                                            <span class="educacional-score-value">60</span>
                                         </div>
                                     </div>
-                            @*
-                                indexEducacional++;
-                            }*@
-
+                                    <span class="educacional-descricao">Nível intermediário de desenvolvimento na disciplina de Língua Portuguesa. Recomenda-se acompanhamento pedagógico específico.</span>
+                                </div>
+                            </div>
                         </div>
+
+                        <!-- Língua Portuguesa - Azul -->
+                        <div class="row-educacional">
+                            <div class="label-educacional">
+                                <div class="label-educacional-container-1 educacional-circle-azul">
+                                    <div class="label-educacional-icon" style="background-size: cover;">
+                                        <img src="~/assets/assets_Laudo/img-educacional/portugues.png" style="width:100%;" />
+                                    </div>
+                                </div>
+                                <div class="label-educacional-container-2">
+                                    <span>Língua Portuguesa</span>
+                                </div>
+                            </div>
+                            <div class="value-educacional educacional-card-azul">
+                                <div class="educacional-status">
+                                    <div class="educacional-status-header">
+                                        <span class="educacional-nivel">Azul</span>
+                                        <div class="educacional-score-container">
+                                            <div class="educacional-score-external"></div>
+                                            <div class="educacional-score-principal" style="background: conic-gradient(#3498DB 0 288deg, #85C1E9 288deg 360deg);"></div>
+                                            <span class="educacional-score-value">80</span>
+                                        </div>
+                                    </div>
+                                    <span class="educacional-descricao">Bom desempenho na disciplina de Matemática. Aluno demonstra compreensão adequada dos conceitos apresentados.</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Língua Portuguesa - Verde -->
+                        <div class="row-educacional">
+                            <div class="label-educacional">
+                                <div class="label-educacional-container-1 educacional-circle-verde">
+                                    <div class="label-educacional-icon" style="background-size: cover;">
+                                        <img src="~/assets/assets_Laudo/img-educacional/portugues.png" style="width:100%;" />
+                                    </div>
+                                </div>
+                                <div class="label-educacional-container-2">
+                                    <span>Língua Portuguesa</span>
+                                </div>
+                            </div>
+                            <div class="value-educacional educacional-card-verde">
+                                <div class="educacional-status">
+                                    <div class="educacional-status-header">
+                                        <span class="educacional-nivel">Verde</span>
+                                        <div class="educacional-score-container">
+                                            <div class="educacional-score-external"></div>
+                                            <div class="educacional-score-principal" style="background: conic-gradient(#27AE60 0 324deg, #82E0AA 324deg 360deg);"></div>
+                                            <span class="educacional-score-value">90</span>
+                                        </div>
+                                    </div>
+                                    <span class="educacional-descricao">Excelente desempenho na disciplina de Ciências. Aluno demonstra domínio completo dos conteúdos estudados.</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Matemática - Amarelo -->
+                        <div class="row-educacional">
+                            <div class="label-educacional">
+                                <div class="label-educacional-container-1 educacional-circle-amarelo">
+                                    <div class="label-educacional-icon" style="background-size: cover;">
+                                        <img src="~/assets/assets_Laudo/img-educacional/matematica.png" style="width:100%;" />
+                                    </div>
+                                </div>
+                                <div class="label-educacional-container-2">
+                                    <span>Matemática</span>
+                                </div>
+                            </div>
+                            <div class="value-educacional educacional-card-amarelo">
+                                <div class="educacional-status">
+                                    <div class="educacional-status-header">
+                                        <span class="educacional-nivel">Amarelo</span>
+                                        <div class="educacional-score-container">
+                                            <div class="educacional-score-external"></div>
+                                            <div class="educacional-score-principal" style="background: conic-gradient(#F1C40F 0 180deg, #F7DC6F 180deg 360deg);"></div>
+                                            <span class="educacional-score-value">50</span>
+                                        </div>
+                                    </div>
+                                    <span class="educacional-descricao">Nível intermediário de desenvolvimento na disciplina de Matemática. Recomenda-se acompanhamento pedagógico específico.</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Matemática - Azul -->
+                        <div class="row-educacional">
+                            <div class="label-educacional">
+                                <div class="label-educacional-container-1 educacional-circle-azul">
+                                    <div class="label-educacional-icon" style="background-size: cover;">
+                                        <img src="~/assets/assets_Laudo/img-educacional/matematica.png" style="width:100%;" />
+                                    </div>
+                                </div>
+                                <div class="label-educacional-container-2">
+                                    <span>Matemática</span>
+                                </div>
+                            </div>
+                            <div class="value-educacional educacional-card-azul">
+                                <div class="educacional-status">
+                                    <div class="educacional-status-header">
+                                        <span class="educacional-nivel">Azul</span>
+                                        <div class="educacional-score-container">
+                                            <div class="educacional-score-external"></div>
+                                            <div class="educacional-score-principal" style="background: conic-gradient(#3498DB 0 252deg, #85C1E9 252deg 360deg);"></div>
+                                            <span class="educacional-score-value">70</span>
+                                        </div>
+                                    </div>
+                                    <span class="educacional-descricao">Bom desempenho na disciplina de Matemática. Aluno demonstra compreensão adequada dos conceitos apresentados.</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Matemática - Verde -->
+                        <div class="row-educacional">
+                            <div class="label-educacional">
+                                <div class="label-educacional-container-1 educacional-circle-verde">
+                                    <div class="label-educacional-icon" style="background-size: cover;">
+                                        <img src="~/assets/assets_Laudo/img-educacional/matematica.png" style="width:100%;" />
+                                    </div>
+                                </div>
+                                <div class="label-educacional-container-2">
+                                    <span>Matemática</span>
+                                </div>
+                            </div>
+                            <div class="value-educacional educacional-card-verde">
+                                <div class="educacional-status">
+                                    <div class="educacional-status-header">
+                                        <span class="educacional-nivel">Verde</span>
+                                        <div class="educacional-score-container">
+                                            <div class="educacional-score-external"></div>
+                                            <div class="educacional-score-principal" style="background: conic-gradient(#27AE60 0 360deg, #82E0AA 360deg 360deg);"></div>
+                                            <span class="educacional-score-value">100</span>
+                                        </div>
+                                    </div>
+                                    <span class="educacional-descricao">Excelente desempenho na disciplina de Matemática. Aluno demonstra domínio completo dos conteúdos estudados.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    @*}*@
+
 
     <!-- Página Final -->
     <div class="page-container">
