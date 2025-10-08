@@ -1,78 +1,78 @@
 .container-main-vida {
-        width: 772px;
-        height: auto;
-        margin: 0 auto;
-        position: relative;
-        padding: 66px 0;
-    }
-    
-    .row-vida {
-        width: 600px;
-        height: auto;
-        min-height: 150px;
-        margin: 0 auto;
-        position: relative;
-        display: flex;
-        justify-content: center;
-        align-items: flex-start;
-        gap: 20px;
-    }
-    
-    .label-vida {
-        width: 210px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        position: relative;
-    }
-    
-    .label-vida-container-1 {
-        width: 60px;
-        height: 60px;
-        border-radius: 30px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-bottom: 10px;
-    }
-    
-    .label-vida-icon {
-        width: 50px;
-        height: 37px;
-    }
-    
-    .label-vida-container-2 {
-        width: 121px;
-        text-align: center;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 5px;
-    }
-    
+    width: 772px;
+    height: auto;
+    margin: 0 auto;
+    position: relative;
+    padding: 66px 0;
+}
+
+.row-vida {
+    width: 600px;
+    height: auto;
+    min-height: 150px;
+    margin: 0 auto;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.label-vida {
+    width: 210px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+.label-vida-container-1 {
+    width: 60px;
+    height: 60px;
+    border-radius: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.label-vida-icon {
+    width: 50px;
+    height: 37px;
+}
+
+.label-vida-container-2 {
+    width: 121px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
     .label-vida-container-2 span {
         color: #000000;
         font-family: Nunito;
         text-align: center;
         display: block;
     }
-    
-    .label-vida-container-2 span:nth-child(1) {
-        font-weight: 800;
-        font-size: 18px;
-    }
-    
-    .label-vida-container-2 span:nth-child(2) {
-        font-weight: 400;
-        font-size: 14px;
-    }
-    
-    .value-vida {
-        width: 100%;
-        padding: 15px;
-        box-sizing: border-box;
-    }
-    
+
+        .label-vida-container-2 span:nth-child(1) {
+            font-weight: 800;
+            font-size: 18px;
+        }
+
+        .label-vida-container-2 span:nth-child(2) {
+            font-weight: 400;
+            font-size: 14px;
+        }
+
+.value-vida {
+    width: 100%;
+    padding: 15px;
+    box-sizing: border-box;
+}
+
     .value-vida span {
         color: rgba(0, 0, 0, 1);
         font-family: Nunito;
@@ -81,3 +81,190 @@
         line-height: 1.5;
         display: block;
     }
+
+/* ==== CLASSES ESPECÍFICAS PARA EDUCACIONAL ==== */
+.container-main-educacional {
+    width: 772px;
+    height: auto;
+    margin: 0 auto;
+    position: relative;
+    padding: 66px 0;
+}
+
+.row-educacional {
+    width: 90%;
+    height: auto;
+    min-height: 150px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 20px;
+    align-items: center;
+}
+
+.label-educacional {
+    width: 210px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+.label-educacional-container-1 {
+    width: 60px;
+    height: 60px;
+    border-radius: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.label-educacional-icon {
+    width: 35px;
+    height: 35px;
+}
+
+.label-educacional-container-2 {
+    width: 200px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+    .label-educacional-container-2 span {
+        color: #000000;
+        font-family: Nunito;
+        text-align: center;
+        display: block;
+    }
+
+        .label-educacional-container-2 span:nth-child(1) {
+            font-weight: 800;
+            font-size: 18px;
+        }
+
+.value-educacional {
+    flex: 1;
+    padding: 10px;
+    box-sizing: border-box;
+    border-radius: 15px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Classes de cores para círculos educacionais */
+.educacional-circle-amarelo {
+    background-color: #F1C40F !important;
+}
+
+.educacional-circle-azul {
+    background-color: #3498DB !important;
+}
+
+.educacional-circle-verde {
+    background-color: #27AE60 !important;
+}
+
+/* Estilos para os cards educacionais */
+.educacional-card-amarelo {
+    background: linear-gradient(135deg, #F7DC6F 0%, #F4D03F 100%);
+}
+
+.educacional-card-azul {
+    background: linear-gradient(135deg, #85C1E9 0%, #3498DB 100%);
+}
+
+.educacional-card-verde {
+    background: linear-gradient(135deg, #82E0AA 0%, #2ECC71 100%);
+}
+
+.educacional-status {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background-color: rgba(255, 255, 255, 0.85);
+    padding: 12px;
+    border-radius: 10px;
+}
+
+.educacional-status-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.educacional-nivel {
+    font-family: Nunito !important;
+    font-weight: 700 !important;
+    font-size: 16px !important;
+    color: #2C3E50 !important;
+    text-transform: uppercase;
+    margin: 0;
+    flex: 1;
+}
+
+.educacional-descricao {
+    font-family: Nunito !important;
+    font-weight: 400 !important;
+    font-size: 13px !important;
+    color: #34495E !important;
+    line-height: 1.4 !important;
+    margin: 0;
+}
+
+/* ==== SCORE CIRCULAR EDUCACIONAL ==== */
+.educacional-score-container {
+    width: 40px;
+    height: 40px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.educacional-score-external {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 1);
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.educacional-score-principal {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    position: absolute;
+    display: flex;
+    top: 4px;
+    left: 4px;
+    align-items: center;
+    justify-content: center;
+}
+
+    .educacional-score-principal::before {
+        content: '';
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: #fff;
+        position: absolute;
+    }
+
+.educacional-score-value {
+    position: absolute;
+    font-family: Nunito !important;
+    font-weight: 700 !important;
+    font-size: 10px !important;
+    color: #2C3E50 !important;
+    z-index: 2;
+    text-align: center;
+}
