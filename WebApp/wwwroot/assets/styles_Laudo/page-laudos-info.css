@@ -101,6 +101,7 @@
     align-items: flex-start;
     gap: 20px;
     align-items: center;
+    margin-bottom: 15px;
 }
 
 .label-educacional {
