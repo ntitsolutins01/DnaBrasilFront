@@ -424,7 +424,15 @@
 				<input type="hidden" name="carteirinhaAlunoId" :value="editDto.Id" />
 				<input type="hidden" id="fomentoId" name="fomentoId" value="editDto.FomentoId" />
 				<div class="modal-body">
-					<div class="row" style="margin: 10px">
+					<!-- Loading Spinner Customizado -->
+					<div v-show="carteirinhaLoading" class="carteirinha-loading-container">
+						<div class="carteirinha-spinner"></div>
+						<p class="carteirinha-loading-text">Carregando dados do aluno...</p>
+						<p class="carteirinha-loading-subtext">Por favor, aguarde um momento</p>
+					</div>
+
+					<!-- Conteúdo da Carteirinha -->
+					<div v-show="!carteirinhaLoading" class="row" style="margin: 10px">
 						<div class="tabs">
 							<ul class="nav nav-tabs">
 								<li class="active">
@@ -486,7 +494,8 @@
 				</div>
 				<div class="modal-footer">
 					<button type="reset" class="btn btn-danger pull-right" style="margin-left: 5px;" data-dismiss="modal"><i class="fa fa-remove"></i> &nbsp;&nbsp;Fechar</button>
-					<a data-toggle="tooltip"
+					<a v-show="!carteirinhaLoading"
+					   data-toggle="tooltip"
 					   data-placement="top"
 					   title="Baixar PDF em CMYK"
 					   :href="'/Aluno/GerarPdfCarteirinha/' + editDto.Id + '?fomentoId=' + editDto.FomentoId"
@@ -499,7 +508,8 @@
 			</div>
 		</div>
 	</div>
-	<!-- Modal -->
+
+    <!-- Modal -->
 	<div class="modal fade" id="mdUpload" tabindex="-1" role="dialog" aria-labelledby="mdUploadLabel" aria-hidden="true">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">

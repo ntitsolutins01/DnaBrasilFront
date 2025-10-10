@@ -1229,27 +1229,27 @@ namespace WebApp.Controllers
                     float alturaItem;
 
                     // Nome
-                    alturaItem = AddInfoRow(document, "NOME DO ESTUDANTE:", aluno.Nome, leftMargin, currentY, labelWidth, valueWidth, corAzul);
+                    alturaItem = AddInfoRow(document, "NOME DO ESTUDANTE:", aluno.Nome ?? "Não Definido", leftMargin, currentY, labelWidth, valueWidth, corAzul);
                     currentY -= alturaItem;
 
                     // Data de nascimento
-                    alturaItem = AddInfoRow(document, "DATA DE NASCIMENTO:", aluno.DtNascimento, leftMargin, currentY, labelWidth, valueWidth, corAzul);
+                    alturaItem = AddInfoRow(document, "DATA DE NASCIMENTO:" ?? "Não Definido", aluno.DtNascimento, leftMargin, currentY, labelWidth, valueWidth, corAzul);
                     currentY -= alturaItem;
 
                     // Telefone
-                    alturaItem = AddInfoRow(document, "TELEFONE:", aluno.Celular, leftMargin, currentY, labelWidth, valueWidth, corAzul);
+                    alturaItem = AddInfoRow(document, "TELEFONE:", aluno.Celular ?? "Não Definido", leftMargin, currentY, labelWidth, valueWidth, corAzul);
                     currentY -= alturaItem;
 
                     // CPF
-                    alturaItem = AddInfoRow(document, "CPF:", aluno.Cpf, leftMargin, currentY, labelWidth, valueWidth, corAzul);
+                    alturaItem = AddInfoRow(document, "CPF:", aluno.Cpf ?? "Não Definido", leftMargin, currentY, labelWidth, valueWidth, corAzul);
                     currentY -= alturaItem;
 
                     // Matrícula
-                    alturaItem = AddInfoRow(document, "MATRÍCULA:", aluno.Id.ToString(), leftMargin, currentY, labelWidth, valueWidth, corAzul);
+                    alturaItem = AddInfoRow(document, "MATRÍCULA:", aluno.Id.ToString() ?? "Não Definido", leftMargin, currentY, labelWidth, valueWidth, corAzul);
                     currentY -= alturaItem;
 
                     // Modalidades - agora ajustando o currentY com base na altura ocupada
-                    alturaItem = AddFullWidthText(document, aluno.Modalidades, leftMargin, currentY, labelWidth + valueWidth, corAzul, false);
+                    alturaItem = AddFullWidthText(document, aluno.Modalidades ?? "Não Definido", leftMargin, currentY, labelWidth + valueWidth, corAzul, false);
 
                     // Adicionar foto do aluno
                     float rightMargin = 0.91f * 28.35f;
@@ -1372,10 +1372,10 @@ namespace WebApp.Controllers
                     // Adicionar QR Code
                     if (aluno.QrCode != null && aluno.QrCode.Length > 0)
                     {
-                        float qrRightMargin = 0.62f * 28.35f + sangriaEmPontos;
-                        float qrBottomMargin = 0.4f * 28.35f + sangriaEmPontos;
-                        float qrWidth = 48.5f;
-                        float qrHeight = 48.5f;
+                        float qrRightMargin = 0.38f * 28.35f + sangriaEmPontos;
+                        float qrBottomMargin = 0.1f * 28.35f + sangriaEmPontos;
+                        float qrWidth = 60.5f;
+                        float qrHeight = 60.5f;
 
                         float qrX = larguraComSangria - qrRightMargin - qrWidth;
                         float qrY = qrBottomMargin;
@@ -1428,11 +1428,11 @@ namespace WebApp.Controllers
                     float versoY = versoStartY;
 
                     // Município/Estado
-                    alturaItem = AddInfoRow(document, "MUNICÍPIO/ESTADO:", aluno.MunicipioEstado, versoLeftMargin, versoY, labelWidth, valueWidth, corAzul, 8f);
+                    alturaItem = AddInfoRow(document, "MUNICÍPIO/ESTADO:", aluno.MunicipioEstado ?? "Não Definido", versoLeftMargin, versoY, labelWidth, valueWidth, corAzul, 8f);
                     versoY -= alturaItem;
 
                     // Unidade Escolar
-                    alturaItem = AddInfoRow(document, "UNIDADE ESCOLAR:", aluno.NomeLocalidade, versoLeftMargin, versoY, labelWidth, valueWidth, corAzul, 8f);
+                    alturaItem = AddInfoRow(document, "UNIDADE ESCOLAR:", aluno.NomeLocalidade ?? "Não Definido", versoLeftMargin, versoY, labelWidth, valueWidth, corAzul, 8f);
 
                     // Aplicar TrimBox imediatamente após concluir a página do verso
                     try
@@ -2371,27 +2371,27 @@ namespace WebApp.Controllers
                 float alturaItem;
 
                 // Nome
-                alturaItem = AddInfoRow(document, "NOME DO ESTUDANTE:", aluno.Nome, leftMargin, currentY, labelWidth, valueWidth, corAzul);
+                alturaItem = AddInfoRow(document, "NOME DO ESTUDANTE:", aluno.Nome ?? "Não Definido", leftMargin, currentY, labelWidth, valueWidth, corAzul);
                 currentY -= alturaItem;
 
                 // Data de nascimento
-                alturaItem = AddInfoRow(document, "DATA DE NASCIMENTO:", aluno.DtNascimento, leftMargin, currentY, labelWidth, valueWidth, corAzul);
+                alturaItem = AddInfoRow(document, "DATA DE NASCIMENTO:", aluno.DtNascimento ?? "Não Definido", leftMargin, currentY, labelWidth, valueWidth, corAzul);
                 currentY -= alturaItem;
 
                 // Telefone
-                alturaItem = AddInfoRow(document, "TELEFONE:", aluno.Celular, leftMargin, currentY, labelWidth, valueWidth, corAzul);
+                alturaItem = AddInfoRow(document, "TELEFONE:", aluno.Celular ?? "Não Definido", leftMargin, currentY, labelWidth, valueWidth, corAzul);
                 currentY -= alturaItem;
 
                 // CPF
-                alturaItem = AddInfoRow(document, "CPF:", aluno.Cpf, leftMargin, currentY, labelWidth, valueWidth, corAzul);
+                alturaItem = AddInfoRow(document, "CPF:", aluno.Cpf ?? "Não Definido", leftMargin, currentY, labelWidth, valueWidth, corAzul);
                 currentY -= alturaItem;
 
                 // Matrícula
-                alturaItem = AddInfoRow(document, "MATRÍCULA:", aluno.Id.ToString(), leftMargin, currentY, labelWidth, valueWidth, corAzul);
+                alturaItem = AddInfoRow(document, "MATRÍCULA:" ?? "Não Definido", aluno.Id.ToString(), leftMargin, currentY, labelWidth, valueWidth, corAzul);
                 currentY -= alturaItem;
 
                 // Modalidades - agora ajustando o currentY com base na altura ocupada
-                alturaItem = AddFullWidthText(document, aluno.Modalidades, leftMargin, currentY, labelWidth + valueWidth, corAzul, false);
+                alturaItem = AddFullWidthText(document, aluno.Modalidades ?? "Não Definido", leftMargin, currentY, labelWidth + valueWidth, corAzul, false);
                 currentY -= alturaItem;
 
                 // Adicionar foto do aluno - ajustado para incluir sangria
@@ -2557,10 +2557,10 @@ namespace WebApp.Controllers
                 if (aluno.QrCode != null && aluno.QrCode.Length > 0)
                 {
                     // Cálculo correto baseado no CSS: right: 0.98cm, bottom: 0.8cm
-                    float qrRightMargin = 0.62f * 28.35f + sangriaEmPontos;
-                    float qrBottomMargin = 0.4f * 28.35f + sangriaEmPontos;
-                    float qrWidth = 48.5f;
-                    float qrHeight = 48.5f;
+                    float qrRightMargin = 0.38f * 28.35f + sangriaEmPontos;
+                    float qrBottomMargin = 0.1f * 28.35f + sangriaEmPontos;
+                    float qrWidth = 60.5f;
+                    float qrHeight = 60.5f;
 
                     // Calculando posição X a partir da direita (incluindo sangria)
                     float qrX = larguraComSangria - qrRightMargin - qrWidth;
@@ -2602,11 +2602,11 @@ namespace WebApp.Controllers
                 float versoY = versoStartY;
 
                 // Município/Estado
-                alturaItem = AddInfoRow(document, "MUNICÍPIO/ESTADO:", aluno.MunicipioEstado, versoLeftMargin, versoY, labelWidth, valueWidth, corAzul, 8f);
+                alturaItem = AddInfoRow(document, "MUNICÍPIO/ESTADO:", aluno.MunicipioEstado ?? "Não Definido", versoLeftMargin, versoY, labelWidth, valueWidth, corAzul, 8f);
                 versoY -= alturaItem;
 
                 // Unidade Escolar
-                alturaItem = AddInfoRow(document, "UNIDADE ESCOLAR:", aluno.NomeLocalidade, versoLeftMargin, versoY, labelWidth, valueWidth, corAzul, 8f);
+                alturaItem = AddInfoRow(document, "UNIDADE ESCOLAR:", aluno.NomeLocalidade ?? "Não Definido", versoLeftMargin, versoY, labelWidth, valueWidth, corAzul, 8f);
                 versoY -= alturaItem;
 
                 // Adicionar sangria
