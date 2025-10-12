@@ -1,0 +1,59 @@
+﻿@model QuestaoEadModel.QuestaoEadViewModel
+
+@if (Model.Questoes == null || !Model.Questoes.Any())
+{
+    <div class="alert alert-info">Nenhuma questão encontrada para esta aula.</div>
+}
+else
+{
+    <div class="questoes-list">
+        @foreach (var q in Model.Questoes)
+        {
+            <div class="card mb-3">
+                <div class="card-header">
+                    <strong>Questão @q.NumeroQuestao</strong>
+                </div>
+                <div class="card-body">
+                    @if (q.Imagens.Any())
+                    {
+                        <div>
+                            <h6 class="mb-1">Imagens</h6>
+                            <div class="d-flex flex-wrap gap-2">
+                                @foreach (var img in q.Imagens.OrderBy(x => x.Ordem))
+                                {
+                                    var valor = img.Valor ?? string.Empty;
+                                    string caminhoImagem = "\\QuestoesEad" + valor.Split("\\QuestoesEad")[1];
+                                    <img src="@caminhoImagem"
+                                         alt="Imagem da questão @q.NumeroQuestao (@img.Ordem)"
+                                         style="max-width:100%; height:auto; object-fit:contain;" />
+                                }
+                            </div>
+                        </div>
+                    }
+
+                    @if (q.Textos.Any())
+                    {
+                        <div class="mb-2">
+                            <h6 class="mb-1">Textos</h6>
+                            <ol class="mb-0">
+                                @foreach (var t in q.Textos.OrderBy(x => x.Ordem))
+                                {
+                                    <li>@t.Valor</li>
+                                }
+                            </ol>
+                        </div>
+                    }
+
+                    @if (!string.IsNullOrWhiteSpace(q.Referencia))
+                    {
+                        <small class="text-muted">Referência: @q.Referencia</small>
+                        <hr />
+                    }
+
+                    <p class="mb-2">@q.Enunciado</p>
+
+                </div>
+            </div>
+        }
+    </div>
+}

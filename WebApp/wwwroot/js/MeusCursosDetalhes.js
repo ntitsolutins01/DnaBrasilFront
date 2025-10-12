@@ -260,44 +260,46 @@
         GetAulaById: function (id) {
             var self = this;
             vm.AtualizarProgresso();
+
+            // opcional: feedback visual enquanto carrega
+            const $container = $('#aula-container');
+            if ($container.length) {
+                $container.html('<div class="text-muted">Carregando questões...</div>');
+            }
+
             axios.get("../../Aula/GetAulaById?id=" + id + "&bloob=true")
                 .then(response => {
                     self.ListarMateriais();
                     self.aula = response.data;
                     self.ListarMateriais();
-                    self.selectedVideoUrl = "";
-                    //if (response.data.video !== undefined) {
-                    //    if (response.data.video.includes("\\Aulas")) {
-                    //        self.selectedVideoUrl = "\\Aulas" + response.data.video.split("\\Aulas")[1];
-                    //    } else if (response.data.video.includes("\\MaterialEAD")) {
-                    //        self.selectedVideoUrl = "\\MaterialEAD" + response.data.video.split("\\MaterialEAD")[1];
-                    //    }
-                    //}
 
                     self.selectedVideoUrl = response.data.video;
-
-                    //if (response.data.material !== undefined) {
-                    //    if (response.data.material.includes("\\Aulas")) {
-                    //        self.selectedMaterialUrl = "\\Aulas" + response.data.material.split("\\Aulas")[1];
-                    //    } else if (response.data.material.includes("\\MaterialEAD")) {
-                    //        self.selectedMaterialUrl = "\\MaterialEAD" + response.data.material.split("\\MaterialEAD")[1];
-                    //    }
-                    //}
-
                     self.selectedMaterialUrl = response.data.material;
 
                     $('#aulaAtualTitulo').text(response.data.titulo);
 
                     var player = document.getElementById("videoPlayer");
-                    if (player) {
-                        player.load();
-                    }
+                    if (player) player.load();
 
                     self.ListarMateriais();
 
+                    // >>> AQUI: carrega a PARTIAL das questões <<<
+                    const aulaId = response.data.id ?? id; // usa o id retornado (se existir), senão o parâmetro
+                    return axios.get("../../AlunoCursoCertificado/GetQuestoesEadAula?aulaId=" + encodeURIComponent(aulaId), {
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' } // indica request AJAX
+                    });
+                })
+                .then(rPartial => {
+                    if (rPartial && rPartial.data && $container.length) {
+                        // rPartial.data é HTML da partial
+                        $container.html(rPartial.data);
+                    }
                 })
                 .catch(error => {
-                    console.error("Erro ao buscar aula:", error);
+                    console.error("Erro ao buscar aula/questões:", error);
+                    if ($container.length) {
+                        $container.html('<div class="alert alert-danger">Erro ao carregar questões.</div>');
+                    }
                 });
         },
         ListarMateriais: function () {

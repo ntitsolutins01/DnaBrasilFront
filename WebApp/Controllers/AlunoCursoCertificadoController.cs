@@ -358,5 +358,80 @@ public class AlunoCursoCertificadoController : BaseController
         return Task.FromResult(result);
     }
 
+    [HttpGet]
+    public async Task<ActionResult> GetQuestoesEadAula(int aulaId)
+    {
+        try
+        {
+            var questoes = ApiClientFactory.Instance.GetQuestoesEadByAulaId(aulaId);
+
+            if (questoes == null || !questoes.Any())
+            {
+                return PartialView("_QuestoesEad", new QuestaoEadModel.QuestaoEadViewModel
+                {
+                    AulaId = aulaId,
+                    Questoes = new List<QuestaoEadModel.QuestaoViewModel>()
+                });
+            }
+
+            var tarefas = questoes.Select(q =>
+            {
+                var itens = ApiClientFactory.Instance.GetTextosImagensQuestoesAllByQuestaoEadId(q.Id) ?? Enumerable.Empty<TextoImagemQuestaoDto>();
+
+                var textos = itens
+                    .Where(i => string.Equals(i.Tipo, "T", StringComparison.OrdinalIgnoreCase))
+                    .OrderBy(i => i.Ordem)
+                    .Select(i => new QuestaoEadModel.ItemViewModel
+                    {
+                        Ordem = i.Ordem,
+                        Valor = i.TextoImagem      // texto puro
+                    })
+                    .ToList();
+
+                var imagens = itens
+                    .Where(i => string.Equals(i.Tipo, "I", StringComparison.OrdinalIgnoreCase))
+                    .OrderBy(i => i.Ordem)
+                    .Select(i => new QuestaoEadModel.ItemViewModel
+                    {
+                        Ordem = i.Ordem,
+                        Valor = i.TextoImagem      // URL absoluta/relativa da imagem no sistema
+                    })
+                    .ToList();
+
+                //var respostas = ApiClientFactory.Instance
+
+                return new QuestaoEadModel.QuestaoViewModel
+                {
+                    Id = q.Id,
+                    NumeroQuestao = q.NumeroQuestao,
+                    Enunciado = q.Enunciado,
+                    Referencia = q.Referencia,
+                    Textos = textos,
+                    Imagens = imagens, 
+                    Respostas = 
+                };
+            });
+
+
+            var vm = new QuestaoEadModel.QuestaoEadViewModel
+            {
+                AulaId = aulaId,
+                Questoes = (tarefas)
+                    .OrderBy(x => x.NumeroQuestao)
+                    .ToList()
+            };
+
+            return PartialView("_QuestoesEad", vm);
+        }
+        catch (Exception)
+        {
+            return RedirectToAction(nameof(DetalhesCurso), new
+            {
+                notify = (int)EnumNotify.Error,
+                message = "Erro ao carregar questões. Favor entrar em contato com o administrador do sistema."
+            });
+        }
+    }
+
     #endregion
 }

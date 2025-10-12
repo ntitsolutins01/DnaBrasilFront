@@ -35,6 +35,29 @@ namespace WebApp.Models
             public List<Dictionary<int, string>>? ListTextos { get; set; }
             public List<Dictionary<int, string>>? ListImagens { get; set; }
         }
+
+        public class QuestaoEadViewModel
+        {
+            public int AulaId { get; set; }
+            public List<QuestaoViewModel> Questoes { get; set; } = new();
+        }
+
+        public class QuestaoViewModel
+        {
+            public int Id { get; set; }
+            public int NumeroQuestao { get; set; }
+            public string Enunciado { get; set; } = "";
+            public string? Referencia { get; set; }
+            public List<ItemViewModel> Textos { get; set; } = new();
+            public List<ItemViewModel> Imagens { get; set; } = new();
+        }
+
+        public class ItemViewModel
+        {
+            public int Ordem { get; set; }
+            public string Valor { get; set; } = ""; // Texto puro ou URL/Base64 da imagem
+        }
+
     }
 
 }

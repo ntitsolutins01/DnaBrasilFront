@@ -83,6 +83,20 @@
                                     </div>
                                 </div>
                             </div>
+                            
+                            @* @{
+                                var questoesEadVazias = new QuestaoEadModel.QuestaoEadViewModel
+                                {
+                                    AulaId = Model is not null && Model is dynamic ? (int?)Model.AulaId ?? 0 : 0,
+                                    Questoes = new List<QuestaoEadModel.QuestaoViewModel>()
+                                };
+                            }
+
+                            <!-- Questões -->
+                            <div id="aula-container" class="mt-lg">
+                                @await Html.PartialAsync("_QuestoesEad", questoesEadVazias)
+                            </div> *@
+
                         </div>
 
                         <div class="col-md-4">
@@ -101,7 +115,7 @@
                                                 progress = (int)Math.Round((double)Model.AlunosAulas.Count() / Model.Aulas.Count() * 100, 0);
                                             }
                                         }
-                                        <input type="hidden" id="progresso" value="@progress"/>
+                                        <input type="hidden" id="progresso" value="@progress" />
                                         <div class="progress-bar"
                                              role="progressbar"
                                              :style="'width:' + progresso + '%'"
@@ -133,7 +147,7 @@
                                             foreach (var modulo in Model.Modulos.OrderBy(m => m.Ordem))
                                             {
                                                 var moduloAulas = Model.Aulas?.Where(a => a.ModuloEadId == modulo.Id).OrderBy(a => a.Ordem).ToList()
-                                                ?? new List<AulaDto>();
+                                                                  ?? new List<AulaDto>();
                                                 var collapseId = "collapseModulo" + modulo.Id;
                                                 var isExpanded = modulo.Equals(Model.Modulos.First()) ? "in" : "";
                                                 <div class="panel panel-accordion">
@@ -184,6 +198,20 @@
                                     </div>
 
                                 </div>
+                                
+                                @{
+                                    var questoesEadVazias = new QuestaoEadModel.QuestaoEadViewModel
+                                    {
+                                        AulaId = Model is not null && Model is dynamic ? (int?)Model.AulaId ?? 0 : 0,
+                                        Questoes = new List<QuestaoEadModel.QuestaoViewModel>()
+                                    };
+                                }
+
+                                <!-- Questões -->
+                                <div id="aula-container" class="mt-lg">
+                                    @await Html.PartialAsync("_QuestoesEad", questoesEadVazias)
+                                </div>
+
                             </div>
 
                             <!-- Opções -->
@@ -249,15 +277,15 @@
             border-radius: 4px;
         }
 
-        .nav-list li a:hover {
-            background-color: #f5f5f5;
-            text-decoration: none;
-        }
+            .nav-list li a:hover {
+                background-color: #f5f5f5;
+                text-decoration: none;
+            }
 
-        .nav-list li a.active {
-            background-color: #eaeaea;
-            font-weight: bold;
-         }
+            .nav-list li a.active {
+                background-color: #eaeaea;
+                font-weight: bold;
+            }
 
         video::-internal-media-controls-download-button {
             display: none;
