@@ -1,3 +1,4 @@
+using log4net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
@@ -25,6 +26,7 @@ public class AtividadeController : BaseController
     #region Parametros
 
     private readonly IOptions<UrlSettings> _appSettings;
+    private readonly ILog _logger;
 
     #endregion
 
@@ -34,10 +36,12 @@ public class AtividadeController : BaseController
     /// Construtor da página
     /// </summary>
     /// <param name="appSettings">configurações de urls do sistema</param>
-    public AtividadeController(IOptions<UrlSettings> appSettings)
+    /// <param name="logger">Log de mensagens da aplicação</param>
+    public AtividadeController(IOptions<UrlSettings> appSettings,
+        ILog logger)
     {
-        _appSettings = appSettings;
-        ApplicationSettings.WebApiUrl = _appSettings.Value.WebApiBaseUrl;
+        ApplicationSettings.WebApiUrl = appSettings.Value.WebApiBaseUrl;
+        _logger = logger;
     }
     #endregion
 
@@ -51,11 +55,29 @@ public class AtividadeController : BaseController
     [ClaimsAuthorize(ClaimType.Atividade, Claim.Consultar)]
     public IActionResult Index(int? crud, int? notify, string message = null)
     {
-        SetNotifyMessage(notify, message);
-        SetCrudMessage(crud);
-        var response = ApiClientFactory.Instance.GetAtividadesAll();
+        try
+        {
+            _logger.Info($"Usuario Logado em Atividade.Index User.Identity.Name : {User.Identity.Name}");
 
-        return View(new AtividadeModel() { Atividades = response });
+            SetNotifyMessage(notify, message);
+            SetCrudMessage(crud);
+
+            var response = ApiClientFactory.Instance.GetAtividadesAll();
+
+            return View(new AtividadeModel() { Atividades = response });
+
+        }
+        catch (Exception e)
+        {
+            _logger.Error($"Atividade.Index: {e.StackTrace}");
+            return RedirectToRoute(new
+            {
+                controller = "Home",
+                action = "Error",
+                message = e.Message,
+                stackTrace = e.StackTrace
+            });
+        }
     }
 
     /// <summary>

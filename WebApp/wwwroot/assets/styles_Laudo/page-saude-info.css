@@ -170,7 +170,6 @@
     width: 490px;
     height: 106px;
     padding: 15px 0px;
-    margin: 10px;
     opacity: 1;
     position: absolute;
     top: 162px;
@@ -181,10 +180,9 @@
     color: rgba(0, 0, 0, 1);
     position: absolute;
     top: 15px;
-    left: 0px;
     font-family: Nunito;
     font-weight: Regular;
     font-size: 14px;
     opacity: 1;
-    text-align: left;
+    text-align: center;
 }

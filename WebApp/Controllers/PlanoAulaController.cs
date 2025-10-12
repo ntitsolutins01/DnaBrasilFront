@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using log4net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
@@ -20,17 +21,27 @@ namespace WebApp.Controllers
     [Authorize(Policy = ModuloAccess.PlanoAula)]
     public class PlanoAulaController : BaseController
     {
-        #region Constructor
-        private readonly IOptions<UrlSettings> _appSettings;
-        private readonly IHostingEnvironment _host;
+        #region Parametros
 
-        public PlanoAulaController(IOptions<UrlSettings> appSettings,
-            IHostingEnvironment host)
+        private readonly ILog _logger;
+        private readonly IWebHostEnvironment _host;
+
+        #endregion
+
+        #region Constructor
+
+        /// <summary>
+        /// Construtor da página
+        /// </summary>
+        /// <param name="appSettings">configurações de url da api</param>
+        /// <param name="logger">Log de mensagens da aplicação</param>
+        public PlanoAulaController(IOptions<UrlSettings> appSettings, ILog logger, IWebHostEnvironment host)
         {
-            _appSettings = appSettings;
-            ApplicationSettings.WebApiUrl = _appSettings.Value.WebApiBaseUrl;
+            _logger = logger;
+            ApplicationSettings.WebApiUrl = appSettings.Value.WebApiBaseUrl;
             _host = host;
         }
+
         #endregion
 
         #region Main Methods
@@ -45,12 +56,28 @@ namespace WebApp.Controllers
         [ClaimsAuthorize(ClaimType.PlanoAula, Claim.Consultar)]
         public IActionResult Index(int? crud, int? notify, string message = null)
         {
-            SetNotifyMessage(notify, message);
-            SetCrudMessage(crud);
-            var response = ApiClientFactory.Instance.GetPlanosAulasAll();
-            var modalidades = new SelectList(ApiClientFactory.Instance.GetModalidadeAll(), "Nome", "Nome");
+            try
+            {
+                _logger.Info($"Usuario Logado em PlanoAula.Index User.Identity.Name : {User.Identity.Name}");
 
-            return View(new PlanoAulaModel() { PlanosAulas = response, ListModalidades = modalidades });
+                SetNotifyMessage(notify, message);
+                SetCrudMessage(crud);
+                var response = ApiClientFactory.Instance.GetPlanosAulasAll();
+                var modalidades = new SelectList(ApiClientFactory.Instance.GetModalidadeAll(), "Nome", "Nome");
+
+                return View(new PlanoAulaModel() { PlanosAulas = response, ListModalidades = modalidades });
+            }
+            catch (Exception e)
+            {
+                _logger.Error($"PlanoAula.Index: {e.StackTrace}");
+                return RedirectToRoute(new
+                {
+                    controller = "Home",
+                    action = "Error",
+                    message = e.Message,
+                    stackTrace = e.StackTrace
+                });
+            }
         }
 
         /// <summary>

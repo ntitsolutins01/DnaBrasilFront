@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using log4net;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
 using WebApp.Configuration;
 using WebApp.Dto;
 using WebApp.Enumerators;
 using WebApp.Factory;
+using WebApp.Identity;
 using WebApp.Models;
 using WebApp.Utility;
 
@@ -13,12 +16,13 @@ namespace WebApp.Controllers
     /// <summary>
     /// Controle de Metricalmc
     /// </summary>
+    [Authorize(Policy = ModuloAccess.ConfiguracaoSistema)]
     public class MetricaImcController : BaseController
     {
 
         #region Parametros
 
-        private readonly IOptions<UrlSettings> _appSettings;
+        private readonly ILog _logger;
 
         #endregion
 
@@ -27,11 +31,12 @@ namespace WebApp.Controllers
         /// <summary>
         /// Construtor da página
         /// </summary>
-        /// <param name="appSettings">configurações de urls do sistema</param>
-        public MetricaImcController(IOptions<UrlSettings> appSettings)
+        /// <param name="appSettings">configurações de url da api</param>
+        /// <param name="logger">Log de mensagens da aplicação</param>
+        public MetricaImcController(IOptions<UrlSettings> appSettings, ILog logger)
         {
-            _appSettings = appSettings;
-            ApplicationSettings.WebApiUrl = _appSettings.Value.WebApiBaseUrl;
+            _logger = logger;
+            ApplicationSettings.WebApiUrl = appSettings.Value.WebApiBaseUrl;
         }
 
         #endregion
@@ -47,11 +52,27 @@ namespace WebApp.Controllers
         /// <returns></returns>
         public IActionResult Index(int? crud, int? notify, string message = null)
         {
-            SetNotifyMessage(notify, message);
-            SetCrudMessage(crud);
-            var response = ApiClientFactory.Instance.GetMetricasImcAll();
+            try
+            {
+                _logger.Info($"Usuario Logado em Metricalmc.Index User.Identity.Name : {User.Identity.Name}");
 
-            return View(new MetricaImcModel() { MetricasImc = response });
+                SetNotifyMessage(notify, message);
+                SetCrudMessage(crud);
+                var response = ApiClientFactory.Instance.GetMetricasImcAll();
+
+                return View(new MetricaImcModel() { MetricasImc = response });
+            }
+            catch (Exception e)
+            {
+                _logger.Error($"Metricalmc.Index: {e.StackTrace}");
+                return RedirectToRoute(new
+                {
+                    controller = "Home",
+                    action = "Error",
+                    message = e.Message,
+                    stackTrace = e.StackTrace
+                });
+            }
         }
 
         /// <summary>

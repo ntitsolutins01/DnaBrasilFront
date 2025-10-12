@@ -1,4 +1,5 @@
 using System.Text.Encodings.Web;
+using log4net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -21,23 +22,38 @@ namespace WebApp.Controllers
     [Authorize(Policy = ModuloAccess.SistemaSocioeconomico)]
     public class SistemaSocioeconomicoController : BaseController
     {
-        #region Constructor
+        #region Parametros
         private readonly IEmailSender _emailSender;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IHostingEnvironment _host;
+        private readonly ILog _logger;
+        #endregion
 
+        #region Constructor
+
+        /// <summary>
+        /// Construtor da página
+        /// </summary>
+        /// <param name="appSettings">Configurações de urls do sistema</param>
+        /// <param name="emailSender">Gerenciador de Email</param>
+        /// <param name="userManager">Gerenciador de Usuario</param>
+        /// <param name="host">Informações da aplicação em execução</param>
+        /// <param name="roleManager">Gerenciador de regras de permissoes</param>
+        /// <param name="logger">Log de mensagens da aplicação</param>
         public SistemaSocioeconomicoController(
             IOptions<UrlSettings> appSettings,
             IEmailSender emailSender,
             UserManager<IdentityUser> userManager,
             IHostingEnvironment host,
-            RoleManager<IdentityRole> roleManager)
+            RoleManager<IdentityRole> roleManager,
+            ILog logger)
         {
             _emailSender = emailSender;
             _userManager = userManager;
             _host = host;
             _roleManager = roleManager;
+            _logger = logger;
             ApplicationSettings.WebApiUrl = appSettings.Value.WebApiBaseUrl;
         }
         #endregion
@@ -49,6 +65,8 @@ namespace WebApp.Controllers
         {
             try
             {
+                _logger.Info($"Usuario Logado em SistemaSocioeconomico.Index User.Identity.Name : {User.Identity.Name}");
+
                 SetNotifyMessage(notify, message);
                 SetCrudMessage(crud);
 
@@ -60,8 +78,14 @@ namespace WebApp.Controllers
             }
             catch (Exception e)
             {
-                Console.Write(e.StackTrace);
-                return RedirectToAction(nameof(Parceiro), new { notify = (int)EnumNotify.Error, message = $"Erro ao executar esta ação. Favor entrar em contato com o administrador do sistema. {e.Message}" });
+                _logger.Error($"SistemaSocioeconomico.Index: {e.StackTrace}");
+                return RedirectToRoute(new
+                {
+                    controller = "Home",
+                    action = "Error",
+                    message = e.Message,
+                    stackTrace = e.StackTrace
+                });
 
             }
 

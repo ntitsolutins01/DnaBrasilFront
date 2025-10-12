@@ -1,4 +1,5 @@
 ﻿using System.IO.Compression;
+using log4net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -21,17 +22,25 @@ namespace WebApp.Controllers;
 [Authorize(Policy = ModuloAccess.Evento)]
 public class EventoController : BaseController
 {
-    #region Constructor
+    #region Parametros
 
+    private readonly ILog _logger;
     private readonly IWebHostEnvironment _host;
+
+
+    #endregion
+
+    #region Constructor
 
     /// <summary>
     /// Construtor da página
     /// </summary>
-    /// <param name="app">configurações de urls do sistema</param>
+    /// <param name="appSettings">configurações de url da api</param>
+    /// <param name="logger">Log de mensagens da aplicação</param>
     /// <param name="host">informações da aplicação em execução</param>
-    public EventoController(IOptions<UrlSettings> appSettings, IWebHostEnvironment host)
+    public EventoController(IOptions<UrlSettings> appSettings, IWebHostEnvironment host, ILog logger)
     {
+        _logger = logger;
         _host = host;
         ApplicationSettings.WebApiUrl = appSettings.Value.WebApiBaseUrl;
     }
@@ -48,26 +57,152 @@ public class EventoController : BaseController
     [ClaimsAuthorize(ClaimType.Evento, Identity.Claim.Consultar)]
     public async Task<ActionResult> Index(int? crud, int? notify, string message = null)
     {
-        SetNotifyMessage(notify, message);
-        SetCrudMessage(crud);
-
-        var usuario = User.Identity.Name;
-        var usu = await ApiClientFactory.Instance.GetUsuarioByEmail(usuario);
-
-        List<EventoDto> response;
-
-        if (usu.Perfil.Id == (int)EnumPerfil.Administrador)
+        try
         {
-            response = await ApiClientFactory.Instance.GetEventosAll();
-        }
-        else
-        {
-            response = await ApiClientFactory.Instance.GetEventosAll();
-        }
+            _logger.Info($"Usuario Logado em Evento.Index User.Identity.Name : {User.Identity.Name}");
 
-        return View(new EventoModel() { Eventos = response.Where(x=>x.EstadoId == usu.Uf).ToList(),
-            IdPerfil = usu.Perfil.Id
-        });
+            SetNotifyMessage(notify, message);
+            SetCrudMessage(crud);
+
+            var usuario = User.Identity.Name;
+
+            var usu = await ApiClientFactory.Instance.GetUsuarioByEmail(usuario);
+
+            var fomento = ApiClientFactory.Instance.GetFomentoByLocalidadeId(Convert.ToInt32(usu.LocalidadeId));
+            var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentosAll(), "Id", "Nome", fomento.Id);
+
+            var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome", usu.Uf);
+
+            SelectList municipios = null;
+
+            if (!string.IsNullOrEmpty(usu.Uf))
+            {
+                municipios = new SelectList(ApiClientFactory.Instance.GetMunicipiosByFomentoId(fomento.Id), "Id", "Nome", usu.MunicipioId);
+            }
+
+            SelectList localidades = null;
+
+            if (usu.MunicipioId != null)
+            {
+                var resultLocalidades = ApiClientFactory.Instance.GetLocalidadeByMunicipioId(usu.MunicipioId.ToString());
+
+                if (resultLocalidades != null)
+                    localidades = new SelectList(resultLocalidades, "Id", "Nome", usu.LocalidadeId);
+            }
+
+            var searchFilter = new EventosFilterDto
+            {
+                MunicipioId = usu.MunicipioId.ToString(),
+                LocalidadeId = usu.LocalidadeId,
+#if DEBUG
+                PageSize = 300
+#else
+                PageSize = 10000
+#endif
+            };
+
+            var response = await ApiClientFactory.Instance.GetEventosByFilter(searchFilter);
+
+            return View(new EventoModel()
+            {
+                Eventos = response.Eventos,
+                IdPerfil = usu.Perfil.Id,
+                ListFomentos = fomentos,
+                ListEstados = estados,
+                ListMunicipios = municipios,
+                ListLocalidades = localidades
+            });
+        }
+        catch (Exception e)
+        {
+            _logger.Error($"Evento.Index: {e.StackTrace}");
+            return RedirectToRoute(new
+            {
+                controller = "Home",
+                action = "Error",
+                message = e.Message,
+                stackTrace = e.StackTrace
+            });
+        }
+    }
+
+
+    /// <summary>
+    /// Listagem de Evento
+    /// </summary>
+    /// <param name="crud">paramentro que indica o tipo de ação realizado</param>
+    /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
+    /// <param name="collection">Lista de filtros selecionados para pesquisa de alunos</param>
+    /// <param name="message">mensagem apresentada nas notificações e alertas gerados na tela</param>
+    [ClaimsAuthorize(ClaimType.Evento, Claim.Consultar)]
+    [HttpPost]
+    public async Task<IActionResult> Index(int? crud, int? notify, IFormCollection collection, string message = null)
+    {
+        try
+        {
+            var usuario = User.Identity.Name;
+            var usu = await ApiClientFactory.Instance.GetUsuarioByEmail(usuario);
+
+            SetNotifyMessage(notify, message);
+            SetCrudMessage(crud);
+
+            var searchFilter = new EventosFilterDto()
+            {
+                FomentoId = collection["ddlFomento"].ToString(),
+                MunicipioId = collection["ddlMunicipio"].ToString(),
+                LocalidadeId = collection["ddlLocalidade"].ToString(),
+                Estado = collection["ddlEstado"].ToString(),
+                PageNumber = 1,
+#if DEBUG
+                PageSize = 300
+#else
+                    PageSize = 10000
+#endif
+            };
+
+            var response = await ApiClientFactory.Instance.GetEventosByFilter(searchFilter);
+
+            var fomento = ApiClientFactory.Instance.GetFomentoByLocalidadeId(Convert.ToInt32(searchFilter.LocalidadeId));
+            var fomentos = new SelectList(ApiClientFactory.Instance.GetFomentosAll(), "Id", "Nome", searchFilter.FomentoId);
+
+            var estados = new SelectList(ApiClientFactory.Instance.GetEstadosAll(), "Sigla", "Nome", searchFilter.Estado);
+
+            SelectList municipios = null;
+
+            if (!string.IsNullOrEmpty(searchFilter.Estado))
+            {
+                municipios = new SelectList(ApiClientFactory.Instance.GetMunicipiosByFomentoId(fomento.Id), "Id", "Nome", searchFilter.MunicipioId);
+            }
+
+            SelectList localidades = null;
+
+            if (usu.MunicipioId != null)
+            {
+                var resultLocalidades = ApiClientFactory.Instance.GetLocalidadeByMunicipioId(searchFilter.MunicipioId.ToString());
+
+                if (resultLocalidades != null)
+                    localidades = new SelectList(resultLocalidades, "Id", "Nome", searchFilter.LocalidadeId);
+            }
+
+            var model = new EventoModel()
+            {
+                Eventos = response.Eventos,
+                ListFomentos = fomentos,
+                ListEstados = estados,
+                ListMunicipios = municipios!,
+                ListLocalidades = localidades!,
+                SearchFilter = searchFilter,
+                IdPerfil = usu.Perfil.Id
+            };
+
+            return View(model);
+        }
+        catch (Exception e)
+        {
+            _logger.Error(e.StackTrace);
+            return RedirectToAction(nameof(Error), new { notify = (int)EnumNotify.Error, message = e.Message });
+
+        }
     }
 
     /// <summary>
@@ -137,7 +272,9 @@ public class EventoController : BaseController
         {
             var command = new EventoModel.CreateUpdateEventoCommand
             {
-                LocalidadeId = Convert.ToInt32(collection["ddlLocalidade"].ToString()),
+                LocalidadeId = collection["ddlLocalidade"].ToString() == ""
+                    ? Convert.ToInt32(collection["hdnLocalidadeId"].ToString())
+                    : Convert.ToInt32(collection["ddlLocalidade"].ToString()),
                 Titulo = collection["titulo"].ToString(),
                 Descricao = collection["descricao"].ToString(),
                 DataEvento = collection["dtEvento"].ToString(),
@@ -346,14 +483,27 @@ public class EventoController : BaseController
 
             var evento = ApiClientFactory.Instance.GetEventoById(eventoId);
 
-            var listAlunos = ApiClientFactory.Instance.GetAlunosByLocalidadeId(Convert.ToInt32(evento.LocalidadeId));
+            var listAlunos = await ApiClientFactory.Instance.GetAlunosByFilter(new AlunosFilterDto(){LocalidadeId = evento.LocalidadeId });
 
-            var alunos = new SelectList(listAlunos, "Id", "Nome");
+            if (listAlunos == null)
+                return RedirectToAction(nameof(IndexControlePresenca),
+                    new
+                    {
+                        eventoId = eventoId, notify = (int)EnumNotify.Error,
+                        message = "Não existem Alunos cadastrados para esta localidade"
+                    });
+            var alunos = new SelectList(listAlunos.Alunos.Where(x=>!x.Convidado), "Id", "Nome");
 
-            var convidado = listAlunos.FirstOrDefault(x => x.Convidado);
+            var convidado = listAlunos.Alunos.FirstOrDefault(x => x.Convidado);
 
 
-            if (convidado == null)
+            if (convidado != null)
+                return View(new EventoModel()
+                {
+                    Evento = evento,
+                    ListAlunos = alunos,
+                    Convidado = convidado
+                });
             {
                 var command = new AlunoModel.CreateUpdateDadosAlunoCommand
                 {
@@ -382,6 +532,7 @@ public class EventoController : BaseController
                 ListAlunos = alunos,
                 Convidado = convidado
             });
+
         }
         catch (Exception e)
         {

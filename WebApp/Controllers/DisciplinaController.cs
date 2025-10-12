@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using log4net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using WebApp.Authorization;
@@ -18,20 +19,25 @@ namespace WebApp.Controllers
     [Authorize(Policy = ModuloAccess.ConfiguracaoSistema)]
     public class DisciplinaController : BaseController
     {
-        #region Constructor
-        private readonly IOptions<UrlSettings> _appSettings;
+        #region Parametros
 
+        private readonly ILog _logger;
+
+        #endregion
+
+        #region Constructor
 
         /// <summary>
         /// Construtor da página
         /// </summary>
-        /// <param name="appSettings">Configurações de urls do sistema</param>
-        /// <param name="host">Informações da aplicação em execução</param>
-        public DisciplinaController(IOptions<UrlSettings> appSettings)
+        /// <param name="appSettings">configurações de url da api</param>
+        /// <param name="logger">Log de mensagens da aplicação</param>
+        public DisciplinaController(IOptions<UrlSettings> appSettings, ILog logger)
         {
-            _appSettings = appSettings;
-            ApplicationSettings.WebApiUrl = _appSettings.Value.WebApiBaseUrl;
+            _logger = logger;
+            ApplicationSettings.WebApiUrl = appSettings.Value.WebApiBaseUrl;
         }
+
         #endregion
 
         #region Main Methods
@@ -40,16 +46,31 @@ namespace WebApp.Controllers
         /// </summary>
         /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
         /// <param name="notify">parametro que indica o tipo de notificação realizada</param>
-        /// <param name="collection">Lista de filtros selecionados para pesquisa de alunos</param>
         /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
         [ClaimsAuthorize(ClaimType.Disciplina, Identity.Claim.Consultar)]
         public IActionResult Index(int? crud, int? notify, string message = null)
         {
-            SetNotifyMessage(notify, message);
-            SetCrudMessage(crud);
-            var response = ApiClientFactory.Instance.GetDisciplinasAll();
+            try
+            {
+                _logger.Info($"Usuario Logado em Disciplina.Index User.Identity.Name : {User.Identity.Name}");
 
-            return View(new DisciplinaModel() { Disciplinas = response });
+                SetNotifyMessage(notify, message);
+                SetCrudMessage(crud);
+                var response = ApiClientFactory.Instance.GetDisciplinasAll();
+
+                return View(new DisciplinaModel() { Disciplinas = response });
+            }
+            catch (Exception e)
+            {
+                _logger.Error($"Disciplina.Index: {e.StackTrace}");
+                return RedirectToRoute(new
+                {
+                    controller = "Home",
+                    action = "Error",
+                    message = e.Message,
+                    stackTrace = e.StackTrace
+                });
+            }
         }
 
         /// <summary>

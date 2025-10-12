@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using log4net;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
 using WebApp.Authorization;
@@ -15,12 +17,13 @@ namespace WebApp.Controllers
     /// <summary>
     /// Controle de Modalidade
     /// </summary>
+    [Authorize(Policy = ModuloAccess.ConfiguracaoSistema)]
     public class ModalidadeController : BaseController
     {
 
         #region Parametros
 
-        private readonly IOptions<UrlSettings> _appSettings;
+        private readonly ILog _logger;
 
         #endregion
 
@@ -29,11 +32,12 @@ namespace WebApp.Controllers
         /// <summary>
         /// Construtor da página
         /// </summary>
-        /// <param name="appSettings">configurações de urls do sistema</param>
-        public ModalidadeController(IOptions<UrlSettings> appSettings)
+        /// <param name="appSettings">configurações de url da api</param>
+        /// <param name="logger">Log de mensagens da aplicação</param>
+        public ModalidadeController(IOptions<UrlSettings> appSettings, ILog logger)
         {
-            _appSettings = appSettings;
-            ApplicationSettings.WebApiUrl = _appSettings.Value.WebApiBaseUrl;
+            _logger = logger;
+            ApplicationSettings.WebApiUrl = appSettings.Value.WebApiBaseUrl;
         }
 
         #endregion
@@ -49,12 +53,28 @@ namespace WebApp.Controllers
         /// <returns></returns>
         public IActionResult Index(int? crud, int? notify, string message = null)
         {
-            SetNotifyMessage(notify, message);
-            SetCrudMessage(crud);
-            var response = ApiClientFactory.Instance.GetModalidadeAll();
-            var linhasAcoes = new SelectList(ApiClientFactory.Instance.GetLinhasAcoesAll(), "Id", "Nome");
+            try
+            {
+                _logger.Info($"Usuario Logado em Modalidade.Index User.Identity.Name : {User.Identity.Name}");
 
-            return View(new ModalidadeModel() { Modalidades = response, ListLinhasAcoes = linhasAcoes });
+                SetNotifyMessage(notify, message);
+                SetCrudMessage(crud);
+                var response = ApiClientFactory.Instance.GetModalidadeAll();
+                var linhasAcoes = new SelectList(ApiClientFactory.Instance.GetLinhasAcoesAll(), "Id", "Nome");
+
+                return View(new ModalidadeModel() { Modalidades = response, ListLinhasAcoes = linhasAcoes });
+            }
+            catch (Exception e)
+            {
+                _logger.Error($"Modalidade.Index: {e.StackTrace}");
+                return RedirectToRoute(new
+                {
+                    controller = "Home",
+                    action = "Error",
+                    message = e.Message,
+                    stackTrace = e.StackTrace
+                });
+            }
         }
 
         /// <summary>

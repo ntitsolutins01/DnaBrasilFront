@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using log4net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
@@ -20,18 +21,24 @@ namespace WebApp.Controllers;
 public class ControleMaterialEstoqueSaidaController : BaseController
 {
 
+    #region Parametros
+
+    private readonly ILog _logger;
+
+    #endregion
+
     #region Constructor
-    private readonly IOptions<UrlSettings> _appSettings;
 
     /// <summary>
     /// Construtor da página
     /// </summary>
     /// <param name="appSettings">Configurações de urls do sistema</param>
-    /// <param name="host">Informações da aplicação em execução</param>
-    public ControleMaterialEstoqueSaidaController(IOptions<UrlSettings> appSettings)
+    /// <param name="logger">Log de mensagens da aplicação</param>
+    public ControleMaterialEstoqueSaidaController(IOptions<UrlSettings> appSettings,
+        ILog logger)
     {
-        _appSettings = appSettings;
-        ApplicationSettings.WebApiUrl = _appSettings.Value.WebApiBaseUrl;
+        ApplicationSettings.WebApiUrl = appSettings.Value.WebApiBaseUrl;
+        _logger = logger;
     }
     #endregion
 
@@ -46,12 +53,29 @@ public class ControleMaterialEstoqueSaidaController : BaseController
     [ClaimsAuthorize(ClaimType.ControleMaterialEstoqueSaida, Identity.Claim.Consultar)]
     public IActionResult Index(int? crud, int? notify, string message = null)
     {
-        SetNotifyMessage(notify, message);
-        SetCrudMessage(crud);
+        
+        try
+        {
+            _logger.Info($"Usuario Logado em ControleMaterialEstoqueSaida.Index User.Identity.Name : {User.Identity.Name}");
 
-        var response = ApiClientFactory.Instance.GetControlesMateriaisEstoquesSaidasAll();
+            SetNotifyMessage(notify, message);
+            SetCrudMessage(crud);
 
-        return View(new ControleMaterialEstoqueSaidaModel() { ControlesMateriaisEstoquesSaidas = response });
+            var response = ApiClientFactory.Instance.GetControlesMateriaisEstoquesSaidasAll();
+
+            return View(new ControleMaterialEstoqueSaidaModel() { ControlesMateriaisEstoquesSaidas = response });
+        }
+        catch (Exception e)
+        {
+            _logger.Error($"ControleMaterialEstoqueSaida.Index: {e.StackTrace}");
+            return RedirectToRoute(new
+            {
+                controller = "Home",
+                action = "Error",
+                message = e.Message,
+                stackTrace = e.StackTrace
+            });
+        }
     }
 
     /// <summary>

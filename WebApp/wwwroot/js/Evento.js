@@ -35,7 +35,121 @@ var vm = new Vue({
                     });
                 });
             }
+            if (formid === "formPesquisarEvento") {
+                var $select = $(".select2").select2({
+                    allowClear: true
+                });
 
+                $(".select2").each(function () {
+                    var $this = $(this),
+                        opts = {};
+
+                    var pluginOptions = $this.data('plugin-options');
+                    if (pluginOptions)
+                        opts = pluginOptions;
+
+                    $this.themePluginSelect2(opts);
+                });
+
+                /*
+                 * When you change the value the select via select2, it triggers
+                 * a 'change' event, but the jquery validation plugin
+                 * only re-validates on 'blur'*/
+
+                $select.on('change', function () {
+                    $(this).trigger('blur');
+                });
+
+                $("#ddlFomento").change(function () {
+
+                    var items = '<option value="">Selecionar Localidade</option>';
+                    $("#ddlLocalidade").empty;
+                    $("#ddlLocalidade").html(items);
+
+                    var id = $("#ddlFomento").val();
+
+                    var url = "../DivisaoAdministrativa/GetMunicipioByFomento?id=" + id;
+
+
+                    $.getJSON(url,
+                        function (data) {
+                            if (data.length > 0) {
+                                $("#ddlEstado").val(data[1]).trigger("change");
+                            }
+                            else {
+                                new PNotify({
+                                    title: 'Municipios',
+                                    text: 'Municipios não encontradas.',
+                                    type: 'warning'
+                                });
+                            }
+                        });
+                });
+
+                //clique de escolha do select
+                $("#ddlEstado").change(function () {
+                    var sigla = $("#ddlEstado").val();
+
+                    var url = "../../DivisaoAdministrativa/GetMunicipioByUf?uf=" + sigla;
+
+                    var ddlSource = "#ddlMunicipio";
+
+                    $.getJSON(url,
+                        { id: $(ddlSource).val() },
+                        function (data) {
+                            if (data.length > 0) {
+                                var items = '<option value="">Selecionar Municipio</option>';
+                                $("#ddlMunicipio").empty;
+                                $.each(data,
+                                    function (i, row) {
+                                        items += "<option value='" + row.value + "'>" + row.text + "</option>";
+                                    });
+                                $("#ddlMunicipio").html(items);
+
+                                var items = '<option value="">Selecionar Localidade</option>';
+                                $("#ddlLocalidade").empty;
+                                $("#ddlLocalidade").html(items);
+                            }
+                            else {
+                                new PNotify({
+                                    title: 'Usuario',
+                                    text: data,
+                                    type: 'warning'
+                                });
+                            }
+                        });
+                });
+
+                //clique de escolha do select
+                $("#ddlMunicipio").change(function () {
+                    var id = $("#ddlMunicipio").val();
+
+                    var url = "../../Localidade/GetLocalidadeByMunicipio?id=" + id;
+
+                    var ddlSource = "#ddlLocalidade";
+
+                    $.getJSON(url,
+                        { id: $(ddlSource).val() },
+                        function (data) {
+                            if (data.length > 0) {
+                                var items = '<option value="">Selecionar Localidade</option>';
+                                $("#ddlLocalidade").empty;
+                                $.each(data,
+                                    function (i, row) {
+                                        items += "<option value='" + row.value + "'>" + row.text + "</option>";
+                                    });
+                                $("#ddlLocalidade").html(items);
+                            }
+                            else {
+                                new PNotify({
+                                    title: 'Localidades',
+                                    text: 'Localidades não encontradas.',
+                                    type: 'warning'
+                                });
+                            }
+                        });
+                });
+            }
             if (formid === "formControlePresencaEvento") {
 
                 //skin select
@@ -161,7 +275,6 @@ var vm = new Vue({
                     }
                 });
             }
-
             if (formid === "formEvento") {
 
                 var $dtEvento = $("#dtEvento");

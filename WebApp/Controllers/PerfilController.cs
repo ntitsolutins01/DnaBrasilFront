@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Specialized;
 using System.Security.Claims;
+using log4net;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -24,21 +25,28 @@ namespace WebApp.Controllers
 
         private readonly ApplicationDbContext _db;
         private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly IOptions<UrlSettings> _appSettings;
-
+        private readonly ILog _logger;
 
         #endregion
 
         #region Constructor
 
+        /// <summary>
+        /// Construtor da página
+        /// </summary>
+        /// <param name="db"></param>
+        /// <param name="roleManager">Gerenciador de regras de permissoes</param>
+        /// <param name="userManager">Gerenciador de Usuario</param>
+        /// <param name="appSettings">Configurações de url da api</param>
+        /// <param name="logger">Log de mensagens da aplicação</param>
         public PerfilController(ApplicationDbContext db,
             RoleManager<IdentityRole> roleManager,
-            UserManager<IdentityUser> userManager, IOptions<UrlSettings> appSettings)
+            UserManager<IdentityUser> userManager, IOptions<UrlSettings> appSettings, ILog logger)
         {
             _db = db;
             _roleManager = roleManager;
-            _appSettings = appSettings;
-            ApplicationSettings.WebApiUrl = _appSettings.Value.WebApiBaseUrl;
+            ApplicationSettings.WebApiUrl = appSettings.Value.WebApiBaseUrl;
+            _logger = logger;
         }
 
         #endregion
@@ -55,11 +63,27 @@ namespace WebApp.Controllers
         //[ClaimsAuthorize("Perfil", "Consultar")]
         public ActionResult Index(int? crud, int? notify, string message = null)
         {
-            SetNotifyMessage(notify, message);
-            SetCrudMessage(crud);
+            try
+            {
+                _logger.Info($"Usuario Logado em Perfil.Index User.Identity.Name : {User.Identity.Name}");
 
-            var response = ApiClientFactory.Instance.GetPerfilAll();
-            return View(new PerfilModel { Perfis = response });
+                SetNotifyMessage(notify, message);
+                SetCrudMessage(crud);
+
+                var response = ApiClientFactory.Instance.GetPerfilAll();
+                return View(new PerfilModel { Perfis = response });
+            }
+            catch (Exception e)
+            {
+                _logger.Error($"Perfil.Index: {e.StackTrace}");
+                return RedirectToRoute(new
+                {
+                    controller = "Home",
+                    action = "Error",
+                    message = e.Message,
+                    stackTrace = e.StackTrace
+                });
+            }
         }
 
         /// <summary>

@@ -2,6 +2,7 @@ var vm = new Vue({
     el: "#vCarteirinha",
     data: {
         loading: false,
+        carteirinhaLoading: false, // Novo estado para loading da carteirinha
         editDto: { Id: "", FomentoId: "", Nome: "", Status: true, Email: "", Sexo: "", DtNascimento: "", MunicipioEstado: "", NomeLocalidade: "", Cpf: "", Image: "", Modalidades: "", Cep: "", Etinia: "", Deficiencia: "" }
     },
     mounted: function () {
@@ -28,13 +29,60 @@ var vm = new Vue({
 
             }).apply(this, [jQuery]);
 
-            //var formid = $('form')[1].id;
+            self.loadCarteirinhaData();
 
+        }).apply(this, [jQuery]);
+    },
+    methods: {
+        ShowLoad: function (flag, el) {
             var self = this;
+
+            self.isLoading = flag;
+            $("#" + el).loadingOverlay({
+                "startShowing": flag
+            });
+            self.loading = flag;
+
+            if (!flag) {
+                self.isLoading = flag;
+                $("#" + el).removeClass("loading-overlay-showing");
+                self.loading = flag;
+            } else {
+                self.isLoading = flag;
+                $("#" + el).addClass("loading-overlay-showing");
+                self.loading = flag;
+            }
+        },
+        loadCarteirinhaData: function () {
+            var self = this;
+
+            // Inicia o carregamento
+            self.carteirinhaLoading = true;
+
+            // Limpa os dados anteriores para evitar mostrar dados antigos
+            self.editDto = {
+                Id: "",
+                FomentoId: "",
+                Nome: "",
+                Status: true,
+                Email: "",
+                Sexo: "",
+                DtNascimento: "",
+                MunicipioEstado: "",
+                NomeLocalidade: "",
+                Cpf: "",
+                Image: "",
+                Modalidades: "",
+                Telefone: "",
+                QRCode: "",
+                Cep: "",
+                Etinia: "",
+                Deficiencia: ""
+            };
 
             const queryString = window.location.pathname;
             const urlParams = queryString.split('/');
-            
+
             axios.get("../../Aluno/GetAlunoById/?id=" + urlParams[3])
                 .then(result => {
                     self.editDto.Id = result.data.id;
@@ -106,7 +154,6 @@ var vm = new Vue({
                         }
 
                         // Atualizar o background do verso com o nome da imagem retornado
-
                         const versoElement = document.querySelector('#verso');
                         if (versoElement) {
                             versoElement.style.backgroundImage = `url(/assets/styles_Carteirinha/modelos/${modeloResult.data.nomeImagemVerso}.png)`;
@@ -115,29 +162,11 @@ var vm = new Vue({
                 })
                 .catch(error => {
                     Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
+                })
+                .finally(() => {
+                    // Finaliza o carregamento
+                    self.carteirinhaLoading = false;
                 });
-
-        }).apply(this, [jQuery]);
-    },
-    methods: {
-        ShowLoad: function (flag, el) {
-            var self = this;
-
-            self.isLoading = flag;
-            $("#" + el).loadingOverlay({
-                "startShowing": flag
-            });
-            self.loading = flag;
-
-            if (!flag) {
-                self.isLoading = flag;
-                $("#" + el).removeClass("loading-overlay-showing");
-                self.loading = flag;
-            } else {
-                self.isLoading = flag;
-                $("#" + el).addClass("loading-overlay-showing");
-                self.loading = flag;
-            }
         },
         GetPesquisaAluno: function () {
 

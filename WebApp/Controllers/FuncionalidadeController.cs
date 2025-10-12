@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using log4net;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
 using WebApp.Configuration;
 using WebApp.Dto;
 using WebApp.Enumerators;
 using WebApp.Factory;
+using WebApp.Identity;
 using WebApp.Models;
 using WebApp.Utility;
 
@@ -13,12 +16,12 @@ namespace WebApp.Controllers
     /// <summary>
     /// Controler Funcionalidade
     /// </summary>
+    [Authorize(Policy = ModuloAccess.ConfiguracaoSistema)]
     public class FuncionalidadeController : BaseController
     {
         #region Parametros
 
-        private readonly IOptions<UrlSettings> _appSettings;
-
+        private readonly ILog _logger;
 
         #endregion
 
@@ -27,13 +30,13 @@ namespace WebApp.Controllers
         /// <summary>
         /// Construtor da página
         /// </summary>
-        /// <param name="appSettings">configurações de urls do sistema</param>
-        public FuncionalidadeController(IOptions<UrlSettings> appSettings)
+        /// <param name="appSettings">configurações de url da api</param>
+        /// <param name="logger">Log de mensagens da aplicação</param>
+        public FuncionalidadeController(IOptions<UrlSettings> appSettings, ILog logger)
         {
-            _appSettings = appSettings;
-            ApplicationSettings.WebApiUrl = _appSettings.Value.WebApiBaseUrl;
+            _logger = logger;
+            ApplicationSettings.WebApiUrl = appSettings.Value.WebApiBaseUrl;
         }
-
 
         #endregion
 
@@ -48,11 +51,27 @@ namespace WebApp.Controllers
         /// <returns>returns true false</returns>
         public IActionResult Index(int? crud, int? notify, string message = null)
         {
-            SetNotifyMessage(notify, message);
-            SetCrudMessage(crud);
-            var response = ApiClientFactory.Instance.GetFuncionalidadesAll();
+            try
+            {
+                _logger.Info($"Usuario Logado em Aula.Index User.Identity.Name : {User.Identity.Name}");
 
-            return View(new FuncionalidadeModel() { Funcionalidades = response });
+                SetNotifyMessage(notify, message);
+                SetCrudMessage(crud);
+                var response = ApiClientFactory.Instance.GetFuncionalidadesAll();
+
+                return View(new FuncionalidadeModel() { Funcionalidades = response });
+            }
+            catch (Exception e)
+            {
+                _logger.Error($"Aula.Index: {e.StackTrace}");
+                return RedirectToRoute(new
+                {
+                    controller = "Home",
+                    action = "Error",
+                    message = e.Message,
+                    stackTrace = e.StackTrace
+                });
+            }
         }
 
         /// <summary>

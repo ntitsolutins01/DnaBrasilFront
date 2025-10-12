@@ -23,21 +23,21 @@ namespace WebApp.Controllers
     //[Authorize(Policy = ModuloAccess.ControlePresenca)]
     public class ControlePresencaController : BaseController
     {
+        #region Parametros
+
         private readonly ILog _logger;
 
-        #region Constructor
+        #endregion
 
-        private readonly UserManager<IdentityUser> _userManager;
+        #region Constructor
 
         /// <summary>
         /// Construtor da página
         /// </summary>
         /// <param name="appSettings">configurações de url da api</param>
-        /// <param name="userManager">gerenciador de identidade de usuários</param>
         /// <param name="logger">Log de mensagens da aplicação</param>
-        public ControlePresencaController(IOptions<UrlSettings> appSettings, UserManager<IdentityUser> userManager, ILog logger)
+        public ControlePresencaController(IOptions<UrlSettings> appSettings, ILog logger)
         {
-            _userManager = userManager;
             _logger = logger;
             ApplicationSettings.WebApiUrl = appSettings.Value.WebApiBaseUrl;
         }
@@ -158,8 +158,14 @@ namespace WebApp.Controllers
             }
             catch (Exception e)
             {
-                Console.Write(e.StackTrace);
-                return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = e.Message });
+                _logger.Error($"ControlePresenca.Index: {e.StackTrace}");
+                return RedirectToRoute(new
+                {
+                    controller = "Home",
+                    action = "Error",
+                    message = e.Message,
+                    stackTrace = e.StackTrace
+                });
 
             }
         }

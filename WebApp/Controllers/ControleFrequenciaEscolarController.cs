@@ -118,8 +118,13 @@ public class ControleFrequenciaEscolarController : BaseController
         catch (Exception e)
         {
             _logger.Error($"ControleFrequenciaEscolar.Index: {e.StackTrace}");
-            return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = e.Message });
-
+            return RedirectToRoute(new
+            {
+                controller = "Home",
+                action = "Error",
+                message = e.Message,
+                stackTrace = e.StackTrace
+            });
         }
     }
 

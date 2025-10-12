@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using log4net;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
 using WebApp.Configuration;
@@ -13,25 +14,23 @@ namespace WebApp.Controllers
     /// </summary>
     public class DivisaoAdministrativaController : BaseController
     {
-        #region Parametro
+        #region Parametros
 
-        private readonly ILogger<DivisaoAdministrativaController> _logger;
-        private readonly IOptions<UrlSettings> _appSettings;
+        private readonly ILog _logger;
 
         #endregion
 
         #region Constructor
 
         /// <summary>
-        ///  Construtor da página
+        /// Construtor da página
         /// </summary>
-        /// <param name="logger">logger</param>
-        /// <param name="appSettings">configurações de urls do sistema</param>
-        public DivisaoAdministrativaController(ILogger<DivisaoAdministrativaController> logger, IOptions<UrlSettings> appSettings)
+        /// <param name="appSettings">configurações de url da api</param>
+        /// <param name="logger">Log de mensagens da aplicação</param>
+        public DivisaoAdministrativaController(IOptions<UrlSettings> appSettings, ILog logger)
         {
             _logger = logger;
-            _appSettings = appSettings;
-            ApplicationSettings.WebApiUrl = _appSettings.Value.WebApiBaseUrl;
+            ApplicationSettings.WebApiUrl = appSettings.Value.WebApiBaseUrl;
         }
 
         #endregion

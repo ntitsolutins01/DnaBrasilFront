@@ -1,3 +1,4 @@
+using log4net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -20,22 +21,28 @@ namespace WebApp.Controllers;
 [Authorize(Policy = ModuloAccess.ConfiguracaoSistemaEad)]
 public class ModuloEadController : BaseController
 {
+    #region Parametros
+
+    private readonly ILog _logger;
+
+    #endregion
+
     #region Constructor
-    private readonly IOptions<UrlSettings> _appSettings;
 
     /// <summary>
     /// Construtor da página
     /// </summary>
-    /// <param name="app">configurações de urls do sistema</param>
-    /// <param name="host">informações da aplicação em execução</param>
-    public ModuloEadController(IOptions<UrlSettings> appSettings)
+    /// <param name="appSettings">configurações de url da api</param>
+    /// <param name="logger">Log de mensagens da aplicação</param>
+    public ModuloEadController(IOptions<UrlSettings> appSettings, ILog logger)
     {
-        _appSettings = appSettings;
-        ApplicationSettings.WebApiUrl = _appSettings.Value.WebApiBaseUrl;
+        _logger = logger;
+        ApplicationSettings.WebApiUrl = appSettings.Value.WebApiBaseUrl;
     }
+
     #endregion
 
-    #region Crud Methods
+    #region Main Methods
     /// <summary>
     /// Listagem de Modulo Ead
     /// </summary>
@@ -46,11 +53,27 @@ public class ModuloEadController : BaseController
     [ClaimsAuthorize(ClaimType.ModuloEad, Identity.Claim.Consultar)]
     public IActionResult Index(int? crud, int? notify, string message = null)
     {
-        SetNotifyMessage(notify, message);
-        SetCrudMessage(crud);
-        var response = ApiClientFactory.Instance.GetModulosEadAll();
+        try
+        {
+            _logger.Info($"Usuario Logado em ModuloEad.Index User.Identity.Name : {User.Identity.Name}");
 
-        return View(new ModuloEadModel() { ModulosEad = response });
+            SetNotifyMessage(notify, message);
+            SetCrudMessage(crud);
+            var response = ApiClientFactory.Instance.GetModulosEadAll();
+
+            return View(new ModuloEadModel() { ModulosEad = response });
+        }
+        catch (Exception e)
+        {
+            _logger.Error($"ModuloEad.Index: {e.StackTrace}");
+            return RedirectToRoute(new
+            {
+                controller = "Home",
+                action = "Error",
+                message = e.Message,
+                stackTrace = e.StackTrace
+            });
+        }
     }
 
     /// <summary>

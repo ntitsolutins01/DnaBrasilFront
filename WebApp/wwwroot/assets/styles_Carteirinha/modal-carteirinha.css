@@ -1,6 +1,55 @@
 ﻿@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 
-/* Estilos da Carteirinha */
+/* Loading Spinner Customizado */
+.carteirinha-loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 20px;
+    min-height: 200px;
+}
+
+.carteirinha-spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #007bff;
+    border-radius: 50%;
+    animation: carteirinha-spin 1s linear infinite;
+    margin-bottom: 20px;
+}
+
+@keyframes carteirinha-spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.carteirinha-loading-text {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: #007bff;
+    text-align: center;
+    margin: 0;
+}
+
+.carteirinha-loading-subtext {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    color: #6c757d;
+    text-align: center;
+    margin-top: 8px;
+    margin-bottom: 0;
+}
+
+/* Estilos da Carteirinha - Aplicam tanto para modal quanto para página */
 #frente.tab-pane,
 #verso.tab-pane,
 .page {
@@ -15,6 +64,26 @@
     overflow: hidden;
     flex-shrink: 0;
 }
+
+/* Container específico para página da carteirinha */
+.carteirinha-page-container {
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+    .carteirinha-page-container .row {
+        margin: 10px;
+        min-width: 992px; /* Força largura mínima como no modal */
+    }
+
+    .carteirinha-page-container .tabs {
+        width: 100%;
+    }
+
+    .carteirinha-page-container .tab-content {
+        position: relative;
+        min-height: 460px;
+    }
 
 /* Frente da Carteirinha */
 .student-info {
@@ -79,10 +148,10 @@
 
 .qr-code-container {
     position: absolute;
-    right: 78.5px;
-    bottom: 40px;
-    width: 155px;
-    height: 155px;
+    right: 64.5px;
+    bottom: 15px;
+    width: 185px;
+    height: 185px;
 }
 
 .qr-code {
@@ -125,21 +194,23 @@
         font-family: 'Montserrat', sans-serif;
     }
 
-
+/* Media queries para responsividade */
 @media screen and (max-width: 992px) {
     .modal-body {
         overflow-x: auto;
     }
 
-    .row {
-        min-width: 992px;
-        position: relative;
-    }
+        .modal-body .row,
+        .carteirinha-page-container .row {
+            min-width: 992px;
+            position: relative;
+        }
 
     #frente.tab-pane, #verso.tab-pane, .page {
         min-height: 540px;
     }
-        .photo-container, .qr-code-container {
+
+    .photo-container, .qr-code-container {
         position: absolute;
         right: 120px;
     }
@@ -155,4 +226,27 @@
     .student-info {
         top: 200px;
     }
+
+    /* Loading responsivo */
+    .carteirinha-loading-container {
+        padding: 60px 20px;
+        min-height: 180px;
+    }
+
+    .carteirinha-spinner {
+        width: 40px;
+        height: 40px;
+        border-width: 3px;
+    }
+}
+
+/* Estilos específicos para telas pequenas na página da carteirinha */
+@media screen and (max-width: 768px) {
+    .carteirinha-page-container {
+        padding: 0 10px;
+    }
+
+        .carteirinha-page-container .row {
+            margin: 5px;
+        }
 }

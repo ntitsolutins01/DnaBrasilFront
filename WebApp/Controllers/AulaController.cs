@@ -57,11 +57,27 @@ public class AulaController : BaseController
     [ClaimsAuthorize(ClaimType.Aula, Identity.Claim.Consultar)]
     public IActionResult Index(int? crud, int? notify, string message = null)
     {
-        SetNotifyMessage(notify, message);
-        SetCrudMessage(crud);
-        var response = ApiClientFactory.Instance.GetAulasAll();
+        try
+        {
+            _logger.Info($"Usuario Logado em Aula.Index User.Identity.Name : {User.Identity.Name}");
 
-        return View(new AulaModel() { Aulas = response });
+            SetNotifyMessage(notify, message);
+            SetCrudMessage(crud);
+            var response = ApiClientFactory.Instance.GetAulasAll();
+
+            return View(new AulaModel() { Aulas = response });
+        }
+        catch (Exception e)
+        {
+            _logger.Error($"Aula.Index: {e.StackTrace}");
+            return RedirectToRoute(new
+            {
+                controller = "Home",
+                action = "Error",
+                message = e.Message,
+                stackTrace = e.StackTrace
+            });
+        }
     }
 
     /// <summary>
@@ -456,7 +472,7 @@ public class AulaController : BaseController
                         return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = "Erro ao realizar Upload. Somente arquivos MP4 e AVI são permitidos." });
                 }
             }
-            
+
             if (aula.Video != null)
             {
                 System.IO.File.Delete(aula.Video);

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using log4net;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
 using WebApp.Authorization;
@@ -19,7 +20,7 @@ public class ControleMaterialController : BaseController
 {
     #region Parametros
 
-    private readonly IOptions<UrlSettings> _appSettings;
+    private readonly ILog _logger;
 
     #endregion
 
@@ -29,10 +30,12 @@ public class ControleMaterialController : BaseController
     /// Construtor da página
     /// </summary>
     /// <param name="appSettings">Configurações de urls do sistema</param>
-    public ControleMaterialController(IOptions<UrlSettings> appSettings)
+    /// <param name="logger">Log de mensagens da aplicação</param>
+    public ControleMaterialController(IOptions<UrlSettings> appSettings,
+        ILog logger)
     {
-        _appSettings = appSettings;
-        ApplicationSettings.WebApiUrl = _appSettings.Value.WebApiBaseUrl;
+        ApplicationSettings.WebApiUrl = appSettings.Value.WebApiBaseUrl;
+        _logger = logger;
     }
     #endregion
 
@@ -46,11 +49,29 @@ public class ControleMaterialController : BaseController
     [ClaimsAuthorize(ClaimType.ControleMaterial, Identity.Claim.Consultar)]
     public IActionResult Index(int? crud, int? notify, string message = null)
     {
-        SetNotifyMessage(notify, message);
-        SetCrudMessage(crud);
-        var response = ApiClientFactory.Instance.GetControlesMateriaisAll();
+        
+        try
+        {
+            _logger.Info($"Usuario Logado em ControleMaterial.Index User.Identity.Name : {User.Identity.Name}");
 
-        return View(new ControleMaterialModel() { ControlesMateriais = response });
+            SetNotifyMessage(notify, message);
+            SetCrudMessage(crud);
+            var response = ApiClientFactory.Instance.GetControlesMateriaisAll();
+
+            return View(new ControleMaterialModel() { ControlesMateriais = response });
+
+        }
+        catch (Exception e)
+        {
+            _logger.Error($"ControleMaterial.Index: {e.StackTrace}");
+            return RedirectToRoute(new
+            {
+                controller = "Home",
+                action = "Error",
+                message = e.Message,
+                stackTrace = e.StackTrace
+            });
+        }
     }
 
     /// <summary>

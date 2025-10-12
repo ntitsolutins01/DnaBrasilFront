@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using log4net;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
 using WebApp.Configuration;
 using WebApp.Dto;
 using WebApp.Enumerators;
 using WebApp.Factory;
+using WebApp.Identity;
 using WebApp.Models;
 using WebApp.Utility;
 
@@ -13,21 +16,26 @@ namespace WebApp.Controllers
     /// <summary>
     /// Controle de Resposta
     /// </summary>
+    [Authorize(Policy = ModuloAccess.ConfiguracaoSistema)]
     public class RespostaController : BaseController
     {
-
         #region Parametros
 
-        private readonly IOptions<UrlSettings> _appSettings;
+        private readonly ILog _logger;
 
         #endregion
 
         #region Constructor
 
-        public RespostaController(IOptions<UrlSettings> appSettings)
+        /// <summary>
+        /// Construtor da página
+        /// </summary>
+        /// <param name="appSettings">configurações de url da api</param>
+        /// <param name="logger">Log de mensagens da aplicação</param>
+        public RespostaController(IOptions<UrlSettings> appSettings, ILog logger)
         {
-            _appSettings = appSettings;
-            ApplicationSettings.WebApiUrl = _appSettings.Value.WebApiBaseUrl;
+            _logger = logger;
+            ApplicationSettings.WebApiUrl = appSettings.Value.WebApiBaseUrl;
         }
 
         #endregion
@@ -45,6 +53,8 @@ namespace WebApp.Controllers
         {
             try
             {
+                _logger.Info($"Usuario Logado em Resposta.Index User.Identity.Name : {User.Identity.Name}");
+
                 SetNotifyMessage(notify, message);
                 SetCrudMessage(crud);
                 var response = ApiClientFactory.Instance.GetRespostaAll();
@@ -58,9 +68,14 @@ namespace WebApp.Controllers
             }
             catch (Exception e)
             {
-                Console.Write(e.StackTrace);
-                return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = e.Message });
-
+                _logger.Error($"Resposta.Index: {e.StackTrace}");
+                return RedirectToRoute(new
+                {
+                    controller = "Home",
+                    action = "Error",
+                    message = e.Message,
+                    stackTrace = e.StackTrace
+                });
             }
         }
 

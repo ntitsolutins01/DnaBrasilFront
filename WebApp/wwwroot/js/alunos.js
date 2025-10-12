@@ -2,6 +2,7 @@ var vm = new Vue({
     el: "#vPesquisarAluno",
     data: {
         loading: false,
+        carteirinhaLoading: false, // Novo estado para loading da carteirinha
         editDto: { Id: "", FomentoId: "", Nome: "", Status: true, Email: "", Sexo: "", DtNascimento: "", MunicipioEstado: "", NomeLocalidade: "", Cpf: "", Image: "", Modalidades: "", Cep: "", Etinia: "", Deficiencia: "" }
     },
     mounted: function () {
@@ -293,6 +294,30 @@ var vm = new Vue({
         CarteirinhaAluno: function (id) {
             var self = this;
 
+            // Inicia o carregamento
+            self.carteirinhaLoading = true;
+
+            // Limpa os dados anteriores para evitar mostrar dados antigos
+            self.editDto = {
+                Id: "",
+                FomentoId: "",
+                Nome: "",
+                Status: true,
+                Email: "",
+                Sexo: "",
+                DtNascimento: "",
+                MunicipioEstado: "",
+                NomeLocalidade: "",
+                Cpf: "",
+                Image: "",
+                Modalidades: "",
+                Telefone: "",
+                QRCode: "",
+                Cep: "",
+                Etinia: "",
+                Deficiencia: ""
+            };
+
             axios.get("Aluno/GetAlunoById/?id=" + id)
                 .then(result => {
                     self.editDto.Id = result.data.id;
@@ -364,7 +389,6 @@ var vm = new Vue({
                         }
 
                         // Atualizar o background do verso com o nome da imagem retornado
-
                         const versoElement = document.querySelector('#verso');
                         if (versoElement) {
                             versoElement.style.backgroundImage = `url(/assets/styles_Carteirinha/modelos/${modeloResult.data.nomeImagemVerso}.png)`;
@@ -373,6 +397,10 @@ var vm = new Vue({
                 })
                 .catch(error => {
                     Site.Notification("Erro ao buscar e analisar dados", error.message, "error", 1);
+                })
+                .finally(() => {
+                    // Finaliza o carregamento
+                    self.carteirinhaLoading = false;
                 });
         },
         GetPesquisaAluno: function () {
@@ -408,7 +436,7 @@ var vm = new Vue({
             self.ShowLoad(false, "pResult");
         },
         DeleteAluno: function (id) {
-            var url = "Aluno/Delete/" + id; 
+            var url = "Aluno/Delete/" + id;
             $("#deleteAlunoHref").prop("href", url);
         },
         HabilitarAluno: function (id) {

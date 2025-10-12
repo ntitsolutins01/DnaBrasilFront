@@ -1,7 +1,9 @@
+using System.Diagnostics;
 using System.Drawing;
 using System.IO.Compression;
 using System.Text.Encodings.Web;
 using System.Text.RegularExpressions;
+using DocumentFormat.OpenXml.Spreadsheet;
 using iText.IO.Image;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
@@ -30,6 +32,7 @@ using WebApp.Utility;
 using Claim = WebApp.Identity.Claim;
 using Path = System.IO.Path;
 using Rectangle = iText.Kernel.Geom.Rectangle;
+using Text = iText.Layout.Element.Text;
 
 namespace WebApp.Controllers
 {
@@ -83,7 +86,6 @@ namespace WebApp.Controllers
         /// </summary>
         /// <param name="crud">Paramentro que indica o tipo de ação realizado</param>
         /// <param name="notify">Parametro que indica o tipo de notificação realizada</param>
-        /// <param name="collection">Lista de filtros selecionados para pesquisa de alunos</param>
         /// <param name="message">Mensagem apresentada nas notificações e alertas gerados na tela</param>
         [ClaimsAuthorize(ClaimType.Aluno, Claim.Consultar)]
         [HttpGet]
@@ -190,7 +192,13 @@ namespace WebApp.Controllers
             catch (Exception e)
             {
                 _logger.Error($"Aluno.Index: {e.StackTrace}");
-                return RedirectToAction(nameof(Index), new { notify = (int)EnumNotify.Error, message = e.Message });
+                return RedirectToRoute(new
+                {
+                    controller = "Home",
+                    action = "Error",
+                    message = e.Message,
+                    stackTrace = e.StackTrace
+                });
 
             }
         }
@@ -504,10 +512,13 @@ namespace WebApp.Controllers
                 }
                 else
                 {
-                    turmas = new SelectList(
-                       ApiClientFactory.Instance
-                           .GetTurmasByLocalidadeIdEtapaIdSerie(Convert.ToInt32(aluno.LocalidadeId), Convert.ToInt32(aluno.EtapaId), aluno.SerieNome)
-                           .Select(s => new { Id = s.Id, Turma = s.Turma }).ToList(), "Id", "Turma", aluno.SerieId);
+                    if (aluno.SerieNome != null)
+                        turmas = new SelectList(
+                            ApiClientFactory.Instance
+                                .GetTurmasByLocalidadeIdEtapaIdSerie(Convert.ToInt32(aluno.LocalidadeId),
+                                    Convert.ToInt32(aluno.EtapaId), aluno.SerieNome)
+                                .Select(s => new { Id = s.Id, Turma = s.Turma }).ToList(), "Id", "Turma",
+                            aluno.SerieId);
                 }
 
 
@@ -1218,27 +1229,27 @@ namespace WebApp.Controllers
                     float alturaItem;
 
                     // Nome
-                    alturaItem = AddInfoRow(document, "NOME DO ESTUDANTE:", aluno.Nome, leftMargin, currentY, labelWidth, valueWidth, corAzul);
+                    alturaItem = AddInfoRow(document, "NOME DO ESTUDANTE:", aluno.Nome ?? "Não Definido", leftMargin, currentY, labelWidth, valueWidth, corAzul);
                     currentY -= alturaItem;
 
                     // Data de nascimento
-                    alturaItem = AddInfoRow(document, "DATA DE NASCIMENTO:", aluno.DtNascimento, leftMargin, currentY, labelWidth, valueWidth, corAzul);
+                    alturaItem = AddInfoRow(document, "DATA DE NASCIMENTO:" ?? "Não Definido", aluno.DtNascimento, leftMargin, currentY, labelWidth, valueWidth, corAzul);
                     currentY -= alturaItem;
 
                     // Telefone
-                    alturaItem = AddInfoRow(document, "TELEFONE:", aluno.Celular, leftMargin, currentY, labelWidth, valueWidth, corAzul);
+                    alturaItem = AddInfoRow(document, "TELEFONE:", aluno.Celular ?? "Não Definido", leftMargin, currentY, labelWidth, valueWidth, corAzul);
                     currentY -= alturaItem;
 
                     // CPF
-                    alturaItem = AddInfoRow(document, "CPF:", aluno.Cpf, leftMargin, currentY, labelWidth, valueWidth, corAzul);
+                    alturaItem = AddInfoRow(document, "CPF:", aluno.Cpf ?? "Não Definido", leftMargin, currentY, labelWidth, valueWidth, corAzul);
                     currentY -= alturaItem;
 
                     // Matrícula
-                    alturaItem = AddInfoRow(document, "MATRÍCULA:", aluno.Id.ToString(), leftMargin, currentY, labelWidth, valueWidth, corAzul);
+                    alturaItem = AddInfoRow(document, "MATRÍCULA:", aluno.Id.ToString() ?? "Não Definido", leftMargin, currentY, labelWidth, valueWidth, corAzul);
                     currentY -= alturaItem;
 
                     // Modalidades - agora ajustando o currentY com base na altura ocupada
-                    alturaItem = AddFullWidthText(document, aluno.Modalidades, leftMargin, currentY, labelWidth + valueWidth, corAzul, false);
+                    alturaItem = AddFullWidthText(document, aluno.Modalidades ?? "Não Definido", leftMargin, currentY, labelWidth + valueWidth, corAzul, false);
 
                     // Adicionar foto do aluno
                     float rightMargin = 0.91f * 28.35f;
@@ -1361,10 +1372,10 @@ namespace WebApp.Controllers
                     // Adicionar QR Code
                     if (aluno.QrCode != null && aluno.QrCode.Length > 0)
                     {
-                        float qrRightMargin = 0.62f * 28.35f + sangriaEmPontos;
-                        float qrBottomMargin = 0.4f * 28.35f + sangriaEmPontos;
-                        float qrWidth = 48.5f;
-                        float qrHeight = 48.5f;
+                        float qrRightMargin = 0.38f * 28.35f + sangriaEmPontos;
+                        float qrBottomMargin = 0.1f * 28.35f + sangriaEmPontos;
+                        float qrWidth = 60.5f;
+                        float qrHeight = 60.5f;
 
                         float qrX = larguraComSangria - qrRightMargin - qrWidth;
                         float qrY = qrBottomMargin;
@@ -1417,11 +1428,11 @@ namespace WebApp.Controllers
                     float versoY = versoStartY;
 
                     // Município/Estado
-                    alturaItem = AddInfoRow(document, "MUNICÍPIO/ESTADO:", aluno.MunicipioEstado, versoLeftMargin, versoY, labelWidth, valueWidth, corAzul, 8f);
+                    alturaItem = AddInfoRow(document, "MUNICÍPIO/ESTADO:", aluno.MunicipioEstado ?? "Não Definido", versoLeftMargin, versoY, labelWidth, valueWidth, corAzul, 8f);
                     versoY -= alturaItem;
 
                     // Unidade Escolar
-                    alturaItem = AddInfoRow(document, "UNIDADE ESCOLAR:", aluno.NomeLocalidade, versoLeftMargin, versoY, labelWidth, valueWidth, corAzul, 8f);
+                    alturaItem = AddInfoRow(document, "UNIDADE ESCOLAR:", aluno.NomeLocalidade ?? "Não Definido", versoLeftMargin, versoY, labelWidth, valueWidth, corAzul, 8f);
 
                     // Aplicar TrimBox imediatamente após concluir a página do verso
                     try
@@ -2197,36 +2208,6 @@ namespace WebApp.Controllers
         }
 
 
-
-        /// <summary>
-        /// Açao de inclusão de etapa de ensino
-        /// </summary>
-        /// <param name="collection">Coleção de dados para etapa de ensino</param>
-        /// <returns>Retorna mensagem de inclusao através do parametro crud</returns>
-        [HttpPost]
-        [ClaimsAuthorize(ClaimType.Aluno, Claim.Incluir)]
-        public async Task<JsonResult> CreateEtapaEnsino(string nome)
-        {
-            try
-            {
-                var command = new AlunoModel.CreateUpdateEtapaEnsinoCommand
-                {
-                    Nome = nome
-                };
-
-                await ApiClientFactory.Instance.CreateEtapaEnsino(command);
-
-                var result = ApiClientFactory.Instance.GetEtapasEnsinoAll();
-
-                return await Task.FromResult(Json(new SelectList(result, "Id", "Nome")));
-            }
-            catch (Exception ex)
-            {
-                return await Task.FromResult(Json(ex.Message));
-            }
-        }
-
-
         /// <summary>
         /// Açao de inclusão de grau de parentêsco
         /// </summary>
@@ -2390,27 +2371,27 @@ namespace WebApp.Controllers
                 float alturaItem;
 
                 // Nome
-                alturaItem = AddInfoRow(document, "NOME DO ESTUDANTE:", aluno.Nome, leftMargin, currentY, labelWidth, valueWidth, corAzul);
+                alturaItem = AddInfoRow(document, "NOME DO ESTUDANTE:", aluno.Nome ?? "Não Definido", leftMargin, currentY, labelWidth, valueWidth, corAzul);
                 currentY -= alturaItem;
 
                 // Data de nascimento
-                alturaItem = AddInfoRow(document, "DATA DE NASCIMENTO:", aluno.DtNascimento, leftMargin, currentY, labelWidth, valueWidth, corAzul);
+                alturaItem = AddInfoRow(document, "DATA DE NASCIMENTO:", aluno.DtNascimento ?? "Não Definido", leftMargin, currentY, labelWidth, valueWidth, corAzul);
                 currentY -= alturaItem;
 
                 // Telefone
-                alturaItem = AddInfoRow(document, "TELEFONE:", aluno.Celular, leftMargin, currentY, labelWidth, valueWidth, corAzul);
+                alturaItem = AddInfoRow(document, "TELEFONE:", aluno.Celular ?? "Não Definido", leftMargin, currentY, labelWidth, valueWidth, corAzul);
                 currentY -= alturaItem;
 
                 // CPF
-                alturaItem = AddInfoRow(document, "CPF:", aluno.Cpf, leftMargin, currentY, labelWidth, valueWidth, corAzul);
+                alturaItem = AddInfoRow(document, "CPF:", aluno.Cpf ?? "Não Definido", leftMargin, currentY, labelWidth, valueWidth, corAzul);
                 currentY -= alturaItem;
 
                 // Matrícula
-                alturaItem = AddInfoRow(document, "MATRÍCULA:", aluno.Id.ToString(), leftMargin, currentY, labelWidth, valueWidth, corAzul);
+                alturaItem = AddInfoRow(document, "MATRÍCULA:" ?? "Não Definido", aluno.Id.ToString(), leftMargin, currentY, labelWidth, valueWidth, corAzul);
                 currentY -= alturaItem;
 
                 // Modalidades - agora ajustando o currentY com base na altura ocupada
-                alturaItem = AddFullWidthText(document, aluno.Modalidades, leftMargin, currentY, labelWidth + valueWidth, corAzul, false);
+                alturaItem = AddFullWidthText(document, aluno.Modalidades ?? "Não Definido", leftMargin, currentY, labelWidth + valueWidth, corAzul, false);
                 currentY -= alturaItem;
 
                 // Adicionar foto do aluno - ajustado para incluir sangria
@@ -2576,10 +2557,10 @@ namespace WebApp.Controllers
                 if (aluno.QrCode != null && aluno.QrCode.Length > 0)
                 {
                     // Cálculo correto baseado no CSS: right: 0.98cm, bottom: 0.8cm
-                    float qrRightMargin = 0.62f * 28.35f + sangriaEmPontos;
-                    float qrBottomMargin = 0.4f * 28.35f + sangriaEmPontos;
-                    float qrWidth = 48.5f;
-                    float qrHeight = 48.5f;
+                    float qrRightMargin = 0.38f * 28.35f + sangriaEmPontos;
+                    float qrBottomMargin = 0.1f * 28.35f + sangriaEmPontos;
+                    float qrWidth = 60.5f;
+                    float qrHeight = 60.5f;
 
                     // Calculando posição X a partir da direita (incluindo sangria)
                     float qrX = larguraComSangria - qrRightMargin - qrWidth;
@@ -2621,11 +2602,11 @@ namespace WebApp.Controllers
                 float versoY = versoStartY;
 
                 // Município/Estado
-                alturaItem = AddInfoRow(document, "MUNICÍPIO/ESTADO:", aluno.MunicipioEstado, versoLeftMargin, versoY, labelWidth, valueWidth, corAzul, 8f);
+                alturaItem = AddInfoRow(document, "MUNICÍPIO/ESTADO:", aluno.MunicipioEstado ?? "Não Definido", versoLeftMargin, versoY, labelWidth, valueWidth, corAzul, 8f);
                 versoY -= alturaItem;
 
                 // Unidade Escolar
-                alturaItem = AddInfoRow(document, "UNIDADE ESCOLAR:", aluno.NomeLocalidade, versoLeftMargin, versoY, labelWidth, valueWidth, corAzul, 8f);
+                alturaItem = AddInfoRow(document, "UNIDADE ESCOLAR:", aluno.NomeLocalidade ?? "Não Definido", versoLeftMargin, versoY, labelWidth, valueWidth, corAzul, 8f);
                 versoY -= alturaItem;
 
                 // Adicionar sangria

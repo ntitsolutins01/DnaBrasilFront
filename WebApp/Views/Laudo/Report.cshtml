@@ -304,10 +304,10 @@
                         }
                         @*if (Model.EncaminhamentoSaudeBucal != null)
                         {*@
-                            <div class="row-info">
-                                <span class="label-info">Educacional </span>
-                                <span class="value-info">AvisoEducacional</span>
-                            </div>
+                        <div class="row-info">
+                            <span class="label-info">Educacional </span>
+                            <span class="value-info">AvisoEducacional</span>
+                        </div>
                         @*}*@
                         @* <div class="row-info">
                         <span class="label-info">NomeModalidade</span>
@@ -341,41 +341,41 @@
                         <div class="cor-esporte" style="top: 0%; height: 100%!important"></div>
                     </div>
                     <div class="container-indicadores">
-	                    <div>
-		                    <span>0%</span>
-		                    <span>–</span>
-		                    <span>Força de membros superiores</span>
-	                    </div>
-	                    <div>
-		                    <span>0%</span>
-		                    <span>–</span>
-		                    <span>Flexibilidade Muscular</span>
-	                    </div>
-	                    <div>
-		                    <span>0%</span>
-		                    <span>–</span>
-		                    <span>Força Explosiva de Membros Inferiores</span>
-	                    </div>
-	                    <div>
-		                    <span>0%</span>
-		                    <span>–</span>
-		                    <span>Velocidade</span>
-	                    </div>
-	                    <div>
-		                    <span>0%</span>
-		                    <span>–</span>
-		                    <span>Agilidade</span>
-	                    </div>
-	                    <div>
-		                    <span>0%</span>
-		                    <span>–</span>
-		                    <span>Resistência Abdominal</span>
-	                    </div>
-	                    <div>
-		                    <span>0%</span>
-		                    <span>–</span>
-		                    <span>Aptidão Cardiorrespiratória</span>
-	                    </div>
+                        <div>
+                            <span>0%</span>
+                            <span>–</span>
+                            <span>Força de membros superiores</span>
+                        </div>
+                        <div>
+                            <span>0%</span>
+                            <span>–</span>
+                            <span>Flexibilidade Muscular</span>
+                        </div>
+                        <div>
+                            <span>0%</span>
+                            <span>–</span>
+                            <span>Força Explosiva de Membros Inferiores</span>
+                        </div>
+                        <div>
+                            <span>0%</span>
+                            <span>–</span>
+                            <span>Velocidade</span>
+                        </div>
+                        <div>
+                            <span>0%</span>
+                            <span>–</span>
+                            <span>Agilidade</span>
+                        </div>
+                        <div>
+                            <span>0%</span>
+                            <span>–</span>
+                            <span>Resistência Abdominal</span>
+                        </div>
+                        <div>
+                            <span>0%</span>
+                            <span>–</span>
+                            <span>Aptidão Cardiorrespiratória</span>
+                        </div>
                     </div>
                     <div class="container-laudo-text">
                         <span>Profissional</span>
@@ -625,7 +625,7 @@
                             <span>–</span>
                             <span> do índice de massa coorporal</span>
                         </div>
-                        
+
                     </div>
                     <div class="container-laudo-text">
                         <span>Profissional</span>
@@ -807,12 +807,12 @@
                         @{
                             var index = 0;
                             List<string> textosVida = new List<string>
-                    {
-                    Model.Desempenho.TextoBemEstar,
-                    Model.Desempenho.TextoAutoestima,
-                    Model.Desempenho.TextoFamilia,
-                    Model.Desempenho.TextoContexto
-                    };
+                                        {
+                                        Model.Desempenho.TextoBemEstar,
+                                        Model.Desempenho.TextoAutoestima,
+                                        Model.Desempenho.TextoFamilia,
+                                        Model.Desempenho.TextoContexto
+                                        };
                         }
                         @foreach (var item in Model.ListQualidadeDeVida)
                         {
@@ -910,7 +910,7 @@
                             }
                         </span>
                         <span>
-	                        @Model.TipoLaudoVocacionalDescricao
+                            @Model.TipoLaudoVocacionalDescricao
                         </span>
                     </div>
                     <div class="laudo-title">
@@ -1064,7 +1064,7 @@
                             }
                         </span>
                         <span>
-	                        @Model.TipoLaudoConsumoAlimentarDescricao
+                            @Model.TipoLaudoConsumoAlimentarDescricao
                         </span>
                     </div>
                     <div class="laudo-title">
@@ -1090,7 +1090,7 @@
                 <div class="newContainer2">
                     <div class="newContainer2">
                         <div class="sideContainer">
-                            <div class="cor-alimento" style="top: 66.64%;"></div>
+                            <div class="cor-alimento" style="top: 0%; height: 100%!important;"></div>
                         </div>
                         <div class="container-main-saude">
                             <div class="container-2-saude">
@@ -1159,7 +1159,7 @@
                             }
                         </span>
                         <span>
-	                        @Model.TipoLaudoSaudeBucalDescricao
+                            @Model.TipoLaudoSaudeBucalDescricao
                         </span>
                     </div>
                     <div class="laudo-title">
@@ -1218,10 +1218,10 @@
             </div>
         </div>
     }
-    
+
     <!-- Laudo Educacional -->
-    @* @if (@Model.Laudo.SaudeBucalId != null)
-    {  *@
+    @if (@Model.Laudo.EducacionalMatematicaId != null || Model.Laudo.EducacionalMatematicaId != null)
+    {
         <div class="page-container">
             <div class="newContainer">
                 <div class="newContainer2">
@@ -1273,7 +1273,7 @@
                              style="background: conic-gradient(#00a9a9 0 80deg, #cbf2f2 80deg 360deg);"></div>
                         <span class="graph-text">Score</span>
                         <span class="graph-value"
-                              style="color:#00a9a9">@Model.Desempenho.ScoreSaudeBucal</span>
+                              style="color:#00a9a9">@(Model.Desempenho.ScoreMatematica + Model.Desempenho.ScorePortugues)</span>
                     </div>
                     <div class="logo"></div>
                 </div>
@@ -1287,50 +1287,191 @@
                     <div class="sideContainer">
                         <div class="cor-educacional" style="top: 0%; height: 100%!important"></div>
                     </div>
-                        <div class="container-main-vida">
-                            @* @{
-                                var indexEducacional = 1;
-                            }
-
-                            @foreach (var item in Model.ListVocacional)
-                            { *@
-                                    <div class="row-vida">
-                                        <div class="label-vida">
-                                            <div class="label-vida-container-1"
-                                                 style="background-color: #00a9a9;">
-                                                <div class="label-vida-icon" style="background-size: cover;">
-                                                    @* @if (item.ByteImage != null)
-                                                    {
-                                                        var base64 = Convert.ToBase64String(item.ByteImage);
-                                                        var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
-
-                                                        <img src="@imgSrc" style="width:100%;" />
-                                                    }
-                                                    else
-                                                    { *@
-                                                        <img src="~/assets/assets_Laudo/img-vocacao/laudo-vocacao-1.png" style="width:100%;" />
-                                                    @*}*@
+                    <div class="container-main-educacional">
+                        @{
+                            switch (Model.EncaminhamentoPortugues.Parametro)
+                            {
+                                case "Intermediario":
+                                    <!-- Língua Portuguesa - Amarelo -->
+                                    <div class="row-educacional">
+                                        <div class="label-educacional">
+                                            <div class="label-educacional-container-1 educacional-circle-amarelo">
+                                                <div class="label-educacional-icon" style="background-size: cover;">
+                                                    <img src="~/assets/assets_Laudo/img-educacional/portugues.png" style="width:100%;" />
                                                 </div>
                                             </div>
-                                            <div class="label-vida-container-2">
-                                                <span>Disciplina.Nome</span>
+                                            <div class="label-educacional-container-2">
+                                                <span>Língua Portuguesa</span>
                                             </div>
                                         </div>
-                                        <div class="value-vida">
-                                            <span>
-                                                Disciplina.Descricao
-                                            </span>
+                                        <div class="value-educacional educacional-card-amarelo">
+                                            <div class="educacional-status">
+                                                <div class="educacional-status-header">
+                                                    <span class="educacional-nivel">Amarelo</span>
+                                                    <div class="educacional-score-container">
+                                                        <div class="educacional-score-external"></div>
+                                                        <div class="educacional-score-principal" style="background: conic-gradient(#F1C40F 0 216deg, #F7DC6F 216deg 360deg);"></div>
+                                                        <span class="educacional-score-value">@Model.Desempenho.ScorePortugues</span>
+                                                    </div>
+                                                </div>
+                                                <span class="educacional-descricao">Você já consegue entender boa parte do que lê e localizar informações mesmo em textos um pouco mais longos. Também começa a perceber relações simples, como causa e consequência, e entende algumas palavras pelo contexto. Para avançar ainda mais, o próximo passo é praticar leituras que desafiem seu raciocínio — como textos com mensagens mais escondidas, ironias ou opiniões do autor. Assim, você vai ampliar seu jeito de pensar e interpretar. </span>
+                                            </div>
                                         </div>
                                     </div>
-                            @*
-                                indexEducacional++;
-                            }*@
+                                    break;
+                                case "Adequado":
+                                    <!-- Língua Portuguesa - Azul -->
+                                    <div class="row-educacional">
+                                        <div class="label-educacional">
+                                            <div class="label-educacional-container-1 educacional-circle-azul">
+                                                <div class="label-educacional-icon" style="background-size: cover;">
+                                                    <img src="~/assets/assets_Laudo/img-educacional/portugues.png" style="width:100%;" />
+                                                </div>
+                                            </div>
+                                            <div class="label-educacional-container-2">
+                                                <span>Língua Portuguesa</span>
+                                            </div>
+                                        </div>
+                                        <div class="value-educacional educacional-card-azul">
+                                            <div class="educacional-status">
+                                                <div class="educacional-status-header">
+                                                    <span class="educacional-nivel">Azul</span>
+                                                    <div class="educacional-score-container">
+                                                        <div class="educacional-score-external"></div>
+                                                        <div class="educacional-score-principal" style="background: conic-gradient(#3498DB 0 288deg, #85C1E9 288deg 360deg);"></div>
+                                                        <span class="educacional-score-value">@Model.Desempenho.ScorePortugues</span>
+                                                    </div>
+                                                </div>
+                                                <span class="educacional-descricao">Você já tem uma boa leitura! Consegue entender textos de diferentes tipos, perceber ideias principais e mensagens que não estão escritas diretamente, além de entender melhor a intenção do autor. Agora, o seu desafio é se aprofundar ainda mais: ler textos mais longos e complexos, participar de debates e escrever com mais autonomia. Isso vai ajudar você a desenvolver pensamento crítico e ampliar sua forma de se expressar. </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    break;
+                                case "Defasagem":
+                                    <!-- Língua Portuguesa - Verde -->
+                                    <div class="row-educacional">
+                                        <div class="label-educacional">
+                                            <div class="label-educacional-container-1 educacional-circle-verde">
+                                                <div class="label-educacional-icon" style="background-size: cover;">
+                                                    <img src="~/assets/assets_Laudo/img-educacional/portugues.png" style="width:100%;" />
+                                                </div>
+                                            </div>
+                                            <div class="label-educacional-container-2">
+                                                <span>Língua Portuguesa</span>
+                                            </div>
+                                        </div>
+                                        <div class="value-educacional educacional-card-verde">
+                                            <div class="educacional-status">
+                                                <div class="educacional-status-header">
+                                                    <span class="educacional-nivel">Verde</span>
+                                                    <div class="educacional-score-container">
+                                                        <div class="educacional-score-external"></div>
+                                                        <div class="educacional-score-principal" style="background: conic-gradient(#27AE60 0 324deg, #82E0AA 324deg 360deg);"></div>
+                                                        <span class="educacional-score-value">@Model.Desempenho.ScorePortugues</span>
+                                                    </div>
+                                                </div>
+                                                <span class="educacional-descricao">Você já consegue entender informações mais simples e diretas nos textos. Consegue encontrar personagens, fatos principais e o assunto geral quando a linguagem é clara. Isso é muito importante — é o primeiro passo para avançar na leitura! Para continuar melhorando, o ideal é ler diferentes tipos de textos, conversar sobre o que entendeu e praticar a interpretação de histórias, reportagens e propagandas. Com dedicação, você vai aprender a perceber mensagens mais escondidas e a interpretar textos mais complexos.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    break;
+                            }
+                        }
 
-                        </div>
+                        @{
+                            switch (Model.EncaminhamentoMatematica.Parametro)
+                            {
+                                case "Intermediario":
+                                    <!-- Matemática - Amarelo -->
+                                    <div class="row-educacional">
+                                        <div class="label-educacional">
+                                            <div class="label-educacional-container-1 educacional-circle-amarelo">
+                                                <div class="label-educacional-icon" style="background-size: cover;">
+                                                    <img src="~/assets/assets_Laudo/img-educacional/matematica.png" style="width:100%;" />
+                                                </div>
+                                            </div>
+                                            <div class="label-educacional-container-2">
+                                                <span>Matemática</span>
+                                            </div>
+                                        </div>
+                                        <div class="value-educacional educacional-card-amarelo">
+                                            <div class="educacional-status">
+                                                <div class="educacional-status-header">
+                                                    <span class="educacional-nivel">Amarelo</span>
+                                                    <div class="educacional-score-container">
+                                                        <div class="educacional-score-external"></div>
+                                                        <div class="educacional-score-principal" style="background: conic-gradient(#F1C40F 0 180deg, #F7DC6F 180deg 360deg);"></div>
+                                                        <span class="educacional-score-value">@Model.Desempenho.ScoreMatematica</span>
+                                                    </div>
+                                                </div>
+                                                <span class="educacional-descricao">Você já domina boa parte dos conteúdos principais. Consegue resolver problemas com as quatro operações, porcentagens simples e entender gráficos e tabelas mais completos. Agora, o seu próximo passo é praticar problemas que exigem mais raciocínio e explicar o seu pensamento com clareza. Isso vai te ajudar a se preparar para desafios maiores e fortalecer seu jeito de pensar em matemática.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    break;
+                                case "Adequado":
+                                    <!-- Matemática - Azul -->
+                                    <div class="row-educacional">
+                                        <div class="label-educacional">
+                                            <div class="label-educacional-container-1 educacional-circle-azul">
+                                                <div class="label-educacional-icon" style="background-size: cover;">
+                                                    <img src="~/assets/assets_Laudo/img-educacional/matematica.png" style="width:100%;" />
+                                                </div>
+                                            </div>
+                                            <div class="label-educacional-container-2">
+                                                <span>Matemática</span>
+                                            </div>
+                                        </div>
+                                        <div class="value-educacional educacional-card-azul">
+                                            <div class="educacional-status">
+                                                <div class="educacional-status-header">
+                                                    <span class="educacional-nivel">Azul</span>
+                                                    <div class="educacional-score-container">
+                                                        <div class="educacional-score-external"></div>
+                                                        <div class="educacional-score-principal" style="background: conic-gradient(#3498DB 0 252deg, #85C1E9 252deg 360deg);"></div>
+                                                        <span class="educacional-score-value">@Model.Desempenho.ScoreMatematica</span>
+                                                    </div>
+                                                </div>
+                                                <span class="educacional-descricao">Você já consegue resolver problemas mais complexos e aplicar o que aprendeu em diferentes situações. Entende bem conceitos de álgebra, geometria e funções, além de interpretar gráficos e tabelas com segurança. Seu desafio agora é se aprofundar ainda mais! Encare novos problemas, procure estratégias diferentes para resolvê-los e continue desenvolvendo seu raciocínio lógico e sua autonomia.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    break;
+                                case "Defasagem":
+                                    <!-- Matemática - Verde -->
+                                    <div class="row-educacional">
+                                        <div class="label-educacional">
+                                            <div class="label-educacional-container-1 educacional-circle-verde">
+                                                <div class="label-educacional-icon" style="background-size: cover;">
+                                                    <img src="~/assets/assets_Laudo/img-educacional/matematica.png" style="width:100%;" />
+                                                </div>
+                                            </div>
+                                            <div class="label-educacional-container-2">
+                                                <span>Matemática</span>
+                                            </div>
+                                        </div>
+                                        <div class="value-educacional educacional-card-verde">
+                                            <div class="educacional-status">
+                                                <div class="educacional-status-header">
+                                                    <span class="educacional-nivel">Verde</span>
+                                                    <div class="educacional-score-container">
+                                                        <div class="educacional-score-external"></div>
+                                                        <div class="educacional-score-principal" style="background: conic-gradient(#27AE60 0 360deg, #82E0AA 360deg 360deg);"></div>
+                                                        <span class="educacional-score-value">@Model.Desempenho.ScoreMatematica</span>
+                                                    </div>
+                                                </div>
+                                                <span class="educacional-descricao">Você já consegue resolver contas e problemas simples, principalmente quando as informações estão bem claras. Também sabe interpretar gráficos e tabelas mais fáceis. Para melhorar ainda mais, é importante reforçar os conceitos básicos e praticar com situações do dia a dia que envolvem números, medidas e formas. Aos poucos, você vai se sentir mais seguro para resolver problemas mais difíceis.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    break;
+                            }
+                        }
+                    </div>
                 </div>
             </div>
         </div>
-    @*}*@
+    }
 
     <!-- Página Final -->
     <div class="page-container">
@@ -1395,8 +1536,9 @@
             </div>
         </div>
     </div>
-    }
+
     <script src="~/assets/scripts_Laudo/index.js"></script>
 </body>
 
-</html>
+</html>
+
