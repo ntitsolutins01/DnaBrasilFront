@@ -13,7 +13,7 @@
     <input type="hidden" id="alunoId" value="@Model.Aluno.Id" />
     <input type="hidden" id="cursoId" value="@Model.Curso.Id" />
     <div class="row mb-lg">
-        <div class="col-lg-12">
+        <div class="col-lg-8">
             <h2 class="mt-none mb-sm text-dark">@Model.Curso.Titulo</h2>
             <p class="mb-lg">
                 @if (Model.Curso.Descricao != null)
@@ -22,17 +22,53 @@
                 }
             </p>
         </div>
+        <div class="col-lg-4">
+            <!-- Progresso do Curso -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title"><i class="fa fa-graduation-cap mr-xs"></i> Seu Progresso</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="progress light mb-md">
+
+                        @{
+                            var progress = 0;
+                            if (Model.Aulas != null && Model.Aulas.Count() > 0)
+                            {
+                                progress = (int)Math.Round((double)Model.AlunosAulas.Count() / Model.Aulas.Count() * 100, 0);
+                            }
+                        }
+                        <input type="hidden" id="progresso" value="@progress" />
+                        <div class="progress-bar"
+                             role="progressbar"
+                             :style="'width:' + progresso + '%'"
+                             :aria-valuenow="progresso"
+                             aria-valuemin="0"
+                             aria-valuemax="100">
+                            {{ progresso }}%
+                        </div>
+                    </div>
+
+                    <div class="text-center mb-md">
+                        <button class="btn btn-default btn-block" disabled>
+                            <i class="fa fa-certificate"></i> Ver Certificado
+                            <small>(Conclua o curso para desbloquear)</small>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="row">
         <div class="col-lg-12">
             <section class="panel">
-                <header class="panel-heading">
+                @* <header class="panel-heading">
                     <div class="panel-actions">
                         <a href="#" class="card-action card-action-toggle" data-card-toggle></a>
                     </div>
                     <h2 class="panel-title">Conteúdo do Curso</h2>
-                </header>
+                </header> *@
 
                 <div class="panel-body">
                     <div class="row">
@@ -83,7 +119,7 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                             @* @{
                                 var questoesEadVazias = new QuestaoEadModel.QuestaoEadViewModel
                                 {
@@ -100,118 +136,100 @@
                         </div>
 
                         <div class="col-md-4">
-                            <!-- Progresso do Curso -->
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h4 class="panel-title"><i class="fa fa-graduation-cap mr-xs"></i> Seu Progresso</h4>
-                                </div>
-                                <div class="panel-body">
-                                    <div class="progress light mb-md">
 
-                                        @{
-                                            var progress = 0;
-                                            if (Model.Aulas != null && Model.Aulas.Count() > 0)
-                                            {
-                                                progress = (int)Math.Round((double)Model.AlunosAulas.Count() / Model.Aulas.Count() * 100, 0);
+                            <div class="tabs tabs-primary">
+                                <ul class="nav nav-tabs nav-justified">
+                                    <li class="active">
+                                        <a href="#popular10" data-toggle="tab" class="text-center" aria-expanded="true">Conteúdo do Curso</a>
+                                    </li>
+                                    <li class="">
+                                        <a href="#recent10" data-toggle="tab" class="text-center" aria-expanded="false">Questões</a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content">
+                                    <div id="popular10" class="tab-pane active">
+                                        <!-- Módulos e Aulas -->
+                                        <div class="panel panel-default overflow-auto" style="max-height:65vh; overflow-y:auto;">
+                                            @* <div class="panel-heading">
+                                                <h4 class="panel-title"><i class="fa fa-list-alt mr-xs"></i> Conteúdo do Curso</h4>
+                                            </div> *@
+                                            <div class="panel-body">
+                                                <div class="panel-group" id="accordion">
+                                                    @if (Model.Modulos != null && Model.Modulos.Any())
+                                                    {
+                                                        foreach (var modulo in Model.Modulos.OrderBy(m => m.Ordem))
+                                                        {
+                                                            var moduloAulas = Model.Aulas?.Where(a => a.ModuloEadId == modulo.Id).OrderBy(a => a.Ordem).ToList()
+                                                            ?? new List<AulaDto>();
+                                                            var collapseId = "collapseModulo" + modulo.Id;
+                                                            var isExpanded = modulo.Equals(Model.Modulos.First()) ? "in" : "";
+                                                            <div class="panel panel-accordion">
+                                                                <div class="panel-heading">
+                                                                    <h4 class="panel-title">
+                                                                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#@collapseId">
+                                                                            <i class="fa fa-folder-o mr-xs"></i> @modulo.Titulo
+                                                                        </a>
+                                                                    </h4>
+                                                                </div>
+                                                                <div id="@collapseId" class="accordion-body collapse @isExpanded">
+                                                                    <div class="panel-body">
+                                                                        @if (moduloAulas.Any())
+                                                                        {
+                                                                            <ul class="nav nav-list">
+                                                                                @foreach (var aula in moduloAulas)
+                                                                                {
+                                                                                    <li class="mb-sm">
+                                                                                        <a href="#" class="aula-link"
+                                                                                           v-on:click.prevent="SelectLesson(@aula.Id)"
+                                                                                           data-aula-id="@aula.Id"
+                                                                                           data-aula-titulo="@aula.Titulo">
+                                                                                            <i class="fa fa-play-circle-o mr-xs"></i> @aula.Titulo
+                                                                                            @if (Model.AlunosAulas.Any(a => Convert.ToInt32(a.AulaId) == aula.Id))
+                                                                                            {
+                                                                                                <span class="pull-right text-success">
+                                                                                                    <i class="fa fa-check-circle"></i>
+                                                                                                </span>
+                                                                                            }
+                                                                                        </a>
+                                                                                    </li>
+                                                                                }
+                                                                            </ul>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <p>Nenhuma aula disponível para este módulo.</p>
+                                                                        }
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <p>Nenhum módulo encontrado.</p>
+                                                    }
+                                                </div>
+
+                                            </div>
+
+                                            @{
+                                                var questoesEadVazias = new QuestaoEadModel.QuestaoEadViewModel
+                                                {
+                                                    AulaId = Model is not null && Model is dynamic ? (int?)Model.AulaId ?? 0 : 0,
+                                                    Questoes = new List<QuestaoEadModel.QuestaoViewModel>()
+                                                };
                                             }
-                                        }
-                                        <input type="hidden" id="progresso" value="@progress" />
-                                        <div class="progress-bar"
-                                             role="progressbar"
-                                             :style="'width:' + progresso + '%'"
-                                             :aria-valuenow="progresso"
-                                             aria-valuemin="0"
-                                             aria-valuemax="100">
-                                            {{ progresso }}%
+
+                                        </div>
+
+                                    </div>
+                                    <div id="recent10" class="tab-pane">
+                                        <!-- Questões -->
+                                        <div id="aula-container" class="mt-lg overflow-auto" style="max-height:65vh; overflow-y:auto;">
+                                            @await Html.PartialAsync("_QuestoesEad", questoesEadVazias)
                                         </div>
                                     </div>
-
-                                    <div class="text-center mb-md">
-                                        <button class="btn btn-default btn-block" disabled>
-                                            <i class="fa fa-certificate"></i> Ver Certificado
-                                            <small>(Conclua o curso para desbloquear)</small>
-                                        </button>
-                                    </div>
                                 </div>
-                            </div>
-
-                            <!-- Módulos e Aulas -->
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h4 class="panel-title"><i class="fa fa-list-alt mr-xs"></i> Conteúdo do Curso</h4>
-                                </div>
-                                <div class="panel-body">
-                                    <div class="panel-group" id="accordion">
-                                        @if (Model.Modulos != null && Model.Modulos.Any())
-                                        {
-                                            foreach (var modulo in Model.Modulos.OrderBy(m => m.Ordem))
-                                            {
-                                                var moduloAulas = Model.Aulas?.Where(a => a.ModuloEadId == modulo.Id).OrderBy(a => a.Ordem).ToList()
-                                                                  ?? new List<AulaDto>();
-                                                var collapseId = "collapseModulo" + modulo.Id;
-                                                var isExpanded = modulo.Equals(Model.Modulos.First()) ? "in" : "";
-                                                <div class="panel panel-accordion">
-                                                    <div class="panel-heading">
-                                                        <h4 class="panel-title">
-                                                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#@collapseId">
-                                                                <i class="fa fa-folder-o mr-xs"></i> @modulo.Titulo
-                                                            </a>
-                                                        </h4>
-                                                    </div>
-                                                    <div id="@collapseId" class="accordion-body collapse @isExpanded">
-                                                        <div class="panel-body">
-                                                            @if (moduloAulas.Any())
-                                                            {
-                                                                <ul class="nav nav-list">
-                                                                    @foreach (var aula in moduloAulas)
-                                                                    {
-                                                                        <li class="mb-sm">
-                                                                            <a href="#" class="aula-link"
-                                                                               v-on:click.prevent="SelectLesson(@aula.Id)"
-                                                                               data-aula-id="@aula.Id"
-                                                                               data-aula-titulo="@aula.Titulo">
-                                                                                <i class="fa fa-play-circle-o mr-xs"></i> @aula.Titulo
-                                                                                @if (Model.AlunosAulas.Any(a => Convert.ToInt32(a.AulaId) == aula.Id))
-                                                                                {
-                                                                                    <span class="pull-right text-success">
-                                                                                        <i class="fa fa-check-circle"></i>
-                                                                                    </span>
-                                                                                }
-                                                                            </a>
-                                                                        </li>
-                                                                    }
-                                                                </ul>
-                                                            }
-                                                            else
-                                                            {
-                                                                <p>Nenhuma aula disponível para este módulo.</p>
-                                                            }
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            }
-                                        }
-                                        else
-                                        {
-                                            <p>Nenhum módulo encontrado.</p>
-                                        }
-                                    </div>
-
-                                </div>
-                                
-                                @{
-                                    var questoesEadVazias = new QuestaoEadModel.QuestaoEadViewModel
-                                    {
-                                        AulaId = Model is not null && Model is dynamic ? (int?)Model.AulaId ?? 0 : 0,
-                                        Questoes = new List<QuestaoEadModel.QuestaoViewModel>()
-                                    };
-                                }
-
-                                <!-- Questões -->
-                                <div id="aula-container" class="mt-lg">
-                                    @await Html.PartialAsync("_QuestoesEad", questoesEadVazias)
-                                </div>
-
                             </div>
 
                             <!-- Opções -->

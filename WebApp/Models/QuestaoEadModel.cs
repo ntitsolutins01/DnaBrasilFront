@@ -50,6 +50,7 @@ namespace WebApp.Models
             public string? Referencia { get; set; }
             public List<ItemViewModel> Textos { get; set; } = new();
             public List<ItemViewModel> Imagens { get; set; } = new();
+            public List<RespostaEadDto> Respostas { get; set; } = new();
         }
 
         public class ItemViewModel

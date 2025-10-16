@@ -314,7 +314,7 @@
                                                     class="form-control" required title="Por favor informe o texto da alternativa." />
                                                 </div>
                                                 <div class="radio-custom radio-success">
-													<input type="radio" id="radio`+ alternativa + `" name="radioAlternativa">
+													<input type="radio" id="radioalternativaA" name="radioAlternativa" value="A">
 													<label for="radio`+ alternativa + `"> </label>
 												</div>
                                             </div>

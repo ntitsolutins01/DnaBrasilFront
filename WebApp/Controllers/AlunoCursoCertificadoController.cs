@@ -411,6 +411,7 @@ public class AlunoCursoCertificadoController : BaseController
             var tarefas = questoes.Select(q =>
             {
                 var itens = ApiClientFactory.Instance.GetTextosImagensQuestoesAllByQuestaoEadId(q.Id) ?? Enumerable.Empty<TextoImagemQuestaoDto>();
+                var respostas = ApiClientFactory.Instance.GetRespostasEadByQuestaoEadId(q.Id) ?? Enumerable.Empty<RespostaEadDto>();
 
                 var textos = itens
                     .Where(i => string.Equals(i.Tipo, "T", StringComparison.OrdinalIgnoreCase))
@@ -432,8 +433,6 @@ public class AlunoCursoCertificadoController : BaseController
                     })
                     .ToList();
 
-                //var respostas = ApiClientFactory.Instance
-
                 return new QuestaoEadModel.QuestaoViewModel
                 {
                     Id = q.Id,
@@ -442,10 +441,9 @@ public class AlunoCursoCertificadoController : BaseController
                     Referencia = q.Referencia,
                     Textos = textos,
                     Imagens = imagens, 
-                    Respostas = 
+                    Respostas = respostas.ToList()
                 };
             });
-
 
             var vm = new QuestaoEadModel.QuestaoEadViewModel
             {

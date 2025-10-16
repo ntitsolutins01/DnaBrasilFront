@@ -181,32 +181,79 @@ public class QuestaoEadController : BaseController
             switch (collection["ddlTipoResposta"])
             {
                 case "A":
+                    {
+                        var letraSelecionada = (collection["radioAlternativa"].ToString() ?? "")
+                            .Trim().ToUpperInvariant();
 
-                    break;
-                case "D":
-
-                    break;
-                case "M":
-                    var listRespostas =
-                        (from item in collection where item.Key.Contains("multiplo") select item)
-                        .Select(v =>
-                        {
-                            var resposta = new RespostaEadDto()
+                        var listRespostasA =
+                            (from item in collection
+                             where item.Key.StartsWith("alternativa", StringComparison.OrdinalIgnoreCase)
+                             select item)
+                            .OrderBy(v => v.Key)
+                            .Select((v, idx) =>
                             {
-                                TipoResposta = "M",
-                                ValorPesoResposta = Convert.ToDecimal(v.Key.ToString().Replace("multiplo", "")),
-                                Resposta = v.Value.ToString()
-                            };
+                                var texto = v.Value.ToString()?.Trim();
+                                if (string.IsNullOrWhiteSpace(texto)) return null;
 
-                            resposta.RespostaCerta =
-                                (from item in collection where item.Key.Contains("ckMulti") select item.Value)
-                                .Select(v => Convert.ToDecimal(v)).ToList().Any(a => a == resposta.ValorPesoResposta);
+                                var letra = v.Key.Substring("alternativa".Length).Trim().ToUpperInvariant();
+                                return new RespostaEadDto
+                                {
+                                    TipoResposta = "A",
+                                    Resposta = texto,
+                                    ValorPesoResposta = 1,
+                                    RespostaCerta = letra == letraSelecionada
+                                };
+                            })
+                            .Where(x => x != null)!.ToList();
 
-                            return resposta;
-                        }).ToList();
+                        if (!listRespostasA.Any(r => r.RespostaCerta) && listRespostasA.Count > 0)
+                            listRespostasA[0].RespostaCerta = true;
 
-                    commandQuestaoEad.Respostas = listRespostas;
-                    break;
+                        commandQuestaoEad.Respostas = listRespostasA;
+                        break;
+                    }
+
+                case "D":
+                    {
+                        var qtdCharsStr = collection["dissertativa"].ToString();
+                        var qtdChars = string.IsNullOrWhiteSpace(qtdCharsStr) ? 0m : Convert.ToDecimal(qtdCharsStr);
+
+                        commandQuestaoEad.Respostas = new List<RespostaEadDto>
+                        {
+                            new RespostaEadDto
+                            {
+                                TipoResposta      = "D",
+                                Resposta          = string.Empty,
+                                ValorPesoResposta = qtdChars,
+                                RespostaCerta     = false
+                            }
+                        };
+                        break;
+                    }
+
+                case "M":
+                    {
+                        var listRespostas =
+                            (from item in collection where item.Key.Contains("multiplo") select item)
+                            .Select(v =>
+                            {
+                                var resposta = new RespostaEadDto()
+                                {
+                                    TipoResposta = "M",
+                                    ValorPesoResposta = Convert.ToDecimal(v.Key.ToString().Replace("multiplo", "")),
+                                    Resposta = v.Value.ToString()
+                                };
+
+                                resposta.RespostaCerta =
+                                    (from item in collection where item.Key.Contains("ckMulti") select item.Value)
+                                    .Select(v => Convert.ToDecimal(v)).ToList().Any(a => a == resposta.ValorPesoResposta);
+
+                                return resposta;
+                            }).ToList();
+
+                        commandQuestaoEad.Respostas = listRespostas;
+                        break;
+                    }
             }
             #endregion
 
