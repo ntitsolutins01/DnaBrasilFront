@@ -1,0 +1,37 @@
+﻿@model AlunoCursoCertificadoModel
+
+<!-- Progresso do Curso -->
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h4 class="panel-title"><i class="fa fa-graduation-cap mr-xs"></i> Seu Progresso</h4>
+    </div>
+    <div class="panel-body">
+        <div class="progress light mb-md">
+
+            @{
+                var progress = 0;
+                // if (Model.Aulas != null && Model.Aulas.Count() > 0)
+                // {
+                //     progress = (int)Math.Round((double)Model.AlunosAulas.Count() / Model.Aulas.Count() * 100, 0);
+                // }
+                progress = Model.AlunoCurso.Progresso;
+            }
+            <input type="hidden" id="progresso" value="@progress" />
+            <div class="progress-bar"
+                 role="progressbar"
+                 :style="'width:' + progresso + '%'"
+                 :aria-valuenow="progresso"
+                 aria-valuemin="0"
+                 aria-valuemax="100">
+                {{ progresso }}%
+            </div>
+        </div>
+
+        <div class="text-center mb-md">
+            <button class="btn btn-default btn-block" disabled>
+                <i class="fa fa-certificate"></i> Ver Certificado
+                <small>(Conclua o curso para desbloquear)</small>
+            </button>
+        </div>
+    </div>
+</div>

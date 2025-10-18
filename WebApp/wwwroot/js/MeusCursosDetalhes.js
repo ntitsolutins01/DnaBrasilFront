@@ -261,7 +261,6 @@
             var self = this;
             vm.AtualizarProgresso();
 
-            // opcional: feedback visual enquanto carrega
             const $container = $('#aula-container');
             if ($container.length) {
                 $container.html('<div class="text-muted">Carregando questões...</div>');
@@ -283,15 +282,14 @@
 
                     self.ListarMateriais();
 
-                    // >>> AQUI: carrega a PARTIAL das questões <<<
-                    const aulaId = response.data.id ?? id; // usa o id retornado (se existir), senão o parâmetro
+                    // Partial Questoes
+                    const aulaId = response.data.id ?? id;
                     return axios.get("../../AlunoCursoCertificado/GetQuestoesEadAula?aulaId=" + encodeURIComponent(aulaId), {
-                        headers: { 'X-Requested-With': 'XMLHttpRequest' } // indica request AJAX
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' }
                     });
                 })
                 .then(rPartial => {
                     if (rPartial && rPartial.data && $container.length) {
-                        // rPartial.data é HTML da partial
                         $container.html(rPartial.data);
                     }
                 })
@@ -422,12 +420,15 @@
         AtualizarProgresso() {
             const alunoId = document.getElementById('alunoId').value;
             const cursoId = document.getElementById('cursoId').value;
+            const progressoAtual = document.getElementById('progresso').value;
 
             const totalAulas = document.querySelectorAll('.aula-link').length;
             const aulasConcluidas = document.querySelectorAll('.aula-link .fa-check-circle').length;
             const novoProgresso = totalAulas > 0 ? Math.round((aulasConcluidas / totalAulas) * 100) : 0;
 
-            vm.progresso = novoProgresso;
+            if (novoProgresso > progressoAtual) {
+                vm.progresso = novoProgresso;
+            }
         }
     }
 });
